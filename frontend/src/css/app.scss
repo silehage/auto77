@@ -348,7 +348,9 @@ h1,h2,h3,h4,h5,h6 {
 }
 #checkout {
   .q-stepper__tab {
-    padding: 6px 12px;
+    padding: 10px;
+    max-height:100px;
+    justify-content: center;
   }
   .q-stepper__step-inner {
     padding: .6rem;

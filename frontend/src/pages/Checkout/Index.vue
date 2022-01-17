@@ -14,6 +14,7 @@
         keep-alive
         flat
         color="primary"
+        alternative-labels
         animated
         >
           <q-step
@@ -66,7 +67,7 @@
       <q-btn :disabled="!isOk" v-if="step != 3 && form.shipping_courier_name != 'COD'" @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
       <q-btn :disabled="!isOk" v-if="form.shipping_courier_name == 'COD' && step != 3" @click="step = 3" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
       <q-btn :disabled="loading" v-if="step == 3" @click="submitOrder" no-caps unelevated label="Proses Pesanan" color="primary"></q-btn>
-      <q-btn :disabled="step == 1" @click="prev" no-caps outline label="Kembali" color="primary"></q-btn>
+      <!-- <q-btn :disabled="step == 1" @click="prev" no-caps outline label="Kembali" color="primary"></q-btn> -->
     </div>
   </q-page>
 </template>

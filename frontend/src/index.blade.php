@@ -42,7 +42,7 @@
     @if(isset($page['featured_image']) && $page['featured_image'])
       <link itemprop="thumbnailUrl" href="{{ $page['featured_image'] }}" >
       <span itemprop="thumbnail" itemscope itemtype="https://schema.org/ImageObject">
-      `<link itemprop="url" href="{{ $page['featured_image'] }}">
+      <link itemprop="url" href="{{ $page['featured_image'] }}">
       </span>
     @else 
     <link itemprop="thumbnailUrl" href="/icon/icon-384x384.png" >

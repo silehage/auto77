@@ -125,13 +125,13 @@ module.exports = function (ctx ) {
         clientsClaim: true
       }, // only for GenerateSW
       manifest: {
-        short_name: "UkmCommerce",
+        short_name: "UKM Commerce",
         name: "UKM Commerce App",
         lang: "id",
         description: "Simple clean dan elegan aplikasi toko online SPA dan PWA ready",
         start_url: "/",
-        background_color: "#c7eff2",
-        theme_color: "#179ca6",
+        background_color: "#b5cfb4",
+        theme_color: "#0da0ba",
         dir: "ltr",
         display: "standalone",
         orientation: "portrait",
