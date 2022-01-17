@@ -15,9 +15,15 @@ const routes = [
     ]
   },
   {
-    path: '/product/:id',
-    name: 'ProductShow',
-    component: () => import('pages/Product/Show.vue')
+    path: '/product',
+    component: () => import('src/layouts/BlankLayout.vue'),
+    children:[
+      {
+        path: ':id',
+        name: 'ProductShow',
+        component: () => import('pages/Product/Show.vue')
+      }
+    ]
   },
   { 
     path: '/p',

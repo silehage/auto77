@@ -1,5 +1,5 @@
 <template>
-  <div style="background:white;" class="q-pb-xl relative" :class="{'flex flex-center' : !ready }">
+  <q-page style="background:white;" class="q-pb-xl relative" :class="{'flex flex-center' : !ready }">
     <template v-if="ready && product">
     <div class="q-pa-md header-top">
       <div class="flex justify-between">
@@ -114,11 +114,11 @@
         </div>
       </div>
     </div>
-    <div class="q-gutter-x-sm flex q-pa-md bg-white fixed-bottom max-width">
+    <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn>
         <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
         <q-btn unelevated rounded :disabled="currentStock == 0" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="col"></q-btn>
-    </div>
+    </q-footer>
     </template>
       <q-inner-loading :showing="!ready">
         <q-spinner-facebook size="50px" color="primary"/>
@@ -212,7 +212,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </div>
+  </q-page>
 </template>
 
 <script>
