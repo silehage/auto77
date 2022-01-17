@@ -328,8 +328,15 @@ export default {
       this.clearSelectedCost() 
       Api().get('shipping/getProvince').then(response => {
        if(response.status == 200) {
-          this.setProvinceOption(response.data.rajaongkir.results)
-       }
+         if(response.data.success) {
+           this.setProvinceOption(response.data.results)
+         }else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
+        }
       })
     },
     getCity() {
@@ -337,7 +344,14 @@ export default {
        self.$store.commit('SET_LOADING', true)
        Api().get('shipping/getCity/'+ this.province_id).then(response => {
         if(response.status == 200) {
-            this.setCityOption(response.data.rajaongkir.results)
+            if(response.data.success) {
+              this.setCityOption(response.data.results)
+            }else {
+                this.$q.notify({
+                  type: 'negative',
+                  message: response.data.message
+                })
+              }
           }
           self.$store.commit('SET_LOADING', false)
           self.setAddress()
@@ -369,7 +383,14 @@ export default {
        self.$store.commit('SET_LOADING', true)
        Api().get('shipping/getSubdistict/'+ this.city_id).then(response => {
         if(response.status == 200) {
-            this.setSubdistrictOption(response.data.rajaongkir.results)
+          if(response.data.success) {
+           this.setSubdistrictOption(response.data.results)
+         }else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
           }
           self.$store.commit('SET_LOADING', false)
           self.setAddress()
@@ -466,7 +487,7 @@ export default {
         self.$store.commit('SET_LOADING', true)
         Api().post('shipping/getCost', this.formGetCost).then(response => {
           if(response.status == 200) {
-            let data = response.data.rajaongkir.results[0];
+            let data = response.data.results[0];
               this.shippingCost.code = data.code
               this.shippingCost.name = data.name
               this.shippingCost.costs = data.costs

@@ -25,7 +25,7 @@ Route::get('products', [FrontController::class, 'products']);
 Route::get('products/category/{category}', [FrontController::class, 'productCategory']);
 Route::get('product/{id}', [FrontController::class, 'productDetail']);
 
-Route::get('{any}', function () {
+Route::get('/{any}', function () {
     return View::vue();
 })->where('any','.*');
 

@@ -39,7 +39,6 @@
             <q-select 
               filled
               borderless
-              options-cover
               v-model="province_id"
               :options="provinceOptions"
               label="Pilih Provinsi"
@@ -48,7 +47,6 @@
               @input="provinceCodSelected"
               />
             <q-select  
-              options-cover
               stack-label
               filled
               borderless
@@ -220,13 +218,24 @@ export default {
       this.setLoading(true)
       this.provinceOptions = []
       Api().get('shipping/getProvince').then(response => {
-       if(response.status == 200) {
-          let res = response.data.rajaongkir.results
 
-         res.forEach(el => {
-            let opts = { label: el.province, value: el.province_id }
-            this.provinceOptions.push(opts)
-         });
+        if(response.status == 200) {
+
+          if(response.data.success) {
+
+           let res = response.data.results
+
+          res.forEach(el => {
+              let opts = { label: el.province, value: el.province_id }
+              this.provinceOptions.push(opts)
+          });
+         } else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
+
        }
       }).finally(() => {
         this.setLoading(false)
@@ -238,11 +247,18 @@ export default {
       Api().get('shipping/getCity/'+ this.province_id)
       .then(response => {
         if(response.status == 200) {
-          let res = response.data.rajaongkir.results
-          res.forEach(el => {
-              let opts = { label:el.type + ' ' + el.city_name, value: el.city_id }
-              this.cityOptions.push(opts)
-          });
+          if(response.data.success){
+            let res = response.data.results
+            res.forEach(el => {
+                let opts = { label:el.type + ' ' + el.city_name, value: el.city_id }
+                this.cityOptions.push(opts)
+            });
+          }else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
         }
       })
       .finally(() => {
@@ -255,11 +271,20 @@ export default {
       Api().get('shipping/getSubdistrict/'+ this.city_id)
       .then(response => {
         if(response.status == 200) {
-          let res = response.data.rajaongkir.results
-          res.forEach(el => {
-              let opts = { label:el.subdistrict_name, value: el.subdistrict_id }
-              this.subdistrictOptions.push(opts)
-          });
+          if(response.data.success) {
+
+            let res = response.data.results
+
+            res.forEach(el => {
+                let opts = { label:el.subdistrict_name, value: el.subdistrict_id }
+                this.subdistrictOptions.push(opts)
+            });
+          } else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
         }
       })
       .finally(() => {
@@ -271,11 +296,20 @@ export default {
       Api().get('shipping/getCity/'+ this.province_id)
       .then(response => {
         if(response.status == 200) {
-          let res = response.data.rajaongkir.results
-          res.forEach(el => {
-              let opts = { label:el.type + ' ' + el.city_name, value: el.city_id }
-              this.cityCodOptions.push(opts)
-          });
+          if(response.data.success) {
+
+            let res = response.data.results
+
+            res.forEach(el => {
+                let opts = { label:el.type + ' ' + el.city_name, value: el.city_id }
+                this.cityCodOptions.push(opts)
+            });
+          } else {
+            this.$q.notify({
+              type: 'negative',
+              message: response.data.message
+            })
+          }
         }
       })
       .finally(() => {

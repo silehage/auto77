@@ -8,13 +8,11 @@ use App\Models\Order;
 use App\Models\Config;
 use App\Models\OrderItem;
 use App\Models\Transaction;
-use App\Notifications\AdminNotificationOrder;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Notifications\OrderNotification;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\AdminNotificationTelegram;
+
+use Tripay;
 
 class OrderController extends Controller
 {
@@ -128,10 +126,22 @@ class OrderController extends Controller
 
             } else {
 
-                $tripay = new TripayController();
-                $response = $tripay->createTransaction($order, $request);
+                $payload = [
+                    'method'            => $request->payment_method,
+                    'merchant_ref'      => $order->order_ref,
+                    'amount'            => $order->order_total,
+                    'customer_name'     => $order->customer_name,
+                    'customer_email'    => $order->customer_email,
+                    'customer_phone'    => $order->customer_whatsapp,
+                    'order_items'       => $request->items,
+                ];
 
-                if($response) {
+                $json = Tripay::createTransaction($payload);
+
+                $obj = json_decode($json);
+
+
+                if($obj->success) {
 
                     $transaction = new Transaction();
 
@@ -140,16 +150,16 @@ class OrderController extends Controller
                     $transaction->payment_method = $request->payment_method;
                     $transaction->payment_name = $request->payment_name;
     
-                    $transaction->qr_url = $response['data']['qr_url'] ?? '';
+                    $transaction->qr_url = $obj->data->qr_url ?? '';
                     
-                    $transaction->payment_code = $response['data']['pay_code'] ?? '';
-                    $transaction->payment_ref = $response['data']['reference'];
-                    $transaction->expired_time = $response['data']['expired_time'];
+                    $transaction->payment_code = $obj->data->pay_code ?? '';
+                    $transaction->payment_ref = $obj->data->reference;
+                    $transaction->expired_time = $obj->data->expired_time;
 
-                    $transaction->amount = $response['data']['amount'];
-                    $transaction->total_fee = $response['data']['total_fee'];
-                    $transaction->amount_received = $response['data']['amount_received'];
-                    $transaction->instructions = json_encode($response['data']['instructions']);
+                    $transaction->amount = $obj->data->amount;
+                    $transaction->total_fee = $obj->data->total_fee;
+                    $transaction->amount_received = $obj->data->amount_received;
+                    $transaction->instructions = json_encode($obj->data->instructions);
 
                     $transaction->save();
 
@@ -157,7 +167,7 @@ class OrderController extends Controller
 
                     return response([
                         'success' => true,
-                        'results' => $order->load('transaction'),
+                        'results' => $order->load('transaction', 'items'),
                     ], 200);
                         
 

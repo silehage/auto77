@@ -120,7 +120,6 @@ Route::get('tripay/callback', function() {
 });
 
 Route::get('tripay/payment-chanel',[TripayController::class, 'getPaymentChanels']);
-Route::get('tripay/payment-chanel/{method}',[TripayController::class, 'getPaymentChanel']);
 
 Route::get('carts/{sessId}', [CartController::class, 'get']);
 Route::post('carts/{sessId}', [CartController::class, 'store']);

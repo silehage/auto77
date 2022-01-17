@@ -4,32 +4,38 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\RajaongkirController;
+use Rajaongkir;
 
 class ShippingController extends Controller
 {
     public function getProvince()
     {
-
-        $data = null;
         if(Cache::has('provinces')) {
-            $data = Cache::get('provinces');
 
-            return response()->json($data, 200);
+            return response()->json([
+                'success' => true,
+                'results' =>  Cache::get('provinces')
+            ]);
 
         } else {
-            $rajaongkir = new RajaongkirController();
 
-            $json = $rajaongkir->getProvince();
+            $json = Rajaongkir::province();
 
-            if($json) {
+            $obj = json_decode($json);
 
-                Cache::forever('provinces', $json);
-                return response()->json($json, 200);
+
+            if($obj->success == true && count($obj->results) > 0) {
+                
+                Cache::forever('provinces', $obj->results);
+
+                return response()->json($obj);
 
             } else {
 
-                return response()->json(null, 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => $obj->message
+                ]);
             }
 
 
@@ -42,23 +48,30 @@ class ShippingController extends Controller
 
         if(Cache::has('city_by_'. $province_id)) {
 
-           $data = Cache::get('city_by_'. $province_id);
-           return response()->json($data, 200);
+           return response()->json([
+                'success' => true,
+                'results' => Cache::get('city_by_'. $province_id)
+            ]);
 
         } else { 
-            $rajaongkir = new RajaongkirController();
+            
+            $json = Rajaongkir::city($province_id);
 
-            $json = $rajaongkir->getCity($province_id);
+            $obj = json_decode($json);
 
-            if($json) {
 
-                Cache::forever('city_by_'. $province_id, $json);
+            if($obj->success == true && count($obj->results) > 0) {
 
-                return response()->json($json, 200);
+                Cache::forever('city_by_'. $province_id, $obj->results);
+
+                return response()->json($obj);
 
             } else {
 
-                return response()->json(null, 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => $obj->message
+                ]);
             }
 
         }    
@@ -68,25 +81,29 @@ class ShippingController extends Controller
     {
 
         if(Cache::has('subdistrict_by_'. $city_id)) {
-            $data = Cache::get('subdistrict_by_'. $city_id);
 
-            return response()->json($data, 200);
+            return response()->json([
+                'success' => true,
+                'results' => Cache::get('subdistrict_by_'. $city_id)
+            ]);
 
         } else { 
 
-            $rajaongkir = new RajaongkirController();
+            $json = Rajaongkir::subdistrict($city_id);
+            $obj = json_decode($json);
 
-            $json = $rajaongkir->getSubdistrict($city_id);
+            if($obj->success == true && count($obj->results) > 0) {
 
-            if($json) {
+                Cache::forever('subdistrict_by_'. $city_id, $obj->results);
 
-                Cache::forever('subdistrict_by_'. $city_id, $json);
-
-                return response()->json($json, 200);
+                return response()->json($obj);
 
             } else {
 
-                return response()->json(null, 400);
+                return response()->json([
+                    'success' => false,
+                    'message' => $obj->message
+                ]);
             }
         
         }
@@ -94,17 +111,42 @@ class ShippingController extends Controller
     }
     public function getCost(Request $request)
     {
-       $rajaongkir = new RajaongkirController();
+        $data = $request->validate([
+            "origin"        => 'required',
+            "destination"   => 'required',
+            "weight"        => 'required',
+            "courier"       => 'required',
+        ]);
+        
+        $key = http_build_query($data);
 
-       $json = $rajaongkir->getCost($request);
+        if(Cache::has($key)) {
 
-       if($json) {
-
-        return response()->json($json, 200);
+            return response()->json([
+                'success' => true,
+                'results' => Cache::get($key)
+            ]);
 
         } else {
+    
+            $json = Rajaongkir::cost($data);
+    
+            $obj = json_decode($json);
+    
+            if($obj->success == true && count($obj->results) > 0) {
+    
+                Cache::put($key, $obj->results, now()->addHours(8));
 
-            return response()->json(null, 400);
+                return response()->json($obj);
+    
+            } else {
+    
+                return response()->json([
+                    'success' => false,
+                    'message' => $obj->message
+                ]);
+            }
+
         }
     }
 }
