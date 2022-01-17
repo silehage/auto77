@@ -1,0 +1,9 @@
+{
+    "/resources/views/app.blade.php": "/resources/views/app.blade.php",
+    "/.htaccess": "/.htaccess",
+    "/config.js": "/config.js",
+    "/index.html": "/index.html",
+    "/manifest.json": "/manifest.json",
+    "/service-worker.js": "/service-worker.js",
+    "/workbox-85cf717f.js": "/workbox-85cf717f.js"
+}
