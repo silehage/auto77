@@ -1,1 +1,1 @@
-const API_URL="http://store.landingku.com/api";
+const API_URL="/api";

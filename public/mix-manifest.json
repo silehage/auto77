@@ -1,6 +1,5 @@
 {
     "/resources/views/app.blade.php": "/resources/views/app.blade.php",
-    "/.htaccess": "/.htaccess",
     "/config.js": "/config.js",
     "/index.html": "/index.html",
     "/manifest.json": "/manifest.json",

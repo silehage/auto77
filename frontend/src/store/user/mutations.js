@@ -4,7 +4,6 @@ export function SET_USER (state, payload) {
 }
 
 export function LOGOUT (state) {
-  localStorage.removeItem('API_TOKEN')
   state.user = false
   state.loggedUser = false
 }

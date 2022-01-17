@@ -47,11 +47,13 @@ export function register ({commit, dispatch}, payload) {
 }
 export function logout({ commit }) {
   commit('LOGOUT')
+  Cookies.remove('__token')
   this.$router.push('/')
   Api().post('user/logout')
 }
 export function exit({ commit }) {
   commit('LOGOUT')
+  Cookies.remove('__token')
   this.$router.push('/')
 }
 export function getUser ({ commit }) {
