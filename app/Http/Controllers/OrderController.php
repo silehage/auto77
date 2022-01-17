@@ -68,14 +68,14 @@ class OrderController extends Controller
         $whatsapp = strip_tags($request->customer_whatsapp);
 
         $uniqueCode = rand(56, 259);
-        $oderRef = 'INV-' . rand(208, 5909). Str::upper(Str::random(5));
+        $orderRef = 'INV-' . rand(208, 5909). Str::upper(Str::random(5));
 
         DB::beginTransaction();
 
         try {
             $order = Order::create([
                 'user_id' => $user? $user->id : null,
-                'order_ref' => $oderRef,
+                'order_ref' => $orderRef,
                 'customer_name' => $name,
                 'customer_whatsapp' => $whatsapp,
                 'customer_email' => $request->customer_email,
@@ -178,7 +178,7 @@ class OrderController extends Controller
             return response([
                 'success' => false,
                 'results' => null,
-                'error' => $th
+                'error' => $th->getMessage()
             ], 400);
         }        
         

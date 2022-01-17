@@ -14,8 +14,8 @@
           <div class="flex justify-between text-grey-8">
             <div class="q-mb-sm">
               <div class="text-weight-bold">{{ shop.name }}</div>
-              <div class="text-xs text-weight-thin">Phone: {{ shop.phone }}</div>
-              <div class="text-xs text-weight-thin" v-html="shop.address"></div>
+              <div class="text-weight-regular">Phone: {{ shop.phone }}</div>
+              <div class="text-weight-regular" v-html="shop.address"></div>
             </div>
             <div>
               <table>
@@ -44,15 +44,12 @@
           <div class="q-mt-lg text-grey-8">
             <table class="table-order-item" v-if="invoice.items">
               <tr>
-                <th align="left" colspan="2">Item</th>
+                <th align="left">Item</th>
                 <th align="left">qty</th>
                 <th align="right">Harga</th>
               </tr>
               <tr v-for="(item, index) in invoice.items" :key="index">
-                <td>
-                  <q-img :src="item.image_url" width="50px" ratio="1" class="rounded-corners"></q-img>
-                </td>
-                <td class="text-xs">{{ item.name }}</td>
+                <td>{{ item.name }}</td>
                 <td>{{ item.quantity }}</td>
                 <td align="right">{{ moneyIDR(item.price) }}</td>
               </tr>

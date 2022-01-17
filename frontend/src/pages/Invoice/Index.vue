@@ -44,14 +44,11 @@
           <div class="q-mt-lg text-grey-8">
             <table class="table-order-item" v-if="invoice.items">
               <tr>
-                <th align="left" colspan="2">Item</th>
+                <th align="left">Item</th>
                 <th align="left">qty</th>
                 <th align="right">Harga</th>
               </tr>
               <tr v-for="(item, index) in invoice.items" :key="index">
-                <td>
-                  <q-img :src="item.image_url" width="50px" ratio="1" class="rounded-corners"></q-img>
-                </td>
                 <td class="">{{ item.name }}</td>
                 <td>{{ item.quantity }}</td>
                 <td align="right">{{ moneyIDR(item.price) }}</td>
