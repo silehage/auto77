@@ -12,5 +12,6 @@ const del = require('del');
  |
  */
  mix
- .copy('frontend/dist/pwa/template.html', 'resources/views/app.blade.php')
- .copyDirectory('frontend/dist/pwa', 'public');
+ .copy('frontend/dist/pwa/index.php', 'resources/views/app.blade.php')
+ .copyDirectory('frontend/dist/pwa', 'public')
+ .copy('frontend/src/index.template.php', 'public/index.php');

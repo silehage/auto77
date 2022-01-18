@@ -50,7 +50,8 @@ module.exports = function (ctx ) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // env: envparser(),
-      htmlFilename: 'template.html',
+      htmlFilename: 'index.php',
+      ssrPwaHtmlFilename: 'offline.html',
 
       // transpile: false,
 
@@ -120,7 +121,7 @@ module.exports = function (ctx ) {
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        exclude: ['.htaccess', 'index.html'],
+        exclude: ['.htaccess'],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true
@@ -194,7 +195,7 @@ module.exports = function (ctx ) {
       
     },
     sourceFiles: {
-      indexHtmlTemplate:  ctx.dev? 'src/index.template.html' :  'src/index.blade.php',
+      indexHtmlTemplate:  ctx.dev? 'src/index.template.html' :  'src/app.blade.php',
     },
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova

@@ -1,8 +1,8 @@
 {
     "/resources/views/app.blade.php": "/resources/views/app.blade.php",
     "/config.js": "/config.js",
+    "/index.php": "/index.php",
     "/manifest.json": "/manifest.json",
     "/service-worker.js": "/service-worker.js",
-    "/template.html": "/template.html",
     "/workbox-85cf717f.js": "/workbox-85cf717f.js"
 }
