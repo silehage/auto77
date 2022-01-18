@@ -71,7 +71,7 @@ class FrontController extends Controller
     public function postDetail($slug)
     {
         $post = Post::where('slug', $slug)->first();
-
+        
         return View::vue([
             'title' => $post->title . ' | ' . $this->shop->name,
             'description' => $this->createTeaser($post->body),
@@ -94,15 +94,7 @@ class FrontController extends Controller
     protected function createTeaser($html)
     {
         $str = strip_tags($html);
-        $num_words = 30;
-        $words = array();
-        $words = explode(" ", $str, $num_words);
-        $shown_string = "";
 
-        $words[count($words)+1] = " ... ";
-
-        $shown_string = implode(" ", $words);
-
-        return $shown_string;
+        return substr($str, 0, 130) . '...'; 
     }
 }
