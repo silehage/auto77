@@ -115,17 +115,23 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     if(! this.shop) {
       this.$store.dispatch('getShop')
     }
     if(! this.config) {
       this.$store.dispatch('getConfig')
-    }
+    } 
     if(Cookies.get('__token')) {
       if(!this.user) {
         this.$store.dispatch('user/getUser')
       }
+    }
+  },
+  created() {
+
+    if(this.config) {
+      this.$store.commit('SET_THEME_COLOR', this.config.theme_color)
     }
   },
   meta() {

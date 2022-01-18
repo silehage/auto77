@@ -23,7 +23,7 @@ import getters from './getters'
 
 const stateData = createPersistedState({
   key: '__state',
-  paths: ['user', 'cart', 'themes', 'shop', 'config', 'session_id'],
+  paths: ['user', 'cart', 'shop', 'config', 'session_id'],
   storage: {
     getItem: (key) => Cookies.get(key),
     setItem: (key, value) => Cookies.set(key, value, { expires: 1 }),

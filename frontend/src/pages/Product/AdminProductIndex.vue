@@ -12,34 +12,35 @@
       </q-toolbar>
     </q-header>
     <template v-if="products.available">
-     <div class="q-pt-md q-pb-xl">
+     <div class="q-pt-sm q-pb-xl">
       <q-list separator>
-       <q-item v-for="product in products.data" :key="product.id">
+       <q-item v-for="product in products.data" :key="product.id" class="q-py-md">
 
          <q-item-section avatar top class="q-pr-sm">
            <q-img v-if="product.assets" :src="product.assets[0].src" class="bg-white img-product-admin" ratio="1"/>
         </q-item-section>
 
-        <q-item-section >
+        <q-item-section top>
           <div class="q-gutter-y-xs">
           <q-item-label lines="2">{{ product.title }}</q-item-label>
           <q-item-label class="text-green-7 text-weight-medium">{{ moneyIDR(product.price) }}</q-item-label>
             </div>
-          <!-- <q-item-label caption class="ellipsis-2-lines" v-html="product.description"></q-item-label> -->
+          <q-item-label caption class="ellipsis-2-lines" v-html="product.description"></q-item-label>
           <div class="q-mt-sm text-xs">
-           <q-chip v-if="product.category" dense size="12px">
+           <q-chip v-if="product.category" dense size="12px" outline color="green-6">
             <q-avatar icon="sell" color="primary" text-color="white"/>
            {{ product.category.title }}
           </q-chip>
-          <q-chip :label="product.weight + ' gram'" dense size="12px"></q-chip>
-          <q-chip :label="'Stok: ' +product.stock " dense size="12px"></q-chip>
+            <q-chip :label="product.weight + ' gram'" dense size="12px" outline color="green-6"></q-chip>
+            <q-chip :label="'Stok: ' +product.stock " dense size="12px" outline color="green-6"></q-chip>
           </div>
         </q-item-section>
 
         <q-item-section side top>
-          <div class="text-grey-8 column q-gutter-y-sm">
-            <q-btn @click="remove(product.id)" size="sm" round icon="delete" glossy color="red"/>
-            <q-btn :to="{ name: 'ProductEdit', params: {id: product.id }}" size="sm" round glossy color="info" icon="edit" />
+          <div class="text-grey-8 column q-gutter-y-xs">
+            <q-btn unelevated @click="remove(product.id)" size="sm" round icon="delete" glossy color="red"/>
+            <q-btn unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" size="sm" round glossy color="info" icon="edit" />
+            <q-btn unelevated :to="{ name: 'ProductShow', params: {id: product.id }}" size="sm" round glossy color="teal" icon="visibility" />
           </div>
         </q-item-section>
       </q-item>
