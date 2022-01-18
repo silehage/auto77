@@ -44,7 +44,7 @@ class FrontController extends Controller
         
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,
-            'description' => $$product->description ? $this->createTeaser($product->description) : $this->shop->description,
+            'description' => $product->description ? $this->createTeaser($product->description) : $this->shop->description,
             'featured_image' => $product->assets[0]->src,
             'data' => $product
         ]);
