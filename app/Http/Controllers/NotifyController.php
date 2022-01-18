@@ -37,16 +37,18 @@ class NotifyController extends Controller
         $adminMsg = '';
         $userMsg = '';
 
-        if($this->sendAdminNotificationOrder($order)) {
+        if(!$this->config->is_demo_mode) {
 
-            $adminMsg = 'OK';
-        };
-        
-       
-        if($this->sendUserNotificationOrder($order)) {
+            if($this->sendAdminNotificationOrder($order)) {
+    
+                $adminMsg = 'OK';
+            };
 
-            $userMsg = 'OK';
-        };
+            if($this->sendUserNotificationOrder($order)) {
+    
+                $userMsg = 'OK';
+            };
+        }
 
 
         return response([
