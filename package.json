@@ -1,16 +1,12 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
+        "dev": "npm run serve",
+        "prod": "npm run build",
         "serve": "cd frontend && quasar dev",
         "build": "cd frontend && quasar build -m pwa && cd .. && npm run development",
         "install": "cd frontend && npm install",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
+        "development": "mix"
     },
     "devDependencies": {
         "axios": "^0.21",

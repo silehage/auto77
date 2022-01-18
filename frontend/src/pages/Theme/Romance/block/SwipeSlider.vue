@@ -5,8 +5,6 @@
         <img :src="img.src" style="width:100%;height:auto;"/>
       </swiper-slide>
       <div class="swiper-pagination swiper-pagination-white" slot="pagination"></div>
-      <div class="swiper-button-prev swiper-button-white" slot="button-prev"></div>
-      <div class="swiper-button-next swiper-button-white" slot="button-next"></div>
     </swiper>
   </div>
 </template>

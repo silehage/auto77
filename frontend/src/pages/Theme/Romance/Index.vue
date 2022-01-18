@@ -2,7 +2,7 @@
   <q-page class="bg-grey-1 romance" :class="{'flex flex-center' : loading }">
     <template v-if="!loading">
       <q-header reveal :reveal-offset="10" class="bg-white box-shadow">
-        <q-toolbar class="q-py-sm">
+        <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
           <div class="col q-ml-md row items-center">
             <div class="col">
