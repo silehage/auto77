@@ -1,8 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +14,11 @@ use Illuminate\Support\Facades\Cache;
 |
 */
 
-Route::get('/flush', function() {
-    Cache::flush();
-    
-    return redirect('/');
-});
 Route::get('/', [FrontController::class, 'homepage']);
 Route::get('products', [FrontController::class, 'products']);
 Route::get('products/category/{category}', [FrontController::class, 'productCategory']);
 Route::get('product/{id}', [FrontController::class, 'productDetail']);
-
-Route::get('/{any}', function () {
-    return View::vue();
-})->where('any','.*');
-
+Route::get('posts', [FrontController::class, 'postIndex']);
+Route::get('post/{slug}', [FrontController::class, 'postDetail']);
+Route::get('clear-cache', [FrontController::class, 'clearCache']);
+Route::get('/{any}', [FrontController::class, 'any'])->where('any','.*');

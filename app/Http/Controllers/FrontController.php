@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
@@ -40,11 +41,10 @@ class FrontController extends Controller
     public function productDetail($id)
     {
         $product = Product::with('assets', 'category','reviews')->withCount('reviews')->where('id', $id)->first();
-        $desc = $product->description;
         
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,
-            'description' => $desc ? substr(strip_tags($product->description),0,100) : $this->shop->description,
+            'description' => $$product->description ? $this->createTeaser($product->description) : $this->shop->description,
             'featured_image' => $product->assets[0]->src,
             'data' => $product
         ]);
@@ -55,9 +55,54 @@ class FrontController extends Controller
     {
         return View::vue([
             'title' => $category->title . ' | ' . $this->shop->name,
-            'description' => $categor->description?? $this->shop->description,
+            'description' => $category->description?? $this->shop->description,
             'featured_image' => url('/upload/images/' . $category->filename),
         ]);
 
+    }
+    public function postIndex()
+    {
+        return View::vue([
+            'title' => 'Artikel | ' . $this->shop->name,
+            'description' => $this->shop->description,
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+        ]);
+    }
+    public function postDetail($slug)
+    {
+        $post = Post::where('slug', $slug)->first();
+
+        return View::vue([
+            'title' => $post->title . ' | ' . $this->shop->name,
+            'description' => $this->createTeaser($post->body),
+            'featured_image' => url('/upload/images/' . $post->image),
+        ]);
+    }
+    public function any()
+    {
+        return View::vue([
+            'title' => $this->shop->name,
+            'description' => $this->shop->description,
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+        ]);
+    }
+    public function clearCache()
+    {   
+        Cache::flush();
+        return redirect('/');
+    }
+    protected function createTeaser($html)
+    {
+        $str = strip_tags($html);
+        $num_words = 30;
+        $words = array();
+        $words = explode(" ", $str, $num_words);
+        $shown_string = "";
+
+        $words[count($words)+1] = " ... ";
+
+        $shown_string = implode(" ", $words);
+
+        return $shown_string;
     }
 }
