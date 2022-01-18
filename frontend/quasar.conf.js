@@ -119,7 +119,7 @@ module.exports = function (ctx ) {
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        exclude: ['.htaccess'],
+        exclude: ['.htaccess', 'index.html'],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true
