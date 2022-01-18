@@ -50,7 +50,7 @@ module.exports = function (ctx ) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // env: envparser(),
-      htmlFilename: 'template.blade.php',
+      htmlFilename: 'template.html',
 
       // transpile: false,
 

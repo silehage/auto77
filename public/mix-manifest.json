@@ -3,6 +3,6 @@
     "/config.js": "/config.js",
     "/manifest.json": "/manifest.json",
     "/service-worker.js": "/service-worker.js",
-    "/template.blade.php": "/template.blade.php",
+    "/template.html": "/template.html",
     "/workbox-85cf717f.js": "/workbox-85cf717f.js"
 }
