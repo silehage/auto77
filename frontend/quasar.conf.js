@@ -50,8 +50,8 @@ module.exports = function (ctx ) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // env: envparser(),
-      htmlFilename: 'index.php',
-      ssrPwaHtmlFilename: 'offline.html',
+      htmlFilename: ctx.dev ? 'index.html' : 'index.php',
+      // ssrPwaHtmlFilename: 'offline.html',
 
       // transpile: false,
 

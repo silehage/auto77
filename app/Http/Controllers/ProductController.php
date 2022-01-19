@@ -91,7 +91,7 @@ class ProductController extends Controller
     {
         return response([
             'success' => true, 
-            'results' => Product::with('assets', 'category','reviews')->withCount('reviews')->where('id', $id)->first()
+            'results' => Product::with('assets', 'category','reviews', 'variants.variant_items.variant_item_values')->withCount('reviews')->where('id', $id)->first()
         ],200);
     }
     /**
@@ -147,6 +147,39 @@ class ProductController extends Controller
                 }
             }
 
+            if($request->variants) {
+
+                $variants = json_decode($request->variants, true);
+
+                foreach($variants as $var) {
+
+                    if(count($var['variant_items']) > 0) {
+                        
+                        $variant = $product->variants()->create([
+                             'variant_name' => $var['variant_name']
+                         ]);
+     
+                         foreach($var['variant_items'] as $varItem) {
+     
+                             if(count($varItem['variant_item_values']) > 0) {
+     
+                                 $item = $variant->variant_items()->create([
+                                     'variant_item_label' => $varItem['variant_item_label']
+                                 ]);
+         
+                                 foreach($varItem['variant_item_values'] as $value) {
+         
+                                     $item->variant_item_values()->create($value);
+                                 }
+                             }
+     
+                         }
+                    }
+
+                }
+            }
+
+
             DB::commit();
 
             Cache::forget('products');
@@ -155,7 +188,7 @@ class ProductController extends Controller
             return response([
                 'success' => true, 
                 'message' => 'Berhasil menambah produk',
-                'results' => $product->load('assets')
+                'results' => $product->load('assets','variants.variant_items.variant_item_values')
                 
             ],201);
 
@@ -166,7 +199,7 @@ class ProductController extends Controller
 
             return response([
                 'success' => false, 
-                'message' => $th,
+                'message' => $th->getMessage(),
                 'results' => null
                 
             ],500);

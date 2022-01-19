@@ -91,6 +91,45 @@
           <!-- <jet-input-error :message="form.errors.images" class="mt-2" /> -->
           </section>
       </div>
+      <!-- Start Product Variants -->
+        <div id="variants" v-if="form.variants.length" class="q-gutter-y-md">
+          <div class="text-lg text-weight-medium q-pt-lg">Produk Varian</div>
+          <div v-for="(variation, varIndex) in form.variants" :key="varIndex" class="q-pa-md bg-grey-2">
+            <div class="row items-center justify-between">
+              <div class="text-lg text-weight-medium text-primary">{{ variation.variant_name }}</div>
+              <div class="q-gutter-x-sm">
+                <q-btn padding="3px 6px" dense icon="add" :label="'Varian ' +variation.variant_name" unelevated size="11px" color="primary" @click="handleAddVariantItem(varIndex)"></q-btn>
+                <q-btn padding="3px 6px" dense icon="delete" unelevated size="11px" color="red-6" @click="handleRemoveVariation(varIndex)"></q-btn>
+              </div>
+            </div>
+            <div v-for="(item, itemIndex) in variation.variant_items" :key="itemIndex" class="bg-white q-mt-md">
+              <div class="row items-center justify-between q-pa-md">
+                <div class="text-md text-weight-medium">{{ form.variants[varIndex].variant_items[itemIndex].variant_item_label }}</div>
+                <div class="q-gutter-x-sm">
+                <q-btn padding="3px 6px" icon="add" :label="'Varian ' +variation.variant_name + ' ' + form.variants[varIndex].variant_items[itemIndex].variant_item_label" unelevated size="11px" color="blue-6" @click="handleAddVariantValue(varIndex, itemIndex)"></q-btn>
+                <q-btn padding="3px 6px" icon="delete" unelevated size="11px" color="red-6" @click="handleRemoveVariantItem(varIndex,itemIndex)"></q-btn>
+                </div>
+              </div>
+              <q-list class="bg-grey-3 q-pa-sm">
+                <!-- <div class="text-weight-medium q-pb-sm text-sm">Varian {{ item.variant_item_label }} Item</div> -->
+                <q-item  v-for="(subItem, subItemIndex) in item.variant_item_values" :key="subItemIndex" class="q-pa-md bg-white q-mb-sm">
+                  <q-item-section>
+                    <q-input required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].item_sku" label="Sku"></q-input>
+                    <q-input required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].additional_price" label="Additional Price" type="number" min="0"></q-input>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-input required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].item_label" label="Label"></q-input>
+                    <q-input required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].item_stock" label="Stok" type="number" min="0"></q-input>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-btn icon="delete" unelevated round color="red-6" padding="5px" size="11px" @click="handleRemoveVariantValue(varIndex, itemIndex, subItemIndex)"></q-btn>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </div>
+        </div>
+        <!-- End Product Variants -->
     </div>
     <q-footer>
        <q-btn type="submit" :loading="loading" class="full-width" label="Simpan Data">
@@ -104,12 +143,13 @@
 <script>
 import { mapActions } from 'vuex'
 export default {
+  name: 'ProductFormEdit',
   data () {
     return {
       requiredRules: [
         val => (val && val.length > 0) || 'Field harus diisi.'
       ],
-      product: this.$store.getters['product/getProductById'](parseInt(this.$route.params.id)),
+      product: null,
       form: {
         id: '',
         title: '',
@@ -118,8 +158,12 @@ export default {
         stock: '',
         category_id: '',
         description: '',
+        variants: [],
         images: [],
         del_images: [],
+        del_variant_ids: [],
+        del_variant_item_ids: [],
+        del_variant_value_ids: []
       },
       imagePreview: [],
       oldImages: []
@@ -214,6 +258,7 @@ export default {
       this.form.stock = this.product.stock
       this.form.category_id = this.product.category_id
       this.form.description = this.product.description
+      this.form.variants = this.product.variants
       this.oldImages = this.product.assets
     },
     money(number) {
@@ -221,14 +266,10 @@ export default {
     },
   },
   mounted() {
-    if(!this.product) {
-      this.getProductById(this.$route.params.id).then((response) => {
-        this.product = response.data.results
-        this.setData() 
-      })
-    }else {
+    this.getProductById(this.$route.params.id).then((response) => {
+      this.product = response.data.results
       this.setData() 
-    }
+    })
     if(!this.categories.length) {
       this.getCategories()
     }
@@ -236,7 +277,3 @@ export default {
   },
 }
 </script>
-
-<style>
-
-</style>

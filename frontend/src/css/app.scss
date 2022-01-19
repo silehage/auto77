@@ -250,6 +250,10 @@ ul {
 .flex-1 {
   flex: 1 0;
 }
+.card-medium {
+  width:100%;
+  max-width:400px !important;
+}
 .card-heading {
   font-weight: 600;
   padding:.7rem 1rem;

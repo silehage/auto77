@@ -40,7 +40,7 @@
         </template>
       </q-carousel>
       <q-card flat class="product-detail relative">
-        <q-card-section class="col-md-6 col-12 q-pt-xs">
+        <q-card-section class="">
           <div class="text-h6 text-weight-bold q-mb-sm" v-if="product">{{ product.title }}</div>
           <div class="row items-center justify-between">
           <div class="text-h6 text-weight-medium">{{ moneyIDR(totalPrice) }}</div>
@@ -67,11 +67,21 @@
           <div class="q-mt-sm">
             <div class="text-subtitle1 text-weight-bold q-mb-sm" :style="stockStyle()"
             >Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}</div>
-            <div class="" v-html="product.description"></div>
+          </div>
+           <div id="variations">
+            <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
+              <div class="q-py-md text-weight-medium">Pilih varian {{ variant.variant_name }}</div>
+              <div class="q-gutter-sm">
+                <q-btn unelevated :color="varItemGetColor(varItem.id)" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+              </div>
+            </div>
+            <div v-if="variantItemSelected" class="q-py-md q-gutter-sm">
+              <q-btn :disabled="itemVal.item_stock < 1" :color="varValueGetColor(itemVal.id)" outline v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
+            </div>
           </div>
         </q-card-section>
         <q-card-section>
-  
+          <div class="" v-html="product.description"></div>
         </q-card-section>
         <q-card-section>
           <div class="flex justify-between items-center">
@@ -245,7 +255,9 @@ export default {
         rating: 0
       },
       cartModal: false,
-      alreadyItemModal: false
+      alreadyItemModal: false,
+      variantItemSelected: null,
+      varianValueSelected: null
     }
   },
   computed: {
@@ -288,7 +300,11 @@ export default {
       }
     },
     totalPrice() {
-      return this.product.price*this.quantity
+      if(this.varianValueSelected) {
+
+        return (parseInt(this.product.price)+parseInt(this.varianValueSelected.additional_price)) * this.quantity
+      }
+      return this.product.price * this.quantity
     },
     cartTextButton() {
        if(this.currentStock >= 1) {
@@ -313,6 +329,26 @@ export default {
       }else {
         this.$router.push({name: 'ProductIndex'})
       }
+    },
+    varItemGetColor(id) {
+      if(this.variantItemSelected) {
+        return this.variantItemSelected.id == id ? 'green-6' : 'grey-7'
+      }
+      return 'grey-7'
+    },
+    varValueGetColor(id) {
+      if(this.varianValueSelected) {
+        return this.varianValueSelected.id == id ? 'green-6' : 'grey-7'
+      }
+      return 'grey-7'
+    },
+    handleSelectedItemValue(value) {
+      this.varianValueSelected = value
+      console.log(value);
+    },
+    handleVariantItemSelectted(item) {
+      this.variantItemSelected = item
+      this.varianValueSelected = null
     },
     discountPriceFormat() {
       return (this.subtotal()*this.discount)/100

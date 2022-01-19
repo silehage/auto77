@@ -373,6 +373,16 @@ export default {
       });
     },
     setSubdistrictOption(res){
+        // [{
+        //     "subdistrict_id":"538",
+        //     "province_id":"5",
+        //     "province":"DI Yogyakarta",
+        //     "city_id":"39",
+        //     "city":"Bantul",
+        //     "type":"Kabupaten",
+        //     "subdistrict_name":"Banguntapan"
+        //  }]
+      this.subdistrictOptions = []
       res.forEach(el => {
           let opts = { label:el.subdistrict_name, value: el.subdistrict_id }
           this.subdistrictOptions.push(opts)
