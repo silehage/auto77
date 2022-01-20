@@ -13,8 +13,10 @@ $default   : #0598c0;
   --default-theme: $default;
 }
 .q-dialog__inner--maximized > .max-width,
+.q-dialog__inner--minimized.q-dialog__inner--bottom > .max-width,
 .max-width {
-  width: var(--page-width);
+  max-width: var(--page-width);
+  width:100%;
   margin:auto;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -287,6 +289,9 @@ ul {
   }
   &-md {
     font-size: 17px;
+  }
+  &-md2 {
+    font-size: 19px;
   }
   &-lg {
     font-size: 24px;

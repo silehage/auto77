@@ -1,5 +1,5 @@
 <template>
-  <q-btn @click="btnFavorite" icon="favorite" size="sm" text-color="white" unelevated round :color="getFavoriteStyle()"></q-btn>
+  <q-btn outline @click="btnFavorite" icon="favorite" size="sm" unelevated round :color="getFavoriteStyle()"></q-btn>
 </template>
 
 <script>

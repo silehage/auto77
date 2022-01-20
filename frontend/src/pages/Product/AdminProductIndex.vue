@@ -16,7 +16,7 @@
       <q-list separator>
        <q-item v-for="product in products.data" :key="product.id" class="q-py-md">
 
-         <q-item-section avatar top class="q-pr-sm">
+         <q-item-section avatar class="q-pr-sm">
            <q-img v-if="product.assets" :src="product.assets[0].src" class="bg-white img-product-admin" ratio="1"/>
         </q-item-section>
 
@@ -40,7 +40,7 @@
           <div class="text-grey-8 column q-gutter-y-xs">
             <q-btn unelevated @click="remove(product.id)" size="sm" round icon="delete" glossy color="red"/>
             <q-btn unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" size="sm" round glossy color="info" icon="edit" />
-            <q-btn unelevated :to="{ name: 'ProductShow', params: {id: product.id }}" size="sm" round glossy color="teal" icon="visibility" />
+            <q-btn unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" size="sm" round glossy color="teal" icon="visibility" />
           </div>
         </q-item-section>
       </q-item>

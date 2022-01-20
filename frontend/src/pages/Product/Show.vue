@@ -40,53 +40,53 @@
         </template>
       </q-carousel>
       <q-card flat class="product-detail relative">
-        <q-card-section class="">
-          <div class="text-h6 text-weight-bold q-mb-sm" v-if="product">{{ product.title }}</div>
-          <div class="row items-center justify-between">
-          <div class="text-h6 text-weight-medium">{{ moneyIDR(totalPrice) }}</div>
-          <div class="row q-gutter-md text-h6 items-center">
-            <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
-            <div>{{ quantity }}</div>
-            <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
-          
-          </div>
-
-          </div>
+        <q-card-section class="q-pt-xs">
           <div class="row items-center q-gutter-x-md">
             <q-rating 
               v-model="productRating"
               readonly
-              color="green-5"
+              color="green-8"
               icon="star_border"
               icon-selected="star"
               icon-half="star_half"
               size="sm" 
             />
-            <div v-if="parseFloat(product.rating) > 0" class="text-weight-bold text-primary text-subtitle1 text-md"> {{ product.rating }} / 5 </div>
+            <div v-if="parseFloat(product.rating) > 0" class="text-weight-bold text-primary text-subtitle1 text-md"> {{ product.rating }}</div>
           </div>
-          <div class="q-mt-sm">
-            <div class="text-subtitle1 text-weight-bold q-mb-sm" :style="stockStyle()"
+          <div class="text-h6 text-weight-medium q-mb-sm q-mt-sm" v-if="product">{{ product.title }}</div>
+          <div class="row items-center justify-between">
+          <div class="text-h6 text-weight-bold text-green-8">{{ moneyIDR(totalPrice) }}</div>
+          <div class="row q-gutter-md text-h6 items-center">
+            <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
+            <div>{{ quantity }}</div>
+            <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
+          </div>
+          </div>
+          <div class="q-mt-md">
+            <div class="text-subtitle1 text-weight-medium" :style="stockStyle()"
             >Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}</div>
           </div>
-           <div id="variations">
+           <div id="variations" v-if="product.variants.length" class="">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
-              <div class="q-py-md text-weight-medium">Pilih varian {{ variant.variant_name }}</div>
+              <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
               <div class="q-gutter-sm">
-                <q-btn unelevated :color="varItemGetColor(varItem.id)" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green-6" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+              </div>
+              <div v-if="variantItemSelected" class="q-pt-md q-gutter-sm">
+                <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
+                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green-6'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
               </div>
             </div>
-            <div v-if="variantItemSelected" class="q-py-md q-gutter-sm">
-              <q-btn :disabled="itemVal.item_stock < 1" :color="varValueGetColor(itemVal.id)" outline v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
             </div>
-          </div>
         </q-card-section>
         <q-card-section>
+          <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
           <div class="" v-html="product.description"></div>
         </q-card-section>
         <q-card-section>
           <div class="flex justify-between items-center">
-            <q-btn color="primary" @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
-            <div class="text-weight-medium text-primary text-subtitle2 text-md q-my-xs">
+            <q-btn unelevated color="primary" @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
+            <div class="text-weight-medium text-primary text-subtitle2 q-my-xs">
              {{ product.reviews_count > 0 ? 'Total ' + product.reviews_count +' ulasan' : 'Belum ada ulasan'}}
             </div>
           </div>
@@ -125,7 +125,7 @@
       </div>
     </div>
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
-        <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn>
+        <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
         <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
         <q-btn unelevated rounded :disabled="currentStock == 0" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="col"></q-btn>
     </q-footer>
@@ -198,16 +198,32 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="cartModal">
-      <q-card style="width:100%;max-width:350px;">
-        <q-card-section>
-          <div class="q-mb-sm text-weight-medium text-md">Item berhasil ditambahkan.</div>
-          <div>Akan lanjut ke halaman chekout?</div>
+    <q-dialog 
+    v-model="cartModal"
+    position="bottom"
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    >
+      <q-card flat class="max-width bg-white">
+        <q-linear-progress size="10px" value="100" />
+          <q-card-section>
+            <div class="text-md text-weight-meduim q-mb-sm">Produk berhasil ditambahkan.</div>
+          <q-list>
+            <q-item>
+              <q-item-section avatar>
+                <q-img :src="product.assets[0].src" width="60px" class="rounded-borders"></q-img>
+              </q-item-section>
+              <q-item-section top>
+                <q-item-label class="text-weight-medium">{{ product.title }}</q-item-label>
+                <q-item-label caption>Anda bisa lanjut kehalaman checkout atau berbelanja kembali</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <div class="flex justify-end q-gutter-x-sm q-pt-sm">
+            <q-btn flat no-caps @click="cartModal = false" label="Berbelanja Lagi" color="primary"></q-btn>
+            <q-btn unelevated no-caps :to="{ name: 'Cart' }" label="Lanjut Checkout" color="primary"></q-btn>
+          </div>
         </q-card-section>
-        <q-card-actions class="justify-end q-gutter-x-sm">
-          <q-btn flat no-caps @click="cartModal = false" label="Belanja Lagi" color="primary"></q-btn>
-          <q-btn unelevated no-caps :to="{ name: 'Cart' }" label="Checkout" color="primary"></q-btn>
-        </q-card-actions>
       </q-card>
     </q-dialog>
     <q-dialog v-model="alreadyItemModal">
@@ -222,6 +238,33 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog 
+      v-model="formVariantModal"
+      position="bottom"
+      transition-show="slide-up"
+      transition-hide="slide-down"
+      >
+      <q-card class="max-width" flat>
+        <q-card-section>
+          <div class="text-weight-medium text-md2 q-mb-sm text-green-8">{{ moneyIDR(totalPrice) }}</div>
+          <div id="variations" v-if="product.variants.length" class="">
+            <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
+              <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
+              <div class="q-gutter-sm">
+                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green-6" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+              </div>
+              <div v-if="variantItemSelected" class="q-pt-md q-gutter-sm">
+                <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
+                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green-6'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
+              </div>
+            </div>
+            </div>
+        </q-card-section>
+        <q-card-section>
+        <q-btn unelevated :disabled="currentStock == 0" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="full-width"></q-btn>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -229,6 +272,7 @@
 import { mapMutations, mapActions } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
 export default {
+  name: 'ProductShow',
   components: { ShoppingCart },
   data () {
     return {
@@ -257,7 +301,8 @@ export default {
       cartModal: false,
       alreadyItemModal: false,
       variantItemSelected: null,
-      varianValueSelected: null
+      varianValueSelected: null,
+      formVariantModal: false
     }
   },
   computed: {
@@ -292,12 +337,32 @@ export default {
       return this.$q.screen.width+'px'
     },
     currentStock() {
-      let hasCart = this.carts.find(el => el.product_id == this.$route.params.id)
+
+      let hasCart = this.carts.find(el => el.sku == this.currentProductSku)
+
       if(hasCart != undefined) {
+        if(this.varianValueSelected) {
+
+          return parseInt(this.varianValueSelected.item_stock)-hasCart.quantity
+        }
        return this.product.stock-hasCart.quantity
+
       } else {
-        return this.product.stock
+        if(this.varianValueSelected) {
+
+          return parseInt(this.varianValueSelected.item_stock)
+        }
+        return this.product.real_stock
       }
+    },
+    isHasVariant() {
+      return this.product.variants.length > 0
+    },
+    currentProductSku() {
+      if(this.varianValueSelected) {
+        return this.varianValueSelected.item_sku
+      }
+      return this.product.id
     },
     totalPrice() {
       if(this.varianValueSelected) {
@@ -317,12 +382,12 @@ export default {
         return 'primary'
       }
       return 'grey-7'
-    }
-   
+    },
+
   },
   methods: {
     ...mapMutations('product',['ADD_REMOVE_TO_FAVORITE']),
-    ...mapActions('product', ['getProductById', 'loadProductReview', 'addProductReview']),
+    ...mapActions('product', ['getProductBySlug', 'loadProductReview', 'addProductReview']),
     backButton() {
       if(window.history.length > 2) {
         window.history.back()
@@ -330,31 +395,28 @@ export default {
         this.$router.push({name: 'ProductIndex'})
       }
     },
+    
     varItemGetColor(id) {
       if(this.variantItemSelected) {
-        return this.variantItemSelected.id == id ? 'green-6' : 'grey-7'
+        return this.variantItemSelected.id == id ?  false : true
       }
-      return 'grey-7'
+      return true
     },
     varValueGetColor(id) {
       if(this.varianValueSelected) {
-        return this.varianValueSelected.id == id ? 'green-6' : 'grey-7'
+        return this.varianValueSelected.id == id ? false : true
       }
-      return 'grey-7'
-    },
-    handleSelectedItemValue(value) {
-      this.varianValueSelected = value
-      console.log(value);
+      return true
     },
     handleVariantItemSelectted(item) {
       this.variantItemSelected = item
       this.varianValueSelected = null
     },
+    handleSelectedItemValue(value) {
+      this.varianValueSelected = value
+    },
     discountPriceFormat() {
       return (this.subtotal()*this.discount)/100
-    },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
     },
     subQty() {
       if(this.carts.length > 1) {
@@ -379,25 +441,40 @@ export default {
       return this.subtotal()
     },
     stockStyle() {
-      if(this.currentStock > 9 ) return 'color:green'
-      if(this.currentStock <= 5 && this.currentStock > 0) return 'color:#ffa800fc'
-      if(this.currentStock == 0 ) return 'color:red'
+      if(this.currentStock >= 6 ) return 'color:green'
+      if(this.currentStock > 0 && this.currentStock <= 5) return 'color:#ffa800fc'
+      if(this.currentStock <= 0 ) return 'color:red'
     },
     addToCart() {
+      this.formVariantModal = false
      if(! this.session_id) this.makeSessionId()
       this.$store.dispatch('cart/addToCart' , {
         session_id: this.session_id, 
         product_id: this.product.id, 
-        product_stock: this.product.stock, 
-        sku: this.product.id, 
+        product_stock: this.currentStock, 
+        sku: this.currentProductSku, 
         name: this.product.title, 
-        price: this.product.price, 
+        price: this.totalPrice, 
         quantity: this.quantity, 
+        note: this.getCartNote(),
         product_url: this.getRoutePath(), 
         image_url: this.product.assets[0].src, 
         weight: this.product.weight})
     },
     addNewItem() {
+      if(this.isHasVariant) {
+        if(!this.varianValueSelected || !this.variantItemSelected) {
+          if(this.formVariantModal) {
+            this.$q.notify({
+              type: 'info',
+              message: 'Silahkan pilih produk varian terlebih dahulu',
+            })
+          } else {
+            this.formVariantModal = true
+          }
+          return
+        }
+      }
       this.checkCart().then(res => {
         this.addToCart()
         this.cartModal = true
@@ -411,19 +488,38 @@ export default {
       this.cartModal = true
     },
     checkCart() {
+      console.log('carts', this.carts);
       return new Promise((resolve, reject) => {
-        let av = this.carts.filter(el => el.product_id == this.product.id)
-        if(av.length) {
-          reject('ada produk lain')
-        } else {
-          resolve('yes')
-        }
+        let cartAlready;
+
+          if(this.isHasVariant) {
+            cartAlready = this.carts.find(el => el.sku == this.currentProductSku)
+          } else {
+            cartAlready = this.carts.find(el => el.sku == this.product.id)
+          }
+
+          if(cartAlready != undefined) {
+
+            reject('ada produk lain')
+
+          } else {
+
+            resolve('yes')
+          }
+
       })
+    },
+    getCartNote() {
+      let str = ''
+      if(this.isHasVariant) {
+        str += this.product.variants[0].variant_name + ' ' + this.variantItemSelected.variant_item_label + ', ' + this.product.variants[0].variant_item_name + ' ' + this.varianValueSelected.item_label
+      }
+      return str
     },
     getRoutePath() {
       let props = this.$router.resolve({ 
         name: 'ProductShow',
-        params: { id: this.product.id },
+        params: { slug: this.product.slug },
       });
 
       return location.origin + props.href;
@@ -503,16 +599,18 @@ export default {
       })
     },
     getProduct() {
-      let self = this
-      this.getProductById(this.$route.params.id).then(response => {
+      this.getProductBySlug(this.$route.params.slug).then(response => {
         if(response.status == 200) {
-          self.product = response.data.results
-          self.ready = true
+          this.product = response.data.results
+          this.ready = true
+          if(this.isHasVariant) {
+            this.variantItemSelected = this.product.variants[0].variant_items[0];
+          }
         } else {
-          self.$router.push({name: 'ProductIndex'})
+          this.$router.push({name: 'ProductIndex'})
         }
       }).catch(() => {
-        self.$router.push({name: 'ProductIndex'})
+        this.$router.push({name: 'ProductIndex'})
       })
     },
     getRandomNumber() {
@@ -569,9 +667,10 @@ export default {
     }
 
   },
-  created() {
+  mounted() {
       this.getProduct()
       this.getRandomNumber()
+      
   },
   meta() {
     return {

@@ -57,7 +57,7 @@
             icon="shopping_cart" 
             exact
             label="Keranjang" >
-            <q-badge v-if="cartCount > 0" color="primary" floating>{{ cartCount }}</q-badge>
+            <q-badge v-if="cartCount > 0" color="pink" floating>{{ cartCount }}</q-badge>
           </q-route-tab>
 
            <q-tab 

@@ -15,7 +15,7 @@
      <template v-if="!products.available">
       <div class="column items-center">
         <p class="text-grey-8 text-weight-bold text-center">Tidak ada produk favorit</p>
-        <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="dark"
+        <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary" unelevated
             icon="keyboard_backspace" label="kembali kehalaman produk" no-caps/>
       </div>
     </template>

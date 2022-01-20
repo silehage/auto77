@@ -49,7 +49,10 @@
                 <th align="right">Harga</th>
               </tr>
               <tr v-for="(item, index) in invoice.items" :key="index">
-                <td class="">{{ item.name }}</td>
+                <td class="">
+                  <div>{{ item.name }}</div>
+                  <div class="text-caption tet-grey-6">{{ item.note }}</div>
+                </td>
                 <td>{{ item.quantity }}</td>
                 <td align="right">{{ moneyIDR(item.price) }}</td>
               </tr>

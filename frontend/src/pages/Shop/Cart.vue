@@ -13,14 +13,15 @@
     <div v-if="carts.length" class="q-py-md">
       <q-list class="bg-white" separator>
         <q-item v-for="cart in carts" :key="cart.sku">
-          <q-item-section side top>
-           <q-img :src="cart.image_url" style="width:100px;height:100px;"></q-img>
+          <q-item-section side>
+           <q-img :src="cart.image_url" style="width:80px;height:80px;"></q-img>
           </q-item-section>
           <q-item-section>
             <div class="col">
               <div class="text-weight-bold">{{ cart.name }}</div>
-              <div class="text-grey-7"><span class="text-weight-bold">{{ cart.quantity }} x</span> {{  moneyIDR(cart.price) }}</div>
-              <div class="text-grey-7">Subtotal: {{ moneyIDR(cart.quantity*cart.price) }}</div>
+              <div class="text-grey-7 q-mb-xs">{{ cart.note }}</div>
+              <div class="text-grey-7"><span class="text-weight-bold" style="min-width:100px;display:inline-block;">Harga </span> : {{  moneyIDR(cart.price) }}</div>
+              <div class="text-grey-7"><span class="text-weight-bold" style="min-width:100px;display:inline-block;">Subtotal </span> : {{ moneyIDR(cart.quantity*cart.price) }}</div>
               <div class="q-gutter-x-sm">
                 <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
                 <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
@@ -33,19 +34,10 @@
           </q-item-section>
         </q-item>
       </q-list>
-        <div class="q-pa-md row text-right bg-grey-1">
-          <q-space />
-          <table style="font-size:17px;" class="text-primary text-weight-medium">
-            <tr>
-              <th align="right">Total Order :</th>
-              <th>{{ moneyIDR(total()) }}</th>
-            </tr>
-          </table>
-        </div>
     </div>
     <div v-if="!carts.length" class="column items-center">
       <p class="text-grey-8 text-weight-bold text-center">Keranjang belanja anda masih kosong!</p>
-      <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="dark"
+      <q-btn unelevated :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary"
         icon="keyboard_backspace" label="kembali berbelanja" no-caps/>
     </div>
     <q-dialog v-model="directCheckoutModal" persistent>
@@ -62,6 +54,15 @@
       <login-block @onResponse="onResponse" @onClose="loginModal = false"/>
     </q-dialog>
     <q-footer v-if="carts.length" class="bg-white q-pa-md">
+      <div class="q-pb-sm row text-right justify-end">
+        <table style="font-size:17px;" class="text-green-7 text-weight-medium">
+          <tr>
+            <td align="right">Total Order</td>
+            <td>:</td>
+            <th>{{ moneyIDR(total()) }}</th>
+          </tr>
+        </table>
+        </div>
       <q-btn v-if="isCanChekout" unelevated @click="checkout" color="primary" class="full-width" no-caps>
         <svg
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -171,21 +172,21 @@ export default {
       }
     },
     incrementQty(cart) {
-      if(cart.quantity >= cart.product_stock) return
-      let qty = cart.quantity+1
+      if(parseInt(cart.quantity) >= parseInt(cart.product_stock)) return
+      let qty = parseInt(cart.quantity)+1
       if(!this.session_id) return
       this.$store.dispatch('cart/updateCart', { 
-        product_id: cart.product_id, 
+        sku: cart.sku, 
         quantity: qty, 
         session_id: this.session_id
       })
     },
     decrementQty(cart) {
-      if(cart.quantity <=1 ) return
-      let qty = cart.quantity-1
+      if(parseInt(cart.quantity) <= 1 ) return
+      let qty = parseInt(cart.quantity)-1
       if(!this.session_id) return
       this.$store.dispatch('cart/updateCart', { 
-        product_id: cart.product_id, 
+        sku: cart.sku, 
         quantity: qty, 
         session_id: this.session_id
       })
@@ -205,7 +206,7 @@ export default {
     },
     removeCart(cart) {
       this.$store.dispatch('cart/removeCart', {
-        product_id: cart.product_id, 
+        sku: cart.sku, 
         session_id: cart.session_id
       })
     },

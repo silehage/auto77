@@ -20,5 +20,6 @@ class Cart extends Model
         'product_url',
         'product_stock',
         'product_id',
+        'note'
     ];
 }

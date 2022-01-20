@@ -53,9 +53,6 @@ export default {
   },
   methods: {
     ...mapActions('product', ['getProductsByCategory']),
-    show(id) {
-      this.$router.push({name: 'ProductShow', params: {id: id}})
-    },
     backButton() {
       if(window.history.length > 2) {
         window.history.back()

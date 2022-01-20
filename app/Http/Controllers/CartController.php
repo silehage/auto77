@@ -41,7 +41,7 @@ class CartController extends Controller
             'product_stock' => 'required',
         ]);
 
-        $cart = Cart::where('session_id', $sessId)->where('product_id', $request->product_id)->first();
+        $cart = Cart::where('session_id', $sessId)->where('sku', $request->sku)->first();
 
         if($cart) {
             $cart->quantity += $request->quantity;
@@ -60,6 +60,7 @@ class CartController extends Controller
                 'product_url' => $request->product_url,
                 'product_stock' => $request->product_stock,
                 'product_id' => $request->product_id,
+                'note' => $request->note
             ]);
         }
 
@@ -77,7 +78,7 @@ class CartController extends Controller
             ], 500);
         }
 
-        $cart = Cart::where('session_id', $sessId)->where('product_id', $request->product_id)->first();
+        $cart = Cart::where('session_id', $sessId)->where('sku', $request->sku)->first();
 
         if($cart) {
             
@@ -97,7 +98,7 @@ class CartController extends Controller
 
     public function destroy(Request $request)
     {
-        Cart::where('product_id', $request->product_id)->where('session_id', $request->session_id)->delete();
+        Cart::where('sku', $request->sku)->where('session_id', $request->session_id)->delete();
 
         Cart::where('created_at', '<', Carbon::now()->subDays(3))->delete();
 

@@ -13,7 +13,8 @@ class ProductVariantValue extends Model
         'item_sku',
         'item_label',
         'additional_price',
-        'item_stock'
+        'item_stock',
+        'product_id'
     ];
 
     public $timestamps = false;

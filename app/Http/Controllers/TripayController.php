@@ -158,11 +158,6 @@ class TripayController extends Controller
                     'note' => $data->note
                 ]);
 
-                foreach($invoice->items as $item) {
-                    DB::table('products')->where('id', $item->product_id)->decrement('stock', $item->quantity);
-                }
-
-
                 return response()->json([
                     'success' => true
                     ]);

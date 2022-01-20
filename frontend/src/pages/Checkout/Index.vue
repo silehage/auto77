@@ -290,7 +290,7 @@ export default {
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)
-            }, 28000)
+            }, 8000)
 
             if(this.isCod) {
   

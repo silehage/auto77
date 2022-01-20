@@ -87,7 +87,14 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
+    {
+        return response([
+            'success' => true, 
+            'results' => Product::with('assets', 'category','reviews', 'variants.variant_items.variant_item_values')->withCount('reviews')->where('slug', $slug)->first()
+        ],200);
+    }
+    public function productById($id)
     {
         return response([
             'success' => true, 
@@ -109,6 +116,8 @@ class ProductController extends Controller
             'stock' => 'required|numeric',
             'description' => 'required',
             'images' => 'required'
+        ], [
+            'title.unique' => 'Nama produk sudah digunakan'
         ]) ;
 
         $path = public_path('/upload/images');
@@ -120,10 +129,11 @@ class ProductController extends Controller
         DB::beginTransaction();
         
         try {
+            $slug = Str::slug($request->title);
             $product = new Product();
 
             $product->title = $request->title;
-            $product->slug = Str::slug($request->title);
+            $product->slug = $slug;
             $product->price = $request->price;
             $product->stock = $request->stock;
             $product->weight = $request->weight;
@@ -131,9 +141,11 @@ class ProductController extends Controller
             $product->category_id =  $request->category_id;
 
             $product->description = $request->description;
+
+            $product->sku = 'PRD' . Str::random(14);
             
             $product->save();
-            
+
             if($request->images) {
                 foreach($request->images as $file) {
                     
@@ -146,8 +158,11 @@ class ProductController extends Controller
                     ]);
                 }
             }
+            
 
             if($request->variants) {
+                
+                $product->refresh();
 
                 $variants = json_decode($request->variants, true);
 
@@ -156,7 +171,8 @@ class ProductController extends Controller
                     if(count($var['variant_items']) > 0) {
                         
                         $variant = $product->variants()->create([
-                             'variant_name' => $var['variant_name']
+                             'variant_name' => $var['variant_name'],
+                             'variant_item_name' => $var['variant_item_name']
                          ]);
      
                          foreach($var['variant_items'] as $varItem) {
@@ -168,8 +184,9 @@ class ProductController extends Controller
                                  ]);
          
                                  foreach($varItem['variant_item_values'] as $value) {
-         
-                                     $item->variant_item_values()->create($value);
+
+                                    $value['product_id'] = $product->id;
+                                    $item->variant_item_values()->create($value);
                                  }
                              }
      
@@ -267,6 +284,44 @@ class ProductController extends Controller
 
             $product->save();
 
+            
+            if($request->variants) {
+
+                $product->variants()->delete();
+
+                $variants = json_decode($request->variants, true);
+
+                foreach($variants as $var) {
+
+                    if(count($var['variant_items']) > 0) {
+                        
+                        $variant = $product->variants()->create([
+                             'variant_name' => $var['variant_name'],
+                             'variant_item_name' => $var['variant_item_name']
+                         ]);
+     
+                         foreach($var['variant_items'] as $varItem) {
+     
+                             if(count($varItem['variant_item_values']) > 0) {
+     
+                                 $item = $variant->variant_items()->create([
+                                     'variant_item_label' => $varItem['variant_item_label']
+                                 ]);
+         
+                                 foreach($varItem['variant_item_values'] as $value) {
+
+                                    $value['product_id'] = $product->id;
+                                    $item->variant_item_values()->create($value);
+                                 }
+                             }
+     
+                         }
+                    }
+
+                }
+            }
+
+
             DB::commit();
 
             Cache::forget('products');
@@ -281,7 +336,7 @@ class ProductController extends Controller
             DB::rollBack();
             return response([
                 'success' => false, 
-                'message' => 'Gagal update produk coba ulangi lagi',
+                'message' => $th->getMessage(),
             ], 500);
         }
 

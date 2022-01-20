@@ -28,9 +28,6 @@ export default {
     created_locale: String
   },
   methods: {
-    show(id) {
-      this.$router.push({name: 'ProductShow', params: {id: id}})
-    },
     getTeaser(html) {
       if(html) {
         let strippedString = html.replace(/(<([^>]+)>)/gi, "");

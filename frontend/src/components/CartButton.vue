@@ -99,11 +99,10 @@ export default {
         weight: this.product.weight }) 
     },
     getRoutePath() {
-      let props = this.$router.resolve({ 
-        name: 'ProductShow',
-        params: { id: this.product.id },
-      });
-
+      let props = this.$router.resolve({
+        name: 'ProductShow', 
+        params: { slug: this.product.slug }
+        });
       return location.origin + props.href;
     },
     addNewItem() {

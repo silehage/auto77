@@ -80,7 +80,9 @@ Route::get('getInitialData', [StoreController::class, 'getInitialData']);
 Route::apiResource('posts', PostController::class)->only('index', 'show');
 Route::get('post/{slug}', [PostController::class, 'getPostBySlug']);
 
-Route::get('product/{id}', [ProductController::class, 'show']);
+Route::get('product/{slug}', [ProductController::class, 'show']);
+Route::get('productById/{id}', [ProductController::class, 'productById']);
+
 Route::post('addProductReview', [ProductController::class, 'addProductReview']);
 Route::get('loadProductReview/{id}', [ProductController::class, 'loadProductReview']);
 Route::get('products', [ProductController::class, 'index']);

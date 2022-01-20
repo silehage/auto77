@@ -2,8 +2,8 @@
   <section>
     <div class="row q-pa-xs justify-end items-center q-mt-sm padding-responsive" v-if="products.ready && products.available">
       <div class="q-gutter-x-xs" v-if="config">
-        <q-btn @click="changeViewMode('grid')" unelevated size="sm" :color="config.product_view_mode == 'grid' ? 'primary' : 'grey-8'" dense icon="grid_view"></q-btn>
-        <q-btn @click="changeViewMode('list')" unelevated size="sm" :color="config.product_view_mode == 'list' ? 'primary' : 'grey-8'" dense icon="view_list"></q-btn>
+        <q-btn @click="changeViewMode('grid')" unelevated size="sm" :color="config.product_view_mode == 'grid' ? 'green-7' : 'grey-8'" dense icon="grid_view"></q-btn>
+        <q-btn @click="changeViewMode('list')" unelevated size="sm" :color="config.product_view_mode == 'list' ? 'green-7' : 'grey-8'" dense icon="view_list"></q-btn>
       </div>
     </div>
     <div class="column q-gutter-y-sm" v-if="config && config.product_view_mode == 'list'">

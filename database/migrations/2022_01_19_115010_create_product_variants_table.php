@@ -17,6 +17,7 @@ class CreateProductVariantsTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('variant_name');
+            $table->string('variant_item_name');
         });
     }
 

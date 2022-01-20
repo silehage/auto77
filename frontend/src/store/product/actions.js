@@ -42,7 +42,10 @@ export function getProducts ({ commit }, q = null) {
 }
 
 export function getProductById ({}, id) {
-  return Api().get('product/' + id)
+  return Api().get('productById/' + id)
+}
+export function getProductBySlug ({}, slug) {
+  return Api().get('product/' + slug)
 }
 
 export function productDelete ( { dispatch },  id) {

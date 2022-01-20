@@ -38,9 +38,9 @@ class FrontController extends Controller
             'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
         ]);
     }
-    public function productDetail($id)
+    public function productDetail($slug)
     {
-        $product = Product::with('assets', 'category','reviews')->withCount('reviews')->where('id', $id)->first();
+        $product = Product::with('assets', 'category','reviews')->withCount('reviews')->where('slug', $slug)->first();
         
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,

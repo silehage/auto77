@@ -12,6 +12,7 @@ export function getCarts ({ commit }, id) {
 export function addToCart ({ commit }, payload) {
 
   commit('ADD_TO_CART', payload)
+  
   Api().post('carts/' + payload.session_id, payload)
   .then(response => {
     if(response.status == 200) {

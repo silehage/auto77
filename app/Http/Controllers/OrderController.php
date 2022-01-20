@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Tripay;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Config;
+use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-use Tripay;
+use Illuminate\Support\Facades\DB;
+use App\Models\ProductVariantValue;
 
 class OrderController extends Controller
 {
@@ -96,8 +98,14 @@ class OrderController extends Controller
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
+                    'note' => $item['note']
                 ]);
+
+                Product::where('sku', $item['sku'])->decrement('stock', $item['quantity']);
+                ProductVariantValue::where('item_sku',$item['sku'])->decrement('item_stock', $item['quantity']);
             }
+
+
 
             if($request->payment_type == 'DIRECT' || $request->payment_type == 'COD') {
   

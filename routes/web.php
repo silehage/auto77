@@ -17,7 +17,7 @@ use App\Http\Controllers\FrontController;
 Route::get('/', [FrontController::class, 'homepage']);
 Route::get('products', [FrontController::class, 'products']);
 Route::get('products/category/{category}', [FrontController::class, 'productCategory']);
-Route::get('product/{id}', [FrontController::class, 'productDetail']);
+Route::get('product/{slug}', [FrontController::class, 'productDetail']);
 Route::get('posts', [FrontController::class, 'postIndex']);
 Route::get('post/{slug}', [FrontController::class, 'postDetail']);
 Route::get('clear-cache', [FrontController::class, 'clearCache']);

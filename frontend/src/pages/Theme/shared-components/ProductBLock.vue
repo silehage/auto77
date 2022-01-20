@@ -3,7 +3,13 @@
     <template v-for="item in products.data">
       <div :key="item.id" v-if="item.items.length" class="block-container">
         <div class="block-heading auto-padding-side">
-          <div class="block-title"><h2>{{ item.title }}</h2></div>
+          <div class="row items-end justify-between">
+            <div class="block-title"><h2>{{ item.title }}</h2></div>
+            <q-btn flat no-caps color="primary" padding="4px" :to="{name: 'ProductCategory', params:{ id: item.category_id }}">
+              <span>Semua</span>
+              <q-icon name="arrow_right"></q-icon>
+            </q-btn>
+          </div> 
           <div v-if="item.description" class="block-subtitle">{{ item.description }}</div>
           <div class="banner" v-if="item.banner_src">
             <router-link :to="{name: 'ProductCategory', params:{ id: item.category_id }}">

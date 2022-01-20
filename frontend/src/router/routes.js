@@ -19,7 +19,7 @@ const routes = [
     component: () => import('src/layouts/BlankLayout.vue'),
     children:[
       {
-        path: ':id',
+        path: ':slug',
         name: 'ProductShow',
         component: () => import('pages/Product/Show.vue')
       }

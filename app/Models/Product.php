@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = [];
-    public $appends = ['rating'];
+    public $appends = ['rating', 'real_stock'];
 
     protected $casts = [
         'status' > 'boolean'
@@ -37,5 +37,21 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
+    }
+    public function getRealStockAttribute()
+    {
+
+        if($this->variantItems()->count() > 0) {
+            return $this->variantItems()->sum('item_stock');
+            
+        } else {
+
+            return $this->stock;
+        }
+
+    }
+    public function variantItems()
+    {
+        return $this->hasMany(ProductVariantValue::class);
     }
 }
