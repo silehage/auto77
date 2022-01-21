@@ -55,7 +55,7 @@
           </div>
           <div class="text-h6 text-weight-medium q-mb-sm q-mt-sm" v-if="product">{{ product.title }}</div>
           <div class="row items-center justify-between">
-          <div class="text-h6 text-weight-bold text-green-8">{{ moneyIDR(totalPrice) }}</div>
+          <div class="text-h6 text-weight-bold text-green-8">{{ moneyIDR(parseInt(totalPrice)) }}</div>
           <div class="row q-gutter-md text-h6 items-center">
             <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
             <div>{{ quantity }}</div>
@@ -204,8 +204,8 @@
     transition-show="slide-up"
     transition-hide="slide-down"
     >
-      <q-card flat class="max-width bg-white">
-        <q-linear-progress size="10px" value="100" />
+      <q-card flat class="max-width bg-white" v-if="product">
+        <q-linear-progress size="10px" :value="100" />
           <q-card-section>
             <div class="text-md text-weight-meduim q-mb-sm">Produk berhasil ditambahkan.</div>
           <q-list>
@@ -244,9 +244,9 @@
       transition-show="slide-up"
       transition-hide="slide-down"
       >
-      <q-card class="max-width" flat>
+      <q-card class="max-width" flat v-if="product">
         <q-card-section>
-          <div class="text-weight-medium text-md2 q-mb-sm text-green-8">{{ moneyIDR(totalPrice) }}</div>
+          <div class="text-weight-medium text-md2 q-mb-sm text-green-8">{{ moneyIDR(parseInt(totalPrice)) }}</div>
           <div id="variations" v-if="product.variants.length" class="">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
               <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
@@ -369,7 +369,7 @@ export default {
 
         return (parseInt(this.product.price)+parseInt(this.varianValueSelected.additional_price)) * this.quantity
       }
-      return this.product.price * this.quantity
+      return parseInt(this.product.price) * this.quantity
     },
     cartTextButton() {
        if(this.currentStock >= 1) {
@@ -488,7 +488,6 @@ export default {
       this.cartModal = true
     },
     checkCart() {
-      console.log('carts', this.carts);
       return new Promise((resolve, reject) => {
         let cartAlready;
 
