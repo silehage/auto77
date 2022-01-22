@@ -62,10 +62,8 @@
             <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
           </div>
           </div>
-          <div class="q-mt-md">
             <div class="text-subtitle1 text-weight-medium" :style="stockStyle()"
             >Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}</div>
-          </div>
            <div id="variations" v-if="product.variants.length" class="">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
               <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
@@ -78,10 +76,10 @@
               </div>
             </div>
             </div>
-        </q-card-section>
-        <q-card-section>
-          <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
-          <div class="" v-html="product.description"></div>
+          <div class="q-py-md">
+            <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
+            <div class="" v-html="product.description"></div>
+          </div>
         </q-card-section>
         <q-card-section>
           <div class="flex justify-between items-center">
@@ -207,14 +205,14 @@
       <q-card flat class="max-width bg-white" v-if="product">
         <q-linear-progress size="10px" :value="100" />
           <q-card-section>
-            <div class="text-md text-weight-meduim q-mb-sm">Produk berhasil ditambahkan.</div>
+            <!-- <q-item-label class="text-weight-medium">{{ product.title }}</q-item-label> -->
           <q-list>
             <q-item>
               <q-item-section avatar>
                 <q-img :src="product.assets[0].src" width="60px" class="rounded-borders"></q-img>
               </q-item-section>
               <q-item-section top>
-                <q-item-label class="text-weight-medium">{{ product.title }}</q-item-label>
+                <div class="text-md text-weight-meduim q-mb-sm">Produk berhasil ditambahkan.</div>
                 <q-item-label caption>Anda bisa lanjut kehalaman checkout atau berbelanja kembali</q-item-label>
               </q-item-section>
             </q-item>
@@ -362,7 +360,7 @@ export default {
       if(this.varianValueSelected) {
         return this.varianValueSelected.item_sku
       }
-      return this.product.id
+      return this.product.sku ? this.product.sku : this.product.id
     },
     totalPrice() {
       if(this.varianValueSelected) {
@@ -491,19 +489,15 @@ export default {
       return new Promise((resolve, reject) => {
         let cartAlready;
 
-          if(this.isHasVariant) {
-            cartAlready = this.carts.find(el => el.sku == this.currentProductSku)
-          } else {
-            cartAlready = this.carts.find(el => el.sku == this.product.id)
-          }
+          cartAlready = this.carts.find(el => el.sku == this.currentProductSku)
 
           if(cartAlready != undefined) {
 
-            reject('ada produk lain')
+            reject()
 
           } else {
 
-            resolve('yes')
+            resolve()
           }
 
       })
@@ -667,8 +661,8 @@ export default {
 
   },
   mounted() {
-      this.getProduct()
-      this.getRandomNumber()
+    this.getProduct()
+    this.getRandomNumber()
       
   },
   meta() {
