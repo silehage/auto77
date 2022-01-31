@@ -1,6 +1,6 @@
 <template>
   <div v-if="config && config.is_demo_mode">
-    <div class="fixed-right z-50" style="top:50%;" v-if="!OpenThemeSetting">
+    <div class="fixed-right-center z-50" v-if="!OpenThemeSetting">
       <div class="bg-primary cursor-pointer q-pa-sm" @click="OpenThemeSetting = !OpenThemeSetting">
         <q-spinner-gears
           color="white"

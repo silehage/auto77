@@ -580,6 +580,11 @@ table.table td, table.table td * {
 .q-panel.scroll {
   overflow-x: hidden;
 }
-
+.fixed-right-center {
+  position: fixed;
+  right:0;
+  top:50%;
+  transform: translateY(-20px);
+}
 
 @import 'responsive';
