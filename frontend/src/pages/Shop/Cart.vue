@@ -14,23 +14,23 @@
       <q-list class="bg-white" separator>
         <q-item v-for="cart in carts" :key="cart.sku">
           <q-item-section side>
-           <q-img :src="cart.image_url" style="width:80px;height:80px;"></q-img>
+            <q-btn @click="removeCart(cart)" icon="cancel" flat color="red" padding="3px" ></q-btn>
+          </q-item-section>
+          <q-item-section side>
+           <q-img :src="cart.image_url" style="width:90px;height:90px;"></q-img>
           </q-item-section>
           <q-item-section>
             <div class="col">
               <div class="text-weight-bold">{{ cart.name }}</div>
               <div class="text-grey-7 q-mb-xs">{{ cart.note }}</div>
-              <div class="text-grey-7"><span class="text-weight-bold" style="min-width:100px;display:inline-block;">Harga </span> : {{  moneyIDR(cart.price) }}</div>
-              <div class="text-grey-7"><span class="text-weight-bold" style="min-width:100px;display:inline-block;">Subtotal </span> : {{ moneyIDR(cart.quantity*cart.price) }}</div>
+              <div class="text-grey-7">Harga {{  moneyIDR(cart.price) }}</div>
+              <div class="text-grey-7">Subtotal {{ moneyIDR(cart.quantity*cart.price) }}</div>
               <div class="q-gutter-x-sm">
                 <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
                 <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
                 <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
               </div>
             </div>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn @click="removeCart(cart)" icon="cancel" flat round color="red"></q-btn>
           </q-item-section>
         </q-item>
       </q-list>

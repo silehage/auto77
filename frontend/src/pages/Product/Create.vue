@@ -14,6 +14,7 @@
       <q-form @submit.prevent="submit"> 
         <div class="q-pa-md q-gutter-y-sm">
             <q-input  
+            filled 
             type="text" 
             v-model="form.title" 
             label="Nama Produk"
@@ -24,7 +25,7 @@
             <div class="row items-center q-gutter-x-sm">
               <div class="col">
                 <q-input  
-                filled square
+                filled 
                 mask="#########" 
                 v-model="form.price" 
                 label="Harga"
@@ -34,7 +35,7 @@
               <div class="col">
 
                 <q-input 
-                  filled square
+                  filled 
                   mask="#####" 
                   v-model="form.stock" 
                   label="Stok"
@@ -45,7 +46,7 @@
               <div class="col">
 
               <q-input 
-                filled square
+                filled 
                 mask="#####" 
                 v-model="form.weight" 
                 label="Berat"
@@ -57,7 +58,7 @@
 
             </div>
               <q-select
-              filled square
+              filled 
                 v-model="form.category_id"
                 :options="categories"
                 label="Kategori"
