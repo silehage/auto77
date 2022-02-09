@@ -45,17 +45,31 @@ class ResetStockByOrder extends Command
     {
         $orderExpireds = Order::where('created_at', '<', Carbon::now()->subdays(2))->where('order_status', 'UNPAID')->get();
 
-        foreach($orderExpireds as $order) {
+        if(count($orderExpireds) > 0) {
 
-            $orderItems = OrderItem::where('order_id', $order->id)->get();
+            
+            foreach($orderExpireds as $order) {
 
-            foreach($orderItems as $item) {
+                $orderItems = OrderItem::where('order_id', $order->id)->get();
 
-                ProductVariantValue::where('item_sku', $item->sku)->increment('item_stock', $item->quantity);
-                Product::where('sku', $item->sku)->increment('stock', $item->quantity);
+                foreach($orderItems as $item) {
+
+                    $product = Product::where('sku', $item->sku)->first();
+                    if($product) {
+                        $product->stock += $item->quantity;
+                        $product->save();
+                    } else {
+                        $productVar = ProductVariantValue::where('item_sku', $item->sku)->first();
+                        if($productVar) {
+                            $productVar->item_stock += $item->quantity;
+                            $productVar->save();
+                        }
+
+                    }
+                }
+
+                $order->update(['order_status' => 'CANCELED']);
             }
-
-            $order->update(['order_status' => 'CANCELED']);
 
         }
 
