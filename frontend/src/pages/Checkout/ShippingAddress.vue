@@ -108,7 +108,8 @@
         @input="courierSelected"
         :rules="[val => val && val.length > 0 || 'Wajib dipilih']"
         />
-      <q-list v-if="shippingCost.costs.length">
+      <q-list v-if="shippingCost.ready">
+        <template v-if="shippingCost.costs.length">
         <q-item tag="label" v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)">
           <q-item-section avatar>
             <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'green-6' : 'grey-6'"></q-icon>
@@ -118,6 +119,12 @@
             <q-item-label>Deskripsi : {{ item.description }}</q-item-label>
             <q-item-label>Ongkir : {{ moneyIDR(item.cost[0].value)}}</q-item-label>
             <q-item-label>Etd: {{ item.cost[0].etd }} day</q-item-label>
+          </q-item-section>
+        </q-item>
+        </template>
+        <q-item v-else>
+          <q-item-section>
+            <q-item-label class="text-red-5 q-pa-lg">Ongkos kirim tidak ditemukan, silahkan ganti dengan kurir yang lain</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -200,7 +207,8 @@ export default {
       shippingCost: {
         code:'',
         name: '',
-        costs: []
+        costs: [],
+        ready: false
       },
       subdistrictText: '',
       address1: '',
@@ -487,11 +495,16 @@ export default {
       this.shippingCost.code = ''
       this.shippingCost.name = ''
       this.shippingCost.costs = []
+      this.form.shipping_courier_name = '',
+      this.form.shipping_cost =  0,
+      this.form.shipping_courier_service = ''
     },
     getCost() {
+      this.shippingCost.ready = false
       let self = this
       this.costNotFound = false
       this.clearSelectedCost() 
+      this.updateDataOrder()
       if(this.canGetCost) {
         this.scrollToBottom()
         self.$store.commit('SET_LOADING', true)
@@ -514,7 +527,13 @@ export default {
           this.collectOrder()
 
         })
+        .finally(() => {
+           this.shippingCost.ready = true
+        })
       }
+    },
+    updateDataOrder() {
+      this.$emit('place', this.form)
     },
     collectOrder() {
       this.form.items = this.carts
@@ -522,8 +541,7 @@ export default {
       this.form.total = this.sumGrandTotal()
       this.form.quantity = this.sumQty()
       this.form.weight = this.sumWeight()
-
-      this.$emit('place', this.form)
+      this.updateDataOrder()
 
     },
     setDataGetCost() {
@@ -624,7 +642,7 @@ export default {
       }
       this.saveDataUser()
 
-      this.collectOrder()
+      this.updateDataOrder()
     },
     saveDataUser() { 
       if(this.userAddressData.address

@@ -23,7 +23,7 @@
     <meta name=format-detection content="telephone=no">
     <meta name=msapplication-tap-highlight content=no>
     <meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
-    <link rel=icon type=image/svg+xml href=/icon/favicon.svg>
+    <link rel=icon type=image/png href=/icon/favicon.png>
     <link rel=icon type=image/png sizes=96x96 href=/icon/icon-96x96.png>
     <link rel=icon type=image/png sizes=192x192 href=/icon/icon-192x192.png>
     <link rel=icon type=image/png sizes=256x256 href=/icon/icon-256x256.png>

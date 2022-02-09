@@ -203,7 +203,7 @@ class OrderController extends Controller
 
         } catch (\Throwable $th) {
 
-            // DB::rollBack();
+            DB::rollBack();
 
             return response([
                 'success' => false,
