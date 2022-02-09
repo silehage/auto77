@@ -27,11 +27,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Schema::defaultStringLength(191);
+        Schema::defaultStringLength(191);
 
-        $shop = Cache::rememberForever('shop', function () {
-            return Store::first();
-        });
+        $shop = null;
+
+        try {
+ 
+            $shop = Cache::rememberForever('shop', function () {
+                return Store::first();
+            });
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
 
         View::macro('vue', function($page = []) use ($shop) {

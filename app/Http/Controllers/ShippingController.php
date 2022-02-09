@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Rajaongkir;
@@ -128,6 +129,12 @@ class ShippingController extends Controller
             ]);
 
         } else {
+            $config = Config::first();
+
+            if($config->rajaongkir_type == 'pro') {
+                $data['originType'] = 'city';
+                $data['destinationType'] = 'subdistrict';
+            }
     
             $json = Rajaongkir::cost($data);
     

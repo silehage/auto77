@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Block;
+use App\Models\Config;
 use App\Models\Slider;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Config;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Store as Shop;
@@ -15,6 +15,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 
 class StoreController extends Controller
 {
@@ -74,6 +75,20 @@ class StoreController extends Controller
             if($request->boolean('is_remove_logo')) {
                 if($shop->logo_path){
                     File::delete($shop->logo_path);
+                    File::delete(
+                        'icon/logo.png',
+                        'icon/icon-384x384.png',
+                        'icon/icon-256x256.png',
+                        'icon/icon-192x192.png',
+                        'icon/icon-180x180.png',
+                        'icon/icon-167x167.png',
+                        'icon/icon-152x152.png',
+                        'icon/icon-144x144.png',
+                        'icon/icon-128x128.png',
+                        'icon/icon-120x120.png',
+                        'icon/icon-96x96.png',
+                        'icon/favicon.png'
+                    );
                     $shop->logo_path = NULL;
                 }
             }
@@ -82,12 +97,34 @@ class StoreController extends Controller
                 if($shop->logo_path) {
                     File::delete($shop->logo_path);
                 }
+           
+                $rawFile = Image::make($file);
+        
+                $rawFile->resize(384,384)->encode('png')->save('icon/logo.png');
+                $rawFile->resize(384,384)->encode('png')->save('icon/icon-384x384.png');
+                $rawFile->resize(256,256)->encode('png')->save('icon/icon-256x256.png');
+                $rawFile->resize(192,192)->encode('png')->save('icon/icon-192x192.png');
+                $rawFile->resize(180,180)->encode('png')->save('icon/icon-180x180.png');
+                $rawFile->resize(167,167)->encode('png')->save('icon/icon-167x167.png');
+                $rawFile->resize(152,152)->encode('png')->save('icon/icon-152x152.png');
+                $rawFile->resize(144,144)->encode('png')->save('icon/icon-144x144.png');
+                $rawFile->resize(128,128)->encode('png')->save('icon/icon-128x128.png');
+                $rawFile->resize(120,120)->encode('png')->save('icon/icon-120x120.png');
+                $rawFile->resize(96,96)->encode('png')->save('icon/icon-96x96.png');
+                $rawFile->resize(64,64)->encode('png')->save('icon/favicon.png'); 
 
                 $filename = Str::random(20) . '.' . $file->extension();
                 
                 $file->move($path, $filename);
 
                 $shop->logo_path = 'upload/images/' .$filename;
+
+                $iconPath = public_path('/icon');
+
+                if (!File::isDirectory($iconPath)) {
+        
+                    File::makeDirectory($iconPath, 0777, true, true);
+                }
             }
 
             $shop->save();

@@ -33,8 +33,8 @@
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <div class="full-width q-px-md q-py-xs text-white text-center" :class="isPaid? 'bg-green-7' : 'bg-grey-7'">
-                      {{ isPaid? 'DIBAYAR' : 'BELUM BAYAR' }}
+                    <div class="full-width q-px-md q-py-xs text-white text-center" :class="statusColor(invoice.order_status)">
+                      {{ invoice.status_label }}
                     </div>
                   </td>
                 </tr>
@@ -204,7 +204,6 @@ export default {
       loading: state => state.loading,
       shop: state => state.shop,
       invoice: state => state.order.invoice,
-      invoice: state => state.order.invoice,
     }),
     isPaid() {
       return this.invoice.transaction.status == 'PAID' ? true : false
@@ -227,6 +226,12 @@ export default {
 
   methods: {
     ...mapActions('order', ['getOrderById']),
+    statusColor(status) {
+      if(status == 'UNPAID') return 'bg-grey-6'
+      if(status == 'CANCELED') return 'bg-red-6'
+      if(status == 'COMPLETE') return 'bg-green-6'
+      return 'bg-blue-7'
+    },
     getOrder() {
       let self = this;
       self.$store.commit('SET_LOADING', true)
