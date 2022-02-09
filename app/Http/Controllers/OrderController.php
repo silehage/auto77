@@ -101,8 +101,20 @@ class OrderController extends Controller
                     'note' => $item['note']
                 ]);
 
-                Product::where('sku', $item['sku'])->decrement('stock', $item['quantity']);
-                ProductVariantValue::where('item_sku',$item['sku'])->decrement('item_stock', $item['quantity']);
+                $productData = Product::where('sku', $item['sku'])->first();
+                if($productData) {
+
+                    $productData->stock -= $item['quantity'];
+                    $productData->save();
+
+                } else {
+
+                    $variantData = ProductVariantValue::where('item_sku',$item['sku'])->first();
+                    if($variantData) {
+                        $variantData->item_stock -= $item['quantity'];
+                        $variantData->save();
+                    }
+                }
             }
 
 
