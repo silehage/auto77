@@ -38,6 +38,14 @@ class Rajaongkir
     return $result;
       
   }
+  public function cityAll()
+  {
+
+    $result = $this->curlGet('/city');
+
+    return $result;
+      
+  }
   public function subdistrict($cityId)
   {
 
