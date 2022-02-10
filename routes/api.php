@@ -115,6 +115,8 @@ Route::get('shipping/getProvince', [ShippingController::class, 'getProvince']);
 Route::get('shipping/getCity/{province_id}', [ShippingController::class, 'getCity']);
 Route::get('shipping/getSubdistict/{city_id}', [ShippingController::class, 'getSubdistrict']);
 Route::post('shipping/getCost', [ShippingController::class, 'getCost']);
+Route::post('shipping/waybill', [ShippingController::class, 'waybill']);
+Route::get('shipping/findSubdistrict/{str}', [ShippingController::class, 'findSubdistrict']);
 
 Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');
 Route::get('tripay/callback', function() {

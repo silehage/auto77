@@ -11,13 +11,13 @@
       </q-toolbar>
       </q-header>
       <div class="q-gutter-y-lg q-pt-md" v-if="config">
-        <tampilan :config="config"/>
-        <theming :config="config"/>
-        <checkout-config :config="config" />
-        <shipping :config="config"/>
-        <notification :config="config"/>
-        <tripay :config="config"/>
-        <system-update :config="config"/>
+        <tampilan />
+        <theming />
+        <checkout-config  />
+        <shipping />
+        <notification />
+        <tripay />
+        <system-update />
       </div>
       <q-inner-loading :showing="loading">
       </q-inner-loading>

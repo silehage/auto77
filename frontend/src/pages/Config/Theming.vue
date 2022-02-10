@@ -33,7 +33,6 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  props: ['config'],
   data () {
     return {
       form: {
@@ -45,6 +44,9 @@ export default {
   computed: {
     themes() {
       return this.$store.state.themes
+    },
+    config: function() {
+      return this.$store.state.config
     }
   },
    watch: {

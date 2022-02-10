@@ -332,7 +332,7 @@ export default {
         numb ++
       })
 
-      str += `Subtotal: *${this.moneyIDR(data.order_subtotal)}*\nOngkir (Diantar): *Rp 0*\nTotal: *${this.moneyIDR(data.order_total)}*\n------------------------\n\n*Nama:*\n ${data.customer_name} (${data.customer_whatsapp})\n\n*Alamat:*\n${this.formatAddressCod(data.shipping_address)}\n\n`
+      str += `Subtotal: *${this.moneyIDR(data.order_subtotal)}*\nOngkir (Diantar): *${this.moneyIDR(data.shipping_cost)}*\nTotal: *${this.moneyIDR(data.order_total)}*\n------------------------\n\n*Nama:*\n ${data.customer_name} (${data.customer_whatsapp})\n\n*Alamat:*\n${this.formatAddressCod(data.shipping_address)}\n\n`
 
       str += `Metode Pembayaran: ${data.transaction.payment_name}\n\n`
 

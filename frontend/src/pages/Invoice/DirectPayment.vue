@@ -22,8 +22,8 @@
             <div>
               <!-- <div class="text-md">Metode Pembayaran</div> -->
               <div class="text-md text-weight-bold text-primary">{{ transaction.payment_method.split('_').join(' ') }}</div>
-              <div class="text-grey-7 q-mt-sm">
-                Lakukan pembayaran sebelum melewati batas pembayaran serta pastikan nominal pembayaran sesuai dengan tagihan. Konfirmasi pembayaran dengan megirim bukti transfer setelah melakukan pembayaran.
+              <div class="text-grey-7 q-mt-sm" style="font-size:13.5px;">
+                Lakukan pembayaran sebelum melewati batas pembayaran, Pastikan nominal pembayaran sesuai dengan Tagihan, Konfirmasi pembayaran dengan megirim bukti transfer
             </div>
             </div>     
           </div>
@@ -78,8 +78,8 @@
             </q-expansion-item>
         </template>
       </q-list>
-      <div class="sticky-bottom">
-         <q-btn @click.prevent="kirimBuktiTransfer" unelevated label="Kirim Bukti Transfer via Whatsapp" class="full-width" color="primary" text-color="white" style="border-radius:none;"></q-btn>
+      <div class="sticky-bottom q-pa-md bg-white">
+         <q-btn @click.prevent="kirimBuktiTransfer" unelevated no-caps label="Kirim Bukti Transfer Disini" class="full-width" color="primary" text-color="white" style="border-radius:none;"></q-btn>
       </div>
       </div>
     </div>

@@ -76,7 +76,6 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  props: ['config'],
   data () {
     return {
       form: {
@@ -86,6 +85,11 @@ export default {
         notifypro_interval: 20,
         notifypro_timeout: 4,
       }
+    }
+  },
+  computed: {
+    config: function() {
+      return this.$store.state.config
     }
   },
   mounted() {

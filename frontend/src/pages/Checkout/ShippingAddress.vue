@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="shipping-address">
-      <div class="text-md q-px-sm q-pt-md q-pb-xs">Penerima</div>
+      <div class="text-md q-px-sm q-pb-xs">Penerima</div>
       <div class="q-gutter-y-md q-pa-sm">
         <q-input
         filled
@@ -10,6 +10,7 @@
         label="Nama Penerima"
         v-model="form.customer_name"
         @input="inputFormUser"
+        debounce="500"
         />
         <q-input
         v-if="canEmail"
@@ -21,6 +22,7 @@
         label="Alamat Email"
         v-model="form.customer_email"
         @input="inputFormUser"
+        debounce="500"
         />
         <q-input
         label="No ponsel / Whatsapp"
@@ -31,69 +33,81 @@
         @change="checkInputPhone"
         placeholder="08XXXXXXXXXXXX"
         @input="inputFormUser"
+        debounce="500"
         />
         </div>
-        <div class="flex justify-between q-px-sm q-pt-md q-pb-xs items-center">
-          <div class="text-md">Alamat</div>
-          <q-btn v-if="readyAddressBlock" no-caps unelevated rounded color="blue-7" size="12px" padding="4px 12px" label="Edit Alamat" @click="changeNewAddress"></q-btn>
-        </div>
-        <template v-if="!readyAddressBlock">
-        <div class="q-gutter-y-md q-pa-sm">
-        <q-select 
-        filled
-        square
-        stack-label
-        label="Pilih Provinsi"
-        :options="provinceOptions"  
-        v-model="province_id" 
-        emit-value
-        map-options
-        @input="provinceSelected"
-        />
-        <q-select 
-          filled
-          square
-          stack-label
-          :disable="!province_id"
-          label="Pilih Kabupaten / Kota"
-          :options="cityOptions"  
-          v-model="city_id" 
-          emit-value
-          map-options
-          @input="citySelected"
-        />
-        <q-select 
-          v-if="config && config.rajaongkir_type == 'pro'"
-          filled
-          square
-          stack-label
-          :disable="!city_id"
-          label="Pilih Kecamatan / Subdistrict"
-          :options="subdistrictOptions"  
-          v-model="subdistrict_id" 
-          emit-value
-          map-options
-          @input="subdistrictSelected"
-        />
-        <q-input v-if="config && config.rajaongkir_type == 'starter' || config && config.rajaongkir_type == 'basic'" filled
-        square
-        stack-label v-model="subdistrictText" label="Kecamatan" @input="setAddress"/>
-        <q-input filled
-        square
-        stack-label v-model="address1" label="Alamat" @input="setAddress"/>
+        <div class="q-px-sm q-pt-md q-pb-xs">
+            <div class="text-md q-pb-md">Pengiriman</div>
+            <template v-if="!readyAddressBlock">
+              <div class="q-gutter-y-md q-mb-md">
+                <q-list v-if="subdistrictSelected">
+                  <q-item class="bg-grey-2">
+                    <q-item-section>{{ subdistrictSelected.subdistrict_name }} - {{ subdistrictSelected.type }} {{ subdistrictSelected.city }}, {{ subdistrictSelected.province }}</q-item-section>
+                    <q-item-section side>
+                      <q-btn flat no-caps color="red" @click="changeAddress">
+                  <q-icon name="close" size="19px"></q-icon>
+                  <span>Ganti</span>
+                  </q-btn>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+                <div v-else>
+                  
+                  <q-input filled placeholder="Ketik kecamatan tujuan" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"></q-input>
+                  <transition
+                      appear
+                      enter-active-class="animated fadeIn"
+                      leave-active-class="animated fadeOut"
+                    >
+                    <div class="relative bg-grey-1" v-show="isSearching || searchReady">
+                      <q-list style="min-height:70px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
+                        <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
+                          <q-item-section>
+                            <q-item-label>{{ item.subdistrict_name }} - {{ item.type }} {{ item.city }}</q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </q-list>
+                      <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
+                      <q-inner-loading :showing="isSearching"></q-inner-loading>
+                    </div>
+                  </transition>
+                </div>
+                <q-input v-if="subdistrictSelected" filled square stack-label v-model="addressTemp" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="200"/>
 
-        <div class="q-pa-md bg-grey-2" v-if="form.address">
-          <div class="label-text q-mb-sm">Alamat</div>
-          <div v-html="form.address"></div>
+              </div>
+            </template>
+            <transition
+              appear
+              enter-active-class="animated fadeIn"
+              leave-active-class="animated fadeOut"
+            >
+            <div v-if="form.address">
+              <div class="flex justify-between items-center q-pb-sm"> 
+                <div class="text-grey-7">Detil Alamat Pengiriman</div>
+                <q-btn flat v-if="readyAddressBlock" no-caps unelevated color="blue-7" padding="2px 12px" label="Edit Alamat" @click="changeNewAddress"></q-btn>
+              </div>
+              <div class="q-pa-md bg-grey-2" v-html="form.address"></div>
+            </div>
+            </transition>
         </div>
-        </div>
-      </template>
-      <template v-if="readyAddressBlock">
-        <ready-address :user="userAddressData"/>
-      </template>
      
     </div>
     <div class="text-md q-px-sm q-pt-md q-pb-xs">Kurir</div>
+    <div id="cod" v-if="codItem" class="q-mb-md">
+      <div class="q-px-sm q-pb-xs text-grey-7">Pengiriman via COD tersedia</div>
+      <q-list class="q-pa-sm">
+        <q-item @click="selectCostCod(codItem)" clickable>
+          <q-item-section avatar>
+            <q-icon :name="isSelectedCostCod ? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCostCod ? 'green-6' : 'grey-6'"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ codItem.subdistrict_name }} - {{ codItem.type }} {{ codItem.city }} {{ parseInt(codItem.price) > 0 }}</q-item-label>
+            <q-item-label>Ongkir : {{ (codItem.price && parseInt(codItem.price) > 0) ? moneyIDR(parseInt(codItem.price)) : 'Gratis'}} </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </div>
+    <div class="q-px-sm q-pb-xs text-grey-7">Pengiriman via Ekspedisi</div>
     <div id="courier" ref="courier" class="q-pa-sm">
       <q-select 
         :disable="!canSelectCourier"
@@ -110,7 +124,7 @@
         />
       <q-list v-if="shippingCost.ready">
         <template v-if="shippingCost.costs.length">
-        <q-item tag="label" v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)">
+        <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable>
           <q-item-section avatar>
             <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'green-6' : 'grey-6'"></q-icon>
           </q-item-section>
@@ -130,7 +144,7 @@
       </q-list>
       <div ref="courier_skeleton">
       <q-list v-if="loading" >
-        <q-item tag="label" v-for="i in 3" :key="i">
+        <q-item v-for="i in 3" :key="i">
           <q-item-section avatar top>
             <div class="q-pa-sm">
             <q-skeleton width="20px" height="20px" class="round"></q-skeleton>
@@ -146,6 +160,7 @@
       </q-list>
       </div>
     </div>
+    
     <q-dialog v-model="useDataUserPrompt">
         <q-card style="max-width:400px;">
           <q-card-section>
@@ -163,7 +178,6 @@
 
 <script>
 import { Api } from 'boot/axios'
-import readyAddress from './ReadyAddress.vue'
 export default {
   name: 'ShippingAddressBlock',
   props: {
@@ -176,13 +190,13 @@ export default {
       default: false
     }
   },
-  components: { readyAddress },
   data() {
     return {
       costNotFound: false,
       readyAddressBlock: false,
       useDataUserPrompt: false,
       isSelectedCost: null,
+      isSelectedCostCod: null,
       form: {
         user_id: '',
         customer_name:'',
@@ -210,22 +224,17 @@ export default {
         costs: [],
         ready: false
       },
-      subdistrictText: '',
-      address1: '',
-      provinceOptions: [],
-      province_id: '',
-      cityOptions: [],
-      city_id: '',
-      subdistrictOptions: [],
-      subdistrict_id: '',
+      addressTemp: '',
       userAddressData: {
         address: '',
-        province: '',
-        city:'',
-        city_id: '',
-        subdistrict: '',
         destination: '',
       },
+      searchSubdistrictKey: '',
+      isSearching: false,
+      searchAvailable: true,
+      searchReady:false,
+      subdistrictOptionsData: [],
+      subdistrictSelected: null,
     }
   },
   watch: {
@@ -247,54 +256,53 @@ export default {
         av.forEach(function(el) {
           n.push({label: el.toUpperCase(), value: el})
         })
-        if(this.isCanCod) {
-          n.push( {label: 'COD ( Dikirim langsung oleh penjual )', value: 'cod'})
-        } 
       }
       
       return n
       
     },
-    isCanCod() {
-      if(this.config && this.config.cod_list && this.config.cod_list.length) {
-        let h = this.config.cod_list.filter(el => el.value == this.city_id)
-        if(h.length) {
-          return true
-        } else {
-          return false
-        }
+    config() {
+      return this.$store.state.config
+    },
+    carts() {
+      return this.$store.state.cart.carts
+    },
+    loading() {
+      return this.$store.state.loading
+    },
+    canSelectCourier() {
+      if(this.formGetCost.destination && this.formGetCost.weight && this.formGetCost.origin){
+        return true
       } else {
         return false
       }
     },
-    config() {
-     return this.$store.state.config
-   },
-   carts() {
-     return this.$store.state.cart.carts
-   },
-   loading() {
-     return this.$store.state.loading
-   },
-   canSelectCourier() {
-      if(this.formGetCost.destination && this.formGetCost.weight && this.formGetCost.origin){
-      return true
-    } else {
-      return false
-    }
-   },
-   canGetCost() {
-    if(this.formGetCost.destination && this.formGetCost.courier && this.formGetCost.weight && this.formGetCost.origin){
-      return true
-    } else {
-      return false
-    }
-   }
+    canGetCost() {
+      if(this.formGetCost.destination && this.formGetCost.courier && this.formGetCost.weight && this.formGetCost.origin){
+        return true
+      } else {
+        return false
+      }
+    },
+    codItem() {
+      if(this.subdistrictSelected) {
+        if(this.config && this.config.cod_list && this.config.cod_list.length) {
+          let h = this.config.cod_list.find(el => el.subdistrict_id == this.subdistrictSelected.subdistrict_id)
+          if(h != undefined) {
+            return h
+          } else {
+            return null
+          }
+        } else {
+          return null
+        }
+
+      } else {
+        return null
+      }
+    },
   },
   mounted() {
-    if(!this.provinceOptions.length) {
-      this.getProvince()
-    }
     this.setDataGetCost()
     if(this.user) {
       this.form.user_id = this.user.id
@@ -302,13 +310,23 @@ export default {
       this.form.customer_email = this.user.email
       this.form.customer_whatsapp = this.user.phone ? this.user.phone : ''
     }
+    this.collectOrder()
   },
   methods: {
     inputFormUser() {
       this.saveDataUser()
+      this.emitForm()
+    },
+    selectCostCod(item) {
+      this.isSelectedCost = null
+      this.form.shipping_courier_name = 'COD'
+      this.form.shipping_courier_service = 'COD'
+      this.form.shipping_cost = item.price? parseInt(item.price) : 0
+      this.isSelectedCostCod = item
       this.collectOrder()
     },
     selectCost(item) {
+      this.isSelectedCostCod = null
       this.form.shipping_courier_name = this.shippingCost.name
       this.form.shipping_courier_service = item.service
       this.form.shipping_cost = item.cost[0].value
@@ -318,27 +336,63 @@ export default {
     changeNewAddress() {
       this.formGetCost.courier = ''
       this.formGetCost.destination = ''
-      this.city_id = ''
       this.form.address = ''
       this.readyAddressBlock = false
       this.clearSelectedCost()
-      this.form.shipping_courier_name =''
-      this.form.shipping_cost = 0
-      this.form.shipping_courier_service = ''
-      this.collectOrder()
+      this.emitForm()
+      setTimeout(() => {
+        this.$refs.search.focus()
+      },300)
     },
     closeModalAddress() {
       this.useDataUserPrompt = false
       this.$emit('closeModal')
     },
-    getProvince() {
-      this.provinceOptions = []
-      this.clearSelectedCost() 
-      Api().get('shipping/getProvince').then(response => {
-       if(response.status == 200) {
-         if(response.data.success) {
-           this.setProvinceOption(response.data.results)
-         }else {
+    changeAddress() {
+      this.form.address = '';
+      this.searchSubdistrictKey = '';
+      this.subdistrictSelected = null
+      this.subdistrictOptionsData = []
+      this.clearSelectedCost()
+      this.emitForm()
+      setTimeout(() => {
+        this.$refs.search.focus()
+      },300)
+
+    },
+    selectSubdistrict(item) {
+
+      console.log(item);
+  
+      this.subdistrictSelected = item
+      this.searchSubdistrictKey = ''
+
+      this.formGetCost.destination = item.city_id
+      this.userAddressData.destination = item.city_id
+
+      if(this.config.rajaongkir_type == 'pro') {
+        this.formGetCost.destination = item.subdistrict_id
+        this.userAddressData.destination = item.subdistrict_id
+      }
+
+      // this.getCost()
+      // this.setAddress()
+    },
+    findSubdistrict() {
+      this.subdistrictOptionsData = []
+      this.searchAvailable = true
+      this.searchReady = false
+      if(this.searchSubdistrictKey.length < 3) return
+      this.isSearching = true
+      Api().get('shipping/findSubdistrict/'+ this.searchSubdistrictKey)
+      .then(response => {
+        if(response.status == 200) {
+          if(response.data.success) {
+
+            this.subdistrictOptionsData = response.data.results
+            this.searchAvailable = response.data.results.length ? true : false
+
+          } else {
             this.$q.notify({
               type: 'negative',
               message: response.data.message
@@ -346,76 +400,10 @@ export default {
           }
         }
       })
-    },
-    getCity() {
-      let self = this
-       self.$store.commit('SET_LOADING', true)
-       Api().get('shipping/getCity/'+ this.province_id).then(response => {
-        if(response.status == 200) {
-            if(response.data.success) {
-              this.setCityOption(response.data.results)
-            }else {
-                this.$q.notify({
-                  type: 'negative',
-                  message: response.data.message
-                })
-              }
-          }
-          self.$store.commit('SET_LOADING', false)
-          self.setAddress()
-        }).catch(() => {
-          self.$store.commit('SET_LOADING', false)
-          self.setAddress()
-        })
-    },
-    setProvinceOption(res){
-      res.forEach(el => {
-          let opts = { label: el.province, value: el.province_id }
-          this.provinceOptions.push(opts)
-        });
-    },
-    setCityOption(res) {
-      res.forEach(el => {
-          let opts = { label:el.type + ' ' + el.city_name, value: el.city_id }
-          this.cityOptions.push(opts)
-      });
-    },
-    setSubdistrictOption(res){
-        // [{
-        //     "subdistrict_id":"538",
-        //     "province_id":"5",
-        //     "province":"DI Yogyakarta",
-        //     "city_id":"39",
-        //     "city":"Bantul",
-        //     "type":"Kabupaten",
-        //     "subdistrict_name":"Banguntapan"
-        //  }]
-      this.subdistrictOptions = []
-      res.forEach(el => {
-          let opts = { label:el.subdistrict_name, value: el.subdistrict_id }
-          this.subdistrictOptions.push(opts)
-      });
-    },
-    getSubdistict() {
-      let self = this
-       self.$store.commit('SET_LOADING', true)
-       Api().get('shipping/getSubdistict/'+ this.city_id).then(response => {
-        if(response.status == 200) {
-          if(response.data.success) {
-           this.setSubdistrictOption(response.data.results)
-         }else {
-            this.$q.notify({
-              type: 'negative',
-              message: response.data.message
-            })
-          }
-          }
-          self.$store.commit('SET_LOADING', false)
-          self.setAddress()
-        }).catch(() => {
-          self.$store.commit('SET_LOADING', false)
-          self.setAddress()
-        })
+      .finally(() => {
+         this.isSearching = false
+         this.searchReady = true
+      })
     },
 
     setDataUser() {
@@ -423,61 +411,20 @@ export default {
       let data = JSON.parse(localStorage.getItem('user_data'))
 
       this.form.address = data.address
-
-      this.city_id = data.city_id
-
-      this.userAddressData.province = data.province
-      this.userAddressData.city = data.city
-      this.userAddressData.subdistrict = data.subdistrict
       this.userAddressData.address = data.address
       this.userAddressData.destination = data.destination
-
       this.formGetCost.destination = data.destination
-
-      this.province_id = data.province_id
-      this.city_id = data.city_id
 
       this.useDataUserPrompt = false
       this.readyAddressBlock = true
 
     },
 
-    provinceSelected() {
-      this.cityOptions = []
-      this.city_id = ''
-      this.clearSelectedCost() 
-      if(this.province_id) { 
-        this.getCity();
-      }
-    },
-    citySelected() {
-     if(this.city_id) {
-       this.formGetCost.destination = this.city_id
-       this.userAddressData.destination = this.city_id
-       this.userAddressData.city_id = this.city_id
-     }
-     if(this.config && this.config.rajaongkir_type == 'pro') {
-       this.getSubdistict()
-     } else {
-       this.getCost()
-     }
-     this.setAddress()
-    },
-    subdistrictSelected() {
-      if(this.subdistrict_id) {
-       this.formGetCost.destination = this.subdistrict_id
-       this.userAddressData.destination = this.subdistrict_id
-     }
-     this.getCost()
-     this.setAddress()
-    },
     courierSelected(evt) {
       if(!evt) {
-        this.form.shipping_courier_name = '',
-        this.form.shipping_cost =  0,
-        this.form.shipping_courier_service = ''
+        
         this.clearSelectedCost()
-        this.collectOrder()
+        this.emitForm()
       }
      
       if(evt == 'cod') {
@@ -485,7 +432,7 @@ export default {
         this.form.shipping_courier_service = 'COD'
         this.form.shipping_cost = 0
         this.clearSelectedCost()
-        this.collectOrder()
+        this.emitForm()
       } else {
         this.form.shipping_courier_name = this.formGetCost.courier
         this.getCost()
@@ -495,19 +442,20 @@ export default {
       this.shippingCost.code = ''
       this.shippingCost.name = ''
       this.shippingCost.costs = []
-      this.form.shipping_courier_name = '',
-      this.form.shipping_cost =  0,
+      this.form.shipping_courier_name = ''
+      this.form.shipping_cost =  0
       this.form.shipping_courier_service = ''
+      this.isSelectedCost = null
+      this.isSelectedCostCod = null
     },
     getCost() {
       this.shippingCost.ready = false
-      let self = this
       this.costNotFound = false
       this.clearSelectedCost() 
-      this.updateDataOrder()
+      this.emitForm()
       if(this.canGetCost) {
         this.scrollToBottom()
-        self.$store.commit('SET_LOADING', true)
+        this.$store.commit('SET_LOADING', true)
         Api().post('shipping/getCost', this.formGetCost).then(response => {
           if(response.status == 200) {
             let data = response.data.results[0];
@@ -518,13 +466,13 @@ export default {
             if(!data.costs.length) {
               this.costNotFound = true
             }
-             self.$store.commit('SET_LOADING', false)
-             this.collectOrder()
+             this.$store.commit('SET_LOADING', false)
+             this.emitForm()
           }
         }).catch(() => {
-          self.$store.commit('SET_LOADING', false)
+          this.$store.commit('SET_LOADING', false)
           this.costNotFound = true
-          this.collectOrder()
+          this.emitForm()
 
         })
         .finally(() => {
@@ -532,7 +480,7 @@ export default {
         })
       }
     },
-    updateDataOrder() {
+    emitForm() {
       this.$emit('place', this.form)
     },
     collectOrder() {
@@ -541,7 +489,7 @@ export default {
       this.form.total = this.sumGrandTotal()
       this.form.quantity = this.sumQty()
       this.form.weight = this.sumWeight()
-      this.updateDataOrder()
+      this.emitForm()
 
     },
     setDataGetCost() {
@@ -549,11 +497,9 @@ export default {
       if(this.config && this.config.can_shipping){
         this.formGetCost.origin = this.config.warehouse_id
       } 
-      this.$emit('place', this.form)
+      this.emitForm()
     },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
-    },
+
     checkInputPhone() {
       this.form.customer_whatsapp = this.form.customer_whatsapp.replace(/\D/g,'')
       if(!this.checkPhoneNumber(this.form.customer_whatsapp)) {
@@ -565,7 +511,7 @@ export default {
     },
     sumGrandTotal() {
       if(this.form.shipping_cost) {
-        return this.sumSubtotal() + this.form.shipping_cost
+        return this.sumSubtotal() + parseInt(this.form.shipping_cost)
       } else {
          return this.sumSubtotal()
       }
@@ -574,31 +520,31 @@ export default {
       if(this.carts.length > 1) {
         let q = [];
         this.carts.forEach(el => {
-          q.push(el.quantity)
+          q.push(parseInt(el.quantity))
         });
         return q.reduce((a,b) => a + b)
       }
-      return this.carts[0].quantity
+      return parseInt(this.carts[0].quantity)
     },
     sumSubtotal() {
       if(this.carts.length > 1) {
         let j = [];
         this.carts.forEach(el => {
-          j.push(el.quantity*el.price)
+          j.push(parseInt(el.quantity)*parseInt(el.price))
         });
         return j.reduce((a,b) => a + b)
       }
-      return this.carts[0].quantity * this.carts[0].price
+      return this.carts[0].quantity * parseInt(this.carts[0].price)
     },
     sumWeight() {
       if(this.carts.length > 1) {
         let w = [];
         this.carts.forEach(el => {
-          w.push(el.weight*el.quantity)
+          w.push(parseInt(el.weight)*parseInt(el.quantity))
         });
         return w.reduce((a,b) => a + b)
       }
-      return this.carts[0].quantity * this.carts[0].weight
+      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].weight)
     },
     sumTotal () {
       return this.sumSubtotal()
@@ -613,42 +559,20 @@ export default {
       }
     },
     setAddress() {
-      let province = '', city = '', subdistrict = '';
-      if(this.province_id) {
-        province = this.provinceOptions.find(el => el.value == this.province_id).label
-      }
-      if(this.city_id) {
-        city = this.cityOptions.find(el => el.value == this.city_id).label
-      }
-      if(this.subdistrict_id) {
-        subdistrict = this.subdistrictOptions.find(el => el.value == this.subdistrict_id).label
-      }
-      if(this.subdistrictText) {
-        subdistrict = this.subdistrictText
-      }
-      if(province && city && subdistrict && this.address1) {
-        let addr = `${this.address1} <br>${subdistrict}, ${city}<br>${province}`
+      if(this.addressTemp && this.subdistrictSelected) {
+        let addr =  `${this.addressTemp} <br> ${this.subdistrictSelected.subdistrict_name} - ${this.subdistrictSelected.type} ${this.subdistrictSelected.city} <br> ${this.subdistrictSelected.province}`
         this.form.address = addr
         this.userAddressData.address = addr
-        this.userAddressData.province = province
-        this.userAddressData.city = city
-        this.userAddressData.subdistrict = subdistrict
-        this.userAddressData.customer_name = this.form.customer_name
-        this.userAddressData.customer_whatsapp = this.form.customer_whatsapp
-        this.userAddressData.customer_email = this.form.customer_email
 
-      } else {
-        this.form.address = ''
+        this.saveDataUser()
+
+        this.emitForm()
       }
-      this.saveDataUser()
 
-      this.updateDataOrder()
     },
     saveDataUser() { 
       if(this.userAddressData.address
-      && this.userAddressData.province
-      && this.userAddressData.city
-      && this.userAddressData.city_id) {
+      && this.userAddressData.warehouse_id) {
         localStorage.setItem('user_data', JSON.stringify(this.userAddressData))
       }
     },

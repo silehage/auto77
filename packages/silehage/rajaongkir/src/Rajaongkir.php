@@ -63,6 +63,12 @@ class Rajaongkir
      return $result;
 
   }
+  public function waybill($payload)
+  {
+    $result = $this->curlPost('/waybill', $payload);
+
+    return $result;
+  }
 
   protected function curlGet($endpoint, $payload = [])
   {
@@ -154,17 +160,26 @@ class Rajaongkir
       }else{
         
         $data = json_decode($response);
+
         if($data->rajaongkir->status->code == 200){
+
+          if(isset($data->rajaongkir->results)) {
+            $result = $data->rajaongkir->results;
+          } else if(isset($data->rajaongkir->result)) {
+            $result = $data->rajaongkir->result;
+          } else {
+            $result = [];
+          }
 
           return json_encode([
             'success' => true,
-            'results' => $data->rajaongkir->results
+            'results' => $result
           ]);
 
         } else {
           return json_encode([
             'success' => false,
-            'message' => $data->status->description,
+            'message' => $data->rajaongkir->status->description,
         ]);
       }
     }

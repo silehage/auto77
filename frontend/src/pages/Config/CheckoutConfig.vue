@@ -34,13 +34,17 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  props: ['config'],
   data() {
     return {
       form: {
         is_whatsapp_checkout: false,
         is_guest_checkout: true
       }
+    }
+  },
+  computed: {
+    config: function() {
+      return this.$store.state.config
     }
   },
   mounted() {

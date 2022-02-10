@@ -31,13 +31,17 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  props: ['config'],
   data() {
     return {
       form: {
         telegram_bot_token: '',
         telegram_user_id: ''
       }
+    }
+  },
+  computed: {
+    config: function() {
+      return this.$store.state.config
     }
   },
   mounted() {

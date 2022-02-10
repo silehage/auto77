@@ -362,6 +362,13 @@ export default {
       }
       return this.product.sku ? this.product.sku : this.product.id
     },
+    realPrice() {
+      if(this.varianValueSelected) {
+
+        return (parseInt(this.product.price)+parseInt(this.varianValueSelected.additional_price))
+      }
+      return parseInt(this.product.price)
+    },
     totalPrice() {
       if(this.varianValueSelected) {
 
@@ -452,7 +459,7 @@ export default {
         product_stock: this.currentStock, 
         sku: this.currentProductSku, 
         name: this.product.title, 
-        price: this.totalPrice, 
+        price: this.realPrice, 
         quantity: this.quantity, 
         note: this.getCartNote(),
         product_url: this.getRoutePath(), 

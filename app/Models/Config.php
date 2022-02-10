@@ -59,7 +59,8 @@ class Config extends Model
         'is_payment_gateway' => 'boolean',
         'is_whatsapp_checkout' => 'boolean',
         'is_guest_checkout' => 'boolean',
-        'cod_list' => 'array'
+        'cod_list' => 'array',
+        'warehouse_address' => 'object'
     ];
 
 

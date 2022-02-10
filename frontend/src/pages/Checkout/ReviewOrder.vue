@@ -75,12 +75,12 @@
           </table>
         </div>
     </fieldset>
-    <fieldset class="q-mt-lg" v-if="form.shipping_courier_name != 'COD'">
+    <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Pembayaran</legend>
         <div class="row q-gutter-sm">
           <template v-if="form.payment_method == 'COD'">
           <div class="box-shadow payment-list is-selected">
-            <div class="text-weight-bold text-h5 text-center image">COD</div>   
+            <div class="text-weight-bold text-h5 text-center">COD</div>   
             <div class="text-center name q-pa-xs">Bayar Ditempat</div>   
           </div>
           </template>

@@ -39,7 +39,6 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  props: ['config'],
   data () {
     return {
       tripayModes: ['sanbox', 'production'],
@@ -50,6 +49,11 @@ export default {
         tripay_merchant_code: '',
         is_payment_gateway: false
       },
+    }
+  },
+  computed: {
+    config: function() {
+      return this.$store.state.config
     }
   },
   mounted() {

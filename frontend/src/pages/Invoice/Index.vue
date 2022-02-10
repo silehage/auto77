@@ -69,10 +69,10 @@
                   <td>:</td>
                   <td align="right">{{ moneyIDR(invoice.shipping_cost) }}</td>
                 </tr>
-                <tr>
+                <tr v-if="invoice.order_unique_code">
                   <td align="right">Kode Unik</td>
                   <td>:</td>
-                  <td align="right">- {{ invoice.order_unique_code ? invoice.order_unique_code : '-' }}</td>
+                  <td align="right">- {{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr>
                   <th align="right">Total</th>
@@ -227,7 +227,7 @@ export default {
   methods: {
     ...mapActions('order', ['getOrderById']),
     statusColor(status) {
-      if(status == 'UNPAID') return 'bg-grey-6'
+      if(status == 'UNPAID') return 'bg-grey-8'
       if(status == 'CANCELED') return 'bg-red-6'
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'
