@@ -159,7 +159,7 @@ export default {
   },
   mounted() {
     if(!this.carts.length) {
-      this.$router.back()
+      this.$router.push({ name: 'Cart'})
     }
     if(this.config && this.config.is_payment_gateway && ! this.paymentChanels.paymentGateway.length) {
       this.getPaymentChanel()

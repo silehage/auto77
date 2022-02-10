@@ -149,6 +149,8 @@ class ShippingController extends Controller
             "weight"        => 'required',
             "courier"       => 'required',
         ]);
+
+        $json = Rajaongkir::cost($request->all());
         
         $key = http_build_query($data);
 
@@ -160,14 +162,14 @@ class ShippingController extends Controller
             ]);
 
         } else {
-            $config = Config::first();
+            // $config = Config::first();
 
-            if($config->rajaongkir_type == 'pro') {
-                $data['originType'] = 'city';
-                $data['destinationType'] = 'subdistrict';
-            }
+            // if($config->rajaongkir_type == 'pro') {
+            //     $data['originType'] = 'city';
+            //     $data['destinationType'] = 'subdistrict';
+            // }
     
-            $json = Rajaongkir::cost($data);
+            $json = Rajaongkir::cost($request->all());
     
             $obj = json_decode($json);
     

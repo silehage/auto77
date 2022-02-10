@@ -37,14 +37,20 @@
         />
         </div>
         <div class="q-px-sm q-pt-md q-pb-xs">
-            <div class="text-md q-pb-md">Pengiriman</div>
+          <div class="q-pb-md">
+            <div class="text-md q-mb-sm">Alamat</div>
+            <div class="bg-green-1 q-pa-sm text-green-8">
+              <div style="font-size:13px;">Dikirim dari {{ originAddressFormat }}.</div>
+              <div v-if="codAvailable" style="font-size:13px;">Pengiriman ke {{ codAvailable }} bisa diantar (COD)</div>
+            </div>
+          </div>
             <template v-if="!readyAddressBlock">
               <div class="q-gutter-y-md q-mb-md">
                 <q-list v-if="subdistrictSelected">
                   <q-item class="bg-grey-2">
-                    <q-item-section>{{ subdistrictSelected.subdistrict_name }} - {{ subdistrictSelected.type }} {{ subdistrictSelected.city }}, {{ subdistrictSelected.province }}</q-item-section>
+                    <q-item-section>{{ destinationAddressFormat(subdistrictSelected) }}</q-item-section>
                     <q-item-section side>
-                      <q-btn flat no-caps color="red" @click="changeAddress">
+                      <q-btn flat no-caps color="red" @click="clearAddress">
                   <q-icon name="close" size="19px"></q-icon>
                   <span>Ganti</span>
                   </q-btn>
@@ -53,7 +59,7 @@
                 </q-list>
                 <div v-else>
                   
-                  <q-input filled placeholder="Ketik kecamatan tujuan" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"></q-input>
+                  <q-input filled square placeholder="Ketik kecamatan tujuan" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"></q-input>
                   <transition
                       appear
                       enter-active-class="animated fadeIn"
@@ -63,7 +69,7 @@
                       <q-list style="min-height:70px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
                         <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
                           <q-item-section>
-                            <q-item-label>{{ item.subdistrict_name }} - {{ item.type }} {{ item.city }}</q-item-label>
+                            <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
                           </q-item-section>
                         </q-item>
                       </q-list>
@@ -72,7 +78,7 @@
                     </div>
                   </transition>
                 </div>
-                <q-input v-if="subdistrictSelected" filled square stack-label v-model="addressTemp" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="200"/>
+                <q-input v-if="subdistrictSelected" filled square stack-label v-model="addressTemp" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="50"/>
 
               </div>
             </template>
@@ -83,7 +89,7 @@
             >
             <div v-if="form.address">
               <div class="flex justify-between items-center q-pb-sm"> 
-                <div class="text-grey-7">Detil Alamat Pengiriman</div>
+                <div class="text-grey-8">Detil Alamat Pengiriman</div>
                 <q-btn flat v-if="readyAddressBlock" no-caps unelevated color="blue-7" padding="2px 12px" label="Edit Alamat" @click="changeNewAddress"></q-btn>
               </div>
               <div class="q-pa-md bg-grey-2" v-html="form.address"></div>
@@ -92,22 +98,24 @@
         </div>
      
     </div>
-    <div class="text-md q-px-sm q-pt-md q-pb-xs">Kurir</div>
+    <div class="q-px-sm q-py-md">
+      <div class="text-md q-pb-xs">Kurir</div>
+    </div>
     <div id="cod" v-if="codItem" class="q-mb-md">
-      <div class="q-px-sm q-pb-xs text-grey-7">Pengiriman via COD tersedia</div>
+      <div class="q-px-sm q-pb-xs">Pengiriman via COD tersedia</div>
       <q-list class="q-pa-sm">
-        <q-item @click="selectCostCod(codItem)" clickable>
+        <q-item @click="selectCostCod(codItem)" clickable class="bg-grey-2">
           <q-item-section avatar>
             <q-icon :name="isSelectedCostCod ? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCostCod ? 'green-6' : 'grey-6'"></q-icon>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ codItem.subdistrict_name }} - {{ codItem.type }} {{ codItem.city }} {{ parseInt(codItem.price) > 0 }}</q-item-label>
+            <q-item-label>{{ destinationAddressFormat(codItem) }}</q-item-label>
             <q-item-label>Ongkir : {{ (codItem.price && parseInt(codItem.price) > 0) ? moneyIDR(parseInt(codItem.price)) : 'Gratis'}} </q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
     </div>
-    <div class="q-px-sm q-pb-xs text-grey-7">Pengiriman via Ekspedisi</div>
+    <div class="q-px-sm q-pb-xs">Pengiriman via Ekspedisi</div>
     <div id="courier" ref="courier" class="q-pa-sm">
       <q-select 
         :disable="!canSelectCourier"
@@ -216,7 +224,7 @@ export default {
         origin: '',
         destination: '',
         weight: '',
-        courier: ''
+        courier: '',
       },
       shippingCost: {
         code:'',
@@ -245,6 +253,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.user
+    },
+    originAddressFormat() {
+      return `${this.config.warehouse_address.city}, ${this.config.warehouse_address.province}`
     },
     couriers() {
       let n = [];
@@ -301,6 +312,16 @@ export default {
         return null
       }
     },
+    codAvailable() {
+      let codStr = []
+      if(this.config.cod_list.length){
+
+        this.config.cod_list.forEach(eld => {
+          codStr.push(`${eld.subdistrict_name}`)
+        })
+      }
+      return codStr.join(', ')
+    }
   },
   mounted() {
     this.setDataGetCost()
@@ -313,6 +334,9 @@ export default {
     this.collectOrder()
   },
   methods: {
+    destinationAddressFormat(obj) {
+      return `${obj.subdistrict_name} - ${obj.type} ${obj.city}, ${obj.province}`
+    },
     inputFormUser() {
       this.saveDataUser()
       this.emitForm()
@@ -348,11 +372,14 @@ export default {
       this.useDataUserPrompt = false
       this.$emit('closeModal')
     },
-    changeAddress() {
+    clearAddress() {
       this.form.address = '';
       this.searchSubdistrictKey = '';
       this.subdistrictSelected = null
       this.subdistrictOptionsData = []
+      this.searchReady = false
+      this.formGetCost.destination = ''
+      this.formGetCost.courier = ''
       this.clearSelectedCost()
       this.emitForm()
       setTimeout(() => {
@@ -361,22 +388,28 @@ export default {
 
     },
     selectSubdistrict(item) {
-
-      console.log(item);
-  
+    
       this.subdistrictSelected = item
       this.searchSubdistrictKey = ''
 
+      this.formGetCost.origin = this.config.warehouse_address.city_id
       this.formGetCost.destination = item.city_id
+
       this.userAddressData.destination = item.city_id
 
       if(this.config.rajaongkir_type == 'pro') {
+
+        this.formGetCost.origin = this.config.warehouse_address.subdistrict_id
         this.formGetCost.destination = item.subdistrict_id
+        this.formGetCost.destinationType = 'subdistrict'
+        this.formGetCost.originType = 'subdistrict'
+
         this.userAddressData.destination = item.subdistrict_id
+
       }
 
-      // this.getCost()
-      // this.setAddress()
+      this.getCost()
+      this.setAddress()
     },
     findSubdistrict() {
       this.subdistrictOptionsData = []
@@ -411,9 +444,20 @@ export default {
       let data = JSON.parse(localStorage.getItem('user_data'))
 
       this.form.address = data.address
+
+      this.formGetCost.destination = data.destination
+      this.formGetCost.origin = this.config.warehouse_address.city_id
+
       this.userAddressData.address = data.address
       this.userAddressData.destination = data.destination
-      this.formGetCost.destination = data.destination
+      
+       if(this.config.rajaongkir_type == 'pro') {
+
+        this.formGetCost.origin = this.config.warehouse_address.subdistrict_id
+        this.formGetCost.destinationType = 'subdistrict'
+        this.formGetCost.originType = 'subdistrict'
+
+      }
 
       this.useDataUserPrompt = false
       this.readyAddressBlock = true
@@ -442,6 +486,7 @@ export default {
       this.shippingCost.code = ''
       this.shippingCost.name = ''
       this.shippingCost.costs = []
+      this.shippingCost.ready = false
       this.form.shipping_courier_name = ''
       this.form.shipping_cost =  0
       this.form.shipping_courier_service = ''
@@ -458,6 +503,8 @@ export default {
         this.$store.commit('SET_LOADING', true)
         Api().post('shipping/getCost', this.formGetCost).then(response => {
           if(response.status == 200) {
+            console.log(response.data.results);
+
             let data = response.data.results[0];
               this.shippingCost.code = data.code
               this.shippingCost.name = data.name
@@ -495,7 +542,15 @@ export default {
     setDataGetCost() {
       this.formGetCost.weight = this.sumWeight();
       if(this.config && this.config.can_shipping){
-        this.formGetCost.origin = this.config.warehouse_id
+
+        this.formGetCost.origin = this.config.warehouse_address.city_id
+
+        if(this.config.rajaongkir_type == 'pro') {
+          this.formGetCost.origin = this.config.warehouse_address.subdistrict_id
+          this.formGetCost.destinationType = 'subdistrict'
+          this.formGetCost.originType = 'subdistrict'
+        }
+
       } 
       this.emitForm()
     },
