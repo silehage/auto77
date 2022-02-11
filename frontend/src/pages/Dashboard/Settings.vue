@@ -57,6 +57,7 @@ export default {
         { label: 'Akun Bank', caption: 'Kelola Akun Bank', path: 'BankIndex', icon: 'account_balance', color: 'blue-7'},
         { label: 'Block', caption: 'Kelola banner, partner dan featured', path: 'AdminBlockIndex', icon: 'space_dashboard', color: 'amber-7'},
         { label: 'Pengaturan', caption: 'Pengaturan Website dan pengiriman', path: 'Config', icon: 'settings', color: 'accent'},
+        { label: 'Manage User', caption: 'kelola user', path: 'UserList', icon: 'group', color: 'teal'},
       ]
     }
   },

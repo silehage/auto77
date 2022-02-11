@@ -46,9 +46,9 @@
           </div>
             <template v-if="!readyAddressBlock">
               <div class="q-gutter-y-md q-mb-md">
-                <q-list v-if="subdistrictSelected">
+                <q-list v-if="address_subdistrict">
                   <q-item class="bg-grey-2">
-                    <q-item-section>{{ destinationAddressFormat(subdistrictSelected) }}</q-item-section>
+                    <q-item-section>{{ destinationAddressFormat(address_subdistrict) }}</q-item-section>
                     <q-item-section side>
                       <q-btn flat no-caps color="red" @click="clearAddress">
                   <q-icon name="close" size="19px"></q-icon>
@@ -78,7 +78,7 @@
                     </div>
                   </transition>
                 </div>
-                <q-input v-if="subdistrictSelected" filled square stack-label v-model="addressTemp" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="50"/>
+                <q-input v-if="address_subdistrict" filled square stack-label v-model="address_street" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="50"/>
 
               </div>
             </template>
@@ -187,7 +187,7 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
-  name: 'ShippingAddressBlock',
+  name: 'ShippingAddress',
   props: {
     canEmail: {
       type: Boolean,
@@ -232,17 +232,17 @@ export default {
         costs: [],
         ready: false
       },
-      addressTemp: '',
+      address_street: '',
       userAddressData: {
-        address: '',
         destination: '',
+        address: ''
       },
       searchSubdistrictKey: '',
       isSearching: false,
       searchAvailable: true,
       searchReady:false,
       subdistrictOptionsData: [],
-      subdistrictSelected: null,
+      address_subdistrict: null,
     }
   },
   watch: {
@@ -296,9 +296,9 @@ export default {
       }
     },
     codItem() {
-      if(this.subdistrictSelected) {
+      if(this.address_subdistrict) {
         if(this.config && this.config.cod_list && this.config.cod_list.length) {
-          let h = this.config.cod_list.find(el => el.subdistrict_id == this.subdistrictSelected.subdistrict_id)
+          let h = this.config.cod_list.find(el => el.subdistrict_id == this.address_subdistrict.subdistrict_id)
           if(h != undefined) {
             return h
           } else {
@@ -375,7 +375,7 @@ export default {
     clearAddress() {
       this.form.address = '';
       this.searchSubdistrictKey = '';
-      this.subdistrictSelected = null
+      this.address_subdistrict = null
       this.subdistrictOptionsData = []
       this.searchReady = false
       this.formGetCost.destination = ''
@@ -389,13 +389,13 @@ export default {
     },
     selectSubdistrict(item) {
     
-      this.subdistrictSelected = item
+      this.address_subdistrict = item
       this.searchSubdistrictKey = ''
 
       this.formGetCost.origin = this.config.warehouse_address.city_id
       this.formGetCost.destination = item.city_id
 
-      this.userAddressData.destination = item.city_id
+      this.userAddressData.destination = item
 
       if(this.config.rajaongkir_type == 'pro') {
 
@@ -403,8 +403,6 @@ export default {
         this.formGetCost.destination = item.subdistrict_id
         this.formGetCost.destinationType = 'subdistrict'
         this.formGetCost.originType = 'subdistrict'
-
-        this.userAddressData.destination = item.subdistrict_id
 
       }
 
@@ -443,21 +441,22 @@ export default {
       
       let data = JSON.parse(localStorage.getItem('user_data'))
 
-      this.form.address = data.address
+      this.address_street = data.address_street
+      this.address_subdistrict = data.address_subdistrict
 
-      this.formGetCost.destination = data.destination
+      this.formGetCost.destination = data.address_subdistrict.city_id
       this.formGetCost.origin = this.config.warehouse_address.city_id
-
-      this.userAddressData.address = data.address
-      this.userAddressData.destination = data.destination
       
        if(this.config.rajaongkir_type == 'pro') {
-
+         
+        this.formGetCost.destination = data.address_subdistrict.subdistrict_id
         this.formGetCost.origin = this.config.warehouse_address.subdistrict_id
         this.formGetCost.destinationType = 'subdistrict'
         this.formGetCost.originType = 'subdistrict'
 
       }
+
+      this.setAddress()
 
       this.useDataUserPrompt = false
       this.readyAddressBlock = true
@@ -503,7 +502,6 @@ export default {
         this.$store.commit('SET_LOADING', true)
         Api().post('shipping/getCost', this.formGetCost).then(response => {
           if(response.status == 200) {
-            console.log(response.data.results);
 
             let data = response.data.results[0];
               this.shippingCost.code = data.code
@@ -614,10 +612,9 @@ export default {
       }
     },
     setAddress() {
-      if(this.addressTemp && this.subdistrictSelected) {
-        let addr =  `${this.addressTemp} <br> ${this.subdistrictSelected.subdistrict_name} - ${this.subdistrictSelected.type} ${this.subdistrictSelected.city} <br> ${this.subdistrictSelected.province}`
+      if(this.address_street && this.address_subdistrict) {
+        let addr =  `${this.address_street} <br> ${this.address_subdistrict.subdistrict_name} - ${this.address_subdistrict.type} ${this.address_subdistrict.city} <br> ${this.address_subdistrict.province}`
         this.form.address = addr
-        this.userAddressData.address = addr
 
         this.saveDataUser()
 
@@ -626,9 +623,11 @@ export default {
 
     },
     saveDataUser() { 
-      if(this.userAddressData.address
-      && this.userAddressData.warehouse_id) {
-        localStorage.setItem('user_data', JSON.stringify(this.userAddressData))
+      if(this.address_street && this.address_subdistrict) {
+        localStorage.setItem('user_data', JSON.stringify({
+          address_street: this.address_street,
+          address_subdistrict: this.address_subdistrict
+        }))
       }
     },
     scrollToBottom () {

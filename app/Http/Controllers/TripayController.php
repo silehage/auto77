@@ -12,19 +12,11 @@ use Tripay;
 
 class TripayController extends Controller
 {
-    protected $apiKey, $privateKey, $merchantCode, $apiUrl;
+    protected $privateKey;
 
     public function __construct()
     {
         $this->apiKey = config('tripay.api_key');
-        $this->privateKey = config('tripay.private_key');
-        $this->merchantCode = config('tripay.merchant_code');
-
-        $this->apiUrl = config('tripay.api_sanbox_url');
-
-        if(config('tripay.mode') == 'production') {
-            $this->apiUrl = config('tripay.api_url');
-        }
         
     }
     public function getPaymentChanels()
@@ -197,8 +189,5 @@ class TripayController extends Controller
 
         return "No action was taken";
     }
-    protected function getSignature($orderRef, $orderTotal)
-    {
-        return hash_hmac('sha256', $this->merchantCode.$orderRef.$orderTotal, $this->privateKey);
-    }
+
 }

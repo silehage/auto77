@@ -35,7 +35,7 @@ class Tripay
   {
     $payload['callback_url'] = route('tripay.callback');
     $payload['expired_time'] = (time()+(24*60*60)); // 24 jam
-    $payload['signature'] = $this->getSignature($payload['merchant_ref'], $payload['amount']);
+    $payload['signature'] = $this->setSignature($payload['merchant_ref'], $payload['amount']);
 
     $result = $this->curlPost('/transaction/create', $payload);
 
@@ -203,7 +203,7 @@ class Tripay
     }
   }
 
-  protected function getSignature($orderRef, $orderTotal)
+  public function setSignature($orderRef, $orderTotal)
   {
       return hash_hmac('sha256', $this->merchant_code.$orderRef.$orderTotal, $this->private_key);
   }

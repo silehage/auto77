@@ -9,5 +9,6 @@ class Province extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $connection = 'rajaongkir';
+    protected $table = 'provinces';
 }

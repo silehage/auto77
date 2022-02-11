@@ -24,25 +24,6 @@ class ShippingController extends Controller
 
         } else {
 
-            // $json = Rajaongkir::province();
-
-            // $obj = json_decode($json);
-
-
-            // if($obj->success == true && count($obj->results) > 0) {
-                
-            //     Cache::forever('provinces', $obj->results);
-
-            //     return response()->json($obj);
-
-            // } else {
-
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => $obj->message
-            //     ]);
-            // }
-
             $data = Province::all();
             Cache::forever('provinces', $data);
 
@@ -69,25 +50,6 @@ class ShippingController extends Controller
 
         } else { 
             
-            // $json = Rajaongkir::city($province_id);
-
-            // $obj = json_decode($json);
-
-
-            // if($obj->success == true && count($obj->results) > 0) {
-
-            //     Cache::forever('city_by_'. $province_id, $obj->results);
-
-            //     return response()->json($obj);
-
-            // } else {
-
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => $obj->message
-            //     ]);
-            // }
-
             $data = City::where('province_id', $province_id)->get();
             Cache::forever('city_by_'. $province_id, $data);
 
@@ -112,24 +74,6 @@ class ShippingController extends Controller
 
         } else { 
 
-            // $json = Subdistrict::subdistrict($city_id);
-            // $obj = json_decode($json);
-
-            
-
-            // if($obj->success == true && count($obj->results) > 0) {
-
-            //     Cache::forever('subdistrict_by_'. $city_id, $obj->results);
-            
-            //     return response()->json($obj);
-
-            // } else {
-
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => $obj->message
-            //     ]);
-            // }
             $data = Subdistrict::where('city_id', $city_id)->get();
             Cache::forever('subdistrict_by_'. $city_id, $data);
 
@@ -149,8 +93,6 @@ class ShippingController extends Controller
             "weight"        => 'required',
             "courier"       => 'required',
         ]);
-
-        $json = Rajaongkir::cost($request->all());
         
         $key = http_build_query($data);
 
@@ -162,13 +104,7 @@ class ShippingController extends Controller
             ]);
 
         } else {
-            // $config = Config::first();
-
-            // if($config->rajaongkir_type == 'pro') {
-            //     $data['originType'] = 'city';
-            //     $data['destinationType'] = 'subdistrict';
-            // }
-    
+   
             $json = Rajaongkir::cost($request->all());
     
             $obj = json_decode($json);
@@ -231,7 +167,11 @@ class ShippingController extends Controller
     public function findSubdistrict($str)
     {
         $str = strip_tags($str);
-        $subdistricts = DB::table('subdistricts')->where('subdistrict_name', 'like', $str.'%')->get();
+        
+        $subdistricts = DB::connection('rajaongkir')
+            ->table('subdistricts')
+            ->where('subdistrict_name', 'like', $str.'%')
+            ->get();
 
         return response()->json([
             'success' => true,

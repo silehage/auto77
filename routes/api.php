@@ -29,52 +29,60 @@ use App\Http\Controllers\TransactionController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->group(function() {
-    Route::get('user', [UserController::class, 'index']);
-    Route::post('user/logout', [UserController::class, 'logout']);
-    Route::post('user/update', [UserController::class, 'update']);
-    
+Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
+    // User
+    Route::get('userList', [UserController::class, 'userList']);
+    Route::get('findUser/{key}', [UserController::class, 'findUser']);
+    // Product
     Route::delete('product/{id}', [ProductController::class, 'destroy']);
     Route::post('product/update', [ProductController::class, 'update']);
     Route::post('product', [ProductController::class, 'store']);
-    
+    // Slider
     Route::post('sliders', [SliderController::class, 'store']);
     Route::delete('sliders/{id}', [SliderController::class, 'destroy']);
     Route::post('update-slider-weight', [SliderController::class, 'updateSliderWeight']);
-    
+    // Category
     Route::apiResource('categories', CategoryController::class)->only('store', 'update', 'destroy');
-    
-    Route::post('refreshToken', [UserController::class, 'refreshToken']);
-
+    // Shop
     Route::post('shop', [StoreController::class, 'update']);
-
+    // Post
     Route::apiResource('posts', PostController::class)->only('store', 'update', 'destroy');
-
+    // Block
     Route::apiResource('blocks', BlockController::class)->only('store', 'update', 'destroy');
+    // Bank
     Route::apiResource('banks', BankController::class)->only('store', 'update', 'destroy');
-
+    // Order
     Route::delete('orders/{id}', [OrderController::class, 'destroy']);
     Route::get('orders', [OrderController::class, 'index']);
     Route::post('searchAdminOrder', [OrderController::class, 'searchAdminOrder']);
     Route::put('orders', [OrderController::class, 'update']);
-    Route::post('filterOrder', [OrderController::class, 'filterOrder']);
     Route::post('updateStatusOrder', [OrderController::class, 'updateStatusOrder']);
-
     Route::post('paymentAccepted/{id}', [OrderController::class, 'paymentAccepted']);
     Route::post('inputResi', [OrderController::class, 'inputResi']);
-    
-    Route::post('config', [ConfigController::class, 'update']);
+    // Config
     Route::get('adminConfig', [ConfigController::class, 'adminConfig']);
-
+    Route::post('config', [ConfigController::class, 'update']);
+    // Update
+    Route::get('update', [UpdateController::class, 'overview']);
     Route::post('update', [UpdateController::class, 'update']);  
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
-
-    Route::get('getCustomerOrders', [OrderController::class, 'getCustomerOrders']);
     
 });
+
+Route::middleware('auth:sanctum')->group(function() {
+    
+    Route::get('user', [UserController::class, 'index']);
+    Route::post('user/logout', [UserController::class, 'logout']);
+    Route::post('user/update', [UserController::class, 'update']);
+    
+    Route::post('filterOrder', [OrderController::class, 'filterOrder']);
+    Route::get('getCustomerOrders', [OrderController::class, 'getCustomerOrders']);
+    Route::post('refreshToken', [UserController::class, 'refreshToken']);
+    
+});
+
 Route::post('orders', [OrderController::class, 'store']);
-Route::get('update', [UpdateController::class, 'overview']);
+
 Route::get('getInitialData', [StoreController::class, 'getInitialData']);
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
@@ -108,6 +116,7 @@ Route::get('orders/{orderRef}', [OrderController::class, 'show']);
 Route::get('transaction/detail',[TransactionController::class, 'show']);
 
 Route::get('banks', [BankController::class, 'index']);
+
 Route::post('searchOrder', [OrderController::class, 'searchOrder']);
 Route::get('getRandomOrder', [OrderController::class, 'getRandomOrder']);
 
@@ -118,12 +127,8 @@ Route::post('shipping/getCost', [ShippingController::class, 'getCost']);
 Route::post('shipping/waybill', [ShippingController::class, 'waybill']);
 Route::get('shipping/findSubdistrict/{str}', [ShippingController::class, 'findSubdistrict']);
 
-Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');
-Route::get('tripay/callback', function() {
-    return abort(404);
-});
-
 Route::get('tripay/payment-chanel',[TripayController::class, 'getPaymentChanels']);
+Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');
 
 Route::get('carts/{sessId}', [CartController::class, 'get']);
 Route::post('carts/{sessId}', [CartController::class, 'store']);

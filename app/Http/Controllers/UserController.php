@@ -10,11 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-      /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         return response([
@@ -70,12 +65,7 @@ class UserController extends Controller
             'results' => $user
         ], 200);
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request)
     {
         $request->validate([
@@ -103,15 +93,33 @@ class UserController extends Controller
 
 
     }
-    /**
-     * Log off
-     *
-     */
+
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
 
         return response('logout', 200);
+    }
+
+    public function userList(Request $request)
+    {
+
+        return response([
+            'success' => true,
+            'results' => User::skip($request->skip)->take($request->take)->latest()->get()
+        ]);
+    }
+    public function findUser($key)
+    {
+        $key = htmlspecialchars($key);
+
+        return response([
+            'success' => true,
+            'results' => User::where('name', 'like', '%' . $key . '%')
+                ->orWhere('email', 'like', '%' . $key . '%')
+                ->orWhere('phone', 'like', '%' . $key . '%')
+                ->get()
+        ]);
     }
     
 }

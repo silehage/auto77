@@ -1,5 +1,5 @@
 <template>
-  <q-page class="">
+  <q-page class="q-pa-sm">
     <q-header class="text-primary bg-white" reveal :reveal-offset="10">
         <q-toolbar>
           <q-btn @click="handleBackButton"

@@ -34,7 +34,8 @@ class UpdateController extends Controller
         } catch (\Throwable $th) {
 
             return response()->json([
-                'sucess' => false
+                'sucess' => false,
+                'message' => $th->getMessage()
             ], 500);
         }
     }
@@ -65,7 +66,8 @@ class UpdateController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'sucess' => false
+                'sucess' => false,
+                'message' => $th->getMessage()
                 ], 500);
         }
     }

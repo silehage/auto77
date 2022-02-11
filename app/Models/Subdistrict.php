@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Subdistrict extends Model
 {
     use HasFactory;
+
+    protected $connection = 'rajaongkir';
+    protected $table = 'subdistricts';
 }

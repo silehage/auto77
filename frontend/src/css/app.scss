@@ -586,5 +586,9 @@ table.table td, table.table td * {
   top:50%;
   transform: translateY(-20px);
 }
-
+@media (min-width: 1440px){
+  .q-footer .q-tab__content, .q-header .q-tab__content {
+      min-width: 50px!important;
+  }
+}
 @import 'responsive';

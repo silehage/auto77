@@ -78,6 +78,7 @@ const routes = [
       { path: 'orders', name: 'OrderIndex', component: () => import('pages/Order/Index.vue')},
       { path: 'order/:order_ref', name: 'AdminOrderShow', component: () => import('pages/Order/Detail.vue')},
       { path: 'banks', name: 'BankIndex', component: () => import('pages/Shop/BankAccount.vue')},
+      { path: 'users', name: 'UserList', component: () => import('pages/Account/UserList.vue')},
     ]
   },
   // Always leave this as last one,
