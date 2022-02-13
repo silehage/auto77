@@ -22,7 +22,7 @@
           </div>
           <div v-if="config && config.is_shippable" class="q-mt-lg">
             <div class="text-grey-8 text-sm q-py-sm">Pengaturan Gudang Pengiriman</div>
-              <div @click="changeWarehouse" class="cursor-pointer q-pa-md full-width border q-filled">{{ warehouseText() }}</div>
+              <div @click="changeWarehouse" class="cursor-pointer q-pa-md full-width border q-filled">{{ warehouseTitle() }}</div>
               <div class="q-mt-md" v-if="theCouriers.length">
                 <div class="text-grey-8 text-sm q-py-sm">Pilih Kurir</div>
                   <div class="q-gutter-sm">
@@ -149,12 +149,17 @@
 <script>
 import { Api } from 'boot/axios'
 export default {
+  name: 'Ekspedisi',
   data () {
     return {
-      katro: 0,
       codListModal: false,
       modal: false,
       rajaongkirtypes: ['starter', 'basic', 'pro'],
+      subdistrictOptions: [],
+      search: '',
+      isWarehouseSearch: false,
+      searchType: 'cod',
+      searchLoading: false,
       formdata: {
         rajaongkir_type: '',
         rajaongkir_apikey: '',
@@ -163,11 +168,6 @@ export default {
         rajaongkir_couriers: '',
         cod_list: []
       },
-      subdistrictOptions: [],
-      search: '',
-      isWarehouseSearch: false,
-      searchType: 'cod',
-      searchLoading: false
     }
   },
   computed: {
@@ -201,7 +201,7 @@ export default {
         this.$refs.warehouse.focus()
       }, 300)
     },
-     warehouseText() {
+    warehouseTitle() {
       if(this.formdata.warehouse_address) {
         return `${this.formdata.warehouse_address.subdistrict_name} - ${this.formdata.warehouse_address.type} ${this.formdata.warehouse_address.city}, ${this.formdata.warehouse_address.province}`
       }

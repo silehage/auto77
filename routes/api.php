@@ -14,6 +14,7 @@ use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ShippingController;
@@ -66,6 +67,8 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::get('update', [UpdateController::class, 'overview']);
     Route::post('update', [UpdateController::class, 'update']);  
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
+
+    Route::apiResource('discount', DiscountController::class);
     
 });
 

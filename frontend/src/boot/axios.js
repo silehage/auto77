@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 Vue.prototype.$axios = axios
 
 var BaseApi = axios.create({
-  baseURL: API_URL
+  baseURL: process.env.API
 })
 
 BaseApi.defaults.headers.common = { 'X-Requested-With': 'XMLHttpRequest' }
@@ -81,16 +81,10 @@ export default ({ app, router, store, Vue }) => {
     }
   
     if(showMessage) {
-      let length = 1;
-      if(errors.length >= 2) {
-        length = 2
-      }
-      for(var i = 0; i < length; i++) {
-        Notify.create({
-          type: 'negative',
-          message: String(errors[i]),
-        })
-      }
+      Notify.create({
+        type: 'negative',
+        message: String(errors[0]),
+      })
     }
     
     // Do something with response error       

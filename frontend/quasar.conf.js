@@ -50,8 +50,15 @@ module.exports = function (ctx ) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // env: envparser(),
-      htmlFilename: ctx.dev ? 'index.html' : 'index.php',
+      htmlFilename: ctx.dev 
+        ? 'index.html' 
+        : 'index.php',
       // ssrPwaHtmlFilename: 'offline.html',
+      env: {
+        API: ctx.dev
+          ? 'http://localhost:8000/api'
+          : '/api'
+      },
 
       // transpile: false,
 
@@ -91,8 +98,8 @@ module.exports = function (ctx ) {
       config: {
         notify: {
           position: 'top', 
-          timeout: 3000,
-          progress: true,
+          timeout: 2500,
+          // progress: true,
         }
       },
 
@@ -201,7 +208,7 @@ module.exports = function (ctx ) {
       
     },
     sourceFiles: {
-      indexHtmlTemplate:  ctx.dev? 'src/index.template.html' :  'src/app.blade.php',
+      indexHtmlTemplate:  ctx.dev? 'src/app.template.html' :  'src/app.template.php',
     },
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
