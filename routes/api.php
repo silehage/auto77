@@ -14,9 +14,11 @@ use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
 
@@ -69,6 +71,8 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
 
     Route::apiResource('discount', DiscountController::class);
+    Route::apiResource('promote', PromoteController::class);
+    Route::apiResource('coupon', CouponController::class);
     
 });
 
@@ -144,3 +148,5 @@ Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
 Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
 Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
 Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
+
+Route::get('coupons/getByCode/{code}', [CouponController::class, 'getByCode']);

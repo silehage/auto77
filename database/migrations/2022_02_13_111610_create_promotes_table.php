@@ -15,6 +15,10 @@ class CreatePromotesTable extends Migration
     {
         Schema::create('promotes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('discount_id');
+            $table->string('label');
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->timestamps();
         });
     }
