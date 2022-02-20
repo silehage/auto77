@@ -1,8 +1,16 @@
 <template>
   <div class="full-height">
     <div class="column full-height relative bg-white">
-      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer"/>
-      <div class="relative col column q-gutter-y-xs justify-between q-px-sm q-py-md overflow-hidden full-width">
+      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.id)" class="cursor-pointer">
+        <template v-slot:error>
+          <div class="absolute-full flex flex-center bg-grey-6 text-white">
+            Cannot load image
+          </div>
+        </template>
+      </q-img>
+      <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.id)" class="cursor-pointer">
+      </q-img>
+      <div class="relative col column q-gutter-y-xs justify-between q-pb-md q-px-sm q-pt-sm overflow-hidden full-width">
         <div>
           <q-rating 
             readonly
@@ -11,26 +19,28 @@
             icon="star_border"
             icon-selected="star"
             icon-half="star_half"
-            size="17px"
+            size="xs"
           />
-          <div class="full-width">
+          <div class="full-width q-mt-xs">
             <div class="text-subtitle ellipsis-2-lines">{{ product.title }}</div>
           </div>
         </div>
-        <div class="row justify-between items-end">
-          <div class="text-md text-weight-medium text-green-8">{{ moneyIDR(product.price) }}</div>
-          <!-- <cart-button :product="product" /> -->
-          <favorite-button :product="product" />
+        <div class="flex justify-between items-end">
+          <div>
+            <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
+            <div class="text-md text-weight-medium text-green-7">{{ moneyIDR(product.pricing.current_price) }} </div>
+          </div>
+          <div>
+          <favorite-button outline :product="product" />
+          </div>
         </div>
       </div>
-        <div class="absolute-top-right q-ma-sm">
-        </div>
+         <div v-if="product.pricing.is_discount" class="absolute top-0 q-pa-xs z-50 bg-red-6 text-white">{{ product.pricing.discount_percent }}%</div>
     </div>
   </div>
 </template>
 <script>
 import FavoriteButton from 'components/FavoriteButton.vue'
-// import CartButton from 'components/CartButton.vue'
 export default {
   name: 'ProductCard',
   props: { product: Object},
@@ -44,8 +54,11 @@ export default {
     money(number) {
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
     },
-    show(slug) {
-      this.$router.push({name: 'ProductShow', params: {slug: slug}})
+    show(id) {
+      this.$router.push({name: 'ProductShow', params: {id: id}})
+    },
+    productRating() {
+      return parseFloat(this.product.rating)
     },
   }
 }

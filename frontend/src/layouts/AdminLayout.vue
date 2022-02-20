@@ -3,7 +3,7 @@
     <q-page-container>
         <router-view />
     </q-page-container>
-    <q-footer class="text-center text-xs text-grey-7 bg-white q-pa-md">&copy; Copyright 2021 {{ shop? shop.name : '' }} Allrights Reserved</q-footer>
+    <!-- <q-footer class="text-center text-xs text-grey-7 bg-white q-pa-md">&copy; Copyright 2021 {{ shop? shop.name : '' }} Allrights Reserved</q-footer> -->
   </q-layout>
 </template>
 <script>

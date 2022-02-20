@@ -29,6 +29,17 @@ export function productUpdate ({ dispatch, commit }, payload) {
   })
 }
 
+export function getAdminProducts ({ commit }, q = null) {
+  if(q) {
+    Api().get('getAdminProducts?='+q).then(response => {
+       commit('SET_ADMIN_PRODUCTS', response.data.results)
+     })
+  } else {
+    Api().get('getAdminProducts').then(response => {
+       commit('SET_ADMIN_PRODUCTS', response.data.results)
+     })
+  }
+}
 export function getProducts ({ commit }, q = null) {
   if(q) {
     Api().get('products?='+q).then(response => {

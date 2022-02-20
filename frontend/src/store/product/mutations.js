@@ -9,6 +9,12 @@ export function SET_PRODUCTS (state, payload)
   state.products.ready = true
   state.products.available = payload.length > 0 ? true : false
 }
+export function SET_ADMIN_PRODUCTS (state, payload) 
+{
+  state.admin_products.data = payload
+  state.admin_products.ready = true
+  state.admin_products.available = payload.length > 0 ? true : false
+}
 export function SET_INITIAL_PRODUCTS (state, payload) 
 {
   state.initial_products.data = payload

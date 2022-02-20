@@ -54,8 +54,8 @@
         </template>
         <q-btn @click="btnChangePassword" class="q-mt-md" dense color="primary" no-caps flat :label="changePassword? 'Batal Ganti Password' : 'Ganti Password'"></q-btn>
       </div>
-      <q-footer>
-        <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data">
+      <q-footer class="q-pa-sm bg-white">
+        <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data" color="primary">
            <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
         </q-btn>
       </q-footer>

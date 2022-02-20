@@ -65,11 +65,11 @@ export default {
   name: 'PageAdminIndex',
   computed: {
     ...mapState({
-      products: state => state.product.products
+      products: state => state.product.admin_products
     })
   },
   methods: {
-    ...mapActions('product', ['getProducts', 'productDelete']),
+    ...mapActions('product', ['getAdminProducts', 'productDelete']),
     money(number) {
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
     },
@@ -95,7 +95,7 @@ export default {
     }
   },
   created() {
-    if(!this.products.data.length) this.getProducts()
+    if(!this.products.data.length) this.getAdminProducts()
   }
 }
 </script>

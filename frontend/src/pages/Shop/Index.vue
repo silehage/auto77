@@ -48,8 +48,8 @@
       </q-list>       
       
     </div>
-    <q-footer>
-        <q-btn :loading="isLoading" class="full-width" @click="save" label="Simpan Data">
+    <q-footer class="q-pa-sm bg-white">
+        <q-btn :loading="isLoading" class="full-width" @click="save" label="Simpan Data" color="primary">
            <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
         </q-btn>
     </q-footer>

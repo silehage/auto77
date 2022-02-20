@@ -68,12 +68,15 @@ export default {
     carts: function() {
       return this.$store.state.cart.carts
     },
+    productStock() {
+      return this.product.variant_items_sum_item_stock? this.product.variant_items_sum_item_stock : this.product.stock
+    },
     currentStock() {
       let hasCart = this.carts.find(el => el.product_id == this.product.id)
       if(hasCart != undefined) {
-       return this.product.stock-hasCart.quantity
+       return this.productStock-hasCart.quantity
       } else {
-        return this.product.stock
+        return this.productStock
       }
     },
     cartTextColor() {

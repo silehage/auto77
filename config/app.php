@@ -165,6 +165,8 @@ return [
         /*
         * Package Service Providers...
         */
+        Silehage\Rajaongkir\RajaongkirServiceProvider::class,
+        Silehage\Tripay\TripayServiceProvider::class,
         
         /*
         * Application Service Providers...
@@ -176,8 +178,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         App\Providers\ConfigApiProvider::class,
-        Silehage\Rajaongkir\RajaongkirServiceProvider::class,
-        Silehage\Tripay\TripayServiceProvider::class,
 
     ],
 

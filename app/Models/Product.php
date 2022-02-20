@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = [];
-    public $appends = ['rating', 'real_stock'];
+    // protected $appends = ['pricing'];
 
     protected $casts = [
         'status' > 'boolean'
@@ -41,7 +41,7 @@ class Product extends Model
     public function getRealStockAttribute()
     {
 
-        if($this->variantItems()->count() > 0) {
+        if($this->variantItems()) {
             return $this->variantItems()->sum('item_stock');
             
         } else {
@@ -53,5 +53,65 @@ class Product extends Model
     public function variantItems()
     {
         return $this->hasMany(ProductVariantValue::class);
+    }
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_id', 'id');
+    }
+    public function promote()
+    {
+        return $this->belongsTo(Promote::class, 'promote_id', 'id');
+    }
+    public function promoDiscount()
+    {
+        if($this->promote()) {
+            return $this->promote();
+        }
+        return $this->discount();
+    }
+    public function getPricingAttribute()
+    {
+        $pricing = [
+            'default_price' => $this->price,
+            'current_price' => $this->price,
+            'discount_value' => 0,
+            'discount_percent' => 0,
+            'is_discount' => false 
+        ];
+
+        $disc = null;
+
+        if($this->discount_id) {
+            $disc = $this->discount;
+        } elseif($this->promote_id) {
+            $disc = $this->promote->discount;
+        }
+
+        if($disc) {
+
+            $pricing['is_discount'] = true;
+
+            $discValue = 0;
+            
+
+            if($disc->unit == 'percent') {
+ 
+                $discValue = ($this->price*$disc->value) / 100;
+
+                $pricing['current_price'] = $this->price - ($this->price*$disc->value / 100);
+                $pricing['discount_percent'] = $disc->value;
+                
+             } else{
+ 
+                 $discValue = $disc->value;
+                 $pricing['current_price'] = $this->price - (int) $disc->value;
+                 $pricing['discount_percent'] = number_format(((int)$disc->value / $this->price)*100, 1);
+ 
+            }
+
+            $pricing['discount_value'] = $discValue;
+         }
+
+        return $pricing;
     }
 }

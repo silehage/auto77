@@ -45,25 +45,30 @@
             <q-rating 
               v-model="productRating"
               readonly
-              color="green-8"
+              color="green"
               icon="star_border"
               icon-selected="star"
               icon-half="star_half"
               size="sm" 
             />
-            <div v-if="parseFloat(product.rating) > 0" class="text-weight-bold text-primary text-subtitle1 text-md"> {{ product.rating }}</div>
+            <div v-if="parseFloat(product.rating) > 0" class="text-weight-bold text-green text-subtitle1 text-md"> {{ product.rating }}</div>
           </div>
           <div class="text-h6 text-weight-medium q-mb-sm q-mt-sm" v-if="product">{{ product.title }}</div>
-          <div class="row items-center justify-between">
-          <div class="text-h6 text-weight-bold text-green-8">{{ moneyIDR(parseInt(totalPrice)) }}</div>
+          <div class="row items-center justify-between q-my-md">
+            <div>
+              <div v-if="product.pricing.is_discount" class="row items-center q-gutter-x-sm">
+                <div class="text-md text-weight-bsemibold text-red text-strike">{{ moneyIDR(parseInt(product.pricing.default_price)) }}</div>
+                <span v-if="product.discount" class="bg-red-6 text-white rounded-borders" style="padding:3px;font-size:12px;">{{ product.pricing.discount_percent }}%</span>
+              </div>
+              <div class="text-h6 text-weight-bold text-green">{{ moneyIDR(parseInt(totalPrice)) }}</div>
+            </div>
           <div class="row q-gutter-md text-h6 items-center">
             <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
             <div>{{ quantity }}</div>
             <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
           </div>
           </div>
-            <div class="text-subtitle1 text-weight-medium" :style="stockStyle()"
-            >Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}</div>
+      
            <div id="variations" v-if="product.variants.length" class="">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
               <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
@@ -75,6 +80,8 @@
                 <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green-6'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
               </div>
             </div>
+            </div>
+             <div class="text-subtitle1 text-weight-medium q-mt-md" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
             </div>
           <div class="q-py-md">
             <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
@@ -139,7 +146,7 @@
             <div class="text-subtitle2 q-mb-sm">Berikan Ulasan Anda</div>
               <q-rating 
                 v-model="form.rating"
-                color="green-5"
+                color="green"
                 icon="star_border"
                 icon-selected="star"
                 icon-half="star_half"
@@ -244,16 +251,16 @@
       >
       <q-card class="max-width" flat v-if="product">
         <q-card-section>
-          <div class="text-weight-medium text-md2 q-mb-sm text-green-8">{{ moneyIDR(parseInt(totalPrice)) }}</div>
+          <div class="text-weight-medium text-md2 q-mb-sm text-green">{{ moneyIDR(parseInt(totalPrice)) }}</div>
           <div id="variations" v-if="product.variants.length" class="">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
               <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
               <div class="q-gutter-sm">
-                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green-6" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
               </div>
               <div v-if="variantItemSelected" class="q-pt-md q-gutter-sm">
                 <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
-                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green-6'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
+                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey' : 'green'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
               </div>
             </div>
             </div>
@@ -334,23 +341,27 @@ export default {
     height() {
       return this.$q.screen.width+'px'
     },
+    productStock() {
+      return this.product.variant_items_sum_item_stock? parseInt(this.product.variant_items_sum_item_stock) : this.product.stock
+    },
     currentStock() {
 
       let hasCart = this.carts.find(el => el.sku == this.currentProductSku)
 
       if(hasCart != undefined) {
+
         if(this.varianValueSelected) {
 
           return parseInt(this.varianValueSelected.item_stock)-hasCart.quantity
         }
-       return this.product.stock-hasCart.quantity
+       return this.productStock-hasCart.quantity
 
       } else {
         if(this.varianValueSelected) {
 
           return parseInt(this.varianValueSelected.item_stock)
         }
-        return this.product.real_stock
+        return this.productStock
       }
     },
     isHasVariant() {
@@ -365,16 +376,16 @@ export default {
     realPrice() {
       if(this.varianValueSelected) {
 
-        return (parseInt(this.product.price)+parseInt(this.varianValueSelected.additional_price))
+        return (parseInt(this.product.pricing.current_price)+parseInt(this.varianValueSelected.additional_price))
       }
-      return parseInt(this.product.price)
+      return parseInt(this.product.pricing.current_price)
     },
     totalPrice() {
       if(this.varianValueSelected) {
 
-        return (parseInt(this.product.price)+parseInt(this.varianValueSelected.additional_price)) * this.quantity
+        return (parseInt(this.product.pricing.current_price)+parseInt(this.varianValueSelected.additional_price)) * this.quantity
       }
-      return parseInt(this.product.price) * this.quantity
+      return parseInt(this.product.pricing.current_price) * this.quantity
     },
     cartTextButton() {
        if(this.currentStock >= 1) {
@@ -416,9 +427,11 @@ export default {
     handleVariantItemSelectted(item) {
       this.variantItemSelected = item
       this.varianValueSelected = null
+      this.quantity = 1
     },
     handleSelectedItemValue(value) {
       this.varianValueSelected = value
+      this.quantity = 1
     },
     discountPriceFormat() {
       return (this.subtotal()*this.discount)/100

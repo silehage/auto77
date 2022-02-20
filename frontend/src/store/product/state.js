@@ -5,6 +5,11 @@ export default function () {
       ready: false,
       available: true
     },
+    admin_products: {
+      data: [],
+      ready: false,
+      available: true
+    },
     initial_products: {
       data: [],
       ready: false,

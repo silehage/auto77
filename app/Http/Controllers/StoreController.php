@@ -16,14 +16,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
+use App\Repositories\ProductRepository;
 
 class StoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     public function index()
     {
@@ -41,12 +43,7 @@ class StoreController extends Controller
             ]
         ], 200);
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request)
     {
         $request->validate([
@@ -149,15 +146,12 @@ class StoreController extends Controller
 
         
     }
-    /**
-     * Display a listing of the initial data.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function getInitialData()
     {
-        // Cache::flush();
 
+        Cache::flush();
+      
         $sliders = Cache::rememberForever('sliders', function () {
             return Slider::OrderBy('weight', 'asc')->get();
         });
@@ -194,7 +188,7 @@ class StoreController extends Controller
                    $data['id'] = Str::random(16);
                    $data['banner_src'] = $cat->banner? $cat->banner_src : '';
                    $data['description'] = $cat->description ?? '';
-                   $data['items'] = Product::with('assets', 'category')->where('category_id', $cat->id)->take(8)->get();
+                   $data['items'] = $this->productRepository->getProductInitialByCategory($cat->id);
 
                     $item[] = $data;
                 }

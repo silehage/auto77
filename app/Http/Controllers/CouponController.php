@@ -16,7 +16,7 @@ class CouponController extends Controller
     {
         return response()->json([
             'success' => true,
-            'results' => Coupon::all()
+            'results' => Coupon::with('discount')->get()
         ]);
     }
 

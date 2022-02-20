@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::delete('product/{id}', [ProductController::class, 'destroy']);
     Route::post('product/update', [ProductController::class, 'update']);
     Route::post('product', [ProductController::class, 'store']);
+    Route::get('getAdminProducts', [ProductController::class, 'getAdminProducts']);
     // Slider
     Route::post('sliders', [SliderController::class, 'store']);
     Route::delete('sliders/{id}', [SliderController::class, 'destroy']);
@@ -71,8 +72,15 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
 
     Route::apiResource('discount', DiscountController::class);
-    Route::apiResource('promote', PromoteController::class);
+
     Route::apiResource('coupon', CouponController::class);
+
+    Route::apiResource('promote', PromoteController::class);
+    Route::get('getPromoDetail/{id}', [PromoteController::class, 'getPromoDetail']);
+
+    Route::post('toggleProductPromo', [ProductController::class, 'toggleProductPromo']);
+    Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
+    Route::get('findNotDiscountProduct', [ProductController::class, 'findNotDiscountProduct']);
     
 });
 
