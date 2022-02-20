@@ -9,6 +9,7 @@ use App\Models\Promote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProductRequest;
+use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\ProductRepository;
 
@@ -59,7 +60,7 @@ class ProductController extends Controller
 
         try {
 
-            $this->result['results'] = $this->productRepository->getProductsFavorites($request->pids);
+            $this->result['results']['products'] = $this->productRepository->getProductsFavorites($request->pids);
 
         } catch (Exception $e) {
 
@@ -78,7 +79,8 @@ class ProductController extends Controller
 
         try {
             
-            $this->result['results'] = $this->productRepository->getProductsByCategory($id);
+            $this->result['results']['products'] = $this->productRepository->getProductsByCategory($id);
+            $this->result['results']['category'] = Category::find($id);
 
         } catch (Exception $e) {
 

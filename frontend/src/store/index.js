@@ -26,7 +26,7 @@ import actions from './actions'
 
 const stateData = createPersistedState({
   key: '__state',
-  paths: ['user', 'cart', 'shop', 'config', 'session_id'],
+  paths: ['user', 'cart', 'shop', 'config', 'session_id', 'product.favorites'],
   storage: {
     getItem: (key) => Cookies.get(key),
     setItem: (key, value) => Cookies.set(key, value, { expires: 1 }),
