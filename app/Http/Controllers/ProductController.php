@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
+use Exception;
 use App\Models\Review;
 use App\Models\Product;
 use App\Models\Promote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Cache;
 use App\Repositories\ProductRepository;
 
 class ProductController extends Controller
 {
     private $productRepository;
+
+    protected $result = ['status' => 200, 'success' => true];
 
     public function __construct(ProductRepository $productRepository)
     {
@@ -20,7 +25,22 @@ class ProductController extends Controller
 
     public function index()
     {
-        return $this->productRepository->getAll();
+
+        try {
+
+            $this->result['results'] = $this->productRepository->getAll();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
+
 
     }
     public function getAdminProducts()
@@ -37,12 +57,39 @@ class ProductController extends Controller
             'pids' => 'required'
         ]);
 
-        return $this->productRepository->getProductsFavorites($request->pids);
+        try {
+
+            $this->result['results'] = $this->productRepository->getProductsFavorites($request->pids);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
        
     }
     public function getProductsByCategory($id)
     {     
-        return $this->productRepository->getProductsByCategory($id);   
+
+        try {
+            
+            $this->result['results'] = $this->productRepository->getProductsByCategory($id);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
        
     }
 
@@ -58,41 +105,85 @@ class ProductController extends Controller
         $key = strip_tags($key);
         $key = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        return response([
-            'success' => true, 
-            'results' => [
-                'products' => $this->productRepository->searchProduct($key)
-            ]
+        try {
             
-        ],200);
+            $this->result['results'] = $this->productRepository->search($key);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
     }
 
     public function show($slug)
     {
-        return response([
-            'success' => true, 
-            'results' => $this->productRepository->show($slug)
-        ],200);
+       
+        try {
+            
+            $this->result['results'] = $this->productRepository->show($slug);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
     }
     public function productById($id)
     {
-        return response([
-            'success' => true, 
-            'results' => Product::with('assets', 'category', 'variants.variant_items.variant_item_values')
+
+        try {
+            
+            $this->result['results'] = Product::with('assets', 'category', 'variants.variant_items.variant_item_values')
             ->where('id', $id) 
-            ->first()
-        ],200);
+            ->first();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
     }
 
     public function store(ProductRequest $request)
     {
-        return $this->productRepository->store($request);
+
+        try {
+            
+            $this->result['results'] = $this->productRepository->store($request);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
         
     }
 
     public function update(Request $request)
     {
         $product = Product::find($request->id);
+
         $request->validate([
             'id' => 'required',
             'title' => 'required',
@@ -103,7 +194,21 @@ class ProductController extends Controller
             'images' => $request->del_images && count($product->assets) == count($request->del_images) && !$request->images?'required' : 'nullable'
         ]);
 
-        return $this->productRepository->update($request);
+        try {
+            
+            $this->result['results'] = $this->productRepository->update($request);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
+
     }
     public function addProductReview(Request $request)
     {
@@ -114,36 +219,80 @@ class ProductController extends Controller
             'rating' => ['required', 'numeric', 'min:1', 'max:5'],
         ]);
 
-        return $this->productRepository->addProductReview($request);
+        try {
+            
+            $this->result['results'] = $this->productRepository->addProductReview($request);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
 
     }
     public function loadProductReview(Request $request, $id)
     {
-        return response()->json([
-            'success' => true,
-            'results' => Review::where('product_id', $id)->latest()->skip($request->skip?? 0)->take(6)->get()
-        ]);
+
+        try {
+            
+            $this->result['results'] = Review::where('product_id', $id)->latest()->skip($request->skip?? 0)->take(6)->get();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
     }
 
     public function findNotDiscountProduct()
     {
-        return response()->json([
-            'success' => true,
-            'results' => Product::whereNull('promote_id')->whereNull('discount_id')->get(),
-        ]);
+        try {
+            
+            $this->result['results'] = Product::whereNull('promote_id')->whereNull('discount_id')->get();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
 
     }
 
     public function getProductPromo($promoId)
     {
-        $promote = Promote::find($promoId);
-
-        return response()->json([
-            'success' => true,
-            'results' => Product::withSum('variantItems', 'item_stock')
+        
+        try {
+            $promote = Promote::find($promoId);
+            
+            $this->result['results'] = Product::withSum('variantItems', 'item_stock')
             ->where('promote_id', $promote->id)
-            ->get(),
-        ]);
+            ->get();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
 
     }
 
@@ -154,22 +303,47 @@ class ProductController extends Controller
             'promote_id' => 'required',
         ]);
 
-        $product = Product::find($request->product_id);
+        try {
+            
+            $product = Product::find($request->product_id);
 
-        if($product->promote_id) {
-            $product->promote_id = null;
-        } else {
-            $product->promote_id = $request->promote_id;
+            if($product->promote_id) {
+
+                $product->promote_id = null;
+
+            } else {
+
+                $product->promote_id = $request->promote_id;
+            }
+    
+            $product->save();
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
 
-        $product->save();
-
-        return response()->json([
-            'success' => true,
-        ]);
+        return response()->json($this->result, $this->result['status']);
     }
     public function destroy($id)
     {
-        return $this->productRepository->destroy($id);
+        try {
+            
+            $this->productRepository->destroy($id);
+
+        } catch (Exception $e) {
+
+            $this->result = [
+                'status' => 500,
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($this->result, $this->result['status']);
     }
 }

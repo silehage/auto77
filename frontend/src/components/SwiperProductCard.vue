@@ -1,14 +1,14 @@
 <template>
   <div class="full-height">
     <div class="column full-height relative bg-white">
-      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.id)" class="cursor-pointer">
+      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
         <template v-slot:error>
           <div class="absolute-full flex flex-center bg-grey-6 text-white">
             Cannot load image
           </div>
         </template>
       </q-img>
-      <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.id)" class="cursor-pointer">
+      <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.slug)" class="cursor-pointer">
       </q-img>
       <div class="relative col column q-gutter-y-xs justify-between q-pb-md q-px-sm q-pt-sm overflow-hidden full-width">
         <div>
@@ -54,11 +54,8 @@ export default {
     money(number) {
       return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
     },
-    show(id) {
-      this.$router.push({name: 'ProductShow', params: {id: id}})
-    },
-    productRating() {
-      return parseFloat(this.product.rating)
+    show(slug) {
+      this.$router.push({name: 'ProductShow', params: { slug: slug }})
     },
   }
 }

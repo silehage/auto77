@@ -4,12 +4,12 @@ namespace App\Repositories;
 
 use App\Models\Asset;
 use App\Models\Product;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\ProductResource;
+use Exception;
 
 
 class ProductRepository
@@ -29,27 +29,25 @@ class ProductRepository
   {
       $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
           ->withAvg('reviews', 'rating')
-          ->get();
-        
-      return response([
-        'success' => true, 
-        'results' => $this->formatResponse($products)
-    ],200);
+          ->get()
+          ->map(function($product) {
+            return $this->formatResponse($product);
+        });
 
+    return $products;
+      
   }
   public function getProductsFavorites($pids)
   {
     $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
           ->withAvg('reviews', 'rating')
           ->whereIn('id', $pids)
-          ->get();
-          
-    return response([
-      'success' => true, 
-      'results' => [
-          'products' =>$this->formatResponse($products)
-      ]
-    ],200);
+          ->get()
+          ->map(function($product) {
+            return $this->formatResponse($product);
+        });
+
+    return $products;
 
   }
 
@@ -58,15 +56,12 @@ class ProductRepository
     $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
           ->withAvg('reviews', 'rating')
           ->where('category_id', $id)
-          ->get();
+          ->get()
+          ->map(function($product) {
+            return $this->formatResponse($product);
+        });
 
-    return response([
-      'success' => true, 
-      'results' => [
-          'products' => $this->formatResponse($products),
-          'category' => Category::find($id)
-          ]
-    ],200);
+    return $products;
 
   }
 
@@ -76,91 +71,32 @@ class ProductRepository
           ->withAvg('reviews', 'rating')
           ->where('category_id', $id)
           ->take(8)
-          ->get();
+          ->get()
+          ->map(function($product) {
+            return $this->formatResponse($product);
+        });
 
-    return $this->formatResponse($products);
+    return $products;
 
   }
 
 
-  public function searchProduct($key)
+  public function search($key)
   {
+
     $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
           ->withAvg('reviews', 'rating')
           ->where('title', 'like', '%'.$key.'%')
           ->orWhere('description', 'like', '%'.$key.'%')
-          ->get();
+          ->get()
+          ->map(function($product) {
+              return $this->formatResponse($product);
+          });
 
-    return $this->formatResponse($products);
+    return $products;
 
   }
-  protected function setPricing($product)
-  {
-    $pricing = [
-      'default_price' => $product->price,
-      'current_price' => $product->price,
-      'discount_value' => 0,
-      'discount_percent' => 0,
-      'is_discount' => false 
-    ];
-    
-    $disc = null;
-    
-    if($product->discount_id) {
-        $disc = $product->discount;
-    } elseif($product->promote_id) {
-        $disc = $product->promote->discount;
-    }
-    
-    if($disc) {
-    
-        $pricing['is_discount'] = true;
-    
-        $discValue = 0;
-        
-    
-        if($disc->unit == 'percent') {
-    
-            $discValue = ($product->price*$disc->value) / 100;
-    
-            $pricing['current_price'] = $product->price - ($product->price*$disc->value / 100);
-            $pricing['discount_percent'] = $disc->value;
-            
-        } else{
-    
-            $discValue = $disc->value;
-            $pricing['current_price'] = $product->price - (int) $disc->value;
-            $pricing['discount_percent'] = number_format(((int)$disc->value / $product->price)*100, 1);
-    
-        }
-    
-        $pricing['discount_value'] = $discValue;
-    }
-    
-      return $pricing;
-  }
-  protected function formatResponse($products)
-  {
-    $data = $products->map(function($product) {
-
-      return [
-        'id'      => $product->id,
-        'title'   => $product->title,
-        'slug'    => $product->slug,
-        'sku'     => $product->sku,
-        'description' =>  $product->description,
-        'status'  =>  $product->status,
-        'sold'    =>  $product->sold,
-        'weight'  =>  $product->weight,
-        'rating'  =>  $product->reviews_avg_rating ? number_format($product->reviews_avg_rating, 1) : 0,
-        'pricing' =>  $this->setPricing($product),
-        'category' => $product->category,
-        'assets'  =>  $product->assets,
-      ];
-
-    });
-    return $data;
-  }
+  
   public function store($request)
   {
     $path = public_path('/upload/images');
@@ -245,24 +181,14 @@ class ProductRepository
         Cache::forget('products');
         Cache::forget('initial_products');
 
-        return response([
-            'success' => true, 
-            'message' => 'Berhasil menambah produk',
-            'results' => $product->load('assets','variants.variant_items.variant_item_values')
-            
-        ],201);
+        return $product->load('assets','variants.variant_items.variant_item_values');
 
 
-    } catch (\Throwable $th) {
+    } catch (Exception $e) {
 
         DB::rollBack();
 
-        return response([
-            'success' => false, 
-            'message' => $th->getMessage(),
-            'results' => null
-            
-        ],500);
+        throw new Exception($e);
     }
 
         
@@ -354,17 +280,13 @@ class ProductRepository
           Cache::forget('products');
           Cache::forget('initial_products');
 
-          return response([
-              'success' => true, 
-              'message' => 'Berhasil update produk',
-          ], 200);
+          return $product->fresh();
 
-      } catch (\Throwable $th) {
+      } catch (Exception $e) {
+
           DB::rollBack();
-          return response([
-              'success' => false, 
-              'message' => $th->getMessage(),
-          ], 500);
+          
+          throw new Exception($e);
       }
 
       
@@ -390,38 +312,90 @@ class ProductRepository
           Cache::forget('products');
           Cache::forget('initial_products');
 
-          return response([
-              'success' => true, 
-              'message' => 'Berhasil menghapus produk',
-          ], 200);
+          return true;
 
 
-      } catch (\Throwable $th) {
+      } catch (Exception $e) {
+
           DB::rollBack();
 
-          return response([
-              'success' => false, 
-              'message' => 'Gagal menghapus produk',
-              'error' => $th->getMessage(),
-          ], 500);
+          throw new Exception($e);
       }
   }
   public function addProductReview($request)
   {   
       $product = Product::findOrFail($request->product_id);
 
-      $product->reviews()->create([
+      $review = $product->reviews()->create([
           'comment' => $request->comment,
           'rating' => $request->rating,
           'name' => $request->name,
       ]);
 
-      Cache::forget('products');
-      Cache::forget('initial_products');
+      return $review;
 
-      return response()->json([
-          'success' => true,
-      ], 201);
+  }
+  protected function setPricing($product)
+  {
+    $pricing = [
+      'default_price' => $product->price,
+      'current_price' => $product->price,
+      'discount_value' => 0,
+      'discount_percent' => 0,
+      'is_discount' => false 
+    ];
+    
+    $disc = null;
+    
+    if($product->discount_id) {
+        $disc = $product->discount;
+    } elseif($product->promote_id) {
+        $disc = $product->promote->discount;
+    }
+    
+    if($disc) {
+    
+        $pricing['is_discount'] = true;
+    
+        $discValue = 0;
+        
+    
+        if($disc->unit == 'percent') {
+    
+            $discValue = ($product->price*$disc->value) / 100;
+    
+            $pricing['current_price'] = $product->price - ($product->price*$disc->value / 100);
+            $pricing['discount_percent'] = $disc->value;
+            
+        } else{
+    
+            $discValue = $disc->value;
+            $pricing['current_price'] = $product->price - (int) $disc->value;
+            $pricing['discount_percent'] = number_format(((int)$disc->value / $product->price)*100, 1);
+    
+        }
+    
+        $pricing['discount_value'] = $discValue;
+    }
+    
+      return $pricing;
+  }
+  protected function formatResponse($product)
+  {
+      return [
+        'id'      => $product->id,
+        'title'   => $product->title,
+        'slug'    => $product->slug,
+        'sku'     => $product->sku,
+        'description' =>  $product->description,
+        'status'  =>  $product->status,
+        'sold'    =>  $product->sold,
+        'weight'  =>  $product->weight,
+        'rating'  =>  $product->reviews_avg_rating ? number_format($product->reviews_avg_rating, 1) : 0,
+        'pricing' =>  $this->setPricing($product),
+        'category' => $product->category,
+        'assets'  =>  $product->assets,
+      ];
 
   }
 }

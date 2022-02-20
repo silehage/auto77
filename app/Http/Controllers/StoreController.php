@@ -150,8 +150,6 @@ class StoreController extends Controller
     public function getInitialData()
     {
 
-        Cache::flush();
-      
         $sliders = Cache::rememberForever('sliders', function () {
             return Slider::OrderBy('weight', 'asc')->get();
         });

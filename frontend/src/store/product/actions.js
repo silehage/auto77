@@ -5,7 +5,7 @@ export function productStore ({ dispatch, commit }, payload) {
   let self = this;
   return Api().post('product', payload, {headers: {'content-Type': 'multipart/formData'}})
   .then(response => {
-    dispatch('getProducts')
+    dispatch('getAdminProducts')
     self.$router.push({name: 'AdminProductIndex'})
 
   })
@@ -20,7 +20,7 @@ export function productUpdate ({ dispatch, commit }, payload) {
   let self = this;
     Api().post('product/update', payload, {headers: {'content-Type': 'multipart/formData'}})
     .then(response => {
-    dispatch('getProducts')
+    dispatch('getAdminProducts')
     
     self.$router.push({name: 'AdminProductIndex'})
   })
@@ -61,7 +61,7 @@ export function getProductBySlug ({}, slug) {
 
 export function productDelete ( { dispatch },  id) {
   Api().delete('product/' + id).then(() => {
-    dispatch('getProducts')
+    dispatch('getAdminProducts')
   })
 }
 
