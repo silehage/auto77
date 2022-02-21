@@ -228,9 +228,9 @@ export default {
     },
     changeBadgeColor(type) {
       if(type == 'PAID' || type == 'SHIPPING') return 'teal'
-      if(type == 'PROCESS') return 'blue-7'
-      if(type == 'COMPLETE') return 'green-6'
-      if(type == 'UNPAID') return 'grey-6'
+      if(type == 'PROCESS') return 'blue'
+      if(type == 'COMPLETE') return 'green'
+      if(type == 'CANCELED') return 'red'
       return 'grey-7'
     },
     canConfirm(order) {

@@ -43,7 +43,7 @@ class UpdateRajaongkirSubdistrict extends Command
         $cities = City::all();
 
         foreach($cities as $city) {
-            sleep(3);
+            sleep(2);
 
             $subdistricts = Rajaongkir::subdistrict($city->city_id);
     
