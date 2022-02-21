@@ -128,7 +128,6 @@
         emit-value
         map-options
         @input="courierSelected"
-        :rules="[val => val && val.length > 0 || 'Wajib dipilih']"
         />
       <q-list v-if="shippingCost.ready">
         <template v-if="shippingCost.costs.length">
@@ -393,6 +392,7 @@ export default {
 
       this.formGetCost.origin = this.config.warehouse_address.city_id
       this.formGetCost.destination = item.city_id
+      this.formGetCost.weight = this.formData.weight
 
       this.userAddressData.destination = item
 
@@ -445,6 +445,7 @@ export default {
 
       this.formGetCost.destination = data.address_subdistrict.city_id
       this.formGetCost.origin = this.config.warehouse_address.city_id
+      this.formGetCost.weight = this.formData.weight
       
        if(this.config.rajaongkir_type == 'pro') {
          
