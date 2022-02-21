@@ -70,7 +70,7 @@ class Config extends Model
     }
     public function getCanShippingAttribute()
     {
-        return $this->rajaongkir_apikey && $this->rajaongkir_type && $this->warehouse_id && $this->rajaongkir_couriers ? true : false;
+        return $this->rajaongkir_apikey && $this->rajaongkir_type && $this->warehouse_address && $this->rajaongkir_couriers ? true : false;
     }
     public function getIsTripayReadyAttribute()
     {
