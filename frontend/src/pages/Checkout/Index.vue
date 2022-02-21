@@ -25,9 +25,10 @@
         >
           <shipping-address 
             canEmail 
-            @place="placeOrder" 
+            @place="placeAddress" 
             :isModalAddress="isAvailableOldAddress"
             @closeModal="isAvailableOldAddress = false"
+            :formData="form"
           />
 
         </q-step>
@@ -111,8 +112,9 @@ export default {
         quantity: 0,
         weight: 0,
         shipping_courier_name:'',
-        shipping_cost: '',
-        shipping_courier_service: ''
+        shipping_cost: 0,
+        shipping_courier_service: '',
+        coupon_discount: 0
       },
     }
   },
@@ -155,6 +157,9 @@ export default {
     },
     session_id() {
       return this.$store.state.session_id
+    },
+    coupon_discount() {
+      return this.$store.state.coupon.coupon_discount
     }
   },
   mounted() {
@@ -168,10 +173,12 @@ export default {
       this.getLocalBanks()
     }
     this.checkDataUser()
+    this.collectOrder()
   },
   methods: {
     ...mapActions('order', ['storeOrder']),
-    placeOrder(data) {
+    placeAddress(data) {
+
       this.paymentSelected = null
       if(data.shipping_courier_name == 'COD') {
         this.form.payment_type = 'COD'
@@ -182,8 +189,29 @@ export default {
         this.form.payment_method = ''
         this.form.payment_name = ''
       }
-      this.form = data
+      this.form.user_id = data.user_id 
+      this.form.customer_email = data.customer_email 
+      this.form.customer_name = data.customer_name 
+      this.form.customer_whatsapp = data.customer_whatsapp 
+      this.form.shipping_cost = data.shipping_cost 
+      this.form.shipping_courier_name = data.shipping_courier_name 
+      this.form.shipping_courier_service = data.shipping_courier_service 
+      this.form.address = data.address 
+
+      this.checkDiscount()
+      this.collectOrder()
       this.checkStepOk()
+
+    },
+    collectOrder() {
+      this.form.items = this.carts
+      this.form.subtotal = this.sumSubtotal()
+      this.form.total = this.sumGrandTotal()
+      this.form.quantity = this.sumQty()
+      this.form.weight = this.sumWeight()
+      if(this.coupon_discount) {
+        this.form.coupon_discount = this.getDiscountAmount()
+      }
     },
     checkDataUser() {
       if(localStorage.getItem('user_data')) {
@@ -258,9 +286,13 @@ export default {
         this.form.payment_type = 'COD'
         this.checkStepOk()
       }
+
+      this.checkDiscount()
     },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
+    checkDiscount() {
+      if(this.coupon_discount) {
+        this.form.coupon_discount = this.getDiscountAmount()
+      }
     },
     getLocalBanks() {
       let self = this
@@ -287,6 +319,7 @@ export default {
           if(response.status == 200) {
 
             this.$store.commit('order/SET_INVOICE', response.data.results)
+            this.$store.commit('coupon/SET_COUPON_DISCOUNT', null)
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)
@@ -328,7 +361,11 @@ export default {
       let items = data.items
       let numb = 1;
       items.forEach(el => {
-        str +=  `*${numb}. ${el.name}*\nJumlah: ${el.quantity}\nHarga (@): ${this.moneyIDR(el.price)}\nHarga Total: ${this.moneyIDR(el.quantity*el.price)}\n\n`
+        str +=  `*${numb}. ${el.name}*\n`
+        if(el.note){
+          str += `[${el.note}]\n`
+        }
+        str+= `Jumlah: ${el.quantity}\nHarga (@): ${this.moneyIDR(el.price)}\nHarga Total: ${this.moneyIDR(el.quantity*el.price)}\n\n`
         numb ++
       })
 
@@ -374,18 +411,60 @@ export default {
         this.step -= 1
       }
     },
-    subtotal() {
+    getDiscountPercent() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return parseInt(this.coupon_discount.discount.value)
+        } 
+        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.sumSubtotal()))*100
+      }
+      return 0
+    },
+    getDiscountAmount() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.sumSubtotal())
+        }
+        return parseInt(this.coupon_discount.discount.value)
+      }
+      return 0
+    },
+    sumQty() {
+      if(this.carts.length > 1) {
+        let q = [];
+        this.carts.forEach(el => {
+          q.push(parseInt(el.quantity))
+        });
+        return q.reduce((a,b) => a + b)
+      }
+      return parseInt(this.carts[0].quantity)
+    },
+    sumSubtotal() {
       if(this.carts.length > 1) {
         let j = [];
-        this.carts.forEach(element => {
-          j.push(element.quantity*element.price)
+        this.carts.forEach(el => {
+          j.push(parseInt(el.quantity)*parseInt(el.price))
         });
         return j.reduce((a,b) => a + b)
       }
-      return this.carts[0].quantity * this.carts[0].price
+      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].price)
     },
-    total () {
-      return this.subtotal()
+    sumGrandTotal() {
+      if(this.coupon_discount) {
+        return (this.sumSubtotal()-this.getDiscountAmount())+parseInt(this.form.shipping_cost)
+      }
+      return this.sumSubtotal() + parseInt(this.form.shipping_cost)
+
+    },
+    sumWeight() {
+      if(this.carts.length > 1) {
+        let w = [];
+        this.carts.forEach(el => {
+          w.push(parseInt(el.weight)*parseInt(el.quantity))
+        });
+        return w.reduce((a,b) => a + b)
+      }
+      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].weight)
     },
   },
   meta() {

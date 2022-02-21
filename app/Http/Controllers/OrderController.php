@@ -89,6 +89,7 @@ class OrderController extends Controller
                 'shipping_courier_name' => $request->shipping_courier_name,
                 'shipping_courier_service' => $request->shipping_courier_service,
                 'shipping_cost' => $request->shipping_cost,
+                'discount' => $request->coupon_discount,
             ]);
                 
             foreach($request->items as $item) {

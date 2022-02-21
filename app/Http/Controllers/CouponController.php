@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Exception;
 
 class CouponController extends Controller
 {
@@ -64,6 +65,33 @@ class CouponController extends Controller
             'success' => true,
             'results' => Coupon::where('code', $code)->firstOrFail()
         ]);
+    }
+    public function redeemCoupon(Request $request)
+    {
+        $request->validate([
+            'code' => 'required'
+        ]);
+        $result = ['success' => true, 'code' => 200];
+        try {
+
+            $coupon = Coupon::with('discount')->where('code', trim($request->code))->first();
+
+            if(!$coupon) {
+                throw new Exception('Kode kupon salah');
+            }
+
+            $result['results'] = $coupon;
+
+        } catch (Exception $e) {
+
+            //throw $th;
+            $result = [
+                'success' => false,
+                'message' => $e->getMessage(),
+                'code' => 404
+            ];
+        }
+        return response()->json($result, $result['code']);
     }
 
     /**

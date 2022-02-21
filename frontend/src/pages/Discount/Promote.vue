@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row items-center justify-between">
+    <div class="row items-center justify-between q-px-sm">
       <div class="text-h6">Promo Diskon</div>
       <div class="row items-center q-gutter-x-sm">
         <q-btn @click="handleAdd" unelevated color="primary">
@@ -14,7 +14,7 @@
        <q-item>
          <q-item-section side>#</q-item-section>
          <q-item-section>Label</q-item-section>
-         <q-item-section>Diskon</q-item-section>
+         <q-item-section v-if="isDesktop">Diskon</q-item-section>
          <q-item-section>Status</q-item-section>
          <q-item-section side>Action</q-item-section>
        </q-item>
@@ -22,8 +22,11 @@
          <q-item-section side>{{ index+1 }}</q-item-section>
          <q-item-section>
            <q-item-label>{{ item.label }} [{{ item.products_count}}]</q-item-label>
+           <div v-if="!isDesktop">
+            <q-chip square text-color="white" color="teal" size="sm">{{ item.discount.label }} </q-chip>
+           </div>
          </q-item-section>
-         <q-item-section>
+         <q-item-section v-if="isDesktop">
            <div>
             <q-chip square text-color="white" color="teal" size="sm">{{ item.discount.label }} </q-chip>
            </div>
@@ -161,6 +164,9 @@ export default {
         opts.push({value: el.id, label: el.label})
       })
       return opts
+    },
+    isDesktop() {
+      return window.innerWidth > 600 ? true : false
     }
   },
   methods: {

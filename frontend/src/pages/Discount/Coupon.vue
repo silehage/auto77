@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row items-center justify-between">
+    <div class="row items-center justify-between q-px-sm">
       <div class="text-h6">Kupon Diskon</div>
       <q-btn @click="handleAdd" unelevated color="primary">
         <q-icon name="add"></q-icon>

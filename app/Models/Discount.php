@@ -10,4 +10,5 @@ class Discount extends Model
     use HasFactory;
 
     protected $guarded = [];
+
 }

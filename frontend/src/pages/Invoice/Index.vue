@@ -57,7 +57,7 @@
                 <td align="right">{{ moneyIDR(item.price) }}</td>
               </tr>
             </table>
-            <div class="column justify-end bg-grey-1 items-end q-pa-sm">
+            <div class="column justify-end items-end q-py-sm">
               <table class="dense">
                 <tr>
                   <td align="right">SubTotal</td>
@@ -75,8 +75,22 @@
                   <td align="right">- {{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr>
-                  <th align="right">Total</th>
+                  <td align="right">Total</td>
                   <td>:</td>
+                  <td align="right">{{ moneyIDR(invoice.order_subtotal+invoice.shipping_cost) }}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="flex justify-end q-py-sm bg-grey-1">
+              <table class="table dense">
+                <tr v-if="invoice.discount">
+                  <td align="right">Diskon [-]</td>
+                  <td align="right">:</td>
+                  <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
+                </tr>
+                <tr>
+                  <th align="right">Grand Total</th>
+                  <td align="right">:</td>
                   <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
                 </tr>
               </table>
@@ -221,6 +235,7 @@ export default {
         this.getOrder()
       } else {
         this.ready = true
+        this.checkOrderStatus()
       }
     }
   },
@@ -228,7 +243,7 @@ export default {
   methods: {
     ...mapActions('order', ['getOrderById']),
     statusColor(status) {
-      if(status == 'UNPAID') return 'bg-grey-8'
+      if(status == 'UNPAID') return 'bg-grey-7'
       if(status == 'CANCELED') return 'bg-red-6'
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'

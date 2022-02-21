@@ -10,30 +10,66 @@
           <q-toolbar-title class="text-weight-bold brand">Keranjang Belanja</q-toolbar-title>
         </q-toolbar>
     </q-header>
-    <div v-if="carts.length" class="q-py-md">
+    <div v-if="carts.length" class="q-py-sm">
       <q-list class="bg-white" separator>
-        <q-item v-for="cart in carts" :key="cart.sku">
-          <q-item-section side>
-            <q-btn @click="removeCart(cart)" icon="cancel" flat color="red" padding="3px" ></q-btn>
+        <q-item v-for="cart in carts" :key="cart.sku" class="q-pa-sm">
+          <q-item-section side class="q-pr-sm">
+            <q-btn @click="removeCart(cart)" icon="close" flat color="red" padding="4px" size="12px" round></q-btn>
           </q-item-section>
           <q-item-section side>
            <q-img :src="cart.image_url" style="width:90px;height:90px;"></q-img>
           </q-item-section>
           <q-item-section>
-            <div class="col">
-              <div class="text-weight-bold">{{ cart.name }}</div>
-              <div class="text-grey-7 q-mb-xs">{{ cart.note }}</div>
-              <div class="text-grey-7">Harga {{  moneyIDR(cart.price) }}</div>
-              <div class="text-grey-7">Subtotal {{ moneyIDR(cart.quantity*cart.price) }}</div>
-              <div class="q-gutter-x-sm">
-                <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
+            <div class="col overflow-hidden full-width">
+              <div class="text-weight-medium ellipsis">{{ cart.name }}</div>
+              <div class="text-grey-7 q-mb-xs text-caption">{{ cart.note }}</div>
+              <div>Harga {{  moneyIDR(cart.price) }}</div>
+              <!-- <div class="text-grey-7">Subtotal {{ moneyIDR(cart.quantity*cart.price) }}</div> -->
+              <div class="q-gutter-x-sm ro items-center">
+                <q-btn flat padding="3px" round icon="remove_circle_outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
                 <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
-                <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
+                <q-btn flat padding="3px" round icon="add_circle_outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
               </div>
             </div>
           </q-item-section>
         </q-item>
       </q-list>
+    <q-card flat square class="">
+      <q-card-section>
+        <div class="flex justify-end q-py-md q-px-sm bg-grey-1">
+          <div class="column items-end">
+            <div style="font-size:14px;">
+              <table class="dense text-weight-medium">
+                <tr>
+                  <td align="right">Subtotal</td>
+                  <td>:</td>
+                  <td align="right">{{ moneyIDR(subtotal()) }}</td>
+                </tr>
+                <tr>
+                  <td align="right">Kupon Diskon <span v-if="coupon_discount" class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
+                  <td>:</td>
+                  <td align="right">{{ moneyIDR(getDiscountAmount()) }}</td>
+                </tr>
+                <tr class=""> 
+                  <td align="right">Order Total</td>
+                  <td>:</td>
+                  <td align="right">{{ moneyIDR(total()) }}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="q-mt-md">
+              <q-form @submit.prevent="handleRedeemCoupon">
+                <!-- <div class="text-caption">Punya Kupon?</div> -->
+                <div class="row items-center no-wrap q-gutter-x-xs">
+                  <q-input required outlined square dense v-model="couponCode" placeholder="Redeem Kupon" style="width:160px;"/>
+                  <q-btn size="16px" color="blue" unelevated type="submit" label="Redeem" style="border-radius:0;"></q-btn>
+                </div>
+              </q-form>
+            </div>
+          </div>
+        </div>
+    </q-card-section>
+  </q-card>
     </div>
     <div v-if="!carts.length" class="column items-center">
       <p class="text-grey-8 text-weight-bold text-center">Keranjang belanja anda masih kosong!</p>
@@ -54,15 +90,6 @@
       <login-block @onResponse="onResponse" @onClose="loginModal = false"/>
     </q-dialog>
     <q-footer v-if="carts.length" class="bg-white q-pa-md">
-      <div class="q-pb-sm row text-right justify-end">
-        <table style="font-size:17px;" class="text-green-7 text-weight-medium">
-          <tr>
-            <td align="right">Total Order</td>
-            <td>:</td>
-            <th>{{ moneyIDR(total()) }}</th>
-          </tr>
-        </table>
-        </div>
       <q-btn v-if="isCanChekout" unelevated @click="checkout" color="primary" class="full-width" no-caps>
         <svg
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -101,7 +128,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import DirectCheckoutBlock from './components/DirectCheckoutBlock.vue'
 import LoginBlock from 'components/LoginBlock'
 export default {
@@ -114,6 +141,7 @@ export default {
       directCheckoutModal: false,
       discount: 0,
       currentOrder: null,
+      couponCode: ''
     }
   },
   computed: {
@@ -121,7 +149,8 @@ export default {
       carts: state => state.cart.carts,
       shop: state => state.shop,
       config: state => state.config,
-      user: state => state.user.user
+      user: state => state.user.user,
+      coupon_discount: state => state.coupon.coupon_discount
     }),
     session_id() {
       return this.$store.state.session_id
@@ -148,9 +177,24 @@ export default {
     if(!this.shop) {
       this.$store.dispatch('getShop')
     }
-    // this.$store.commit('cart/getCarts')
   },
   methods: {
+    ...mapActions('coupon', ['redeemCoupon']),
+    handleRedeemCoupon() {
+      this.redeemCoupon({ code: this.couponCode }).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('coupon/SET_COUPON_DISCOUNT', response.data.results)
+        }
+      }).catch(err => {
+        if(err && err.response && err.response.status == 404) {
+          this.$q.notify({
+            type: 'negative',
+            message: err.response.data.message
+          })
+          this.couponCode = ''
+        }
+      })
+    },
     onResponse(evt) {
       if(evt === true) {
         this.loginModal = false
@@ -202,7 +246,28 @@ export default {
       return this.carts[0].quantity * this.carts[0].price
     },
     total () {
+      if(this.coupon_discount) {
+        return parseInt(this.subtotal())-this.getDiscountAmount()
+      }
       return this.subtotal()
+    },
+    getDiscountPercent() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return parseInt(this.coupon_discount.discount.value)
+        } 
+        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.subtotal()))*100
+      }
+      return 0
+    },
+    getDiscountAmount() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.subtotal())
+        }
+        return parseInt(this.coupon_discount.discount.value)
+      }
+      return 0
     },
     removeCart(cart) {
       this.$store.dispatch('cart/removeCart', {

@@ -165,7 +165,7 @@ class StoreController extends Controller
             return Category::orderBy('weight', 'asc')->get();
         });
         $posts = Cache::rememberForever('promote_post', function () {
-            return Post::promote()->latest()->take(5)->get();
+            return Post::promote()->latest()->take(4)->get();
         });
         $config = Cache::rememberForever('shop_config', function () {
             return Config::first();

@@ -48,7 +48,8 @@
               </q-item-section>
               <q-item-section>
                 <div class="col">
-                  <div class="text-weight-bold">{{ cart.name }}</div>
+                  <div class="text-weight-medium">{{ cart.name }}</div>
+                  <div class="text-caption text-grey-7">{{ cart.note }}</div>
                   <div class="text-grey-7">{{ cart.quantity + 'x ' + moneyIDR(cart.price) }}</div>
                 </div>
               </q-item-section>
@@ -58,19 +59,33 @@
         <div class="flex justify-end">
           <table class="table dense">
             <tr>
-              <th align="right">Subtotal</th>
+              <td align="right">Subtotal</td>
               <td align="right">:</td>
               <td align="right">{{ moneyIDR(form.subtotal) }}</td>
             </tr>
             <tr>
-              <th align="right">Ongkos Kirim</th>
+              <td align="right">Ongkos Kirim</td>
               <td align="right">:</td>
               <td align="right">{{ form.shipping_cost? moneyIDR(form.shipping_cost) : 0 }}</td>
             </tr>
-            <tr>
-              <th align="right">Total</th>
+            <tr style="border-bottom:1px solid">
+              <td align="right">Total</td>
               <td align="right">:</td>
-              <td align="right">{{ moneyIDR(form.total) }}</td>
+              <td align="right">{{ moneyIDR(form.subtotal+form.shipping_cost) }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="flex justify-end q-mt-sm">
+          <table class="table dense">
+            <tr v-if="form.coupon_discount">
+              <td align="right">Diskon [-]</td>
+              <td align="right">:</td>
+              <td align="right">{{ form.coupon_discount? moneyIDR(form.coupon_discount) : 0 }}</td>
+            </tr>
+            <tr>
+              <th align="right">Grand Total</th>
+              <td align="right">:</td>
+              <th align="right">{{ moneyIDR(form.total) }}</th>
             </tr>
           </table>
         </div>
@@ -116,6 +131,7 @@ export default {
     money(number) {
      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
     },
+    
   }
 }
 </script>

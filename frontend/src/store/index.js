@@ -4,8 +4,8 @@ import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import Cookies from 'js-cookie';
 
-// import SecureLS from "secure-ls";
-// var ls = new SecureLS({ isCompression: false });
+import SecureLS from "secure-ls";
+var ls = new SecureLS({ isCompression: false });
 
 import user from './user'
 import product from './product'
@@ -26,11 +26,11 @@ import actions from './actions'
 
 const stateData = createPersistedState({
   key: '__state',
-  paths: ['user', 'cart', 'shop', 'config', 'session_id', 'product.favorites'],
+  paths: ['user', 'cart', 'shop', 'config', 'session_id', 'product.favorites', 'coupon.coupon_discount'],
   storage: {
-    getItem: (key) => Cookies.get(key),
-    setItem: (key, value) => Cookies.set(key, value, { expires: 1 }),
-    removeItem: (key) => Cookies.remove(key),
+    getItem: (key) => ls.get(key),
+    setItem: (key, value) => ls.set(key, value, { expires: 1 }),
+    removeItem: (key) => ls.remove(key),
   }
 })
 

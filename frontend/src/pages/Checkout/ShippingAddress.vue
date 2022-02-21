@@ -10,7 +10,7 @@
         label="Nama Penerima"
         v-model="form.customer_name"
         @input="inputFormUser"
-        debounce="500"
+        debounce="1000"
         />
         <q-input
         v-if="canEmail"
@@ -22,7 +22,7 @@
         label="Alamat Email"
         v-model="form.customer_email"
         @input="inputFormUser"
-        debounce="500"
+        debounce="1000"
         />
         <q-input
         label="No ponsel / Whatsapp"
@@ -33,7 +33,7 @@
         @change="checkInputPhone"
         placeholder="08XXXXXXXXXXXX"
         @input="inputFormUser"
-        debounce="500"
+        debounce="1000"
         />
         </div>
         <div class="q-px-sm q-pt-md q-pb-xs">
@@ -51,11 +51,11 @@
                     <q-item-section>{{ destinationAddressFormat(address_subdistrict) }}</q-item-section>
                     <q-item-section side>
                       <q-btn flat no-caps color="red" @click="clearAddress">
-                  <q-icon name="close" size="19px"></q-icon>
-                  <span>Ganti</span>
-                  </q-btn>
-                    </q-item-section>
-                  </q-item>
+                      <q-icon name="close" size="19px"></q-icon>
+                      <span>Ganti</span>
+                      </q-btn>
+                        </q-item-section>
+                    </q-item>
                 </q-list>
                 <div v-else>
                   
@@ -78,7 +78,7 @@
                     </div>
                   </transition>
                 </div>
-                <q-input v-if="address_subdistrict" filled square stack-label v-model="address_street" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="50"/>
+                <q-input v-if="address_subdistrict" filled square stack-label v-model="address_street" label="Alamat jalan / dusun / desa / Rt / Rw" @input="setAddress" debounce="100"/>
 
               </div>
             </template>
@@ -196,7 +196,8 @@ export default {
     isModalAddress: {
       type: Boolean,
       default: false
-    }
+    },
+    formData: Object
   },
   data() {
     return {
@@ -211,11 +212,6 @@ export default {
         customer_email: '',
         customer_whatsapp: '',
         address: '',
-        items: [],
-        subtotal: 0,
-        total: 0,
-        quantity: 0,
-        weight: 0,
         shipping_courier_name:'',
         shipping_cost: 0,
         shipping_courier_service:''
@@ -331,7 +327,6 @@ export default {
       this.form.customer_email = this.user.email
       this.form.customer_whatsapp = this.user.phone ? this.user.phone : ''
     }
-    this.collectOrder()
   },
   methods: {
     destinationAddressFormat(obj) {
@@ -347,17 +342,21 @@ export default {
       this.form.shipping_courier_service = 'COD'
       this.form.shipping_cost = item.price? parseInt(item.price) : 0
       this.isSelectedCostCod = item
-      this.collectOrder()
+
+      this.emitForm()
     },
     selectCost(item) {
       this.isSelectedCostCod = null
+      this.isSelectedCost = item
+
       this.form.shipping_courier_name = this.shippingCost.name
       this.form.shipping_courier_service = item.service
       this.form.shipping_cost = item.cost[0].value
-      this.isSelectedCost = item
-      this.collectOrder()
+
+      this.emitForm()
     },
     changeNewAddress() {
+      this.clearAddress()
       this.formGetCost.courier = ''
       this.formGetCost.destination = ''
       this.form.address = ''
@@ -487,7 +486,7 @@ export default {
       this.shippingCost.costs = []
       this.shippingCost.ready = false
       this.form.shipping_courier_name = ''
-      this.form.shipping_cost =  0
+      this.form.shipping_cost = 0
       this.form.shipping_courier_service = ''
       this.isSelectedCost = null
       this.isSelectedCostCod = null
@@ -528,17 +527,9 @@ export default {
     emitForm() {
       this.$emit('place', this.form)
     },
-    collectOrder() {
-      this.form.items = this.carts
-      this.form.subtotal = this.sumSubtotal()
-      this.form.total = this.sumGrandTotal()
-      this.form.quantity = this.sumQty()
-      this.form.weight = this.sumWeight()
-      this.emitForm()
-
-    },
     setDataGetCost() {
-      this.formGetCost.weight = this.sumWeight();
+      this.formGetCost.weight = this.formData.weight;
+
       if(this.config && this.config.can_shipping){
 
         this.formGetCost.origin = this.config.warehouse_address.city_id
@@ -555,52 +546,13 @@ export default {
 
     checkInputPhone() {
       this.form.customer_whatsapp = this.form.customer_whatsapp.replace(/\D/g,'')
+
       if(!this.checkPhoneNumber(this.form.customer_whatsapp)) {
         this.$q.dialog({
           message: 'Silahkan masukkan nomor whatsapp yang benar.'
         })
         this.form.customer_whatsapp = ''
       }
-    },
-    sumGrandTotal() {
-      if(this.form.shipping_cost) {
-        return this.sumSubtotal() + parseInt(this.form.shipping_cost)
-      } else {
-         return this.sumSubtotal()
-      }
-    },
-    sumQty() {
-      if(this.carts.length > 1) {
-        let q = [];
-        this.carts.forEach(el => {
-          q.push(parseInt(el.quantity))
-        });
-        return q.reduce((a,b) => a + b)
-      }
-      return parseInt(this.carts[0].quantity)
-    },
-    sumSubtotal() {
-      if(this.carts.length > 1) {
-        let j = [];
-        this.carts.forEach(el => {
-          j.push(parseInt(el.quantity)*parseInt(el.price))
-        });
-        return j.reduce((a,b) => a + b)
-      }
-      return this.carts[0].quantity * parseInt(this.carts[0].price)
-    },
-    sumWeight() {
-      if(this.carts.length > 1) {
-        let w = [];
-        this.carts.forEach(el => {
-          w.push(parseInt(el.weight)*parseInt(el.quantity))
-        });
-        return w.reduce((a,b) => a + b)
-      }
-      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].weight)
-    },
-    sumTotal () {
-      return this.sumSubtotal()
     },
     checkPhoneNumber(formatted) {
 

@@ -21,15 +21,15 @@
     <q-separator />
 
     <q-tab-panels v-model="tab" animated>
-      <q-tab-panel name="diskon">
+      <q-tab-panel name="diskon" class="q-px-xs">
         <Discount />
       </q-tab-panel>
 
-      <q-tab-panel name="kupon">
+      <q-tab-panel name="kupon" class="q-px-xs">
        <Coupon />
       </q-tab-panel>
 
-      <q-tab-panel name="promo">
+      <q-tab-panel name="promo" class="q-px-xs">
         <Promote />
       </q-tab-panel>
     </q-tab-panels>

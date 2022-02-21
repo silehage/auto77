@@ -23,3 +23,6 @@ export function deleteCoupon ({ dispatch }, id) {
   })
 }
 
+export function redeemCoupon ({}, payload) {
+  return Api().post('redeemCoupon', payload)
+}

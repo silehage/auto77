@@ -80,7 +80,7 @@ export default ({ app, router, store, Vue }) => {
       errors.push('Jaringan sedang bermasalah, silahkan tunggu beberapa saat.')
     }
   
-    if(showMessage) {
+    if(showMessage && errors.length) {
       Notify.create({
         type: 'negative',
         message: String(errors[0]),

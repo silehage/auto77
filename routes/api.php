@@ -158,3 +158,4 @@ Route::get('validateToken/{token}', [PasswordResetController::class, 'validateTo
 Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 
 Route::get('coupons/getByCode/{code}', [CouponController::class, 'getByCode']);
+Route::post('redeemCoupon', [CouponController::class, 'redeemCoupon']);
