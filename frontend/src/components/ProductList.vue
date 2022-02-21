@@ -1,7 +1,7 @@
 <template>
   <q-list class="relative bg-white">
     <q-item class="q-pa-md relative">
-      <q-item-section avatar top @click.prevent="$router.push({name: 'ProductShow', params:{id: product.id}})" class="cursor-pointer column items-center q-gutter-y-sm">
+      <q-item-section avatar top @click.prevent="$router.push({name: 'ProductShow', params:{ slug: product.slug }})" class="cursor-pointer column items-center q-gutter-y-sm">
         <q-img v-if="product.assets && product.assets.length" :src="product.assets[0].src" ratio="1" class="image-list rounded-borders">
           <template v-slot:error>
           <div class="absolute-full flex flex-center bg-grey-6 text-white text-center">
