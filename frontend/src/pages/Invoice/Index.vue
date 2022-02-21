@@ -196,7 +196,8 @@ export default {
   data () {
     return {
       modalPayment: false,
-      throtle: 1
+      throtle: 1,
+      interval: null
     }
   },
   computed: {
@@ -233,14 +234,14 @@ export default {
       return 'bg-blue-7'
     },
     getOrder() {
-      let self = this;
-      self.$store.commit('SET_LOADING', true)
+      this.$store.commit('SET_LOADING', true)
       if(this.$route.params.order_ref) {
         this.getOrderById(this.$route.params.order_ref).then(response => {
           if(response.status == 200) {
-            self.$store.commit('order/SET_INVOICE', response.data.results)
+            this.$store.commit('order/SET_INVOICE', response.data.results)
           }
-          self.$store.commit('SET_LOADING', false)
+          this.$store.commit('SET_LOADING', false)
+          this.checkOrderStatus()
         }).catch(() => {
           this.$router.push({name: 'Cart'})
         })
@@ -290,8 +291,27 @@ export default {
     },
     handlePaymentModal() {
       this.modalPayment = true
+    },
+    getCheckOrder() {
+       this.getOrderById(this.$route.params.order_ref).then(response => {
+          if(response.status == 200) {
+            this.$store.commit('order/SET_INVOICE', response.data.results)
+          }
+        })
+    },
+    checkOrderStatus() {
+      if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS') {
+        this.interval = setInterval(() => {
+          this.getCheckOrder()
+        }, 20000)
+      } else {
+        clearInterval(this.interval)
+      }
     }
   },
+  beforeDestroy() {
+    clearInterval(this.interval)
+  }
 
 }
 </script>
