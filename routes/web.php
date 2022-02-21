@@ -1,13 +1,7 @@
 <?php
 
-use App\Models\Product;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\ProductResource;
 use App\Http\Controllers\FrontController;
-use App\Http\Controllers\ProductController;
-use App\Http\Resources\ProductCollection;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
