@@ -320,6 +320,9 @@ class ProductController extends Controller
     
             $product->save();
 
+            Cache::forget('products');
+            Cache::forget('initial_products');
+
         } catch (Exception $e) {
 
             $this->result = [
