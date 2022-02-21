@@ -25,6 +25,7 @@ class ProductRepository
 
     return $product;
   }
+
   public function getAll()
   {
       $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
@@ -37,6 +38,7 @@ class ProductRepository
     return $products;
       
   }
+
   public function getProductsFavorites($pids)
   {
     $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
@@ -79,7 +81,6 @@ class ProductRepository
     return $products;
 
   }
-
 
   public function search($key)
   {
@@ -178,8 +179,7 @@ class ProductRepository
 
         DB::commit();
 
-        Cache::forget('products');
-        Cache::forget('initial_products');
+        $this->clearCache();
 
         return $product->load('assets','variants.variant_items.variant_item_values');
 
@@ -193,6 +193,7 @@ class ProductRepository
 
         
   }
+
   public function update($request)
   {
       $product = Product::find($request->id);
@@ -277,8 +278,7 @@ class ProductRepository
 
           DB::commit();
 
-          Cache::forget('products');
-          Cache::forget('initial_products');
+          $this->clearCache();
 
           return $product->fresh();
 
@@ -291,6 +291,7 @@ class ProductRepository
 
       
   }
+
   public function destroy($id)
   {
       $product = Product::find($id);
@@ -309,8 +310,7 @@ class ProductRepository
 
           DB::commit();
 
-          Cache::forget('products');
-          Cache::forget('initial_products');
+          $this->clearCache();
 
           return true;
 
@@ -322,6 +322,7 @@ class ProductRepository
           throw new Exception($e);
       }
   }
+
   public function addProductReview($request)
   {   
       $product = Product::findOrFail($request->product_id);
@@ -335,6 +336,7 @@ class ProductRepository
       return $review;
 
   }
+
   protected function setPricing($product)
   {
     $pricing = [
@@ -380,6 +382,7 @@ class ProductRepository
     
       return $pricing;
   }
+
   protected function formatResponse($product)
   {
       return [
@@ -397,5 +400,11 @@ class ProductRepository
         'assets'  =>  $product->assets,
       ];
 
+  }
+  
+  protected function clearCache()
+  {
+    Cache::forget('products');
+    Cache::forget('initial_products');
   }
 }
