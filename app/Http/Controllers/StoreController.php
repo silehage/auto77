@@ -20,12 +20,6 @@ use App\Repositories\ProductRepository;
 
 class StoreController extends Controller
 {
-    private $productRepository;
-
-    public function __construct(ProductRepository $productRepository)
-    {
-        $this->productRepository = $productRepository;
-    }
 
     public function index()
     {
@@ -145,72 +139,5 @@ class StoreController extends Controller
         }
 
         
-    }
-
-    public function getInitialData()
-    {
-
-        $sliders = Cache::rememberForever('sliders', function () {
-            return Slider::OrderBy('weight', 'asc')->get();
-        });
-        
-        $blocks = Cache::rememberForever('blocks', function () {
-            return Block::with('post')->OrderBy('weight', 'asc')->get();
-        });
-
-        $shop = Cache::rememberForever('shop', function () {
-            return Shop::first();
-        });
-        $categories = Cache::rememberForever('categories', function () {
-            return Category::orderBy('weight', 'asc')->get();
-        });
-        $posts = Cache::rememberForever('promote_post', function () {
-            return Post::promote()->latest()->take(4)->get();
-        });
-        $config = Cache::rememberForever('shop_config', function () {
-            return Config::first();
-        });
-
-        $initialProducts = Cache::rememberForever('initial_products', function() use ($categories){
-
-            $item = [];
-
-            foreach($categories as $cat) {
-
-                if($cat->is_front) {
-
-                   $data = new Collection();
-                   $data['title'] = $cat->title;
-                   $data['category_id'] = $cat->id;
-                   $data['category_slug'] = $cat->slug;
-                   $data['id'] = Str::random(16);
-                   $data['banner_src'] = $cat->banner? $cat->banner_src : '';
-                   $data['description'] = $cat->description ?? '';
-                   $data['items'] = $this->productRepository->getProductInitialByCategory($cat->id);
-
-                    $item[] = $data;
-                }
-                
-            }
-
-            return $item;
-        });
-
-        // dd($initialProducts);
-
-        return response()->json([
-            'success' => true, 
-            'results' => [
-                'products' => $initialProducts,
-                'sliders' => $sliders,
-                'categories' => $categories,
-                'blocks' => $blocks,
-                'shop' => $shop,
-                'posts' => $posts,
-                'config' => $config,
-                'sess_id' => Str::random(40),
-            ]
-            
-        ],200);
     }
 }

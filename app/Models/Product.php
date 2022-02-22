@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = [];
-    // protected $appends = ['pricing'];
+    // public $appends = ['rating'];
 
     protected $casts = [
         'status' > 'boolean'
@@ -28,11 +28,11 @@ class Product extends Model
     }
     public function reviews()
     {
-        return $this->hasMany(Review::class)->latest()->take(4);
+        return $this->hasMany(Review::class);
     }
-    public function getRatingAttribute()
+    public function reviewsLimit()
     {
-        return number_format($this->reviews()->avg('rating'), 1)?? 0;
+        return $this->hasMany(Review::class)->take(4);
     }
     public function variants()
     {
@@ -65,9 +65,13 @@ class Product extends Model
     public function promoDiscount()
     {
         if($this->promote()) {
+            
             return $this->promote();
+
+        } else {
+
+            return $this->discount();
         }
-        return $this->discount();
     }
     public function getPricingAttribute()
     {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FrontApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
 /*
@@ -12,6 +13,8 @@ use App\Http\Controllers\FrontController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('test', [FrontApiController::class, 'home']);
 
 Route::get('/', [FrontController::class, 'homepage']);
 Route::get('products', [FrontController::class, 'products']);

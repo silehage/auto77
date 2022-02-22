@@ -23,10 +23,18 @@ class Category extends Model
     {
         return $this->filename ?  url('/upload/images/' . $this->filename) : '';
     }
+
     public function getBannerSrcAttribute()
     {
         return $this->banner ? url('/upload/images/' . $this->banner) : '';
     }
 
-
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+    public function productItems()
+    {
+        return $this->hasMany(Product::class)->take(2);
+    }
 }

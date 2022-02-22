@@ -2,15 +2,16 @@
 
 namespace App\Repositories;
 
+use Exception;
 use App\Models\Asset;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\ProductResource;
-use Exception;
-
+use stdClass;
 
 class ProductRepository
 {
@@ -67,7 +68,7 @@ class ProductRepository
 
   }
 
-  public function getProductInitialByCategory($id)
+  public function getProductByCategoryWithLimit($id)
   {
     $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
           ->withAvg('reviews', 'rating')
@@ -81,6 +82,54 @@ class ProductRepository
     return $products;
 
   }
+
+  public function getInitialProducts()
+    {
+
+        $data = Category::where('is_front', 1)
+            ->with(['products.assets', 'products.discount', 'products.promote.discount', 'products.reviews'])
+            ->get()
+            ->map(function($cat) {
+
+                $categoryItem = new stdClass();
+                $categoryItem->title = $cat->title;
+                $categoryItem->category_id = $cat->id;
+                $categoryItem->category_slug = $cat->slug;
+                $categoryItem->id = Str::random(16);
+                $categoryItem->banner_src = $cat->banner? $cat->banner_src : '';
+                $categoryItem->description = $cat->description ?? '';
+
+                $categoryItem->items = $cat->products->map(function($product) use($cat) {
+
+                    $newCat = new stdClass();
+                    $newCat->id = $cat->id;
+                    $newCat->title = $cat->title;
+                    $newCat->slug = $cat->slug;
+
+                    return [
+                        'id'      => $product->id,
+                        'title'   => $product->title,
+                        'slug'    => $product->slug,
+                        'sku'     => $product->sku,
+                        'description' =>  $product->description,
+                        'status'  =>  $product->status,
+                        'sold'    =>  $product->sold,
+                        'weight'  =>  $product->weight,
+                        'rating'  =>  count($product->reviews) > 0 ? (float) number_format($product->reviews->avg('rating'), 1) : 0.0,
+                        'pricing' =>  $this->setPricing($product),
+                        'category' => $newCat,
+                        'assets'  =>  $product->assets,
+                    ];
+                });
+
+                // dd($categoryItem);
+
+                return $categoryItem;
+            });
+
+        return $data;
+
+    }
 
   public function search($key)
   {
@@ -394,7 +443,7 @@ class ProductRepository
         'status'  =>  $product->status,
         'sold'    =>  $product->sold,
         'weight'  =>  $product->weight,
-        'rating'  =>  $product->reviews_avg_rating ? number_format($product->reviews_avg_rating, 1) : 0,
+        'rating'  =>  count($product->reviews) > 0 ? (float) number_format($product->reviews->avg('rating'), 1) : 0.0,
         'pricing' =>  $this->setPricing($product),
         'category' => $product->category,
         'assets'  =>  $product->assets,
@@ -407,4 +456,5 @@ class ProductRepository
     Cache::forget('products');
     Cache::forget('initial_products');
   }
+
 }
