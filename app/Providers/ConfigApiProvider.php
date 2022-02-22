@@ -19,7 +19,7 @@ class ConfigApiProvider extends ServiceProvider
             //code...
             $setting = DB::table('configs')->first();
 
-            $apiPro = env('RAJAONGKIR_API_PRO', '');
+            $apiPro = env('RAJAONGKIR_API_PRO', null);
             if ($setting) //checking if table is not empty
             {
                 $rajaongkir = array(
