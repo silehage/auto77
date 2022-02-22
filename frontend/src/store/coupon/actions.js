@@ -13,7 +13,7 @@ export function storeCoupon ({ dispatch }, payload) {
   })
 }
 export function updateCoupon ({ dispatch }, payload) {
-  Api().post('coupon/' + payload.id, payload).then(() => {
+  Api().post('coupon/' + payload.discount_id, payload).then(() => {
     dispatch('getCoupons')
   })
 }
