@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      tab: 'diskon'
+      tab: 'promo'
     }
   },
   mounted() {
