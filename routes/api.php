@@ -16,6 +16,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\FrontApiController;
 use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PromoteController;
@@ -98,7 +99,6 @@ Route::middleware('auth:sanctum')->group(function() {
 
 Route::post('orders', [OrderController::class, 'store']);
 
-Route::get('getInitialData', [StoreController::class, 'getInitialData']);
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
 Route::get('post/{slug}', [PostController::class, 'getPostBySlug']);
@@ -159,3 +159,5 @@ Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 
 Route::get('coupons/getByCode/{code}', [CouponController::class, 'getByCode']);
 Route::post('redeemCoupon', [CouponController::class, 'redeemCoupon']);
+
+Route::get('getInitialData', [FrontApiController::class, 'home']);
