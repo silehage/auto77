@@ -13,6 +13,8 @@ class Promote extends Model
 
     public $appends = ['is_active', 'now', 'start', 'diff_start', 'diff_end'];
 
+    protected $with =['discount'];
+
     protected $casts = [
         'start_date' => 'datetime:d F Y H:i',
         'end_date' => 'datetime:d F Y H:i',
@@ -45,10 +47,6 @@ class Promote extends Model
     {
         return Carbon::parse($this->end_date)->diffForHumans();
     }
-    // public function products()
-    // {
-    //     return $this->belongsToMany(Product::class, 'product_promote', 'promote_id', 'product_id');
-    // }
     public function products()
     {
         return $this->hasMany(Product::class);

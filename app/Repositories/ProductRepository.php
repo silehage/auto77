@@ -29,7 +29,7 @@ class ProductRepository
 
   public function getAll()
   {
-      $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
+      $products =  Product::with('assets', 'category','discount', 'promote', 'reviews')
           ->withAvg('reviews', 'rating')
           ->get()
           ->map(function($product) {
@@ -42,7 +42,7 @@ class ProductRepository
 
   public function getProductsFavorites($pids)
   {
-    $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
+    $products =  Product::with('assets', 'category','discount', 'promote', 'reviews')
           ->withAvg('reviews', 'rating')
           ->whereIn('id', $pids)
           ->get()
@@ -53,10 +53,26 @@ class ProductRepository
     return $products;
 
   }
+  
+  public function search($key)
+  {
+
+    $products =  Product::with('assets', 'category','discount', 'promote', 'reviews')
+          ->withAvg('reviews', 'rating')
+          ->where('title', 'like', '%'.$key.'%')
+          ->orWhere('description', 'like', '%'.$key.'%')
+          ->get()
+          ->map(function($product) {
+              return $this->formatResponse($product);
+          });
+
+    return $products;
+
+  }
 
   public function getProductsByCategory($id)
   {
-    $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
+    $products =  Product::with('assets', 'category','discount', 'promote', 'reviews')
           ->withAvg('reviews', 'rating')
           ->where('category_id', $id)
           ->get()
@@ -70,7 +86,7 @@ class ProductRepository
 
   public function getProductByCategoryWithLimit($id)
   {
-    $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
+    $products =  Product::with('assets', 'category','discount', 'promote', 'reviews')
           ->withAvg('reviews', 'rating')
           ->where('category_id', $id)
           ->take(8)
@@ -87,7 +103,7 @@ class ProductRepository
     {
 
         $data = Category::where('is_front', 1)
-            ->with(['products.assets', 'products.discount', 'products.promote.discount', 'products.reviews'])
+            ->with(['products.assets', 'products.discount', 'products.promote', 'products.reviews'])
             ->get()
             ->map(function($cat) {
 
@@ -122,30 +138,13 @@ class ProductRepository
                     ];
                 });
 
-                // dd($categoryItem);
-
                 return $categoryItem;
             });
+            // dd($data);
 
         return $data;
 
     }
-
-  public function search($key)
-  {
-
-    $products =  Product::with('assets', 'category','discount', 'promote.discount', 'reviews')
-          ->withAvg('reviews', 'rating')
-          ->where('title', 'like', '%'.$key.'%')
-          ->orWhere('description', 'like', '%'.$key.'%')
-          ->get()
-          ->map(function($product) {
-              return $this->formatResponse($product);
-          });
-
-    return $products;
-
-  }
   
   public function store($request)
   {

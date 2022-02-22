@@ -6,7 +6,7 @@
             flat round dense
             icon="arrow_back" />
             <q-toolbar-title class="text-weight-bold brand">Cari Produk</q-toolbar-title>
-            <!-- <q-btn flat label="Cari Order" :to="{ name: 'OrderSearch'}"></q-btn> -->
+            <q-btn flat label="Cari Order" :to="{ name: 'OrderSearch'}"></q-btn>
        </q-toolbar>
     </q-header>
     <div class="col bg-white border q-ma-md">
@@ -64,7 +64,7 @@ export default {
       this.$refs.input.blur()
       this.searchProducts(this.search).then(response => {
         if(response.status == 200) {
-          this.products.data = response.data.results.products
+          this.products.data = response.data.results
           this.products.available = this.products.data.length? true : false
         }
       }).finally(() => {

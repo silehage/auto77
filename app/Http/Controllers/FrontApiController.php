@@ -46,11 +46,15 @@ class FrontApiController extends Controller
             return Config::first();
         });
 
+        // Cache::flush();
+
         $initialProducts = Cache::rememberForever('initial_products', function() use ($categories){
 
             return $this->productRepository->getInitialProducts($categories);
 
         });
+
+        // return view('welcome');
 
         return response()->json([
             'success' => true, 

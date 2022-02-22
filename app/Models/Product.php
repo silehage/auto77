@@ -60,7 +60,7 @@ class Product extends Model
     }
     public function promote()
     {
-        return $this->belongsTo(Promote::class, 'promote_id', 'id');
+        return $this->belongsTo(Promote::class, 'promote_id', 'id')->where('start_date', '<', now())->where('end_date', '>', now());
     }
     public function promoDiscount()
     {
