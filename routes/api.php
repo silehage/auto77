@@ -65,14 +65,11 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('updateStatusOrder', [OrderController::class, 'updateStatusOrder']);
     Route::post('paymentAccepted/{id}', [OrderController::class, 'paymentAccepted']);
     Route::post('inputResi', [OrderController::class, 'inputResi']);
-    // Config
-    Route::get('adminConfig', [ConfigController::class, 'adminConfig']);
-    Route::post('config', [ConfigController::class, 'update']);
     // Update
     Route::get('update', [UpdateController::class, 'overview']);
     Route::post('update', [UpdateController::class, 'update']);  
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
-
+    
     Route::apiResource('discount', DiscountController::class);
 
     Route::apiResource('coupon', CouponController::class);
@@ -87,6 +84,9 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
 });
 
 Route::middleware('auth:sanctum')->group(function() {
+    // Config
+    Route::get('adminConfig', [ConfigController::class, 'adminConfig']);
+    Route::post('config', [ConfigController::class, 'update']);
     
     Route::get('user', [UserController::class, 'index']);
     Route::post('user/logout', [UserController::class, 'logout']);
