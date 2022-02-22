@@ -14,9 +14,9 @@
     v-model="tab"
     class="text-primary"
     >
-      <q-tab name="diskon" label="Diskon"></q-tab>
-      <q-tab name="kupon" label="Kupon"></q-tab>
       <q-tab name="promo" label="Promo"></q-tab>
+      <q-tab name="kupon" label="Kupon"></q-tab>
+      <q-tab name="diskon" label="Diskon"></q-tab>
     </q-tabs>
     <q-separator />
 
