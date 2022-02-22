@@ -18,10 +18,12 @@ class ConfigApiProvider extends ServiceProvider
         try {
             //code...
             $setting = DB::table('configs')->first();
+
+            $apiPro = env('RAJAONGKIR_API_PRO', '');
             if ($setting) //checking if table is not empty
             {
                 $rajaongkir = array(
-                    'api_key' => $setting->rajaongkir_apikey,
+                    'api_key' => $apiPro?? $setting->rajaongkir_apikey,
                     // 'api_key' => env('RAJAONGKIR_API_PRO', $setting->rajaongkir_apikey),
                     'account_type' => $setting->rajaongkir_type,
                     'api_url' => env('RAJAONGKIR_API_URL', 'https://api.rajaongkir.com/starter/'),
