@@ -37,6 +37,7 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     // User
     Route::get('userList', [UserController::class, 'userList']);
     Route::get('findUser/{key}', [UserController::class, 'findUser']);
+    Route::delete('user/{id}', [UserController::class, 'destroy']);
     // Product
     Route::delete('product/{id}', [ProductController::class, 'destroy']);
     Route::post('product/update', [ProductController::class, 'update']);

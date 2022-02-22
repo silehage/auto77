@@ -50,8 +50,8 @@
             </q-item-section> 
           </q-item>
         </q-list>
-        <div class="q-my-md">
-          <q-btn v-if="canLoad" label="Loadmore" @click="getUsers"></q-btn>
+        <div class="q-py-md flex justify-center">
+          <q-btn :loading="load" v-if="canLoad" label="Loadmore" @click="loadUser" color="primary" outline></q-btn>
         </div>
       </div>
   </q-page>
@@ -68,7 +68,8 @@ export default {
       canLoad: false,
       search: '',
       userNotAvailable: false,
-      deleteId: null
+      deleteId: null,
+      load: false
     }
   },
   mounted() {
@@ -93,6 +94,19 @@ export default {
       })
       .finally(() => {
         this.$q.loading.hide()
+      })
+    },
+    loadUser() {
+      this.load = true
+      Api().get(`userList?take=${this.take}&skip=${this.users.length}`).then(response => {
+        if(response.status == 200) {
+          this.users = [...this.users, ...response.data.results]
+          this.canLoad = response.data.results.length == this.take ? true : false
+          this.userNotAvailable = this.users.length ? false : true
+        }
+      })
+      .finally(() => {
+        this.load = false
       })
     },
     findUser() {
