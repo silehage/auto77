@@ -124,6 +124,7 @@
 
 <script>
 import { Api } from 'boot/axios'
+import Cookies from 'js-cookie';
 export default {
   data() {
     return {
@@ -156,7 +157,7 @@ export default {
         Api().post('user/login', this.form).then(response => {
           if(response.status == 200) {
             this.$store.commit('user/SET_USER', response.data.results)
-            localStorage.setItem('API_TOKEN', response.data.token)
+            Cookies.set('__token', response.data.token, { expires: 1 })
           }
           this.$emit('onResponse', true)
         })
@@ -168,7 +169,7 @@ export default {
         Api().post('user/register', this.form).then(response => {
           if(response.status == 201) {
             this.$store.commit('user/SET_USER', response.data.results)
-            localStorage.setItem('API_TOKEN', response.data.token)
+            Cookies.set('__token', response.data.token, { expires: 1 })
             this.$emit('onResponse', true)
           }
         })
@@ -180,7 +181,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

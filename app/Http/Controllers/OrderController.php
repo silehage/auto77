@@ -38,7 +38,18 @@ class OrderController extends Controller
 
         return response([
             'success' => true,
-            'results' => $request->skip ? Order::with('transaction')->latest()->where('user_id', $user->id)->skip($request->skip)->take($take)->get() : Order::with('transaction')->where('user_id', $user->id)->latest()->take($take)->get()
+            'results' => $request->skip 
+            ? Order::with('transaction')
+            ->latest()
+            ->where('user_id', $user->id)
+            ->skip($request->skip)
+            ->take($take)
+            ->get()
+            : Order::with('transaction')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take($take)
+            ->get()
         ]);
     }
 
@@ -101,6 +112,10 @@ class OrderController extends Controller
                     'price' => $item['price'],
                     'note' => $item['note']
                 ]);
+
+                DB::table('products')->where('id', $item['product_id'],)->decrement('stock', intval($item['quantity']));
+                DB::table('product_variant_values')->where('product_id', $item['product_id'],)->decrement('item_stock', intval($item['quantity']));
+
 
                 $productData = Product::where('sku', $item['sku'])->first();
                 if($productData) {
@@ -251,6 +266,7 @@ class OrderController extends Controller
 
         foreach($order->items as $item) {
            DB::table('products')->where('id', $item->product_id)->decrement('stock', $item->quantity);
+           DB::table('product_variant_values')->where('product_id', $item->product_id)->decrement('item_stock', $item->quantity);
         }
 
         return response([
@@ -267,7 +283,12 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => Order::with('items.product')->where('order_status', $request->filter)->orderByDesc('updated_at')->skip($skip)->take(4)->get()
+            'results' => Order::with('items.product')
+            ->where('order_status', $request->filter)
+            ->orderByDesc('updated_at')
+            ->skip($skip)
+            ->take(4)
+            ->get()
         ], 200);
     }
     public function searchOrder(Request $request)
@@ -280,7 +301,11 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => Order::with('items.product')->where('customer_whatsapp', $q)->orWhere('order_ref', $q)->orderByDesc('updated_at')->get()
+            'results' => Order::with('items.product')
+            ->where('customer_whatsapp', $q)
+            ->orWhere('order_ref', $q)
+            ->orderByDesc('updated_at')
+            ->get()
         ], 200);
     }
     public function searchAdminOrder(Request $request)
@@ -293,7 +318,11 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'results' => Order::with('transaction')->where('customer_whatsapp', 'like', '%'.$q .'%')->orWhere('order_ref', 'like', '%'.$q .'%')->orderByDesc('updated_at')->get()
+            'results' => Order::with('transaction')
+            ->where('customer_whatsapp', 'like', '%'.$q .'%')
+            ->orWhere('order_ref', 'like', '%'.$q .'%')
+            ->orderByDesc('updated_at')
+            ->get()
         ], 200);
     }
     public function inputResi(Request $request)
@@ -323,10 +352,18 @@ class OrderController extends Controller
         $take = $request->query('take')?? 4;
 
         if($search) {
-            return Order::with('transaction')->where('customer_whatsapp', $search)->orWhere('order_ref', $search)->orderByDesc('updated_at')->get();
+            return Order::with('transaction')->where('customer_whatsapp', $search)
+            ->orWhere('order_ref', $search)
+            ->orderByDesc('updated_at')
+            ->get();
         }
         if($filter && $filter != 'ALL') {
-            return Order::with('transaction')->where('order_status', $filter)->orderByDesc('updated_at')->skip($skip)->take($take)->get();
+            return Order::with('transaction')
+            ->where('order_status', $filter)
+            ->orderByDesc('updated_at')
+            ->skip($skip)
+            ->take($take)
+            ->get();
         }
 
         return Order::with('transaction')->latest()->skip($skip)->take($take)->get();
@@ -336,7 +373,10 @@ class OrderController extends Controller
     public function getRandomOrder()
     {
         return response()->json([
-            'results' => OrderItem::with('images', 'order:id,customer_name,created_at')->inRandomOrder()->take(20)->get()
+            'results' => OrderItem::with('images', 'order:id,customer_name,created_at')
+                ->inRandomOrder()
+                ->take(20)
+                ->get()
         ], 200);
     }
     public function updateStatusOrder(Request $request)
