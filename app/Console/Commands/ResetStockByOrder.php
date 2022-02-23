@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\OrderItem;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use App\Models\ProductVariantValue;
 use Illuminate\Support\Facades\Log;
 
@@ -54,18 +55,8 @@ class ResetStockByOrder extends Command
 
                 foreach($orderItems as $item) {
 
-                    $product = Product::where('sku', $item->sku)->first();
-                    if($product) {
-                        $product->stock += $item->quantity;
-                        $product->save();
-                    } else {
-                        $productVar = ProductVariantValue::where('item_sku', $item->sku)->first();
-                        if($productVar) {
-                            $productVar->item_stock += $item->quantity;
-                            $productVar->save();
-                        }
-
-                    }
+                    DB::table('products')->where('id', $item['product_id'],)->increment('stock', intval($item['quantity']));
+                    DB::table('product_variant_values')->where('product_id', $item['product_id'],)->increment('item_stock', intval($item['quantity']));
                 }
 
                 $order->update(['order_status' => 'CANCELED']);
