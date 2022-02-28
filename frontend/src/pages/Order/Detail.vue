@@ -1,11 +1,12 @@
 <template>
   <q-page class="q-pb-lg bg-grey-2">
-    <q-header class="text-primary bg-white">
+    <q-header class="text-primary bg-white no-print">
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
           icon="arrow_back" />
         <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
+        <q-btn @click="print">Print</q-btn>
       </q-toolbar>
     </q-header>
     <div v-if="invoice">
@@ -94,7 +95,7 @@
             </div>
           </div>
         </div>
-        <q-card class="shadow" flat square>
+        <q-card class="no-print shadow" flat square>
             <div class="card-heading">Informasi Penerima</div>
           <q-card-section>
             <div class="text-grey-9">
@@ -118,7 +119,7 @@
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="bg-white shadow" square>
+        <q-card class="no-print bg-white shadow" square>
             <div class="card-heading">Informasi Ekspedisi</div>
           <q-card-section>
             <div class="text-grey-9">
@@ -142,7 +143,7 @@
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="bg-white shadow" square>
+        <q-card class="no-print bg-white shadow" square>
           <div class="card-heading border-b">Informasi Pembayaran</div>
           <q-card-section>
               <table class="dense">
@@ -166,7 +167,7 @@
         </q-card>
       </div>
     </div>
-    <q-inner-loading :showing="loading">
+    <q-inner-loading :showing="loading" class="no-print">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
   </q-page>
@@ -208,6 +209,9 @@ export default {
       if(status == 'CANCELED') return 'bg-red-6'
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'
+    },
+    print() {
+      window.print()
     },
     getOrder() {
       let self = this;
@@ -288,6 +292,11 @@ export default {
     td {
       border-bottom: 1px solid #eee;
     }
+  }
+}
+@media print{
+  .no-print{
+    display: none;
   }
 }
 </style>

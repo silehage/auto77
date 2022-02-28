@@ -49,7 +49,7 @@
             <q-input
               v-model="form.email"
               color="grey-6"
-              label="Alamat email *"
+             label="Email atau No Ponsel*"
               dense
               lazy-rules
               :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
@@ -73,7 +73,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'visibility' : 'visibility_off'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />
@@ -93,7 +93,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'visibility' : 'visibility_off'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />
@@ -101,7 +101,7 @@
         </q-input>
         </template>
       <div class="column q-gutter-y-sm">
-        <q-btn :loading="isLoading" 
+        <q-btn :loading="isLoading" unelevated
         type="submit" color="primary" padding="sm lg"
         >{{ isRegister? 'Daftar' : 'Login'}}</q-btn>
 

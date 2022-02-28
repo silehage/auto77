@@ -67,7 +67,7 @@
             </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'visibility' : 'visibility_off'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />
@@ -86,7 +86,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'visibility' : 'visibility_off'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />
@@ -94,7 +94,7 @@
         </q-input>
         <div class="column">
           <q-btn :loading="isLoading" 
-          type="submit" color="primary" padding="sm lg"
+          type="submit" color="primary" padding="sm lg" 
           >Daftar Sekarang</q-btn>
 
         </div>

@@ -20,13 +20,13 @@
               <q-input
               v-model="form.email"
               color="grey-6"
-              label="Email Anda *"
+              label="Email atau No Ponsel *"
               dense
               lazy-rules
               :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
             >
             <template v-slot:prepend>
-              <q-icon name="email" />
+              <q-icon name="account_circle" />
             </template>
               </q-input>
             
@@ -43,14 +43,14 @@
             </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'visibility' : 'visibility_off'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />
           </template>
         </q-input>
         <div class="column">
-          <q-btn :loading="isLoading" 
+          <q-btn :loading="isLoading"
           type="submit" color="primary" padding="sm lg"
           >Login</q-btn>
 

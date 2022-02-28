@@ -22,8 +22,14 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:60'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:80', 'unique:users'],
             'password' => ['required', 'confirmed'],
+        ],[
+            'name.required' => 'Nama wajib diisi.',
+            'phone.required' => 'Nomor ponsel wajib diisi.',
+            'phone.unique' => 'Nomor ponsel sudah terdaftar.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.confirmed' => 'Password konfirmasi tidak sama.',
         ]);
 
         $user = User::create([
@@ -47,13 +53,16 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
             'device_name' => 'required',
+        ], [
+            'email.required' => 'Email atau No ponsel wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
         ]);
     
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
     
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Email atau password salah.'],
+                'email' => ['Data kredensial salah.'],
             ]);
         }
         $user->tokens()->delete();
@@ -68,14 +77,22 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        $user = $request->user();
+
         $request->validate([
             'name' => 'required',
-            'phone' => 'required',
-            'email' => 'required|email',
+            'phone' => 'required|unique:users,phone,' .$user->id,
+            'email' => 'required|email|unique:users,email,' .$user->id,
             'password' => 'nullable|confirmed'
+        ],[
+            'name.required' => 'Nama wajib diisi.',
+            'phone.required' => 'Nomor ponsel wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'phone.unique' => 'Nomor ponsel sudah terdaftar.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.confirmed' => 'Password konfirmasi salah.',
         ]);
 
-        $user = $request->user();
 
         $user->name = $request->name;
         $user->email = $request->email;
