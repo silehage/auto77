@@ -265,8 +265,8 @@ class OrderController extends Controller
         $transaction->save();
 
         foreach($order->items as $item) {
-           DB::table('products')->where('id', $item->product_id)->decrement('stock', $item->quantity);
-           DB::table('product_variant_values')->where('product_id', $item->product_id)->decrement('item_stock', $item->quantity);
+           DB::table('products')->where('sku', $item->sku)->decrement('stock', $item->quantity);
+           DB::table('product_variant_values')->where('item_sku', $item->sku)->decrement('item_stock', $item->quantity);
         }
 
         return response([
