@@ -397,9 +397,9 @@ class ProductRepository
     
     $disc = null;
     
-    if($product->discount_id) {
+    if($product->discount_id != null) {
         $disc = $product->discount;
-    } elseif($product->promote_id) {
+    } elseif($product->promote_id != null) {
         $disc = $product->promote->discount;
     }
     
