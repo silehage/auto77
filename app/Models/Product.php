@@ -73,49 +73,49 @@ class Product extends Model
             return $this->discount();
         }
     }
-    public function getPricingAttribute()
-    {
-        $pricing = [
-            'default_price' => $this->price,
-            'current_price' => $this->price,
-            'discount_value' => 0,
-            'discount_percent' => 0,
-            'is_discount' => false 
-        ];
+    // public function getPricingAttribute()
+    // {
+    //     $pricing = [
+    //         'default_price' => $this->price,
+    //         'current_price' => $this->price,
+    //         'discount_value' => 0,
+    //         'discount_percent' => 0,
+    //         'is_discount' => false 
+    //     ];
 
-        $disc = null;
+    //     $disc = null;
 
-        if($this->discount_id) {
-            $disc = $this->discount;
-        } elseif($this->promote_id) {
-            $disc = $this->promote->discount;
-        }
+    //     if($this->discount_id) {
+    //         $disc = $this->discount;
+    //     } elseif($this->promote_id && $this->promote) {
+    //         $disc = $this->promote->discount;
+    //     }
 
-        if($disc) {
+    //     if($disc) {
 
-            $pricing['is_discount'] = true;
+    //         $pricing['is_discount'] = true;
 
-            $discValue = 0;
+    //         $discValue = 0;
             
 
-            if($disc->unit == 'percent') {
+    //         if($disc->unit == 'percent') {
  
-                $discValue = ($this->price*$disc->value) / 100;
+    //             $discValue = ($this->price*$disc->value) / 100;
 
-                $pricing['current_price'] = $this->price - ($this->price*$disc->value / 100);
-                $pricing['discount_percent'] = $disc->value;
+    //             $pricing['current_price'] = $this->price - ($this->price*$disc->value / 100);
+    //             $pricing['discount_percent'] = $disc->value;
                 
-             } else{
+    //          } else{
  
-                 $discValue = $disc->value;
-                 $pricing['current_price'] = $this->price - (int) $disc->value;
-                 $pricing['discount_percent'] = number_format(((int)$disc->value / $this->price)*100, 1);
+    //              $discValue = $disc->value;
+    //              $pricing['current_price'] = $this->price - (int) $disc->value;
+    //              $pricing['discount_percent'] = number_format(((int)$disc->value / $this->price)*100, 1);
  
-            }
+    //         }
 
-            $pricing['discount_value'] = $discValue;
-         }
+    //         $pricing['discount_value'] = $discValue;
+    //      }
 
-        return $pricing;
-    }
+    //     return $pricing;
+    // }
 }

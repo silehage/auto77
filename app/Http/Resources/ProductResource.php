@@ -24,10 +24,10 @@ class ProductResource extends JsonResource
         ];
 
         $disc = null;
-
-        if($this->discount_id) {
+ 
+        if($this->discount_id && $this->discount) {
             $disc = $this->discount;
-        } elseif($this->promote_id) {
+        } elseif($this->promote_id && $this->promote) {
             $disc = $this->promote->discount;
         }
 
@@ -59,7 +59,7 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'pricing' => $this->pricing,
+            'pricing' => $pricing,
             'slug' => $this->slug,
             'sku' => $this->sku,
             'stock' => $this->variant_items_sum_item_stock?? $this->stock,
