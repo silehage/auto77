@@ -1,16 +1,26 @@
 
 
 export function ADD_TO_CART (state, payload) {
-  let item;
-  let hasItem = state.carts.find(el => el.sku == payload.sku)
-  if(hasItem != undefined) {
-    item = hasItem
-    state.carts = state.carts.filter(ek => ek.sku != payload.sku)
-    item = {...item, quantity: item.quantity+payload.quantity }
+
+  if(state.carts.length) {
+
+    let hasItem = state.carts.find(el => el.sku == payload.sku)
+
+    if(hasItem != undefined) {
+  
+      let index = state.carts.findIndex(ej => ej.sku == payload.sku)
+  
+      console.log(payload);
+      state.carts[index].quantity += payload.quantity
+  
+    } else {
+      state.carts.push(payload)
+    }
   } else {
-    item = payload
+    state.carts.push(payload)
   }
-  state.carts.push(item) 
+
+
 }
 
 export function UPDATE_CART(state, payload) {
@@ -18,6 +28,7 @@ export function UPDATE_CART(state, payload) {
   let objIndex = state.carts.findIndex(el => el.sku == payload.sku)
 
   state.carts[objIndex].quantity = parseInt(payload.quantity)
+
 
 }
 
@@ -39,3 +50,4 @@ export function COMMIT_CARTS(state) {
 export function ROLLBACK_CARTS(state) {
   state.carts = JSON.parse(localStorage.getItem('_wacommerce-carts'))
 }
+

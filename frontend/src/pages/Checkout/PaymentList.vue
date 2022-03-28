@@ -1,20 +1,5 @@
 <template>
   <div class="q-gutter-y-lg">
-     <div v-if="isCod">
-        <div class="q-pb-lg">
-          <fieldset>
-            <legend class="q-px-sm">Bayar Ditempat</legend>
-            <div class="row q-gutter-sm payment-container">
-              <div 
-                class="box-shadow cursor-pointer payment-list cod" 
-                :class="{'is-selected' : isSelectedCod}" @click="selectCodPayment">
-                  <div class="text-h5 text-weight-bold">COD</div>
-                  <div class="text-center name">Bayar Ditempat</div>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-      </div>
     <div v-if="payments.localbanks.length">
       <fieldset>
         <legend class="q-px-sm">Bank Transfer</legend>
@@ -37,17 +22,19 @@
        <fieldset>
         <legend class="q-px-sm">Virtual Account</legend>
         <div class="row q-gutter-sm payment-container">
-          <div 
-            class="box-shadow cursor-pointer payment-list" 
-            :class="{'is-selected' : isSelected(item.code)}"
-            v-for="(item, index) in virtualAccounts" 
-            :key="index" @click="selectPayment(item)">
-               <div class="image">
-                <img v-if="item.icon_url" :src="item.icon_url" />
-                <img v-else src="/static/no-image.png" />
+          <div v-for="(item, index) in virtualAccounts" :key="index">
+            <div 
+              class="box-shadow cursor-pointer payment-list" 
+              :class="{'is-selected' : isSelected(item.code)}"
+               @click="selectPayment(item)">
+                <div class="image">
+                  <img v-if="item.icon_url" :src="item.icon_url" />
+                  <img v-else src="/static/no-image.png" />
+                </div>
+                <div class="text-center name">{{ item.name }}</div>
               </div>
-              <div class="text-center name">{{ item.name }}</div>
-            </div>
+            <div v-if="isFeeCustomer(item.fee_customer)" class="text-grey-7 text-xs q-pa-xs text-center">Fee {{ moneyIDR(calculateFee(item.fee_customer)) }}</div>
+          </div>
         </div>
       </fieldset>
     </div>
@@ -55,17 +42,20 @@
       <fieldset>
         <legend class="q-px-sm">Convenion Store</legend>
          <div class="row q-gutter-sm payment-container">
-          <div 
-          class="box-shadow cursor-pointer payment-list" 
-          :class="{'is-selected' : isSelected(item.code)}"
-          v-for="(item, index) in convenienceStore" 
-          :key="index" @click="selectPayment(item)">
-             <div class="image">
-                <img v-if="item.icon_url" :src="item.icon_url" />
-                <img v-else src="/static/no-image.png" />
-              </div>
-            <div class="text-center name">{{ item.name }}</div>
-          </div>
+           <div v-for="(item, index) in convenienceStore" 
+            :key="index">
+            <div 
+            class="box-shadow cursor-pointer payment-list" 
+            :class="{'is-selected' : isSelected(item.code)}"
+             @click="selectPayment(item)">
+              <div class="image">
+                  <img v-if="item.icon_url" :src="item.icon_url" />
+                  <img v-else src="/static/no-image.png" />
+                </div>
+              <div class="text-center name">{{ item.name }}</div>
+            </div>
+            <div v-if="isFeeCustomer(item.fee_customer)" class="text-grey-7 text-xs q-pa-xs text-center">Fee {{ moneyIDR(calculateFee(item.fee_customer)) }}</div>
+           </div>
         </div>
       </fieldset>
     </div>
@@ -73,17 +63,19 @@
       <fieldset>
         <legend class="q-px-sm">E-Walet</legend>
          <div class="row q-gutter-sm payment-container">
-          <div 
-            class="box-shadow cursor-pointer payment-list" 
-            :class="{'is-selected' : isSelected(item.code)}"
-            v-for="(item, index) in ewalet" 
-            :key="index" @click="selectPayment(item)">
-               <div class="image">
-                <img v-if="item.icon_url" :src="item.icon_url" />
-                <img v-else src="/static/no-image.png" />
+           <div v-for="(item, index) in ewalet" :key="index">
+            <div 
+              class="box-shadow cursor-pointer payment-list" 
+              :class="{'is-selected' : isSelected(item.code)}"
+               @click="selectPayment(item)">
+                <div class="image">
+                  <img v-if="item.icon_url" :src="item.icon_url" />
+                  <img v-else src="/static/no-image.png" />
+                </div>
+                <div class="text-center name">{{ item.name }}</div>
               </div>
-              <div class="text-center name">{{ item.name }}</div>
-            </div>
+              <div v-if="isFeeCustomer(item.fee_customer)" class="text-grey-7 text-xs q-pa-xs text-center">Fee {{ moneyIDR(calculateFee(item.fee_customer)) }}</div>
+           </div>
          </div>
       </fieldset>
     </div>
@@ -95,14 +87,19 @@ export default {
   props: {
     payments: Object,
     paymentSelected: Object,
-    isCod: Boolean
-  },
-  data() {
-    return {
-      selected: null
-    }
+    isCod: Boolean,
+    order: Object,
   },
   computed: {
+    user() {
+        return this.$store.state.user.user
+    },
+    viaSaldo() {
+      return this.paymentSelected && this.paymentSelected.payment_type == 'BALANCE'
+    },
+    canSaldo() {
+      return this.user.balance.saldo >= this.order.total
+    },
     virtualAccounts() {
       if(this.payments && this.payments.paymentGateway.length) {
         return this.payments.paymentGateway.filter(function(el) {
@@ -140,6 +137,26 @@ export default {
     },
   },
   methods: {
+    isFeeCustomer(fee) {
+      if(fee.flat > 0 || fee.percent > 0) {
+        return true
+      }
+      return false
+    },
+    calculateFee(fee) {
+      let totalFee = parseInt(fee.flat);
+      if(fee.percent > 0) {
+        let feePercent = (parseInt(this.order.total) * parseFloat(fee.percent))/100
+
+        if(fee.flat > 0) {
+          totalFee += feePercent
+        } else {
+          totalFee = feePercent
+        }
+         
+      }
+      return totalFee;
+    },
     isSelected(code) {
       if(this.paymentSelected) {
         if(this.paymentSelected.code == code) {
@@ -170,8 +187,12 @@ export default {
       }
       this.$emit('onSelect', cod )
     },
+    selectSaldo() {
+      if(!this.canSaldo) return
+      this.$emit('onSelect', {payment_type: 'BALANCE'})
+    },
     selectPayment(item) {
-      this.$emit('onSelect', {...item, payment_type: 'GATEWAY'})
+      this.$emit('onSelect', {...item, payment_type: 'GATEWAY', payment_fee: this.calculateFee(item.fee_customer)})
     },
     selectPaymentBank(item){
       this.$emit('onSelect', {...item, payment_type: 'DIRECT'})
@@ -179,7 +200,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

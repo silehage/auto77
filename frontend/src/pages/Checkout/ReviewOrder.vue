@@ -40,9 +40,9 @@
     </fieldset>
     <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Ringkasan Order</legend>
-        <div v-if="carts.length" class="bg-grey-2 q-mb-md">
+        <div v-if="carts.items.length" class="bg-grey-2 q-mb-md">
           <q-list separator>
-            <q-item v-for="cart in carts" :key="cart.id">
+            <q-item v-for="cart in carts.items" :key="cart.id">
               <q-item-section side top>
               <q-img :src="cart.image_url" style="width:50px;height:50px;"></q-img>
               </q-item-section>
@@ -63,34 +63,39 @@
               <td align="right">:</td>
               <td align="right">{{ moneyIDR(form.subtotal) }}</td>
             </tr>
-            <tr>
-              <td align="right">Ongkos Kirim</td>
+            <tr v-if="form.shipping_cost">
+              <td align="right">Ongkos Kirim (+)</td>
               <td align="right">:</td>
-              <td align="right">{{ form.shipping_cost? moneyIDR(form.shipping_cost) : 0 }}</td>
+              <td align="right">{{ moneyIDR(form.shipping_cost) }}</td>
             </tr>
-            <tr style="border-bottom:1px solid">
+            <tr v-if="form.payment_fee">
+              <td align="right">Payment Fee (+)</td>
+              <td align="right">:</td>
+              <td align="right">{{ moneyIDR(form.payment_fee) }}</td>
+            </tr>
+            <!-- <tr style="border-bottom:1px solid">
               <td align="right">Total</td>
               <td align="right">:</td>
               <td align="right">{{ moneyIDR(form.subtotal+form.shipping_cost) }}</td>
+            </tr> -->
+            <tr v-if="form.coupon_discount">
+              <td align="right">Diskon (-)</td>
+              <td align="right">:</td>
+              <td align="right">{{ form.coupon_discount? moneyIDR(form.coupon_discount) : 0 }}</td>
             </tr>
           </table>
         </div>
         <div class="flex justify-end q-mt-sm">
           <table class="table dense">
-            <tr v-if="form.coupon_discount">
-              <td align="right">Diskon [-]</td>
-              <td align="right">:</td>
-              <td align="right">{{ form.coupon_discount? moneyIDR(form.coupon_discount) : 0 }}</td>
-            </tr>
             <tr>
-              <th align="right">Grand Total</th>
+              <th align="right">Total Tagihan</th>
               <td align="right">:</td>
               <th align="right">{{ moneyIDR(form.total) }}</th>
             </tr>
           </table>
         </div>
     </fieldset>
-    <fieldset class="q-mt-lg">
+    <fieldset class="q-mt-lg" v-if="form.payment_method && paymentSelected">
       <legend class="q-pa-sm">Pembayaran</legend>
         <div class="row q-gutter-sm">
           <template v-if="form.payment_method == 'COD'">
@@ -101,15 +106,15 @@
           </template>
           <template v-else>
             <div class="box-shadow payment-list is-selected">
-               <div class="image" v-if="payment.icon_url">
-                <img  :src="payment.icon_url" />
+               <div class="image" v-if="paymentSelected.icon_url">
+                <img :src="paymentSelected.icon_url" />
               </div>
-              <div class="flex justify-center items-center" v-if="payment.payment_type== 'DIRECT'" style="margin:auto;">
-                <div class=" text-weight-bold text-md">{{  payment.bank_name }}</div>
+              <div class="flex justify-center items-center" v-if="paymentSelected.payment_type== 'DIRECT'" style="margin:auto;">
+                <div class=" text-weight-bold text-md">{{  paymentSelected.bank_name }}</div>
                 <div>Bank Transfer</div>
               </div>
               <div v-else class="text-center name">
-                {{ payment.name }}
+                {{ paymentSelected.name }}
               </div>
             </div>
           </template>
@@ -122,9 +127,9 @@
 export default {
   name: 'ReviewOrder',
   props: {
-    carts: Array,
+    carts: Object,
     form: Object,
-    payment: Object,
+    paymentSelected: Object,
     noPayment: Boolean
   },
   methods: {

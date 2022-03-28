@@ -15,7 +15,7 @@ class CartController extends Controller
                 'status' => false
             ], 500);
         }
-        
+
         return response()->json([
             'results' => Cart::where('session_id', $sessId)->get()
         ], 200);

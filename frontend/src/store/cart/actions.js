@@ -39,6 +39,7 @@ export function updateCart ({ commit }, payload) {
   })
 
 }
+
 export function removeCart ({ commit }, payload) {
 
   commit('REMOVE_CART', payload)

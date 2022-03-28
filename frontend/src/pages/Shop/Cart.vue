@@ -1,6 +1,6 @@
 <template>
   <q-page class="bg-grey-2"
-  :class="{'flex flex-center' : !carts.length}"
+  :class="{'flex flex-center' : !carts.items.length}"
   >
     <q-header class="text-primary bg-white">
         <q-toolbar>
@@ -10,9 +10,9 @@
           <q-toolbar-title class="text-weight-bold brand">Keranjang Belanja</q-toolbar-title>
         </q-toolbar>
     </q-header>
-    <div v-if="carts.length" class="q-py-sm">
+    <div v-if="carts.items.length" class="q-py-sm">
       <q-list class="bg-white" separator>
-        <q-item v-for="cart in carts" :key="cart.sku" class="q-pa-sm">
+        <q-item v-for="cart in carts.items" :key="cart.sku" class="q-pa-sm">
           <q-item-section side class="q-pr-sm">
             <q-btn @click="removeCart(cart)" icon="close" flat color="red" padding="4px" size="12px" round></q-btn>
           </q-item-section>
@@ -24,7 +24,6 @@
               <div class="text-weight-medium ellipsis">{{ cart.name }}</div>
               <div class="text-grey-7 q-mb-xs text-caption">{{ cart.note }}</div>
               <div>Harga {{  moneyIDR(cart.price) }}</div>
-              <!-- <div class="text-grey-7">Subtotal {{ moneyIDR(cart.quantity*cart.price) }}</div> -->
               <div class="q-gutter-x-sm ro items-center">
                 <q-btn flat padding="3px" round icon="remove_circle_outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
                 <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
@@ -43,10 +42,10 @@
                 <tr>
                   <td align="right">Subtotal</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(subtotal()) }}</td>
+                  <td align="right">{{ moneyIDR(carts.subtotal) }}</td>
                 </tr>
                 <tr>
-                  <td align="right">Kupon Diskon <span v-if="coupon_discount" class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
+                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> Diskon <span v-if="coupon_discount" class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
                   <td>:</td>
                   <td align="right">{{ moneyIDR(getDiscountAmount()) }}</td>
                 </tr>
@@ -57,12 +56,13 @@
                 </tr>
               </table>
             </div>
-            <div class="q-mt-md">
+            <div class="text-teal text-underline cursor-pointer q-mt-md" v-if="!showCouponForm" @click="isCoupon = true">Punya kode kupon?</div>
+            <div class="q-mt-md" v-if="showCouponForm">
               <q-form @submit.prevent="handleRedeemCoupon">
                 <!-- <div class="text-caption">Punya Kupon?</div> -->
-                <div class="row items-center no-wrap q-gutter-x-xs">
-                  <q-input required outlined square dense v-model="couponCode" placeholder="Redeem Kupon" style="width:160px;"/>
-                  <q-btn size="16px" color="blue" unelevated type="submit" label="Redeem" style="border-radius:0;"></q-btn>
+                <div class="row items-center no-wrap">
+                  <input class="input-coupon" required v-model="couponCode" placeholder="Input Kupon"/>
+                  <q-btn no-caps size="14px" color="teal" unelevated type="submit" label="Gunakan" style="border-radius:0;"></q-btn>
                 </div>
               </q-form>
             </div>
@@ -71,7 +71,7 @@
     </q-card-section>
   </q-card>
     </div>
-    <div v-if="!carts.length" class="column items-center">
+    <div v-if="!carts.items.length" class="column items-center">
       <p class="text-grey-8 text-weight-bold text-center">Keranjang belanja anda masih kosong!</p>
       <q-btn unelevated :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary"
         icon="keyboard_backspace" label="kembali berbelanja" no-caps/>
@@ -89,7 +89,7 @@
      >
       <login-block @onResponse="onResponse" @onClose="loginModal = false"/>
     </q-dialog>
-    <q-footer v-if="carts.length" class="bg-white q-pa-md">
+    <q-footer v-if="carts.items.length" class="bg-white q-pa-md">
       <q-btn v-if="isCanChekout" unelevated @click="checkout" color="primary" class="full-width" no-caps>
         <svg
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -141,22 +141,28 @@ export default {
       directCheckoutModal: false,
       discount: 0,
       currentOrder: null,
-      couponCode: ''
+      couponCode: '',
+      isCoupon: false
     }
   },
   computed: {
     ...mapState({
-      carts: state => state.cart.carts,
       shop: state => state.shop,
       config: state => state.config,
       user: state => state.user.user,
       coupon_discount: state => state.coupon.coupon_discount
     }),
+    showCouponForm() {
+      return this.isCoupon || this.coupon_discount ? true : false
+    },
+    carts() {
+      return this.$store.getters['cart/getCarts']
+    },
     session_id() {
       return this.$store.state.session_id
     },
     isCanChekout: function() {
-      if(this.carts.length && this.config && this.config.can_shipping) {
+      if(this.carts.items.length && this.config && this.config.can_shipping) {
         if(this.config.is_tripay_ready || this.config.is_bank_ready) {
           return true
         } else {
@@ -167,7 +173,7 @@ export default {
       }
     },
     isCanCheckoutDirectWithShipping() {
-      return this.carts.length && this.shop.phone && this.config && this.config.can_shipping ? true : false
+      return this.carts.items.length && this.shop.phone && this.config && this.config.can_shipping ? true : false
     },
     isCanCheckoutWhatsapp() {
       return this.config && this.config.is_whatsapp_checkout && this.shop.phone ? true : false
@@ -177,6 +183,7 @@ export default {
     if(!this.shop) {
       this.$store.dispatch('getShop')
     }
+    console.log(this.carts);
   },
   methods: {
     ...mapActions('coupon', ['redeemCoupon']),
@@ -194,6 +201,10 @@ export default {
           this.couponCode = ''
         }
       })
+    },
+    removeCoupon() {
+      this.couponCode = ''
+      this.$store.commit('coupon/REMOVE_COUPON')
     },
     onResponse(evt) {
       if(evt === true) {
@@ -235,35 +246,25 @@ export default {
         session_id: this.session_id
       })
     },
-    subtotal() {
-      if(this.carts.length > 1) {
-        let j = [];
-        this.carts.forEach(element => {
-          j.push(element.quantity*element.price)
-        });
-        return j.reduce((a,b) => a + b)
-      }
-      return this.carts[0].quantity * this.carts[0].price
-    },
     total () {
       if(this.coupon_discount) {
-        return parseInt(this.subtotal())-this.getDiscountAmount()
+        return parseInt(this.carts.subtotal)-this.getDiscountAmount()
       }
-      return this.subtotal()
+      return this.carts.subtotal
     },
     getDiscountPercent() {
       if(this.coupon_discount) {
         if(this.coupon_discount.discount.unit == 'percent') {
           return parseInt(this.coupon_discount.discount.value)
         } 
-        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.subtotal()))*100
+        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.carts.subtotal))*100
       }
       return 0
     },
     getDiscountAmount() {
       if(this.coupon_discount) {
         if(this.coupon_discount.discount.unit == 'percent') {
-          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.subtotal())
+          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.carts.subtotal)
         }
         return parseInt(this.coupon_discount.discount.value)
       }
@@ -275,9 +276,6 @@ export default {
         session_id: cart.session_id
       })
     },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
-    },
   },
   meta() {
     return {
@@ -286,3 +284,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.input-coupon {
+  width: 180px;
+  padding: 6px 10px;
+  border: 1px solid #c3c3c3;
+  outline: none;
+}
+</style>

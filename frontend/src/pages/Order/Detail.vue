@@ -1,15 +1,14 @@
 <template>
   <q-page class="q-pb-lg bg-grey-2">
-    <q-header class="text-primary bg-white no-print">
+    <q-header class="text-primary bg-white ">
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
           icon="arrow_back" />
         <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
-        <q-btn @click="print">Print</q-btn>
       </q-toolbar>
     </q-header>
-    <div v-if="invoice">
+    <div v-if="invoice" class="">
       <div class="q-pt-md q-gutter-y-md">
         <div class="q-mt-md q-pb-lg bg-white q-pa-md">
           <div class="flex justify-between text-grey-8">
@@ -70,27 +69,32 @@
                   <td>:</td>
                   <td align="right">{{ moneyIDR(invoice.shipping_cost) }}</td>
                 </tr>
-                <tr v-if="invoice.order_unique_code">
-                  <td align="right">Kode Unik</td>
+                <tr v-if="invoice.payment_fee > 0">
+                  <td align="right">Payment Fee</td>
                   <td>:</td>
-                  <td align="right">- {{ invoice.order_unique_code }}</td>
+                  <td align="right">{{ moneyIDR(invoice.payment_fee) }}</td>
+                </tr>
+                <tr v-if="invoice.order_unique_code">
+                  <td align="right">Kode Unik ( - )</td>
+                  <td>:</td>
+                  <td align="right">{{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr>
-                  <td align="right">Total</td>
+                  <td align="right">Total Order</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.order_subtotal+invoice.shipping_cost) }}</td>
+                  <td align="right">{{ moneyIDR(invoice.order_subtotal+invoice.shipping_cost+invoice.payment_fee) }}</td>
                 </tr>
               </table>
             </div>
             <div class="flex justify-end q-py-sm bg-grey-1">
               <table class="table dense">
                 <tr v-if="invoice.discount">
-                  <td align="right">Diskon [-]</td>
+                  <td align="right">Diskon ( - )</td>
                   <td align="right">:</td>
                   <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
                 </tr>
                 <tr>
-                  <th align="right">Grand Total</th>
+                  <th align="right">Total Tagihan</th>
                   <td align="right">:</td>
                   <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
                 </tr>
@@ -98,7 +102,7 @@
             </div>
           </div>
         </div>
-        <q-card class="no-print shadow" flat square>
+        <q-card class=" shadow" flat square>
             <div class="card-heading">Informasi Penerima</div>
           <q-card-section>
             <div class="text-grey-9">
@@ -122,7 +126,7 @@
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="no-print bg-white shadow" square>
+        <q-card class=" bg-white shadow" square>
             <div class="card-heading">Informasi Ekspedisi</div>
           <q-card-section>
             <div class="text-grey-9">
@@ -146,7 +150,7 @@
             </div>
           </q-card-section>
         </q-card>
-        <q-card class="no-print bg-white shadow" square>
+        <q-card class=" bg-white shadow" square>
           <div class="card-heading border-b">Informasi Pembayaran</div>
           <q-card-section>
               <table class="dense">
@@ -170,7 +174,7 @@
         </q-card>
       </div>
     </div>
-    <q-inner-loading :showing="loading" class="no-print">
+    <q-inner-loading :showing="loading" class="">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
   </q-page>
@@ -213,9 +217,7 @@ export default {
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'
     },
-    print() {
-      window.print()
-    },
+    
     getOrder() {
       let self = this;
       self.$store.commit('SET_LOADING', true)
@@ -297,9 +299,5 @@ export default {
     }
   }
 }
-@media print{
-  .no-print{
-    display: none;
-  }
-}
+
 </style>

@@ -323,7 +323,7 @@ export default {
       return parseFloat(this.product.rating)
     },
     carts() {
-      return this.$store.state.cart.carts
+      return this.$store.getters['cart/getCarts']
     },
     favorites: function() {
       return this.$store.state.product.favorites
@@ -348,7 +348,7 @@ export default {
     },
     currentStock() {
 
-      let hasCart = this.carts.find(el => el.sku == this.currentProductSku)
+      let hasCart = this.carts.items.find(el => el.sku == this.currentProductSku)
 
       if(hasCart != undefined) {
 
@@ -439,20 +439,20 @@ export default {
       return (this.subtotal()*this.discount)/100
     },
     subQty() {
-      if(this.carts.length > 1) {
-        return this.carts.reduce((a,b) => a.quantity + b.quantity) 
+      if(this.carts.items.length > 1) {
+        return this.carts.items.reduce((a,b) => a.quantity + b.quantity) 
       }
-      return this.carts[0].quantity
+      return this.carts.items[0].quantity
     },
     subtotal() {
-      if(this.carts.length > 1) {
+      if(this.carts.items.length > 1) {
         let j = [];
-        this.carts.forEach(element => {
+        this.carts.items.forEach(element => {
           j.push(element.quantity*element.price)
         });
         return j.reduce((a,b) => a + b)
       }
-      return this.carts[0].quantity * this.carts[0].price
+      return this.carts.items[0].quantity * this.carts.items[0].price
     },
     total () {
       if(this.discount || this.discount !== 0) {
@@ -511,7 +511,7 @@ export default {
       return new Promise((resolve, reject) => {
         let cartAlready;
 
-          cartAlready = this.carts.find(el => el.sku == this.currentProductSku)
+          cartAlready = this.carts.items.find(el => el.sku == this.currentProductSku)
 
           if(cartAlready != undefined) {
 
@@ -685,6 +685,7 @@ export default {
   mounted() {
     this.getProduct()
     this.getRandomNumber()
+    console.log(this.carts);
       
   },
   meta() {

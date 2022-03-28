@@ -22,4 +22,13 @@ class Cart extends Model
         'product_id',
         'note'
     ];
+
+    public function sumWeight()
+    {
+        return $this->weigth*$this->quantity;
+    }
+    public function sumPrice()
+    {
+        return $this->price*$this->quantity;
+    }
 }

@@ -31,7 +31,6 @@
         stack-label
         v-model="form.customer_whatsapp"
         @change="checkInputPhone"
-        placeholder="08XXXXXXXXXXXX"
         @input="inputFormUser"
         debounce="1000"
         />
@@ -74,7 +73,7 @@
                         </q-item>
                       </q-list>
                       <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
-                      <q-inner-loading :showing="isSearching"></q-inner-loading>
+                      <!-- <q-inner-loading :showing="isSearching"></q-inner-loading> -->
                     </div>
                   </transition>
                 </div>
@@ -269,9 +268,6 @@ export default {
     },
     config() {
       return this.$store.state.config
-    },
-    carts() {
-      return this.$store.state.cart.carts
     },
     loading() {
       return this.$store.state.loading

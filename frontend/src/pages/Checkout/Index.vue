@@ -8,7 +8,7 @@
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
         </q-toolbar>
     </q-header>
-    <div id="checkout" v-if="carts && carts.length" ref="top" class="q-pb-xl">
+    <div id="checkout" v-if="carts && carts.items.length" ref="top" class="q-pb-xl">
       <q-stepper
         v-model="step"
         keep-alive
@@ -47,6 +47,7 @@
             :paymentSelected="paymentSelected" 
             :payments="paymentChanels" 
             @onSelect="onSelectPayment"
+            :order="form"
           />
           </q-step>
 
@@ -56,7 +57,11 @@
           :done="step > 3"
           icon="playlist_add_check"
           >
-         <review-order :form="form" :carts="carts" :payment="paymentSelected" :noPayment="isCantPaymentStep"/>
+         <review-order 
+         :form="form" 
+         :carts="carts" 
+         :paymentSelected="paymentSelected" 
+         :noPayment="isCantPaymentStep"/>
           </q-step>
 
       </q-stepper>
@@ -105,6 +110,7 @@ export default {
         payment_name: '',
         payment_type: '',
         payment_code: '',
+        payment_fee: 0,
         address: '',
         items: [],
         subtotal: 0,
@@ -132,7 +138,7 @@ export default {
       return this.form.shipping_courier_name == 'COD'
     },
     carts() {
-        return this.$store.state.cart.carts
+        return this.$store.getters['cart/getCarts']
     },
     shop() {
         return this.$store.state.shop
@@ -163,7 +169,7 @@ export default {
     }
   },
   mounted() {
-    if(!this.carts.length) {
+    if(!this.carts.items.length) {
       this.$router.push({ name: 'Cart'})
     }
     if(this.config && this.config.is_payment_gateway && ! this.paymentChanels.paymentGateway.length) {
@@ -204,11 +210,11 @@ export default {
 
     },
     collectOrder() {
-      this.form.items = this.carts
-      this.form.subtotal = this.sumSubtotal()
-      this.form.total = this.sumGrandTotal()
-      this.form.quantity = this.sumQty()
-      this.form.weight = this.sumWeight()
+      this.form.items = this.carts.items
+      this.form.subtotal = this.carts.subtotal
+      this.form.total = this.sumTotal()
+      this.form.quantity = this.carts.qty
+      this.form.weight = this.carts.weight
       if(this.coupon_discount) {
         this.form.coupon_discount = this.getDiscountAmount()
       }
@@ -265,51 +271,42 @@ export default {
     },
     onSelectPayment(item) {
       this.paymentSelected = item
+
+      if(item.payment_fee) {
+        this.form.payment_fee = item.payment_fee
+      } else {
+        this.form.payment_fee = 0
+      }
+
       if(item.payment_type == 'DIRECT') {
         this.form.payment_method = 'BANK_TRANSFER'
         this.form.payment_name = item.bank_name + ' - ' + item.bank_office + ' ( a.n ' + item.account_name + ' )'
         this.form.payment_code = item.account_number
         this.form.payment_type = item.payment_type
-        this.checkStepOk()
       }
       if(item.payment_type == 'GATEWAY') {
         this.form.payment_method = item.code
         this.form.payment_name = item.name
         this.form.payment_code = ''
         this.form.payment_type = item.payment_type
-        this.checkStepOk()
       }
       if(item.payment_type == 'COD') {
         this.form.payment_method = item.payment_method
         this.form.payment_name = item.payment_name
         this.form.payment_code = ''
         this.form.payment_type = 'COD'
-        this.checkStepOk()
       }
 
       this.checkDiscount()
+      this.collectOrder()
+      this.checkStepOk()
     },
     checkDiscount() {
       if(this.coupon_discount) {
         this.form.coupon_discount = this.getDiscountAmount()
       }
     },
-    getLocalBanks() {
-      let self = this
-      Api().get('banks').then(response => {
-        if(response.status == 200) {
-          self.paymentChanels.localbanks = response.data.results
-        }
-      })
-    },
-    getPaymentChanel() {
-      let self = this
-      Api().get('tripay/payment-chanel').then(response => {
-        if(response.status == 200) {
-          self.paymentChanels.paymentGateway = response.data.data
-        }
-      })
-    },
+    
     submitOrder() {
       this.$store.commit('SET_LOADING', true)
       this.storeOrder(this.form)
@@ -397,6 +394,47 @@ export default {
 
       return location.origin + props.href;
     },
+    getDiscountPercent() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return parseInt(this.coupon_discount.discount.value)
+        } 
+        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.carts.subtotal))*100
+      }
+      return 0
+    },
+    getDiscountAmount() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.carts.subtotal)
+        }
+        return parseInt(this.coupon_discount.discount.value)
+      }
+      return 0
+    },
+    sumTotal() {
+      if(this.coupon_discount) {
+        return (this.carts.subtotal-this.getDiscountAmount())+parseInt(this.form.shipping_cost)+ parseInt(this.form.payment_fee)
+      }
+      return this.carts.subtotal + parseInt(this.form.shipping_cost) + parseInt(this.form.payment_fee)
+
+    },
+    getLocalBanks() {
+      let self = this
+      Api().get('banks').then(response => {
+        if(response.status == 200) {
+          self.paymentChanels.localbanks = response.data.results
+        }
+      })
+    },
+    getPaymentChanel() {
+      let self = this
+      Api().get('tripay/payment-chanel').then(response => {
+        if(response.status == 200) {
+          self.paymentChanels.paymentGateway = response.data.data
+        }
+      })
+    },
     next() {
       if(this.isCod) {
         this.step = 3
@@ -411,61 +449,7 @@ export default {
         this.step -= 1
       }
     },
-    getDiscountPercent() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return parseInt(this.coupon_discount.discount.value)
-        } 
-        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.sumSubtotal()))*100
-      }
-      return 0
-    },
-    getDiscountAmount() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.sumSubtotal())
-        }
-        return parseInt(this.coupon_discount.discount.value)
-      }
-      return 0
-    },
-    sumQty() {
-      if(this.carts.length > 1) {
-        let q = [];
-        this.carts.forEach(el => {
-          q.push(parseInt(el.quantity))
-        });
-        return q.reduce((a,b) => a + b)
-      }
-      return parseInt(this.carts[0].quantity)
-    },
-    sumSubtotal() {
-      if(this.carts.length > 1) {
-        let j = [];
-        this.carts.forEach(el => {
-          j.push(parseInt(el.quantity)*parseInt(el.price))
-        });
-        return j.reduce((a,b) => a + b)
-      }
-      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].price)
-    },
-    sumGrandTotal() {
-      if(this.coupon_discount) {
-        return (this.sumSubtotal()-this.getDiscountAmount())+parseInt(this.form.shipping_cost)
-      }
-      return this.sumSubtotal() + parseInt(this.form.shipping_cost)
-
-    },
-    sumWeight() {
-      if(this.carts.length > 1) {
-        let w = [];
-        this.carts.forEach(el => {
-          w.push(parseInt(el.weight)*parseInt(el.quantity))
-        });
-        return w.reduce((a,b) => a + b)
-      }
-      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].weight)
-    },
+  
   },
   meta() {
     return {
