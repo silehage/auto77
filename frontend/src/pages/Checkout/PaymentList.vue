@@ -155,7 +155,7 @@ export default {
         }
          
       }
-      return totalFee;
+      return parseInt(totalFee);
     },
     isSelected(code) {
       if(this.paymentSelected) {

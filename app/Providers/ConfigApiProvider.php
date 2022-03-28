@@ -24,7 +24,6 @@ class ConfigApiProvider extends ServiceProvider
             {
                 $rajaongkir = array(
                     'api_key' => $apiPro?? $setting->rajaongkir_apikey,
-                    // 'api_key' => env('RAJAONGKIR_API_PRO', $setting->rajaongkir_apikey),
                     'account_type' => $setting->rajaongkir_type,
                     'api_url' => env('RAJAONGKIR_API_URL', 'https://api.rajaongkir.com/starter/'),
                     'api_url_basic' => env('RAJAONGKIR_API_BASIC_URL', 'https://api.rajaongkir.com/basic/'),

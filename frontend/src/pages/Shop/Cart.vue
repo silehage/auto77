@@ -44,8 +44,8 @@
                   <td>:</td>
                   <td align="right">{{ moneyIDR(carts.subtotal) }}</td>
                 </tr>
-                <tr>
-                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> Diskon <span v-if="coupon_discount" class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
+                <tr v-if="coupon_discount">
+                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> Diskon <span class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
                   <td>:</td>
                   <td align="right">{{ moneyIDR(getDiscountAmount()) }}</td>
                 </tr>
