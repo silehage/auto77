@@ -6,22 +6,7 @@
           flat round dense
           icon="arrow_back" />
         <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
-        <q-btn-dropdown flat icon="print" color="teal">
-          <q-list flat class="no-print">
-            <q-item clickable @click="printPacking">
-              <q-item-section side>
-                <q-icon name="print"></q-icon>
-              </q-item-section>
-              <q-item-section>Print Label Pengiriman</q-item-section>
-            </q-item>
-            <q-item clickable @click="printInvoice">
-              <q-item-section side>
-                <q-icon name="print"></q-icon>
-              </q-item-section>
-              <q-item-section>Print Tagihan</q-item-section>
-            </q-item>
-          </q-list>
-      </q-btn-dropdown>
+      <q-btn icon="print" @click="printInvoice" flat round class="no-print"></q-btn>
       </q-toolbar>
     </q-header>
     <div v-if="invoice" class="no-print q-pt-md">
