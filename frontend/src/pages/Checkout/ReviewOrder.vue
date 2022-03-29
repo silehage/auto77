@@ -137,9 +137,6 @@ export default {
       return this.$store.getters['order/getFormOrder']
     }
   },
-  mounted() {
-    console.log(formOrder);
-  },
   methods: {
     money(number) {
      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)

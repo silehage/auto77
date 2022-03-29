@@ -77,7 +77,7 @@
             >
               <q-card class="q-py-md q-pb-xl">
                  <q-list bordered>
-                  <q-item v-for="(step, index) in item.steps" :key="step">
+                  <q-item v-for="(step, index) in item.steps" :key="index">
                     <q-item-section avatar>
                       <q-avatar color="grey-7" text-color="white" size="sm">
                         {{ index+1 }}

@@ -227,14 +227,9 @@ export default {
         this.$store.commit('order/SET_FORM_ORDER', { key: x, value: formData[x]})
       }
 
-      console.log(this.formOrder);
-
       this.$emit('checkStep')
  
     }
   },
-  mounted() {
-    console.log(this.formOrder);
-  }
 }
 </script>

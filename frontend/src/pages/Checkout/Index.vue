@@ -130,9 +130,6 @@ export default {
     session_id() {
       return this.$store.state.session_id
     },
-    coupon_discount() {
-      return this.$store.state.coupon.coupon_discount
-    }
   },
   mounted() {
     if(!this.carts.items.length) {
@@ -175,7 +172,6 @@ export default {
       }, 500)
     },
     checkStepOk() {
-      console.log('check step');
 
       if(this.step == 1) { 
         if(this.formOrder.customer_name 
@@ -219,7 +215,6 @@ export default {
           if(response.status == 200) {
 
             this.$store.commit('order/SET_INVOICE', response.data.results)
-            this.$store.commit('coupon/SET_COUPON_DISCOUNT', null)
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)

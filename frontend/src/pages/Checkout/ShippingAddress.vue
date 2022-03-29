@@ -344,10 +344,7 @@ export default {
     destinationAddressFormat(obj) {
       return `${obj.subdistrict_name} - ${obj.type} ${obj.city}, ${obj.province}`
     },
-    inputFormUser() {
-      this.saveDataUser()
-      this.emitForm()
-    },
+
     selectCostCod(item) {
 
       this.isSelectedCost = null
@@ -358,7 +355,6 @@ export default {
 
       this.isSelectedCostCod = item
 
-      this.emitForm()
     },
     selectCost(item) {
 
@@ -533,7 +529,6 @@ export default {
           }
         }).catch(() => {
           this.costNotFound = true
-          this.emitForm()
 
         })
         .finally(() => {
