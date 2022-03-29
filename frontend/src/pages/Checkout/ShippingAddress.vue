@@ -404,6 +404,7 @@ export default {
       this.searchSubdistrictKey = ''
 
       this.userAddressData.destination = item
+      this.formGetCost.weight = this.formOrder.weight
 
       if(this.config.rajaongkir_type == 'pro') {
 
