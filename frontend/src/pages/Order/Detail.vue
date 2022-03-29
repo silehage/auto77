@@ -85,34 +85,34 @@
                   <td>:</td>
                   <td align="right">{{ moneyIDR(invoice.shipping_cost) }}</td>
                 </tr>
-                <tr v-if="invoice.payment_fee > 0">
-                  <td align="right">Payment Fee</td>
-                  <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.payment_fee) }}</td>
-                </tr>
                 <tr v-if="invoice.order_unique_code">
                   <td align="right">Kode Unik ( - )</td>
                   <td>:</td>
                   <td align="right">{{ invoice.order_unique_code }}</td>
                 </tr>
-                <tr>
-                  <td align="right">Total Order</td>
-                  <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.order_subtotal+invoice.shipping_cost+invoice.payment_fee) }}</td>
-                </tr>
-              </table>
-            </div>
-            <div class="flex justify-end q-py-sm bg-grey-1">
-              <table class="table dense">
                 <tr v-if="invoice.discount">
                   <td align="right">Diskon ( - )</td>
                   <td align="right">:</td>
                   <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
                 </tr>
                 <tr>
+                  <td align="right">Total Order</td>
+                  <td>:</td>
+                  <td align="right">{{ moneyIDR(invoice.order_total) }}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="flex justify-end q-py-sm bg-grey-1">
+              <table class="table dense">
+                <tr v-if="invoice.payment_fee > 0">
+                  <td align="right" class="text-xs">Payment Fee [ {{ invoice.transaction.payment_name }} ]</td>
+                  <td>:</td>
+                  <td align="right">{{ moneyIDR(invoice.payment_fee) }}</td>
+                </tr>
+                <tr>
                   <th align="right">Total Tagihan</th>
                   <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
+                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
                 </tr>
               </table>
             </div>
@@ -280,7 +280,7 @@
                   <tr>
                     <th align="right">Total Tagihan</th>
                     <td align="right">:</td>
-                    <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
+                    <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
                   </tr>
                 </table>
               </div>
@@ -349,9 +349,9 @@
             <div class="flex justify-end q-py-sm bg-grey-1">
               <table class="table dense">
                 <tr>
-                  <th align="right">Total Pesanan</th>
+                  <th align="right">Total</th>
                   <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
+                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
                 </tr>
               </table>
             </div>
