@@ -250,7 +250,7 @@ class OrderController extends Controller
 
         return response([
             'success' => true,
-            'results' => $order->load('items', 'transaction')
+            'results' => Order::with(['items', 'transaction'])->where('order_ref', $orderRef)->first()
         ]);
     }
 
@@ -420,6 +420,14 @@ class OrderController extends Controller
         return response()->json([
             'success' => true
         ], 200);
+    }
+
+    protected function getFormatResponse($order) 
+    {
+        return [
+            'id' => $order->id,
+
+        ];
     }
     
 }
