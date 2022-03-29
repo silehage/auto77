@@ -11,11 +11,17 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [];
-    public $appends = ['status_label', 'created'];
+    public $appends = ['status_label', 'created', 'grand_total'];
 
     public $casts = [
         'created_at' => 'datetime:d/m/Y'
     ];
+
+    public function getGrandTotalAttribute()
+    {
+        return $this->order_total+$this->payment_fee;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -8,9 +8,8 @@
         square
         stack-label
         label="Nama Penerima"
-        v-model="form.customer_name"
-        @input="inputFormUser"
-        debounce="1000"
+         :value="$store.state.order.formOrder.customer_name"
+        @input="inputNameField"
         />
         <q-input
         v-if="canEmail"
@@ -20,19 +19,16 @@
         type="email"
         required
         label="Alamat Email"
-        v-model="form.customer_email"
-        @input="inputFormUser"
-        debounce="1000"
+        :value="$store.state.order.formOrder.customer_email"
+        @input="inputEmailField"
         />
         <q-input
         label="No ponsel / Whatsapp"
         filled
         square
         stack-label
-        v-model="form.customer_whatsapp"
-        @change="checkInputPhone"
-        @input="inputFormUser"
-        debounce="1000"
+        :value="$store.state.order.formOrder.customer_phone"
+        @input="inputPhoneField"
         />
         </div>
         <div class="q-px-sm q-pt-md q-pb-xs">
@@ -86,12 +82,12 @@
               enter-active-class="animated fadeIn"
               leave-active-class="animated fadeOut"
             >
-            <div v-if="form.address">
+            <div v-if="formOrder.address">
               <div class="flex justify-between items-center q-pb-sm"> 
                 <div class="text-grey-8">Detil Alamat Pengiriman</div>
                 <q-btn flat v-if="readyAddressBlock" no-caps unelevated color="blue-7" padding="2px 12px" label="Edit Alamat" @click="changeNewAddress"></q-btn>
               </div>
-              <div class="q-pa-md bg-grey-2" v-html="form.address"></div>
+              <div class="q-pa-md bg-grey-2" v-html="formOrder.address"></div>
             </div>
             </transition>
         </div>
@@ -199,6 +195,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       costNotFound: false,
       readyAddressBlock: false,
       useDataUserPrompt: false,
@@ -208,7 +205,7 @@ export default {
         user_id: '',
         customer_name:'',
         customer_email: '',
-        customer_whatsapp: '',
+        customer_phone: '',
         address: '',
         shipping_courier_name:'',
         shipping_cost: 0,
@@ -237,6 +234,7 @@ export default {
       searchReady:false,
       subdistrictOptionsData: [],
       address_subdistrict: null,
+      timeout: null
     }
   },
   watch: {
@@ -247,6 +245,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.user
+    },
+    formOrder() {
+      return this.$store.getters['order/getFormOrder']
     },
     originAddressFormat() {
       return `${this.config.warehouse_address.city}, ${this.config.warehouse_address.province}`
@@ -268,9 +269,6 @@ export default {
     },
     config() {
       return this.$store.state.config
-    },
-    loading() {
-      return this.$store.state.loading
     },
     canSelectCourier() {
       if(this.formGetCost.destination && this.formGetCost.weight && this.formGetCost.origin){
@@ -317,13 +315,32 @@ export default {
   mounted() {
     this.setDataGetCost()
     if(this.user) {
-      this.form.user_id = this.user.id
-      this.form.customer_name = this.user.name
-      this.form.customer_email = this.user.email
-      this.form.customer_whatsapp = this.user.phone ? this.user.phone : ''
+     this.commitFormOrder('customer_name', this.user.name)
+     this.commitFormOrder('customer_email', this.user.email)
+     this.commitFormOrder('customer_phone', this.user.phone)
+     this.commitFormOrder('user_id', this.user.id)
     }
   },
   methods: {
+    inputNameField(val) {
+      this.commitFormOrder('customer_name', val)
+    },
+    inputPhoneField(val) {
+      this.commitFormOrder('customer_phone', val)
+    },
+    inputEmailField(val) {
+      this.commitFormOrder('customer_email', val)
+    },
+    commitFormOrder(key, value) {
+      this.$store.commit('order/SET_FORM_ORDER', {key: key, value: value})
+
+      clearTimeout(this.timeout);
+
+      this.timeout = setTimeout(() => {
+        this.$emit('checkStep')
+
+      }, 500)
+    },
     destinationAddressFormat(obj) {
       return `${obj.subdistrict_name} - ${obj.type} ${obj.city}, ${obj.province}`
     },
@@ -332,32 +349,37 @@ export default {
       this.emitForm()
     },
     selectCostCod(item) {
+
       this.isSelectedCost = null
-      this.form.shipping_courier_name = 'COD'
-      this.form.shipping_courier_service = 'COD'
-      this.form.shipping_cost = item.price? parseInt(item.price) : 0
+
+       this.commitFormOrder('shipping_courier_name',  'COD')
+       this.commitFormOrder('shipping_courier_service',  'COD')
+       this.commitFormOrder('shipping_cost',  item.price? parseInt(item.price) : 0)
+
       this.isSelectedCostCod = item
 
       this.emitForm()
     },
     selectCost(item) {
+
       this.isSelectedCostCod = null
       this.isSelectedCost = item
 
-      this.form.shipping_courier_name = this.shippingCost.name
-      this.form.shipping_courier_service = item.service
-      this.form.shipping_cost = item.cost[0].value
+      this.commitFormOrder('shipping_courier_name', this.shippingCost.name)
+      this.commitFormOrder('shipping_courier_service', item.service)
+      this.commitFormOrder('shipping_cost', item.cost[0].value)
 
-      this.emitForm()
     },
     changeNewAddress() {
       this.clearAddress()
       this.formGetCost.courier = ''
       this.formGetCost.destination = ''
-      this.form.address = ''
+
+      this.commitFormOrder('address', '')
+      
       this.readyAddressBlock = false
       this.clearSelectedCost()
-      this.emitForm()
+
       setTimeout(() => {
         this.$refs.search.focus()
       },300)
@@ -367,7 +389,7 @@ export default {
       this.$emit('closeModal')
     },
     clearAddress() {
-      this.form.address = '';
+      this.commitFormOrder('address', '')
       this.searchSubdistrictKey = '';
       this.address_subdistrict = null
       this.subdistrictOptionsData = []
@@ -375,7 +397,6 @@ export default {
       this.formGetCost.destination = ''
       this.formGetCost.courier = ''
       this.clearSelectedCost()
-      this.emitForm()
       setTimeout(() => {
         this.$refs.search.focus()
       },300)
@@ -386,10 +407,6 @@ export default {
       this.address_subdistrict = item
       this.searchSubdistrictKey = ''
 
-      this.formGetCost.origin = this.config.warehouse_address.city_id
-      this.formGetCost.destination = item.city_id
-      this.formGetCost.weight = this.formData.weight
-
       this.userAddressData.destination = item
 
       if(this.config.rajaongkir_type == 'pro') {
@@ -399,10 +416,15 @@ export default {
         this.formGetCost.destinationType = 'subdistrict'
         this.formGetCost.originType = 'subdistrict'
 
+      } else {
+
+        this.formGetCost.origin = this.config.warehouse_address.city_id
+        this.formGetCost.destination = item.city_id
+        this.formGetCost.weight = this.formOrder.weight
+
       }
 
       this.getCost()
-      this.setAddress()
     },
     findSubdistrict() {
       this.subdistrictOptionsData = []
@@ -441,7 +463,7 @@ export default {
 
       this.formGetCost.destination = data.address_subdistrict.city_id
       this.formGetCost.origin = this.config.warehouse_address.city_id
-      this.formGetCost.weight = this.formData.weight
+      this.formGetCost.weight = this.formOrder.weight
       
        if(this.config.rajaongkir_type == 'pro') {
          
@@ -461,41 +483,42 @@ export default {
 
     courierSelected(evt) {
       if(!evt) {
-        
         this.clearSelectedCost()
-        this.emitForm()
       }
      
       if(evt == 'cod') {
-        this.form.shipping_courier_name = 'COD'
-        this.form.shipping_courier_service = 'COD'
-        this.form.shipping_cost = 0
+        this.commitFormOrder('shipping_courier_name', 'COD')
+        this.commitFormOrder('shipping_courier_service', 'COD')
+        this.commitFormOrder('shipping_cost', 0)
+
         this.clearSelectedCost()
-        this.emitForm()
+        
       } else {
-        this.form.shipping_courier_name = this.formGetCost.courier
+        this.commitFormOrder('shipping_courier_name',  this.formGetCost.courier)
         this.getCost()
       }
     },
     clearSelectedCost() {
+
       this.shippingCost.code = ''
       this.shippingCost.name = ''
       this.shippingCost.costs = []
       this.shippingCost.ready = false
-      this.form.shipping_courier_name = ''
-      this.form.shipping_cost = 0
-      this.form.shipping_courier_service = ''
       this.isSelectedCost = null
       this.isSelectedCostCod = null
+
+      this.commitFormOrder('shipping_courier_name', '')
+      this.commitFormOrder('shipping_courier_service', '' )
+      this.commitFormOrder('shipping_cost', 0 )
+
     },
     getCost() {
       this.shippingCost.ready = false
       this.costNotFound = false
       this.clearSelectedCost() 
-      this.emitForm()
       if(this.canGetCost) {
         this.scrollToBottom()
-        this.$store.commit('SET_LOADING', true)
+        this.loading = true
         Api().post('shipping/getCost', this.formGetCost).then(response => {
           if(response.status == 200) {
 
@@ -507,25 +530,21 @@ export default {
             if(!data.costs.length) {
               this.costNotFound = true
             }
-             this.$store.commit('SET_LOADING', false)
-             this.emitForm()
           }
         }).catch(() => {
-          this.$store.commit('SET_LOADING', false)
           this.costNotFound = true
           this.emitForm()
 
         })
         .finally(() => {
            this.shippingCost.ready = true
+           this.loading = false
         })
       }
     },
-    emitForm() {
-      this.$emit('place', this.form)
-    },
     setDataGetCost() {
-      this.formGetCost.weight = this.formData.weight;
+
+      this.formGetCost.weight = this.formOrder.weight;
 
       if(this.config && this.config.can_shipping){
 
@@ -538,17 +557,16 @@ export default {
         }
 
       } 
-      this.emitForm()
     },
 
     checkInputPhone() {
-      this.form.customer_whatsapp = this.form.customer_whatsapp.replace(/\D/g,'')
+      let validPhone = this.formOrder.customer_phone.replace(/\D/g,'')
 
-      if(!this.checkPhoneNumber(this.form.customer_whatsapp)) {
+      if(!this.checkPhoneNumber(validPhone)) {
         this.$q.dialog({
           message: 'Silahkan masukkan nomor whatsapp yang benar.'
         })
-        this.form.customer_whatsapp = ''
+        this.commitFormOrder('customer_phone', '')
       }
     },
     checkPhoneNumber(formatted) {
@@ -563,11 +581,9 @@ export default {
     setAddress() {
       if(this.address_street && this.address_subdistrict) {
         let addr =  `${this.address_street} <br> ${this.address_subdistrict.subdistrict_name} - ${this.address_subdistrict.type} ${this.address_subdistrict.city} <br> ${this.address_subdistrict.province}`
-        this.form.address = addr
 
-        this.saveDataUser()
+        this.commitFormOrder('address', addr)
 
-        this.emitForm()
       }
 
     },

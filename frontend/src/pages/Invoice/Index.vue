@@ -92,7 +92,7 @@
                 <tr>
                   <th align="right">Total Tagihan</th>
                   <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
+                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
                 </tr>
               </table>
             </div>
@@ -355,7 +355,7 @@
                 <tr>
                   <th align="right">Total Pesanan</th>
                   <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.order_total) }}</th>
+                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
                 </tr>
               </table>
             </div>

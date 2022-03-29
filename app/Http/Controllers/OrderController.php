@@ -55,6 +55,9 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        // $json = Tripay::createTransaction($request);
+
+        // return response($json);
 
         $user = null;
         if($request->user_id) {
@@ -64,7 +67,7 @@ class OrderController extends Controller
 
         $request->validate([
             'customer_name' => ['required', 'string'],
-            'customer_whatsapp' => ['required', 'string'],
+            'customer_phone' => ['required', 'string'],
             'customer_email' => ['required', 'email'],
             'payment_method' => ['required', 'string'],
             'payment_type' => ['required', 'string'],
@@ -76,10 +79,12 @@ class OrderController extends Controller
             'total' => ['required', 'numeric'],
         ]);
         $name = strip_tags($request->customer_name);
-        $whatsapp = strip_tags($request->customer_whatsapp);
+        $whatsapp = strip_tags($request->customer_phone);
 
         $uniqueCode = rand(56, 259);
         $orderRef = 'INV-' . rand(208, 5909). Str::upper(Str::random(5));
+
+        // $totalTagihan = $request->total+$request->payment_fee;
 
         DB::beginTransaction();
 
@@ -184,8 +189,8 @@ class OrderController extends Controller
 
                     $transaction->order_id = $order->id;
                     $transaction->payment_type = $request->payment_type;
-                    $transaction->payment_method = $request->payment_method;
                     $transaction->payment_name = $request->payment_name;
+                    $transaction->payment_method = $request->payment_method;
     
                     $transaction->qr_url = $obj->data->qr_url ?? '';
                     
@@ -194,11 +199,19 @@ class OrderController extends Controller
                     $transaction->expired_time = $obj->data->expired_time;
 
                     $transaction->amount = $obj->data->amount;
-                    $transaction->total_fee = $obj->data->total_fee;
                     $transaction->amount_received = $obj->data->amount_received;
+                    $transaction->total_fee = $obj->data->total_fee;
+                    $transaction->fee_merchant = $obj->data->fee_merchant;
+                    $transaction->fee_customer = $obj->data->fee_customer;
                     $transaction->instructions = json_encode($obj->data->instructions);
 
                     $transaction->save();
+
+                    $order->fresh();
+
+                    $order->payment_fee = $obj->data->fee_customer;
+
+                    $order->save();
 
                     DB::commit();
 

@@ -45,21 +45,20 @@
                   <td align="right">{{ moneyIDR(carts.subtotal) }}</td>
                 </tr>
                 <tr v-if="coupon_discount">
-                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> Diskon <span class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ getDiscountPercent() }}%</span></td>
+                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> {{ coupon_discount.label }} <span class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ carts.discount_percent }}%</span></td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(getDiscountAmount()) }}</td>
+                  <td align="right">{{ moneyIDR(carts.discount_amount) }}</td>
                 </tr>
                 <tr class=""> 
-                  <td align="right">Order Total</td>
+                  <td align="right">Total</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(total()) }}</td>
+                  <td align="right">{{ moneyIDR(carts.subtotal-carts.discount_amount) }}</td>
                 </tr>
               </table>
             </div>
             <div class="text-teal text-underline cursor-pointer q-mt-md" v-if="!showCouponForm" @click="isCoupon = true">Punya kode kupon?</div>
-            <div class="q-mt-md" v-if="showCouponForm">
+            <div class="q-mt-md" v-if="showCouponForm && !coupon_discount">
               <q-form @submit.prevent="handleRedeemCoupon">
-                <!-- <div class="text-caption">Punya Kupon?</div> -->
                 <div class="row items-center no-wrap">
                   <input class="input-coupon" required v-model="couponCode" placeholder="Input Kupon"/>
                   <q-btn no-caps size="14px" color="teal" unelevated type="submit" label="Gunakan" style="border-radius:0;"></q-btn>
@@ -150,7 +149,7 @@ export default {
       shop: state => state.shop,
       config: state => state.config,
       user: state => state.user.user,
-      coupon_discount: state => state.coupon.coupon_discount
+      coupon_discount: state => state.cart.coupon_discount
     }),
     showCouponForm() {
       return this.isCoupon || this.coupon_discount ? true : false
@@ -183,14 +182,13 @@ export default {
     if(!this.shop) {
       this.$store.dispatch('getShop')
     }
-    console.log(this.carts);
   },
   methods: {
     ...mapActions('coupon', ['redeemCoupon']),
     handleRedeemCoupon() {
       this.redeemCoupon({ code: this.couponCode }).then(response => {
         if(response.status == 200) {
-          this.$store.commit('coupon/SET_COUPON_DISCOUNT', response.data.results)
+          this.$store.commit('cart/SET_COUPON_DISCOUNT', response.data.results)
         }
       }).catch(err => {
         if(err && err.response && err.response.status == 404) {
@@ -204,7 +202,7 @@ export default {
     },
     removeCoupon() {
       this.couponCode = ''
-      this.$store.commit('coupon/REMOVE_COUPON')
+      this.$store.commit('cart/REMOVE_COUPON')
     },
     onResponse(evt) {
       if(evt === true) {
@@ -245,30 +243,6 @@ export default {
         quantity: qty, 
         session_id: this.session_id
       })
-    },
-    total () {
-      if(this.coupon_discount) {
-        return parseInt(this.carts.subtotal)-this.getDiscountAmount()
-      }
-      return this.carts.subtotal
-    },
-    getDiscountPercent() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return parseInt(this.coupon_discount.discount.value)
-        } 
-        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.carts.subtotal))*100
-      }
-      return 0
-    },
-    getDiscountAmount() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.carts.subtotal)
-        }
-        return parseInt(this.coupon_discount.discount.value)
-      }
-      return 0
     },
     removeCart(cart) {
       this.$store.dispatch('cart/removeCart', {

@@ -685,7 +685,6 @@ export default {
   mounted() {
     this.getProduct()
     this.getRandomNumber()
-    console.log(this.carts);
       
   },
   meta() {

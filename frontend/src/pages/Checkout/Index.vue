@@ -25,10 +25,9 @@
         >
           <shipping-address 
             canEmail 
-            @place="placeAddress" 
             :isModalAddress="isAvailableOldAddress"
             @closeModal="isAvailableOldAddress = false"
-            :formData="form"
+            @checkStep="checkStepOk"
           />
 
         </q-step>
@@ -38,16 +37,15 @@
           title="Pembayaran"
           :done="step > 2"
           icon="payments"
-          v-if="form.shipping_courier_name != 'COD'"
+          v-if="formOrder.shipping_courier_name != 'COD'"
           >
          
           <payment-list 
             ref="paymentList" 
-            :isCod="isCod" 
             :paymentSelected="paymentSelected" 
             :payments="paymentChanels" 
-            @onSelect="onSelectPayment"
-            :order="form"
+             @checkStep="checkStepOk"
+             @onSelectPayment="onSelectPayment"
           />
           </q-step>
 
@@ -58,8 +56,6 @@
           icon="playlist_add_check"
           >
          <review-order 
-         :form="form" 
-         :carts="carts" 
          :paymentSelected="paymentSelected" 
          :noPayment="isCantPaymentStep"/>
           </q-step>
@@ -70,8 +66,8 @@
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
     <div class="bg-white q-pa-md q-gutter-y-sm column" :class="{'sticky-bottom': $q.platform.is.desktop }">
-      <q-btn :disabled="!isOk" v-if="step != 3 && form.shipping_courier_name != 'COD'" @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
-      <q-btn :disabled="!isOk" v-if="form.shipping_courier_name == 'COD' && step != 3" @click="step = 3" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
+      <q-btn :disabled="!isOk" v-if="step != 3 && formOrder.shipping_courier_name != 'COD'" @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
+      <q-btn :disabled="!isOk" v-if="formOrder.shipping_courier_name == 'COD' && step != 3" @click="step = 3" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
       <q-btn :disabled="loading" v-if="step == 3" @click="submitOrder" no-caps unelevated label="Proses Pesanan" color="primary"></q-btn>
       <!-- <q-btn :disabled="step == 1" @click="prev" no-caps outline label="Kembali" color="primary"></q-btn> -->
     </div>
@@ -91,51 +87,24 @@ export default {
     return {
       isAvailableOldAddress: false,
       isOk: false,
-      step1Ok: false,
-      step2Ok: false,
       formLoading: false,
       paymentChanels: {
         localbanks: [],
         paymentGateway: []
       },
-      invoiceTemp: null,
       step: 1,
       paymentSelected: null,
-      form: {
-        reference: '',
-        customer_name:'',
-        customer_email: '',
-        customer_whatsapp: '',
-        payment_method: '',
-        payment_name: '',
-        payment_type: '',
-        payment_code: '',
-        payment_fee: 0,
-        address: '',
-        items: [],
-        subtotal: 0,
-        total: 0,
-        quantity: 0,
-        weight: 0,
-        shipping_courier_name:'',
-        shipping_cost: 0,
-        shipping_courier_service: '',
-        coupon_discount: 0
-      },
     }
   },
   watch: {
     step: function() {
       this.checkStepOk()
       this.toTop()
-    }
+    },
   },
   computed: {
-    isOVO() {
-      return this.form.payment_method == 'OVO'
-    },
-    isCod() {
-      return this.form.shipping_courier_name == 'COD'
+    formOrder() {
+      return this.$store.getters['order/getFormOrder']
     },
     carts() {
         return this.$store.getters['cart/getCarts']
@@ -149,11 +118,8 @@ export default {
     loading() {
       return this.$store.state.loading
       },
-    isCodPayment() {
-      return this.form.payment_method == 'COD'
-    },
     isCantPaymentStep() {
-      return this.form.shipping_courier_name == 'COD' || !this.config.is_payment_gateway? true : false
+      return this.formOrder.shipping_courier_name == 'COD' || !this.config.is_payment_gateway? true : false
     },
     title() {
       if(this.step == 1) return 'Pengiriman'
@@ -183,41 +149,8 @@ export default {
   },
   methods: {
     ...mapActions('order', ['storeOrder']),
-    placeAddress(data) {
-
-      this.paymentSelected = null
-      if(data.shipping_courier_name == 'COD') {
-        this.form.payment_type = 'COD'
-        this.form.payment_method = 'COD'
-        this.form.payment_name = 'COD'
-      } else {
-        this.form.payment_type = ''
-        this.form.payment_method = ''
-        this.form.payment_name = ''
-      }
-      this.form.user_id = data.user_id 
-      this.form.customer_email = data.customer_email 
-      this.form.customer_name = data.customer_name 
-      this.form.customer_whatsapp = data.customer_whatsapp 
-      this.form.shipping_cost = data.shipping_cost 
-      this.form.shipping_courier_name = data.shipping_courier_name 
-      this.form.shipping_courier_service = data.shipping_courier_service 
-      this.form.address = data.address 
-
-      this.checkDiscount()
-      this.collectOrder()
-      this.checkStepOk()
-
-    },
     collectOrder() {
-      this.form.items = this.carts.items
-      this.form.subtotal = this.carts.subtotal
-      this.form.total = this.sumTotal()
-      this.form.quantity = this.carts.qty
-      this.form.weight = this.carts.weight
-      if(this.coupon_discount) {
-        this.form.coupon_discount = this.getDiscountAmount()
-      }
+      this.$store.commit('order/COLLECT_ORDER', this.carts)
     },
     checkDataUser() {
       if(localStorage.getItem('user_data')) {
@@ -242,24 +175,26 @@ export default {
       }, 500)
     },
     checkStepOk() {
+      console.log('check step');
+
       if(this.step == 1) { 
-        if(this.form.customer_name 
-            && this.form.customer_email 
-            && this.form.customer_whatsapp 
-            && this.form.shipping_courier_name
-            && this.form.address) {
+        if(this.formOrder.customer_name 
+            && this.formOrder.customer_email 
+            && this.formOrder.customer_phone 
+            && this.formOrder.shipping_courier_name
+            && this.formOrder.address) {
                if(this.isCod) {
                  this.isOk = true
               } else {
-                this.form.shipping_cost ?  this.isOk = true :  this.isOk = false
+                this.formOrder.shipping_cost ?  this.isOk = true :  this.isOk = false
               }
             } else {
               this.isOk = false
             }
       } else if(this.step == 2) {
-        if(this.form.payment_name 
-            && this.form.address 
-            && this.form.payment_type) {
+        if(this.formOrder.payment_name 
+            && this.formOrder.address 
+            && this.formOrder.payment_type) {
               this.isOk = true
           } else {
               this.isOk = false
@@ -271,47 +206,15 @@ export default {
     },
     onSelectPayment(item) {
       this.paymentSelected = item
-
-      if(item.payment_fee) {
-        this.form.payment_fee = item.payment_fee
-      } else {
-        this.form.payment_fee = 0
-      }
-
-      if(item.payment_type == 'DIRECT') {
-        this.form.payment_method = 'BANK_TRANSFER'
-        this.form.payment_name = item.bank_name + ' - ' + item.bank_office + ' ( a.n ' + item.account_name + ' )'
-        this.form.payment_code = item.account_number
-        this.form.payment_type = item.payment_type
-      }
-      if(item.payment_type == 'GATEWAY') {
-        this.form.payment_method = item.code
-        this.form.payment_name = item.name
-        this.form.payment_code = ''
-        this.form.payment_type = item.payment_type
-      }
-      if(item.payment_type == 'COD') {
-        this.form.payment_method = item.payment_method
-        this.form.payment_name = item.payment_name
-        this.form.payment_code = ''
-        this.form.payment_type = 'COD'
-      }
-
-      this.checkDiscount()
-      this.collectOrder()
-      this.checkStepOk()
     },
-    checkDiscount() {
-      if(this.coupon_discount) {
-        this.form.coupon_discount = this.getDiscountAmount()
-      }
-    },
-    
+
     submitOrder() {
       this.$store.commit('SET_LOADING', true)
-      this.storeOrder(this.form)
+      this.storeOrder(this.formOrder)
       .then(response => {
+
           this.$store.commit('SET_LOADING', false)
+          this.$store.commit('cart/REMOVE_COUPON')
 
           if(response.status == 200) {
 
@@ -322,7 +225,7 @@ export default {
               this.$store.dispatch('cart/clearCart', this.session_id)
             }, 8000)
 
-            if(this.isCod) {
+            if(this.formOrder.shipping_courier_name == 'COD') {
   
               this.directChekout(response.data.results)
               
@@ -366,7 +269,7 @@ export default {
         numb ++
       })
 
-      str += `Subtotal: *${this.moneyIDR(data.order_subtotal)}*\nOngkir: *${this.moneyIDR(data.shipping_cost)}*\nDiskon: *${this.moneyIDR(data.discount)}*\nTotal: *${this.moneyIDR(data.order_total)}*\n------------------------\n\n*Nama:*\n ${data.customer_name} (${data.customer_whatsapp})\n\n*Alamat:*\n${this.formatAddressCod(data.shipping_address)}\n\n`
+      str += `Subtotal: *${this.moneyIDR(data.order_subtotal)}*\nOngkir: *${this.moneyIDR(data.shipping_cost)}*\nDiskon: *${this.moneyIDR(data.discount)}*\nTotal: *${this.moneyIDR(data.order_total)}*\n------------------------\n\n*Nama:*\n ${data.customer_name} (${data.customer_phone})\n\n*Alamat:*\n${this.formatAddressCod(data.shipping_address)}\n\n`
 
       str += `Metode Pembayaran: ${data.transaction.payment_name}\n\n`
 
@@ -393,31 +296,6 @@ export default {
       });
 
       return location.origin + props.href;
-    },
-    getDiscountPercent() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return parseInt(this.coupon_discount.discount.value)
-        } 
-        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.carts.subtotal))*100
-      }
-      return 0
-    },
-    getDiscountAmount() {
-      if(this.coupon_discount) {
-        if(this.coupon_discount.discount.unit == 'percent') {
-          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.carts.subtotal)
-        }
-        return parseInt(this.coupon_discount.discount.value)
-      }
-      return 0
-    },
-    sumTotal() {
-      if(this.coupon_discount) {
-        return (this.carts.subtotal-this.getDiscountAmount())+parseInt(this.form.shipping_cost)+ parseInt(this.form.payment_fee)
-      }
-      return this.carts.subtotal + parseInt(this.form.shipping_cost) + parseInt(this.form.payment_fee)
-
     },
     getLocalBanks() {
       let self = this

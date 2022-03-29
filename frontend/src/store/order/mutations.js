@@ -48,5 +48,21 @@ export function SET_LOAD_MORE_CUSTOMER (state, status) {
   state.customer_order.isLoadMore = status
   
 }
+export function COLLECT_ORDER (state, payload) {
+
+  state.formOrder.items = payload.items
+  state.formOrder.quantity = payload.qty
+  state.formOrder.weight = payload.weight
+  state.formOrder.subtotal = payload.subtotal
+  state.formOrder.coupon_discount = payload.discount_amount
+  
+}
+
+export function SET_FORM_ORDER (state, payload) {
+  state.formOrder[payload.key] = payload.value
+}
+
+      
+
 
 

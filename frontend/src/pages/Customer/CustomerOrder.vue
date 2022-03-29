@@ -35,7 +35,7 @@
                 </tr>
                 <tr>
                   <td>Total</td>
-                  <td>{{ moneyIDR(order.order_total) }}</td>
+                  <td>{{ moneyIDR(order.grand_total) }}</td>
                 </tr>
                 <tr>
                   <td>Dibuat</td>
