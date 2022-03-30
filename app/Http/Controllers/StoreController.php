@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\Block;
+
 use App\Models\Config;
-use App\Models\Slider;
-use App\Models\Product;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Store as Shop;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
-use App\Repositories\ProductRepository;
 
 class StoreController extends Controller
 {

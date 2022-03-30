@@ -166,7 +166,7 @@ class CategoryController extends Controller
 
             return response([
                 'success' => false, 
-                'message' => $th,
+                'message' => $th->getMessage(),
                 
             ],400);
 

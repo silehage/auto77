@@ -103,9 +103,7 @@ class ProductController extends Controller
            ], 404);
         }
 
-        $key = trim($request->q);
-        $key = strip_tags($key);
-        $key = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
+        $key = filter_var($request->q, FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
             

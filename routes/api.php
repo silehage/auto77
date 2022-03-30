@@ -23,41 +23,31 @@ use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
-    // User
+
     Route::get('userList', [UserController::class, 'userList']);
     Route::get('findUser/{key}', [UserController::class, 'findUser']);
     Route::delete('user/{id}', [UserController::class, 'destroy']);
-    // Product
+
     Route::delete('product/{id}', [ProductController::class, 'destroy']);
     Route::post('product/update', [ProductController::class, 'update']);
     Route::post('product', [ProductController::class, 'store']);
     Route::get('getAdminProducts', [ProductController::class, 'getAdminProducts']);
-    // Slider
+
     Route::post('sliders', [SliderController::class, 'store']);
     Route::delete('sliders/{id}', [SliderController::class, 'destroy']);
     Route::post('update-slider-weight', [SliderController::class, 'updateSliderWeight']);
-    // Category
+
     Route::apiResource('categories', CategoryController::class)->only('store', 'update', 'destroy');
-    // Shop
+
     Route::post('shop', [StoreController::class, 'update']);
-    // Post
+
     Route::apiResource('posts', PostController::class)->only('store', 'update', 'destroy');
-    // Block
+
     Route::apiResource('blocks', BlockController::class)->only('store', 'update', 'destroy');
-    // Bank
+
     Route::apiResource('banks', BankController::class)->only('store', 'update', 'destroy');
-    // Order
+
     Route::delete('orders/{id}', [OrderController::class, 'destroy']);
     Route::get('orders', [OrderController::class, 'index']);
     Route::post('searchAdminOrder', [OrderController::class, 'searchAdminOrder']);
@@ -84,7 +74,7 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
 });
 
 Route::middleware('auth:sanctum')->group(function() {
-    // Config
+
     Route::get('adminConfig', [ConfigController::class, 'adminConfig']);
     Route::post('config', [ConfigController::class, 'update']);
     
@@ -99,7 +89,6 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 Route::post('orders', [OrderController::class, 'store']);
-
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
 Route::get('post/{slug}', [PostController::class, 'getPostBySlug']);
@@ -141,7 +130,7 @@ Route::get('shipping/getCity/{province_id}', [ShippingController::class, 'getCit
 Route::get('shipping/getSubdistict/{city_id}', [ShippingController::class, 'getSubdistrict']);
 Route::post('shipping/getCost', [ShippingController::class, 'getCost']);
 Route::post('shipping/waybill', [ShippingController::class, 'waybill']);
-Route::get('shipping/findSubdistrict/{str}', [ShippingController::class, 'findSubdistrict']);
+Route::get('shipping/findSubdistrict/{key}', [ShippingController::class, 'findSubdistrict']);
 
 Route::get('tripay/payment-chanel',[TripayController::class, 'getPaymentChanels']);
 Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');

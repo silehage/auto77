@@ -164,13 +164,13 @@ class ShippingController extends Controller
 
     }
 
-    public function findSubdistrict($str)
+    public function findSubdistrict($key)
     {
-        $str = strip_tags($str);
+        $key = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
         
         $subdistricts = DB::connection('rajaongkir')
             ->table('subdistricts')
-            ->where('subdistrict_name', 'like', $str.'%')
+            ->where('subdistrict_name', 'like', $key.'%')
             ->get();
 
         return response()->json([

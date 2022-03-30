@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BankController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -15,10 +15,7 @@ class BankController extends Controller
      */
     public function index()
     {
-        return response([
-            'success' => true,
-            'results' => BankAccount::all()
-        ], 200);
+        return response(['success' => true, 'results' => BankAccount::all()], 200);
     }
 
     /**
@@ -43,9 +40,7 @@ class BankController extends Controller
             'account_number' => $request->account_number,
         ]);
 
-        return response([
-            'success' => true,
-        ], 201);
+        return response(['success' => true], 201);
     }
 
     /**
@@ -72,9 +67,7 @@ class BankController extends Controller
             'account_number' => $request->account_number,
         ]);
 
-        return response([
-            'success' => true,
-        ], 200);
+        return response(['success' => true], 200);
     }
 
     /**
@@ -89,8 +82,6 @@ class BankController extends Controller
 
         $bank->delete();
 
-        return response([
-            'success' => true,
-        ], 200);
+        return response(['success' => true], 200);
     }
 }

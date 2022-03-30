@@ -11,9 +11,7 @@ class CartController extends Controller
     public function get($sessId)
     {
         if(!$sessId) {
-            return response([
-                'status' => false
-            ], 500);
+            return response(['status' => false], 500);
         }
 
         return response()->json([
@@ -24,9 +22,7 @@ class CartController extends Controller
     public function store(Request $request, $sessId)
     {
         if(!$sessId) {
-            return response([
-                'status' => false
-            ], 500);
+            return response(['status' => false], 500);
         }
 
         $request->validate([
@@ -65,9 +61,7 @@ class CartController extends Controller
         }
 
 
-        return response([
-            'status' => true
-        ], 200);
+        return response(['status' => true], 200);
     }
 
     public function update(Request $request, $sessId)
@@ -86,14 +80,10 @@ class CartController extends Controller
     
             $cart->save();
     
-            return response([
-                'status' => true
-            ], 200);
+            return response(['status' => true], 200);
         }
 
-        return response([
-            'status' => false
-        ], 404);
+        return response(['status' => false], 400);
     }
 
     public function destroy(Request $request)
@@ -102,16 +92,12 @@ class CartController extends Controller
 
         Cart::where('created_at', '<', Carbon::now()->subDays(3))->delete();
 
-        return response([
-            'status' => true
-        ], 200);
+        return response(['status' => true], 200);
     }
     public function clear(Request $request)
     {
         Cart::where('session_id', $request->session_id)->delete();
 
-        return response([
-            'status' => true
-        ], 200);
+        return response(['status' => true], 200);
     }
 }

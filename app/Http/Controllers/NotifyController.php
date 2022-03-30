@@ -71,7 +71,7 @@ class NotifyController extends Controller
     
             } catch (\Throwable $th) {
     
-                Log::error($th);
+                Log::error($th->getMessage());
                 return false;
             }
 
@@ -90,7 +90,7 @@ class NotifyController extends Controller
                 
             } catch (\Throwable $th) {
                 
-                Log::error($th);
+                Log::error($th->getMessage());
                 return false;
             }
         }
@@ -113,14 +113,12 @@ class NotifyController extends Controller
                 
             } catch (\Throwable $th) {
                 
-                Log::error($th);
+                Log::error($th->getMessage());
                 return false;
             }
         }
 
         return false;
-
-
   
     }
 }

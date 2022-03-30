@@ -71,7 +71,9 @@ class CouponController extends Controller
         $request->validate([
             'code' => 'required'
         ]);
+
         $result = ['success' => true, 'code' => 200];
+
         try {
 
             $coupon = Coupon::with('discount')->where('code', trim($request->code))->first();
@@ -111,6 +113,7 @@ class CouponController extends Controller
         $coupon = Coupon::findOrFail($id);
 
         $coupon->update($data);
+        
         return response()->json([
             'success' => true,
             'results' => $coupon->fresh()

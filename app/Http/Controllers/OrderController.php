@@ -55,12 +55,11 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // $json = Tripay::createTransaction($request);
-
-        // return response($json);
 
         $user = null;
+
         if($request->user_id) {
+
             $user = User::find($request->user_id);
         }
 
@@ -78,13 +77,12 @@ class OrderController extends Controller
             'subtotal' => ['required', 'numeric'],
             'total' => ['required', 'numeric'],
         ]);
-        $name = strip_tags($request->customer_name);
-        $whatsapp = strip_tags($request->customer_phone);
+
+        $name = filter_var($request->customer_name, FILTER_SANITIZE_SPECIAL_CHARS);
+        $whatsapp = filter_var($request->customer_phone, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $uniqueCode = rand(56, 259);
         $orderRef = 'INV-' . rand(208, 5909). Str::upper(Str::random(5));
-
-        // $totalTagihan = $request->total+$request->payment_fee;
 
         DB::beginTransaction();
 
@@ -110,6 +108,7 @@ class OrderController extends Controller
             ]);
                 
             foreach($request->items as $item) {
+
                 $order->items()->create([
                     'sku' => $item['sku'],
                     'name' => $item['name'],
@@ -124,6 +123,7 @@ class OrderController extends Controller
 
 
                 $productData = Product::where('sku', $item['sku'])->first();
+
                 if($productData) {
 
                     $productData->stock -= $item['quantity'];
@@ -246,8 +246,6 @@ class OrderController extends Controller
 
     public function show($orderRef)
     {
-        $order = Order::where('order_ref', $orderRef)->firstOrFail();
-
         return response([
             'success' => true,
             'results' => Order::with(['items', 'transaction'])->where('order_ref', $orderRef)->first()
@@ -256,15 +254,12 @@ class OrderController extends Controller
 
     public function destroy($id)
     {
-        $order = Order::find($id);
+        $order = Order::findOrFail($id);
 
-        if($order) {
-            $order->delete();
+        $order->delete();
 
-            return response([
-                'success' => true
-            ], 200);
-        }
+        return response([ 'success' => true ], 200);
+
     }
     public function paymentAccepted($id)
     {
@@ -283,9 +278,7 @@ class OrderController extends Controller
            DB::table('product_variant_values')->where('item_sku', $item->sku)->decrement('item_stock', $item->quantity);
         }
 
-        return response([
-            'success' => true
-        ], 200);
+        return response([ 'success' => true ], 200);
     }
     public function filterOrder(Request $request)
     {
@@ -298,11 +291,11 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'results' => Order::with('items.product')
-            ->where('order_status', $request->filter)
-            ->orderByDesc('updated_at')
-            ->skip($skip)
-            ->take(4)
-            ->get()
+                ->where('order_status', $request->filter)
+                ->orderByDesc('updated_at')
+                ->skip($skip)
+                ->take(4)
+                ->get()
         ], 200);
     }
     public function searchOrder(Request $request)
@@ -310,16 +303,16 @@ class OrderController extends Controller
         $request->validate([
             'key' => ['required', 'string']
         ]);
-        $q = strip_tags($request->key);
-        $q = trim($q);
+        
+        $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
 
         return response()->json([
             'success' => true,
             'results' => Order::with('items.product')
-            ->where('customer_whatsapp', $q)
-            ->orWhere('order_ref', $q)
-            ->orderByDesc('updated_at')
-            ->get()
+                ->where('customer_whatsapp', $q)
+                ->orWhere('order_ref', $q)
+                ->orderByDesc('updated_at')
+                ->get()
         ], 200);
     }
     public function searchAdminOrder(Request $request)
@@ -327,16 +320,15 @@ class OrderController extends Controller
         $request->validate([
             'key' => ['required', 'string']
         ]);
-        $q = strip_tags($request->key);
-        $q = trim($q);
+        $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
 
         return response()->json([
             'success' => true,
             'results' => Order::with('transaction')
-            ->where('customer_whatsapp', 'like', '%'.$q .'%')
-            ->orWhere('order_ref', 'like', '%'.$q .'%')
-            ->orderByDesc('updated_at')
-            ->get()
+                ->where('customer_whatsapp', 'like', '%'.$q .'%')
+                ->orWhere('order_ref', 'like', '%'.$q .'%')
+                ->orderByDesc('updated_at')
+                ->get()
         ], 200);
     }
     public function inputResi(Request $request)
@@ -353,9 +345,7 @@ class OrderController extends Controller
 
         $order->save();
 
-        return response([
-            'success' => true
-        ], 200);
+        return response([ 'success' => true ], 200);
     }
 
     protected function getOrders($request) 
@@ -367,17 +357,17 @@ class OrderController extends Controller
 
         if($search) {
             return Order::with('transaction')->where('customer_whatsapp', $search)
-            ->orWhere('order_ref', $search)
-            ->orderByDesc('updated_at')
-            ->get();
+                ->orWhere('order_ref', $search)
+                ->orderByDesc('updated_at')
+                ->get();
         }
         if($filter && $filter != 'ALL') {
             return Order::with('transaction')
-            ->where('order_status', $filter)
-            ->orderByDesc('updated_at')
-            ->skip($skip)
-            ->take($take)
-            ->get();
+                ->where('order_status', $filter)
+                ->orderByDesc('updated_at')
+                ->skip($skip)
+                ->take($take)
+                ->get();
         }
 
         return Order::with('transaction')->latest()->skip($skip)->take($take)->get();
@@ -388,9 +378,9 @@ class OrderController extends Controller
     {
         return response()->json([
             'results' => OrderItem::with('images', 'order:id,customer_name,created_at')
-                ->inRandomOrder()
-                ->take(20)
-                ->get()
+                        ->inRandomOrder()
+                        ->take(20)
+                        ->get()
         ], 200);
     }
     public function updateStatusOrder(Request $request)
@@ -417,17 +407,7 @@ class OrderController extends Controller
             'order_status' => $request->status
         ]);
 
-        return response()->json([
-            'success' => true
-        ], 200);
-    }
-
-    protected function getFormatResponse($order) 
-    {
-        return [
-            'id' => $order->id,
-
-        ];
+        return response([ 'success' => true ], 200);
     }
     
 }

@@ -66,7 +66,7 @@ class PasswordResetController extends Controller
             
             return response([
                 'OK' => false,
-                'message' => $th,
+                'message' => $th->getMessage(),
             ], 200);
         }
 
@@ -80,9 +80,7 @@ class PasswordResetController extends Controller
     public function validateToken($token)
     {
 
-        $tkn = strip_tags($token);
-        $tkn = htmlspecialchars($tkn);
-
+        $tkn =  trim(htmlspecialchars(strip_tags($token)));
         if(!$tkn) {
             return response([
                 'OK' => false,
@@ -110,7 +108,9 @@ class PasswordResetController extends Controller
             'email' => ['required'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
-        $tkn = strip_tags($request->token);
+
+        $tkn = filter_var($request->token, FILTER_SANITIZE_SPECIAL_CHARS);
+        
         $data = PasswordReset::where('token', $tkn)->first();
         $user = User::where('email', $data->email)->first();
 

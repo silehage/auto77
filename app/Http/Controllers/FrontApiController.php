@@ -10,7 +10,6 @@ use App\Models\Slider;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\ProductRepository;
 

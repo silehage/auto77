@@ -110,9 +110,7 @@ class PromoteController extends Controller
 
         $promote->delete();
 
-        return response()->json([
-            'success' => true,
-        ]);
+        return response([ 'success' => true ], 200);
 
     }
 

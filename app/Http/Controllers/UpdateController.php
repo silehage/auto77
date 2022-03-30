@@ -19,16 +19,14 @@ class UpdateController extends Controller
     public function clearCache()
     {
 
-        try {
+        Cache::flush();
 
-            Cache::flush();
+        try {
 
             Artisan::call('cache:clear');
             Artisan::call('config:clear');
 
-            return response()->json([
-                'sucess' => true
-            ], 200);
+            return response()->json(['success' => true ], 200);
 
 
         } catch (\Throwable $th) {
@@ -51,6 +49,7 @@ class UpdateController extends Controller
     public function update()
     {
         DB::beginTransaction();
+        
         try {
             
             Artisan::call('migrate', ['--force' => true]);

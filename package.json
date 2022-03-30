@@ -5,7 +5,8 @@
         "prod": "npm run build",
         "serve": "cd frontend && quasar dev",
         "build": "cd frontend && quasar build -m pwa && cd .. && npm run development",
-        "install_frontend": "cd frontend && npm install",
+        "start": "npm install && npm run install-frontend",
+        "install-frontend": "cd frontend && npm install",
         "development": "mix"
     },
     "devDependencies": {

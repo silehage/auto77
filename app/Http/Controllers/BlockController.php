@@ -81,9 +81,7 @@ class BlockController extends Controller
 
             Cache::forget('blocks');
 
-            return response([
-                'success' => true
-            ], 201);
+            return response(['success' => true], 201);
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -143,15 +141,13 @@ class BlockController extends Controller
 
             Cache::forget('blocks');
 
-            return response([
-                'success' => true
-            ], 201);
+            return response(['success' => true], 200);
 
         } catch (\Throwable $th) {
             //throw $th;
-            return response([
-                'success' => false
-            ], 400);
+
+            DB::rollBack();
+            return response(['success' => false], 400);
         }
     }
 
@@ -177,19 +173,13 @@ class BlockController extends Controller
 
             Cache::forget('blocks');
 
-            return response([
-                'success' => true, 
-                'message' => 'Berhasil menghapus data',
-            ], 200);
+            return response(['success' => true, 'message' => 'Berhasil menghapus data'], 200);
 
 
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            return response([
-                'success' => false, 
-                'message' => 'Gagal menghapus data',
-            ], 400);
+            return response(['success' => false, 'message' => 'Gagal menghapus data'], 400);
         }
     }
 }

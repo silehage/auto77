@@ -33,9 +33,11 @@ class TripayController extends Controller
         } else {
             
             $json = Tripay::paymentChanels();
+
             $obj = json_decode($json);
     
             if($obj->success == true) {
+
                 Cache::put('tripay_payment_chanels', $obj->data, now()->addHours(6));
 
                 return response()->json($obj);
@@ -122,8 +124,8 @@ class TripayController extends Controller
             $merchantRef = $data->merchant_ref;
             
             $invoice = Order::where('order_ref', $merchantRef)
-            ->where('order_status', 'UNPAID')
-            ->first();
+                ->where('order_status', 'UNPAID')
+                ->first();
             
             
             if( !$invoice ) {
@@ -150,9 +152,7 @@ class TripayController extends Controller
                     'note' => $data->note
                 ]);
 
-                return response()->json([
-                    'success' => true
-                    ]);
+                return response()->json(['success' => true ]);
             }
             elseif( $data->status == 'EXPIRED' ) // handle status EXPIRED
             {
@@ -166,9 +166,7 @@ class TripayController extends Controller
                 ]);
 
 
-                return response()->json([
-                    'success' => true
-                    ]);
+                return response()->json(['success' => true ]);
             }
             elseif( $data->status == 'FAILED' ) // handle status FAILED
             {
@@ -181,9 +179,7 @@ class TripayController extends Controller
                     'note' => $data->note
                 ]);
 
-                return response()->json([
-                    'success' => true
-                    ]);
+                return response()->json(['success' => true ]);
             }
         }
 

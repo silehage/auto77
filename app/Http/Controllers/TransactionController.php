@@ -10,7 +10,7 @@ class TransactionController extends Controller
 {
     public function show(Request $request)
     {
-        if(!$request->reference) return response(null,404);
+        if(!$request->reference) return response([ 'success' => false ],404);
         
         $data = null;
         $status = 400;       
