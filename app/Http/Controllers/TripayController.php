@@ -123,26 +123,26 @@ class TripayController extends Controller
         {
             $merchantRef = $data->merchant_ref;
             
-            $invoice = Order::where('order_ref', $merchantRef)
+            $order = Order::where('order_ref', $merchantRef)
                 ->where('order_status', 'UNPAID')
                 ->first();
             
             
-            if( !$invoice ) {
+            if( !$order ) {
                 
                 return "Invoice not found or current status is not UNPAID";
             }
 
-            $transaction = $invoice->transaction;
+            $transaction = $order->transaction;
 
-            if ((int) $data->total_amount !== (int) $invoice->order_total) {
+            if ((int) $data->total_amount !== (int) $order->order_total) {
                 return 'Invalid amount';
             }
   
 
             if( $data->status == 'PAID' ) // handle status PAID
             {
-                $invoice->update([
+                $order->update([
                     'order_status'	=> 'PAID',
                 ]);
                 
@@ -152,11 +152,12 @@ class TripayController extends Controller
                     'note' => $data->note
                 ]);
 
+
                 return response()->json(['success' => true ]);
             }
             elseif( $data->status == 'EXPIRED' ) // handle status EXPIRED
             {
-                $invoice->update([
+                $order->update([
                     'order_status'	=> 'CANCELED',
                 ]);
 
@@ -164,13 +165,15 @@ class TripayController extends Controller
                     'status' => 'CANCELED',
                     'note' => $data->note
                 ]);
+
+                $this->resetStock($order);
 
 
                 return response()->json(['success' => true ]);
             }
             elseif( $data->status == 'FAILED' ) // handle status FAILED
             {
-                $invoice->update([
+                $order->update([
                     'order_status'	=> 'CANCELED',
                 ]);
 
@@ -179,11 +182,23 @@ class TripayController extends Controller
                     'note' => $data->note
                 ]);
 
+                $this->resetStock($order);
+
                 return response()->json(['success' => true ]);
             }
         }
 
         return "No action was taken";
+    }
+
+    protected function resetStock($order) 
+    {
+        foreach($order->items as $item) {
+
+            DB::table('products')->where('sku', $item->sku)->increment('stock', intval($item->quantity));
+            DB::table('product_variant_values')->where('item_sku', $item->sku)->increment('item_stock', intval($item->quantity));
+
+        }
     }
 
 }

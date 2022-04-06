@@ -55,8 +55,8 @@ class ResetStockByOrder extends Command
 
                 foreach($orderItems as $item) {
 
-                    DB::table('products')->where('sku', $item['sku'],)->increment('stock', intval($item['quantity']));
-                    DB::table('product_variant_values')->where('item_sku', $item['sku'],)->increment('item_stock', intval($item['quantity']));
+                    DB::table('products')->where('sku', $item->sku)->increment('stock', intval($item->quantity));
+                    DB::table('product_variant_values')->where('item_sku', $item->sku)->increment('item_stock', intval($item->quantity));
                 }
 
                 $order->update(['order_status' => 'CANCELED']);

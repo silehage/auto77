@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('updateStatusOrder', [OrderController::class, 'updateStatusOrder']);
     Route::post('paymentAccepted/{id}', [OrderController::class, 'paymentAccepted']);
     Route::post('inputResi', [OrderController::class, 'inputResi']);
+    Route::post('cancelOrder/{id}', [OrderController::class, 'cancelOrder']);
     // Update
     Route::get('update', [UpdateController::class, 'overview']);
     Route::post('update', [UpdateController::class, 'update']);  

@@ -84,6 +84,13 @@ export function acceptPayment ({ dispatch }, id) {
     }
   })
 }
+export function cancelOrder ({ dispatch }, id) {
+  Api().post('cancelOrder/'+ id).then(response => {
+    if(response.status == 200) {
+      dispatch('getOrders')
+    }
+  })
+}
 
 export function inputResi ({ dispatch }, payload) {
   Api().post('inputResi', payload).then(response => {

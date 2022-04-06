@@ -83,7 +83,13 @@
               </div>
             </div>
             </div>
-             <div class="text-subtitle1 text-weight-medium q-mt-sm" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
+            <div v-if="isHasVariant">
+             <div v-if="varianValueSelected" class="text-subtitle1 text-weight-medium q-mt-sm" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
+              </div>
+            </div>
+            <div v-if="!isHasVariant">
+              <div class="text-subtitle1 text-weight-medium q-mt-sm" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
+              </div>
             </div>
           <div class="q-py-md">
             <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
@@ -134,7 +140,7 @@
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
         <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
-        <q-btn unelevated rounded :disabled="currentStock == 0" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="col"></q-btn>
+        <q-btn unelevated rounded :disabled="outOfStock" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="col"></q-btn>
     </q-footer>
     </template>
       <q-inner-loading :showing="!ready">
@@ -268,7 +274,7 @@
             </div>
         </q-card-section>
         <q-card-section>
-        <q-btn unelevated :disabled="currentStock == 0" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="full-width"></q-btn>
+        <q-btn unelevated :disabled="outOfStock" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="full-width"></q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -345,6 +351,9 @@ export default {
     },
     productStock() {
       return this.product.variant_items_sum_item_stock? parseInt(this.product.variant_items_sum_item_stock) : this.product.stock
+    },
+    outOfStock() {
+      return (this.currentStock-this.quantity) < 0
     },
     currentStock() {
 
@@ -480,6 +489,8 @@ export default {
         product_url: this.getRoutePath(), 
         image_url: this.product.assets[0].src, 
         weight: this.product.weight})
+
+        this.quantity = 1
     },
     addNewItem() {
       if(this.isHasVariant) {

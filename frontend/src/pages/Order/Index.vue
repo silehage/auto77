@@ -90,6 +90,7 @@
               <q-btn unelevated v-if="canInputResi(order)" no-caps size="12px" label="Input Resi" color="orange" @click="handleInputResi(order)"></q-btn>
               <q-btn unelevated v-if="canShip(order)" no-caps size="12px" label="Kirim COD" color="orange" @click="handleKirimCod(order)"></q-btn>
               <q-btn unelevated v-if="canComplete(order)" no-caps size="12px" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-btn>
+              <q-btn unelevated v-if="canCancelOrder(order)" no-caps size="12px" label="Batalkan Order" color="pink" @click="handleCancelOrder(order)"></q-btn>
             </div>
           </q-item-section>
         </q-item>
@@ -166,7 +167,7 @@ export default {
     this.getOrders()
   },
   methods: {
-    ...mapActions('order', ['getOrders', 'getPaginateOrder', 'getPaginateFilterOrder', 'destroyOrder', 'acceptPayment', 'inputResi', 'updateStatusOrder', 'searchOrder', 'filterOrder']),
+    ...mapActions('order', ['getOrders', 'getPaginateOrder', 'getPaginateFilterOrder', 'destroyOrder', 'acceptPayment', 'inputResi', 'updateStatusOrder', 'searchOrder', 'filterOrder', 'cancelOrder']),
     loadMore() {
       this.getPaginateOrder({ filter: this.filter, skip: this.orders.data.length })
     },
@@ -186,6 +187,17 @@ export default {
         this.updateStatusOrder(this.form)
       })
     },
+    handleCancelOrder(order) {
+      this.$q.dialog({
+        title: 'Konfirmasi Pembatalan order',
+        message: 'Akan membatalkan order ini?, perubahan ini tidak dapat dikembalikan',
+        cancel: true,
+      }).onOk(() => {
+        this.form.status = 'SHIPPING'
+        this.form.order_id = order.id
+        this.cancelOrder(order.id)
+      })
+    },
     canShip(order) {
       if(order.shipping_courier_name == 'COD') {
         if(order.order_status == 'PROCESS' || order.order_status == 'UNPAID') {
@@ -199,6 +211,9 @@ export default {
     },
     canComplete(order) {
       return order.order_status == 'SHIPPING' ? true : false
+    },
+    canCancelOrder(order) {
+      return order.order_status == 'UNPAID'
     },
     handleCompletionOrder(order) {
       this.form.status = 'COMPLETE'

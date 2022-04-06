@@ -107,14 +107,17 @@ export default {
       return this.$store.getters['order/getFormOrder']
     },
     carts() {
-        return this.$store.getters['cart/getCarts']
+      return this.$store.getters['cart/getCarts']
     },
     shop() {
-        return this.$store.state.shop
-      },
+      return this.$store.state.shop
+    },
     config() {
-        return this.$store.state.config
-      },
+      return this.$store.state.config
+    },
+    isCod() {
+      return this.formOrder.shipping_courier_name == 'COD'
+    },
     loading() {
       return this.$store.state.loading
       },
@@ -218,7 +221,7 @@ export default {
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)
-            }, 8000)
+            }, 1000)
 
             if(this.formOrder.shipping_courier_name == 'COD') {
   

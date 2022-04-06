@@ -349,6 +349,10 @@ export default {
 
       this.isSelectedCost = null
 
+       this.commitFormOrder('payment_name',  'COD')
+       this.commitFormOrder('payment_method',  'COD')
+       this.commitFormOrder('payment_code',  '')
+       this.commitFormOrder('payment_type',  'COD')
        this.commitFormOrder('shipping_courier_name',  'COD')
        this.commitFormOrder('shipping_courier_service',  'COD')
        this.commitFormOrder('shipping_cost',  item.price? parseInt(item.price) : 0)
