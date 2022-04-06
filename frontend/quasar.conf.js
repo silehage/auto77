@@ -140,8 +140,8 @@ module.exports = function (ctx ) {
         clientsClaim: true
       }, // only for GenerateSW
       manifest: {
-        short_name: "UKM Commerce",
-        name: "UKM Commerce App",
+        short_name: "NextShop",
+        name: "NextShop App",
         lang: "id",
         description: "Simple clean dan elegan aplikasi toko online SPA dan PWA ready",
         start_url: "/",
