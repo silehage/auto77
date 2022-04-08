@@ -1,6 +1,7 @@
 <template>
   <div>
-    <component :is="isActiveComponent" />
+    <!-- <component :is="isActiveComponent" /> -->
+    <elegant />
   </div>
 </template>
 
@@ -18,9 +19,9 @@ export default {
   //   'romance': () => import('./Theme/romance/Index.vue'),
   // },
   components: { 
-    elegant: romanceTheme, 
-    default: defaultTheme, 
-    romance: elegantTheme
+    elegant: elegantTheme, 
+    // default: defaultTheme, 
+    // romance: romanceTheme
    },
   computed: {
     isActiveComponent() { 
