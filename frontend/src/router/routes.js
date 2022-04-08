@@ -4,7 +4,7 @@ const routes = [
     path: '/',
     component: () => import('layouts/FrontLayout.vue'),
     children: [
-      { path: '', name: 'Home', component: () => import('pages/Theme/Default/Index.vue')},
+      { path: '', name: 'Home', component: () => import('pages/Test.vue')},
       { path: 'favorite', name: 'ProductFavorite', component: () => import('pages/Product/Favorite.vue')},
       { path: 'products', name: 'ProductIndex', component: () => import('pages/Product/Index.vue') },
       { path: 'products/category/:id', name: 'ProductCategory', component: () => import('pages/Product/ByCategory.vue') },
