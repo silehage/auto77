@@ -14,7 +14,7 @@
       <!-- <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div> -->
-      <!-- <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding-side block-container">
+      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding-side block-container">
         <div class="block-heading">
           <div class="block-title"><h2>Kategori</h2></div>
         </div>
@@ -24,7 +24,7 @@
       </div>
       <div v-if="blocks.banner.length" class="banner auto-padding-side block-container">
         <img :src="blocks.banner[0].image_url" @click="goToPost(blocks.banner[0])">
-      </div> -->
+      </div>
       
       <product-block :products="products" />
 
@@ -60,13 +60,13 @@
 import { mapActions, mapState } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
 import SwipeSlider from './block/GlideSlider.vue'
-import FeaturedCarousel from './../shared-components/FeaturedCarousel.vue'
-import CategoryCarousel from './block/CategoryCarousel.vue'
+// import FeaturedCarousel from './../shared-components/FeaturedCarousel.vue'
+// import CategoryCarousel from './block/CategoryCarousel.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
-import PostBlock from './../shared-components/PostBlock.vue'
-import PartnerCarousel from 'components/PartnerCarousel.vue'
+// import PostBlock from './../shared-components/PostBlock.vue'
+// import PartnerCarousel from 'components/PartnerCarousel.vue'
 // import InstallApp from 'components/InstallApp.vue'
-import FooterBlock from './../shared-components/FooterBlock.vue'
+// import FooterBlock from './../shared-components/FooterBlock.vue'
 
 export default {
   name: 'PageIndex',
@@ -75,11 +75,11 @@ export default {
     SwipeSlider, 
     // InstallApp, 
     ProductBlock, 
-    // CategoryCarousel,
+    'category-carousel': () => import('./block/CategoryCarousel.vue'),
     // FeaturedCarousel,
     // PartnerCarousel,
-    PostBlock, 
-    FooterBlock,
+    'post-block': () => import('./../shared-components/PostBlock.vue'), 
+    'footer-block': () => import('./../shared-components/FooterBlock.vue'),
     'install-app': () => import('components/InstallApp.vue')
   },
   data() {

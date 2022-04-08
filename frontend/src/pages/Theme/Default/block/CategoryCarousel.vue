@@ -1,14 +1,14 @@
 <template>
   <div class="overflow-hidden">
-    <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide v-for="cat in datas" :key="cat.id">
+    <vue-glide :options="glideOptions">
+      <vue-glide-slide v-for="cat in datas" :key="cat.id">
         <div class="column full-height bg-white text-center">
-            <q-img v-if="cat.filename" :src="cat.src" ratio="1"  @click="openCategory(cat.id)" class="cursor-pointer">
-                <div class="text-weight-medium text-auto absolute-full flex flex-center">{{ cat.title }}</div>
-            </q-img>
-          </div>
-      </swiper-slide>
-    </swiper>
+          <q-img v-if="cat.filename" :src="cat.src" ratio="1"  @click="openCategory(cat.id)" class="cursor-pointer">
+              <div class="text-weight-medium text-auto absolute-full flex flex-center">{{ cat.title }}</div>
+          </q-img>
+        </div>
+      </vue-glide-slide>
+    </vue-glide> 
   </div>
 </template>
 
@@ -20,15 +20,15 @@ export default {
   },
   data () {
     return {
-      swiperOptions: {
-        slidesPerView: 4,
-        spaceBetween: 5,
+      glideOptios: {
+        perView: 4,
+        gap: 5,
       }
     }
   },
   created() {
     if(this.datas.length <= 3) {
-      this.swiperOptions.slidesPerView = 3
+      this.glideOptios.perView = 3
     }
   },
   methods: {

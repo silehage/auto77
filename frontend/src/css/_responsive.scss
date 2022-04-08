@@ -46,6 +46,28 @@
     width: 60px;
     height:auto;
   }
+  .text {
+    &-xs {
+      font-size: 11px;
+    }
+    &-sm1 {
+  
+      font-size: 12px;
+    }
+    &-sm {
+  
+      font-size: 13px;
+    }
+    &-md {
+      font-size: 15px;
+    }
+    &-md2 {
+      font-size: 18px;
+    }
+    &-lg {
+      font-size: 21px;
+    }
+  }
 }
 
 @media screen and(min-width: 600px) {

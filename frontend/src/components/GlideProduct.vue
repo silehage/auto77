@@ -21,7 +21,11 @@ import SwiperProductCard from 'components/SwiperProductCard'
         glideOptions: {
           perView: 2,
           gap: 8,
-          bound: true
+          bound: true,
+          peek: {
+           before: 0, 
+           after: 50
+          }
         }
       }
     },
