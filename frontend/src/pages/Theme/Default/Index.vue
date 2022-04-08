@@ -8,9 +8,9 @@
       </q-toolbar>
     </q-header>
 
-      <!-- <div id="slider" class="q-pt-sm" v-if="sliders.data.length">
+      <div id="slider" class="q-pt-sm" v-if="sliders.data.length">
         <swipe-slider :datas="sliders.data" />
-      </div> -->
+      </div>
       <!-- <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div> -->
@@ -59,7 +59,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
-// import SwipeSlider from './block/SwipeSlider.vue'
+import SwipeSlider from './block/GlideSlider.vue'
 import FeaturedCarousel from './../shared-components/FeaturedCarousel.vue'
 import CategoryCarousel from './block/CategoryCarousel.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
@@ -72,7 +72,7 @@ export default {
   name: 'PageIndex',
   components: {
     ShoppingCart,
-    // SwipeSlider, 
+    SwipeSlider, 
     // InstallApp, 
     ProductBlock, 
     // CategoryCarousel,

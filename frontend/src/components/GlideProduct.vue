@@ -1,10 +1,10 @@
 <template>
   <div class="overflow-hidden">
-    <vue-glide>
-    <vue-glide-slide v-for="product in products.items" :key="product.id">
-      <swiper-product-card :product="product" />
-    </vue-glide-slide>
-  </vue-glide>  
+    <vue-glide :options="glideOptions">
+      <vue-glide-slide v-for="product in products.items" :key="product.id">
+        <swiper-product-card :product="product" />
+      </vue-glide-slide>
+    </vue-glide>  
   </div>
 </template>
 
@@ -21,6 +21,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
         glideOptions: {
           perView: 2,
           gap: 8,
+          bound: true
         }
       }
     },
