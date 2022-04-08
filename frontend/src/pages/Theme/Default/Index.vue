@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-2 default" :class="{'flex flex-center' : loading }">
+  <q-page class="bg-grey-2 default">
     <q-header class="bg-white text-dark">
       <q-toolbar class="items-center sans">
         <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
@@ -7,7 +7,7 @@
         <shopping-cart />
       </q-toolbar>
     </q-header>
-    <template v-if="!loading">
+
       <div id="slider" class="q-pt-sm" v-if="sliders.data.length">
         <swipe-slider :datas="sliders.data" />
       </div>
@@ -51,10 +51,9 @@
 
       <footer-block />
 
-    </template>
-      <q-inner-loading :showing="loading">
+      <!-- <q-inner-loading :showing="loading">
         <q-spinner-facebook size="50px" color="primary"/>
-      </q-inner-loading>
+      </q-inner-loading> -->
   </q-page>
 </template>
 <script>
