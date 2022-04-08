@@ -15,13 +15,14 @@
     <q-list separator>
        <q-item v-for="block in blocks.data" :key="block.id">
 
-         <q-item-section side class="q-pr-sm justify-end">
+         <q-item-section side class="q-pr-sm relative">
            <img v-if="block.image" :src="block.image_url" class="rounded-corners" style="height:50px;width:100px;object-fit:contain;"/>
         </q-item-section>
         <q-item-section >
           <q-item-label class="text-subtitle2">{{ block.label }}</q-item-label>
           <q-item-label v-if="block.description" caption class="" v-html="block.description"></q-item-label>
           <div class="q-mt-xs">
+            <q-chip size="sm" outline color="pink" text-color="white">Urutan {{ block.weight }}</q-chip>
             <q-chip size="sm" icon="bookmark" outline color="blue-7" text-color="white">{{ block.position }}</q-chip>
             <q-chip v-if="block.post_id" size="sm" icon="check_circle" outline color="teal" text-color="white">Linked</q-chip>
           </div>
@@ -80,11 +81,14 @@
             label="Urutan" 
             v-model="form.weight" 
             mask="####"
+            :hint="form.position == 'Banner' ? 'Posisi banner: 1 , 2 atau 3' : ''"
             :rules="[
             val => val && val > 0 || 'Tidak boleh kosong'
             ]"
             />
-            <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
+            <div class="q-mt-md">
+             <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
+            </div>
             <template v-if="linkToPost">
               <div class="text-grey-7 q-my-sm">Pilih Post</div>
               <div class="">
@@ -169,6 +173,16 @@ export default {
        }
      },
     submitBlock() {
+      if(this.form.position == 'Banner') {
+        if(this.form.weight > 3) {
+          this.$q.dialog({
+            title: 'Error',
+            message: 'Urutan block tipe banner maksimal adalah 3, Anda bisa pilih no 1, 2 atau 3'
+          })
+
+          return
+        }
+      }
       this.loading = true
       if(this.formType == 'add') {
         this.addBlock(this.form).then(response => {

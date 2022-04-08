@@ -2,7 +2,7 @@
 <div class="overflow-hidden">
     <swiper ref="mySwiper" :options="swiperOptions">
       <swiper-slide v-for="(item, index) in datas" :key="index" class="text-center">
-       <div  class="cursor-pointer column items-center">
+       <div class="cursor-pointer column items-center" @click="showPost(item)">
           <div class="partner-img">
             <img v-if="item.image" :src="item.image_url" />
           </div>
@@ -31,9 +31,9 @@ export default {
     }
   },
   methods: {
-    openCategory(id) {
-      if(id) {
-        this.$router.push({name: 'ProductCategory', params: {id:id}})
+    showPost(featured) {
+      if(featured.post) {
+        this.$router.push({ name: 'FrontPostShow', params: { slug: featured.post.slug }})
       }
     }
   }

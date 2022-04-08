@@ -9,7 +9,7 @@
         </template>
       </q-img>
       <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.slug)" class="cursor-pointer"></q-img>
-      <div class="relative col column justify-between q-pa-sm borfer-box">
+      <div class="relative col column justify-between q-pb-md q-px-sm q-pt-sm border-box">
         <div>
            <q-rating 
           readonly
@@ -21,18 +21,15 @@
         />
         <div class="text-subtitle2 ellipsis-2-lines">{{ product.title }}</div>
         </div>
-        <div class="flex justify-between items-end">
-          <div>
-            <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
-            <div class="text-md text-weight-medium text-green-7">{{ moneyIDR(product.pricing.current_price) }} </div>
-          </div>
-          <!-- <cart-button :product="product" /> -->
-          <div>
-          <favorite-button outline :product="product" />
-          </div>
+        <div class="flex justify-between items-center q-mt-sm">
+          <div class="card-price text-weight-medium">{{ moneyIDR(product.pricing.current_price) }} </div>
+          <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
         </div>
       </div>
-       <div v-if="product.pricing.is_discount" class="absolute top-0 q-pa-xs z-50 bg-red-6 text-white">{{ product.pricing.discount_percent }}%</div>
+       <div class="absolute-top-right q-pa-xs">
+        <favorite-button outline :product="product" />
+      </div>
+       <!-- <div v-if="product.pricing.is_discount" class="discount-badge">{{ product.pricing.discount_percent }}%</div> -->
     </div>
     </div>
 </template>

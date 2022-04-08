@@ -15,8 +15,8 @@
     <template v-if="!products.available">
       <div class="column items-center">
         <p class="text-grey-8 text-weight-bold text-center">Tidak ada produk ditemukan</p>
-        <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="dark"
-            icon="keyboard_backspace" label="kembali kehalaman produk" no-caps/>
+        <q-btn unelevated :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary"
+            icon="keyboard_backspace" label="Kehalaman Produk" no-caps/>
       </div>
     </template>
   </q-page>

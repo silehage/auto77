@@ -5,7 +5,7 @@
         <div class="column full-height text-center">
           <q-img v-if="cat.filename" :src="cat.src" ratio="1"  @click="openCategory(cat.id)" class="cursor-pointer rounded-borders bg-white">
           </q-img>
-          <div class="text-weight-medium text-category-auto text-center q-mt-sm">{{ cat.title }}</div>
+           <div class="text-category-auto text-center q-mt-xs">{{ cat.title }}</div>
         </div>
       </vue-glide-slide>
     </vue-glide> 
@@ -22,7 +22,7 @@ export default {
     return {
       glideOptions: {
         perView: 4,
-        gap: 16,
+        gap: 12,
         bound: true
       }
     }
@@ -34,9 +34,10 @@ export default {
     setGlideOptions() {
       if(this.datas.length <= 3) {
       this.glideOptions.perView = 3
-      }else if(window.innerWidth > 575) {
+      }else if(window.innerWidth > 600) {
         this.glideOptions.perView = 5
-      }else if(window.innerWidth < 380) {
+        this.glideOptions.gap = 16
+      }else if(window.innerWidth < 360) {
         this.glideOptions.perView = 3
         this.glideOptions.gap = 8
       }
@@ -50,7 +51,3 @@ export default {
 
 }
 </script>
-
-<style>
-
-</style>

@@ -1,18 +1,14 @@
 <template>
   <div class="overflow-hidden">
-    <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide v-for="cat in datas" :key="cat.id">
+     <vue-glide :options="glideOptions">
+      <vue-glide-slide v-for="cat in datas" :key="cat.id">
         <div class="column full-height relative bg-white wisata-card">
           <q-img v-if="cat.filename" :src="cat.src" ratio="1" @click="openCategory(cat.id)" class="cursor-pointer rounded-borders">
-            <div class="content">
-              <div>
-                <div class="text-weight-medium text-auto">{{ cat.title }}</div>
-              </div>
-            </div>
           </q-img>
         </div>
-      </swiper-slide>
-    </swiper>
+         <div class="text-category-auto text-center q-mt-xs">{{ cat.title }}</div>
+      </vue-glide-slide>
+    </vue-glide> 
   </div>
 </template>
 
@@ -24,18 +20,23 @@ export default {
   },
   data () {
     return {
-      swiperOptions: {
-        slidesPerView: 4,
-        spaceBetween: 15,
+      glideOptions: {
+        perView: 4,
+        gap: 12,
+        bound: true
       }
     }
   },
-  created() {
-    if(this.datas.length <= 3) {
-      this.swiperOptions.slidesPerView = 3
-    }
+ created() {
+    this.setGlideOptions()
   },
   methods: {
+    setGlideOptions() {
+      if(this.datas.length <= 3 || window.innerWidth < 360) {
+        this.glideOptions.perView = 3
+        this.glideOptions.gap = 8
+      }
+    },
     openCategory(id) {
       if(id) {
         this.$router.push({name: 'ProductCategory', params: {id:id}})
@@ -45,7 +46,3 @@ export default {
 
 }
 </script>
-
-<style>
-
-</style>

@@ -24,12 +24,16 @@ class FrontApiController extends Controller
     public function home()
     {
 
+        // sleep(5);
+
         $sliders = Cache::rememberForever('sliders', function () {
             return Slider::OrderBy('weight', 'asc')->get();
         });
         
         $blocks = Cache::rememberForever('blocks', function () {
-            return Block::with('post')->OrderBy('weight', 'asc')->get();
+            return Block::with('post:id,title,slug')
+            ->OrderBy('weight', 'asc')
+            ->get();
         });
 
         $shop = Cache::rememberForever('shop', function () {

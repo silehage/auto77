@@ -20,7 +20,7 @@ class BlockController extends Controller
     {
         return response()->json([
             'success' => true,
-            'results' => Block::with('post')->orderBy('weight', 'asc')->get()
+            'results' => Block::with('post:id,slug,title')->orderBy('position', 'desc')->get()
         ]);
     }
     public function show($id)
@@ -120,7 +120,9 @@ class BlockController extends Controller
 
             if($request->post_id) {
                 $block->post_id = $request->post_id;
-            } 
+            }  else {
+                $block->post_id = null;
+            }
             if($file = $request->file('image')) {
                 $filename = Str::random(42).'.' . $file->extension();
 

@@ -34,9 +34,7 @@
               <q-avatar icon="local_offer" color="primary" text-color="white"></q-avatar>
               {{ product.category.title }}
             </q-chip>
-            <div class="q-gutter-sm">
-              <q-btn unelevated size="sm" round color="green-6" icon="visibility" :to="{name: 'ProductShow', params:{slug: product.slug}}"></q-btn>
-              
+            <div>
               <favorite-button outline :product="product" />
             </div>
           </div>

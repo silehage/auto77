@@ -14,7 +14,6 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  props: ['imagename'],
   computed: {
     ...mapGetters('product', ['favoriteCount']),
     ...mapGetters('cart', ['cartCount']),
