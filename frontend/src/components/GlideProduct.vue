@@ -29,5 +29,10 @@ import SwiperProductCard from 'components/SwiperProductCard'
         }
       }
     },
+    created() {
+      if(window.innerWidth < 400) {
+        this.glideOptions.peek.after = 30
+      }
+    }
   }
 </script>

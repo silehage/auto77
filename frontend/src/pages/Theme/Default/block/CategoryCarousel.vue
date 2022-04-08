@@ -2,10 +2,10 @@
   <div class="overflow-hidden">
     <vue-glide :options="glideOptions">
       <vue-glide-slide v-for="cat in datas" :key="cat.id">
-        <div class="column full-height bg-white text-center">
-          <q-img v-if="cat.filename" :src="cat.src" ratio="1"  @click="openCategory(cat.id)" class="cursor-pointer">
-              <div class="text-weight-medium text-auto absolute-full flex flex-center">{{ cat.title }}</div>
+        <div class="column full-height text-center">
+          <q-img v-if="cat.filename" :src="cat.src" ratio="1"  @click="openCategory(cat.id)" class="cursor-pointer rounded-borders bg-white">
           </q-img>
+          <div class="text-weight-medium text-category-auto text-center q-mt-sm">{{ cat.title }}</div>
         </div>
       </vue-glide-slide>
     </vue-glide> 
@@ -20,18 +20,27 @@ export default {
   },
   data () {
     return {
-      glideOptios: {
+      glideOptions: {
         perView: 4,
-        gap: 5,
+        gap: 16,
+        bound: true
       }
     }
   },
   created() {
-    if(this.datas.length <= 3) {
-      this.glideOptios.perView = 3
-    }
+    this.setGlideOptions()
   },
   methods: {
+    setGlideOptions() {
+      if(this.datas.length <= 3) {
+      this.glideOptions.perView = 3
+      }else if(window.innerWidth > 575) {
+        this.glideOptions.perView = 5
+      }else if(window.innerWidth < 380) {
+        this.glideOptions.perView = 3
+        this.glideOptions.gap = 8
+      }
+    },
     openCategory(id) {
       if(id) {
         this.$router.push({name: 'ProductCategory', params: {id:id}})

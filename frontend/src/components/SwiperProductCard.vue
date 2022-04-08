@@ -28,7 +28,7 @@
         <div class="flex justify-between items-end">
           <div>
             <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
-            <div class="text-md text-weight-medium text-green-7">{{ moneyIDR(product.pricing.current_price) }} </div>
+            <div class="text-md text-weight-medium">{{ moneyIDR(product.pricing.current_price) }} </div>
           </div>
           <div>
           <favorite-button outline :product="product" />
