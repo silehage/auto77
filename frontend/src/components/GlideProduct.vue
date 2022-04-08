@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden">
     <vue-glide :options="glideOptions">
-      <vue-glide-slide v-for="product in products.items" :key="product.id">
+      <vue-glide-slide v-for="product in products.items" :key="product.id" class="relative">
         <swiper-product-card :product="product" />
       </vue-glide-slide>
     </vue-glide>  
