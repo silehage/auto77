@@ -8,13 +8,13 @@
       </q-toolbar>
     </q-header>
 
-      <div id="slider" class="q-pt-sm" v-if="sliders.data.length">
+      <!-- <div id="slider" class="q-pt-sm" v-if="sliders.data.length">
         <swipe-slider :datas="sliders.data" />
-      </div>
-      <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
+      </div> -->
+      <!-- <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
-      </div>
-      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding-side block-container">
+      </div> -->
+      <!-- <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding-side block-container">
         <div class="block-heading">
           <div class="block-title"><h2>Kategori</h2></div>
         </div>
@@ -24,11 +24,11 @@
       </div>
       <div v-if="blocks.banner.length" class="banner auto-padding-side block-container">
         <img :src="blocks.banner[0].image_url" @click="goToPost(blocks.banner[0])">
-      </div>
+      </div> -->
       
-      <product-block :products="products" />
+      <!-- <product-block :products="products" /> -->
 
-      <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
+      <!-- <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
         <div class="block-heading">
           <div class="block-title"><h2>Partners</h2></div>
         </div>
@@ -39,15 +39,15 @@
       
       <div v-if="blocks.banner.length > 1" class="banner auto-padding-side block-container">
         <img :src="blocks.banner[1].image_url" @click="goToPost(blocks.banner[1])">
-      </div>
+      </div> -->
 
       <post-block :posts="posts" />
 
-      <div v-if="blocks.banner.length > 2" class="banner auto-padding block-container">
+      <!-- <div v-if="blocks.banner.length > 2" class="banner auto-padding block-container">
         <img :src="blocks.banner[2].image_url" @click="goToPost(blocks.banner[2])">
-      </div>
+      </div> -->
 
-      <install-app />
+      <!-- <install-app /> -->
 
       <footer-block />
 
@@ -59,7 +59,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
-import SwipeSlider from './block/SwipeSlider.vue'
+// import SwipeSlider from './block/SwipeSlider.vue'
 import FeaturedCarousel from './../shared-components/FeaturedCarousel.vue'
 import CategoryCarousel from './block/CategoryCarousel.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
@@ -72,13 +72,13 @@ export default {
   name: 'PageIndex',
   components: {
     ShoppingCart,
-    SwipeSlider, 
-    InstallApp, 
-    ProductBlock, 
+    // SwipeSlider, 
+    // InstallApp, 
+    // ProductBlock, 
+    // CategoryCarousel,
+    // FeaturedCarousel,
+    // PartnerCarousel,
     PostBlock, 
-    CategoryCarousel,
-    FeaturedCarousel,
-    PartnerCarousel,
     FooterBlock
   },
   data() {
