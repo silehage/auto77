@@ -32,7 +32,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import SwiperProduct from 'components/SwiperProduct.vue'
+import SwiperProduct from 'components/GlideProduct.vue'
 import ProductListSection from 'components/ProductListSectionHome.vue'
 export default {
   props: ['products'],

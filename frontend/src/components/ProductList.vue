@@ -58,9 +58,6 @@ export default {
     }
   },
   methods: {
-    money(number) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
-    },
     show(id) {
       this.$router.push({name: 'ProductShow', params: {id: id}})
     },

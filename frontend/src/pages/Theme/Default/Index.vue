@@ -26,7 +26,7 @@
         <img :src="blocks.banner[0].image_url" @click="goToPost(blocks.banner[0])">
       </div> -->
       
-      <!-- <product-block :products="products" /> -->
+      <product-block :products="products" />
 
       <!-- <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
         <div class="block-heading">
@@ -47,7 +47,7 @@
         <img :src="blocks.banner[2].image_url" @click="goToPost(blocks.banner[2])">
       </div> -->
 
-      <!-- <install-app /> -->
+      <install-app />
 
       <footer-block />
 
@@ -65,7 +65,7 @@ import CategoryCarousel from './block/CategoryCarousel.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
 import PostBlock from './../shared-components/PostBlock.vue'
 import PartnerCarousel from 'components/PartnerCarousel.vue'
-import InstallApp from 'components/InstallApp.vue'
+// import InstallApp from 'components/InstallApp.vue'
 import FooterBlock from './../shared-components/FooterBlock.vue'
 
 export default {
@@ -74,12 +74,13 @@ export default {
     ShoppingCart,
     // SwipeSlider, 
     // InstallApp, 
-    // ProductBlock, 
+    ProductBlock, 
     // CategoryCarousel,
     // FeaturedCarousel,
     // PartnerCarousel,
     PostBlock, 
-    FooterBlock
+    FooterBlock,
+    'install-app': () => import('components/InstallApp.vue')
   },
   data() {
     return {
