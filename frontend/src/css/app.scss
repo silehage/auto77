@@ -141,6 +141,15 @@ div,
     right: 0px;
   }
 }   
+.discount-badge {
+  position: absolute;
+  top:0;
+  left:0;
+  font-size: 14px;
+  background-color: rgb(236, 0, 0);
+  color: #fff;
+  padding: 3px;
+}
 .block-title {
   position: relative;
    h4, h3, h2{
@@ -592,5 +601,9 @@ table.table td, table.table td * {
   .q-footer .q-tab__content, .q-header .q-tab__content {
       min-width: 50px!important;
   }
+}
+.glide__slides {
+  display: grid !important;
+  grid-template-columns: repeat(10, 1fr);
 }
 @import 'responsive';

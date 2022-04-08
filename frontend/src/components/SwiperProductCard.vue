@@ -22,7 +22,7 @@
             size="xs"
           />
           <div class="full-width q-mt-xs">
-            <div class="text-subtitle ellipsis-2-lines">{{ product.title }}</div>
+            <div class="product-card-title ellipsis-2-lines">{{ product.title }}</div>
           </div>
         </div>
         <div class="flex justify-between items-end">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-         <div v-if="product.pricing.is_discount" class="absolute top-0 q-pa-xs z-50 bg-red-6 text-white">{{ product.pricing.discount_percent }}%</div>
+      <div v-if="product.pricing.is_discount" class="discount-badge">{{ product.pricing.discount_percent }}%</div>
     </div>
   </div>
 </template>
