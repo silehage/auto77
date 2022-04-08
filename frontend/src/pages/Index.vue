@@ -1,23 +1,30 @@
 <template>
   <div>
-    <component :is="isComponent" />
+    <component :is="isActiveComponent" />
   </div>
 </template>
 
 <script>
+
+import defaultTheme from 'pages/Theme/Default/Index.vue';
+import romanceTheme from 'pages/Theme/Romance/Index.vue';
+import elegantTheme from 'pages/Theme/Elegant/Index.vue';
+
 export default {
   name: 'PageIndex',
-  components: {
-    'default': () =>  import('./Theme/Default/Index.vue'),
-    'elegant': () => import('./Theme/Elegant/Index.vue'),
-    'romance': () => import('./Theme/Romance/Index.vue'),
-  },
+  // components: {
+  //   'default': () =>  import('./Theme/base/Index.vue'),
+  //   'elegant': () => import('./Theme/elegant/Index.vue'),
+  //   'romance': () => import('./Theme/romance/Index.vue'),
+  // },
+  components: { 
+    elegant: romanceTheme, 
+    default: defaultTheme, 
+    romance: elegantTheme
+   },
   computed: {
-    config() {
-      return this.$store.state.config
-    },
-    isComponent: function() { 
-      return this.config && this.config.theme ? this.config.theme : 'default'
+    isActiveComponent() { 
+      return this.$store.getters['getTheme']
     },
     loading() {
       return this.$store.state.loading
