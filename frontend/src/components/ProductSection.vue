@@ -30,6 +30,7 @@ import ProductCard from 'components/ProductCard.vue'
 import ProductCardSkeleton from 'components/ProductCardSkeleton.vue'
 import ProductList from 'components/ProductList.vue'
 import ProductListSkeleton from 'components/ProductListSkeleton.vue'
+
 export default {
   name: 'ProductSection',
   components: { 
@@ -44,7 +45,7 @@ export default {
   },
   data() {
     return {
-      viewMode: 'grid'
+      viewMode: 'grid',
     }
   },
   computed: {
@@ -55,13 +56,10 @@ export default {
   methods: {
     changeViewMode(str) {
       this.$store.commit('SET_PRODUCT_VIEW_MODE', str)
-    }
+    },
+    
   }
   
 
 }
 </script>
-
-<style>
-
-</style>

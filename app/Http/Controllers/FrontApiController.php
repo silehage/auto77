@@ -24,8 +24,6 @@ class FrontApiController extends Controller
     public function home()
     {
 
-        // sleep(5);
-
         $sliders = Cache::rememberForever('sliders', function () {
             return Slider::OrderBy('weight', 'asc')->get();
         });
@@ -51,13 +49,12 @@ class FrontApiController extends Controller
 
         // Cache::flush();
 
-        $initialProducts = Cache::rememberForever('initial_products', function() use ($categories){
-
-            return $this->productRepository->getInitialProducts($categories);
+        $initialProducts = Cache::rememberForever('initial_products', function() {
+            
+            return $this->productRepository->getInitialProducts();
 
         });
-
-        // return view('welcome');
+        
 
         return response()->json([
             'success' => true, 

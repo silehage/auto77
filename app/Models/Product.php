@@ -12,7 +12,7 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = [];
-    // public $appends = ['rating'];
+    public $appends = ['rating'];
 
     protected $casts = [
         'status' > 'boolean'
@@ -28,7 +28,7 @@ class Product extends Model
     }
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(Review::class)->latest();
     }
     public function reviewsLimit()
     {
@@ -37,6 +37,14 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
+    }
+    public function getRatingAttribute()
+    {
+        return $this->productRating();
+    }
+    public function productRating()
+    {
+        return $this->hasMany(Review::class)->avg('rating');
     }
     public function getRealStockAttribute()
     {

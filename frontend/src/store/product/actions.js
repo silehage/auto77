@@ -40,16 +40,11 @@ export function getAdminProducts ({ commit }, q = null) {
      })
   }
 }
-export function getProducts ({ commit }, q = null) {
-  if(q) {
-    Api().get('products?='+q).then(response => {
-       commit('SET_PRODUCTS', response.data.results)
-     })
-  } else {
-    Api().get('products').then(response => {
-       commit('SET_PRODUCTS', response.data.results)
-     })
-  }
+export function getProducts ({ commit }) {
+
+  Api().get('products').then(response => {
+     commit('SET_PRODUCTS', response.data)
+   })
 }
 
 export function getProductById ({}, id) {
@@ -66,15 +61,15 @@ export function productDelete ( { dispatch },  id) {
 }
 
 export function searchProducts ({ commit }, q) {
-  return Api().get('search?q='+q)
+  return Api().get('search/'+q)
  }
 
 export function getProductsByCategory ({ commit }, id) {
 
   Api().get('getProductsByCategory/'+id).then(response => {
     if(response.status == 200) {
-      commit('SET_PRODUCT_CATEGORY', response.data.results.products)
-      commit('SET_META_TITLE', response.data.results.category.title, { root: true })
+      commit('SET_PRODUCT_CATEGORY', response.data)
+      commit('SET_META_TITLE', response.data.data[0].category.title, { root: true })
     }
   })
  }
@@ -82,7 +77,7 @@ export function getProductsByCategory ({ commit }, id) {
 export function getProductsFavorites ({ commit }, payload) {
   Api().post('getProductsFavorites', payload).then(response => {
     if(response.status == 200) {
-      commit('SET_PRODUCT_FAVORITE', response.data.results.products)
+      commit('SET_PRODUCT_FAVORITE', response.data)
     }
   })
  }

@@ -36,12 +36,16 @@
     <q-inner-loading :showing="loading">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
+    <div class="flex justify-center q-py-lg" v-if="products && products.links">
+     <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
+   </div>
   </q-page>
 </template>
 
 <script>
 import ProductSection from 'components/ProductSection.vue'
 import { mapActions } from 'vuex'
+import { Api } from 'boot/axios'
 export default {
   name: 'ProductSearch',
   components: { ProductSection },
@@ -53,8 +57,11 @@ export default {
       products: {
         data: [],
         ready: false,
-        available: true
+        available: true,
+        links: null,
+        meta: null
       },
+      isLoadmore: false
     }
   },
   methods: {
@@ -64,7 +71,9 @@ export default {
       this.$refs.input.blur()
       this.searchProducts(this.search).then(response => {
         if(response.status == 200) {
-          this.products.data = response.data.results
+          this.products.data = response.data.data
+          this.products.links = response.data.links
+          this.products.meta = response.data.meta
           this.products.available = this.products.data.length? true : false
         }
       }).finally(() => {
@@ -73,6 +82,16 @@ export default {
         this.searchTitle = this.search
         this.search = ''
       })
+    },
+    paginate(url) {
+      this.isLoadmore = true
+      Api().get(url).then(response => {
+        if(response.status == 200) {
+          this.products.data = [...this.products.data, ...response.data.data]
+          this.products.links = response.data.links
+          this.products.meta = response.data.meta
+        }
+      }).finally(() =>  this.isLoadmore = false)
     }
   },
   mounted() {

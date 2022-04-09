@@ -11,6 +11,9 @@
     </q-header>
     <template v-if="products.available">
       <product-section title="Produk Katalog" :products="products"></product-section>
+      <div class="flex justify-center q-py-lg" v-if="products.links">
+      <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
+    </div>
     </template>
     <template v-if="!products.available">
       <div class="column items-center">
@@ -26,6 +29,7 @@
 import { mapActions } from 'vuex'
 import ProductSection from 'components/ProductSection.vue'
 import ShoppingCart from 'components/ShoppingCart.vue'
+import { Api } from 'boot/axios'
 export default {
   name: 'ProductCategory',
   components: { ProductSection, ShoppingCart },
@@ -34,6 +38,7 @@ export default {
       likes: [],
       description: this.$store.state.meta.description,
       shop: this.$store.state.shop,
+      isLoadmore: false,
     }
   },
   computed: {
@@ -67,6 +72,14 @@ export default {
           this.$store.commit('SET_META_TITLE', c.title)
         }
       }
+    },
+    paginate(url) {
+      this.isLoadmore = true
+      Api().get(url).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('product/SET_PRODUCT_CATEGORY_PAGINATE', response.data)
+        }
+      }).finally(() =>  this.isLoadmore = false)
     }
   },
   mounted() {

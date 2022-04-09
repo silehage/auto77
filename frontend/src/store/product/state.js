@@ -3,7 +3,9 @@ export default function () {
     products: {
       data: [],
       ready: false,
-      available: true
+      available: true,
+      links: null,
+      meta: null
     },
     admin_products: {
       data: [],
@@ -25,7 +27,9 @@ export default function () {
     productByCategory: {
       data: [],
       ready: false,
-      available: true
+      available: true,
+      links: null,
+      meta: null
     },
     productFavorites: {
       data: [],

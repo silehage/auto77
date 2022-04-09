@@ -20,7 +20,7 @@ class ProductResource extends JsonResource
             'default_price' => $this->price,
             'current_price' => $this->price,
             'discount_value' => 0,
-            'is_discount' => false 
+            'is_discount' => false ,
         ];
 
         $disc = null;
@@ -66,7 +66,7 @@ class ProductResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'sold' => $this->sold,
-            'rating' => $this->reviews_avg_rating ? number_format($this->reviews_avg_rating, 1) : 0,
+            'rating' => $this->rating ? number_format($this->rating, 1) : 0,
             'weight' => $this->weight,
             'category' => $this->category,
             'assets' => $this->assets,

@@ -37,4 +37,8 @@ class Category extends Model
     {
         return $this->hasMany(Product::class)->take(2);
     }
+    public function productReviewRatings()
+    {
+        return $this->hasManyThrough(Review::class, Product::class)->avg('rating');
+    }
 }

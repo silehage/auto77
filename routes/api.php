@@ -102,7 +102,7 @@ Route::get('loadProductReview/{id}', [ProductController::class, 'loadProductRevi
 Route::get('products', [ProductController::class, 'index']);
 Route::post('getProductsFavorites', [ProductController::class, 'getProductsFavorites']);
 Route::get('getProductsByCategory/{id}', [ProductController::class, 'getProductsByCategory']);
-Route::get('search', [ProductController::class, 'search']);
+Route::get('search/{key}', [ProductController::class, 'search']);
 
 Route::get('sliders', [SliderController::class, 'index']);
 Route::get('shop', [StoreController::class, 'index']);

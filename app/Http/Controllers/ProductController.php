@@ -7,11 +7,11 @@ use App\Models\Review;
 use App\Models\Product;
 use App\Models\Promote;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProductRequest;
-use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\ProductRepository;
+use App\Http\Resources\ProductListCollection;
+use App\Http\Resources\ProductListResource;
 
 class ProductController extends Controller
 {
@@ -24,34 +24,21 @@ class ProductController extends Controller
         $this->productRepository = $productRepository;
     }
 
+
     public function index()
     {
 
         try {
-
-            $this->result['results'] = $this->productRepository->getAll();
+          
+           return ProductListResource::collection($this->productRepository->getAll());
 
         } catch (Exception $e) {
 
-            $this->result = [
-                'status' => 500,
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
+            return response()->json(['status' => 500, 'success' => false,'message' => $e->getMessage()]);
         }
 
-        return response()->json($this->result, $this->result['status']);
-
-
     }
-    public function getAdminProducts()
-    {
-        return response([
-            'success' => true, 
-            'results' => Product::with('assets', 'category', 'variants.variant_items.variant_item_values')->latest()->get()
-        ],200);
-    }
-
+   
     public function getProductsFavorites(Request $request)
     {
         $request->validate([
@@ -60,15 +47,11 @@ class ProductController extends Controller
 
         try {
 
-            $this->result['results']['products'] = $this->productRepository->getProductsFavorites($request->pids);
+            return new ProductListCollection($this->productRepository->getProductsFavorites($request->pids));
 
         } catch (Exception $e) {
 
-            $this->result = [
-                'status' => 500,
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
+            return response()->json(['status' => 500, 'success' => false,'message' => $e->getMessage()]);
         }
 
         return response()->json($this->result, $this->result['status']);
@@ -79,46 +62,36 @@ class ProductController extends Controller
 
         try {
             
-            $this->result['results']['products'] = $this->productRepository->getProductsByCategory($id);
-            $this->result['results']['category'] = Category::find($id);
+            return new ProductListCollection($this->productRepository->getProductsByCategory($id));
 
         } catch (Exception $e) {
 
-            $this->result = [
-                'status' => 500,
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
+            return response()->json(['status' => 500, 'success' => false,'message' => $e->getMessage()]);
         }
 
-        return response()->json($this->result, $this->result['status']);
-       
     }
 
-    public function search(Request $request)
+    public function search($key)
     {
-        if(!$request->q) {
+        if(!$key) {
            return response([
                'success' => false,
            ], 404);
         }
 
-        $key = filter_var($request->q, FILTER_SANITIZE_SPECIAL_CHARS);
+        $key = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
             
-            $this->result['results'] = $this->productRepository->search($key);
+           return new ProductListCollection($this->productRepository->search($key));
+
+           return view('welcome');
 
         } catch (Exception $e) {
 
-            $this->result = [
-                'status' => 500,
-                'success' => false,
-                'message' => $e->getMessage()
-            ];
+            return response()->json(['status' => 500, 'success' => false,'message' => $e->getMessage()]);
         }
 
-        return response()->json($this->result, $this->result['status']);
     }
 
     public function show($slug)
@@ -126,7 +99,20 @@ class ProductController extends Controller
        
         try {
             
-            $this->result['results'] = $this->productRepository->show($slug);
+            return $this->productRepository->show($slug);
+
+        } catch (Exception $e) {
+
+            return response()->json(['status' => 500, 'success' => false,'message' => $e->getMessage()]);
+        }
+
+    }
+
+    public function getAdminProducts()
+    {
+        try {
+            
+            $this->result['results'] = Product::with('assets', 'category', 'variants.variant_items.variant_item_values')->latest()->get();
 
         } catch (Exception $e) {
 
@@ -136,9 +122,9 @@ class ProductController extends Controller
                 'message' => $e->getMessage()
             ];
         }
-
         return response()->json($this->result, $this->result['status']);
     }
+
     public function productById($id)
     {
 

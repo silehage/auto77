@@ -627,7 +627,7 @@ export default {
     getProduct() {
       this.getProductBySlug(this.$route.params.slug).then(response => {
         if(response.status == 200) {
-          this.product = response.data.results
+          this.product = response.data.data
           this.ready = true
           if(this.isHasVariant) {
             this.variantItemSelected = this.product.variants[0].variant_items[0];

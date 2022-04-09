@@ -5,7 +5,7 @@
         <swiper-product-card :product="product" />
       </vue-glide-slide>
       <vue-glide-slide class="relative">
-        <div class="full-height column relative text-center justify-center items-center">
+        <div class="full-height flex column relative text-center justify-center items-center">
           <div>
             <q-btn unelevated icon="navigate_next" round size="16px" color="primary" :to="{name: 'ProductCategory', params:{ id: products.category_id }}"></q-btn>
             <div class="q-pt-md">Selengkapnya <br>di {{ products.title }}</div>

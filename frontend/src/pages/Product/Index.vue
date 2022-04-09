@@ -10,6 +10,9 @@
        </q-toolbar>
     </q-header>
    <product-section :title="title" :products="products"></product-section>
+    <div class="flex justify-center q-py-lg" v-if="products && products.links">
+     <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
+   </div>
   </q-page>
 </template>
 
@@ -17,6 +20,7 @@
 import { mapActions } from 'vuex'
 import ProductSection from 'components/ProductSection.vue'
 import ShoppingCart from 'components/ShoppingCart.vue'
+import { Api } from 'boot/axios'
 export default {
   name: 'ProductIndex',
   components: { ProductSection, ShoppingCart },
@@ -24,6 +28,7 @@ export default {
     return {
       title: 'Katalog Produk',
       description: this.$store.state.meta.description,
+      isLoadmore: false
     }
   },
   computed: {
@@ -33,18 +38,21 @@ export default {
   },
   methods: {
     ...mapActions('product', ['getProducts']),
+    paginate(url) {
+      this.isLoadmore = true
+      Api().get(url).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('product/SET_PAGINATE', response.data)
+        }
+      }).finally(() =>  this.isLoadmore = false)
+    }
   },
   created() {
     if(this.$route.query.q){
       this.title = 'Produk ' + this.$route.query.q
     }
-    if(this.$route.query && this.$route.query.q == 'Terlaris') {
-      let q = this.$route.query.q
-      this.getProducts(q.toLowerCase())
-    } else {
-      if(!this.products.data.length) {
-          this.getProducts()
-      }
+    if(!this.products.data.length) {
+      this.getProducts()
     }
   },
   meta() {
