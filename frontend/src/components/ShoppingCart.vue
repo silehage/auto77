@@ -14,6 +14,12 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  props: {
+    favorite: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters('product', ['favoriteCount']),
     ...mapGetters('cart', ['cartCount']),

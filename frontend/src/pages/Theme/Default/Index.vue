@@ -4,7 +4,7 @@
       <q-toolbar class="items-center sans">
         <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
         <q-toolbar-title v-if="shop && shop.name" class="text-weight-bold text-primary">{{ shop.name }}</q-toolbar-title>
-        <shopping-cart />
+        <shopping-cart  />
       </q-toolbar>
     </q-header>
     <template v-if="!loading">

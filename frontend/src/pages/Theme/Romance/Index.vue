@@ -3,11 +3,11 @@
     <q-header reveal :reveal-offset="10" class="bg-white box-shadow">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
-          <div class="col q-ml-md row items-center">
+          <div class="col q-ml-sm row items-center">
             <div class="col">
-              <q-input ref="input" color="grey-4" standout="bg-primary text-white" dense class="text-xs" v-model="search" @keyup.enter="searchNow" placeholder="ketik nama produk..."
+              <q-input borderless ref="input" color="grey-4" dense class="input-search text-xs bg-grey-1" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
                 >
-                <template v-slot:append>
+                <template v-slot:prepend>
                   <q-icon
                     name="search"
                     class="cursor-pointer"
@@ -17,7 +17,7 @@
               </q-input>
             </div>
             <div class="q-pl-sm">
-              <shopping-cart />
+              <shopping-cart  />
             </div>
             </div>
         </q-toolbar>

@@ -6,7 +6,7 @@
             flat round dense
             icon="arrow_back" />
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
-          <shopping-cart />
+          <shopping-cart  />
        </q-toolbar>
     </q-header>
    <product-section :title="title" :products="products"></product-section>

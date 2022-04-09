@@ -7,7 +7,7 @@
         @click="backButton"
         flat dense icon="keyboard_backspace" icon-size="27px" style="cursor:pointer;opacity:.9;">
         </q-btn>
-        <shopping-cart />
+        <shopping-cart  />
       </div>
     </div>
     <div class="col relative overflow-x-hidden">

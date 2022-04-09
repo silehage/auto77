@@ -7,7 +7,7 @@
       <q-footer class="bg-white text-primary footer-tab">
         <q-tabs
           active-color="primary"
-          class="text-grey-8 shadow-2 text-xs"
+          class="text-grey-8 text-xs"
           no-caps
           dense
           switch-indicator

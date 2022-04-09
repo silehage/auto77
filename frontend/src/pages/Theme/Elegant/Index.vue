@@ -1,10 +1,10 @@
 <template>
   <q-page class="bg-grey-2 elegant" :class="{'flex flex-center' : loading }">
-     <q-header reveal :reveal-offset="10" class="bg-primary text-white auto-padding-side">
+     <q-header reveal :reveal-offset="10" class="bg-primary text-white">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
-          <div class="col q-mx-md inline-flex">
-            <q-input ref="input" borderless dense class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="Ketik nama produk..."
+          <div class="col q-mx-sm inline-flex">
+            <q-input ref="input" borderless dense class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
               >
               <template v-slot:prepend>
                 <q-icon
@@ -15,7 +15,7 @@
               </template>
               </q-input>
             </div>
-           <shopping-cart />
+           <shopping-cart  />
         </q-toolbar>
       </q-header>
       <div class="header">

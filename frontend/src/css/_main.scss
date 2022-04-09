@@ -579,11 +579,25 @@ table.table td, table.table td * {
 .q-panel.scroll {
   overflow-x: hidden;
 }
+.theme-setting {
+  padding: 8px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  box-shadow: -5px 1px 13px 1px #3c3b3b2e;
+  border:1px solid #ddd;
+  cursor: pointer;
+}
+.fixed-right-middle {
+  position: fixed;
+  right:0;
+  top:25%;
+  transform: translateY(-50%);
+}
 .fixed-right-center {
   position: fixed;
   right:0;
   top:50%;
-  transform: translateY(-20px);
+  transform: translateY(-50%);
 }
 @media (min-width: 1440px){
   .q-footer .q-tab__content, .q-header .q-tab__content {

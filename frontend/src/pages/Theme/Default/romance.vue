@@ -17,7 +17,7 @@
               </q-input>
             </div>
             <div class="q-pl-sm">
-              <shopping-cart />
+              <shopping-cart  />
             </div>
             </div>
         </q-toolbar>

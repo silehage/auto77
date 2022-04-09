@@ -38,8 +38,13 @@ import SwiperProductCard from 'components/SwiperProductCard'
       }
     },
     created() {
-      if(window.innerWidth < 400) {
-        this.glideOptions.peek.after = 30
+      if(window.innerWidth < 321) {
+
+         this.glideOptions.perView = 1
+         this.glideOptions.peek.after = 90
+
+      }else if(window.innerWidth < 481) {
+        this.glideOptions.peek.after = 20
       }
     }
   }
