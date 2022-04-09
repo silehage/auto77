@@ -23,9 +23,9 @@
           />
           <div class="text-subtitle2 ellipsis-2-lines">{{ product.title }}</div>
         </div>
-        <div class="flex justify-between items-center">
-          <div class="card-price text-weight-medium">{{ moneyIDR(product.pricing.current_price) }} </div>
-          <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
+        <div class="card-price-container">
+          <div class="card-price">{{ moneyIDR(product.pricing.current_price) }} </div>
+          <div v-if="product.pricing.is_discount" class="card-discount text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
         </div>
       </div>
       <div class="absolute-top-right q-pa-xs">

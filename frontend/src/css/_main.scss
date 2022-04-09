@@ -599,6 +599,29 @@ table.table td, table.table td * {
   top:50%;
   transform: translateY(-50%);
 }
+.card-price-container {
+  margin-top: .3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @media (min-width: 360px) {
+    flex-direction: row;
+  }
+}
+.card-price {
+  font-weight: 500;
+  font-size: 16px;
+  order: 2;
+  @media (min-width: 360px) {
+    order: 1;
+  }
+}
+.card-discount {
+  order: 1;
+  @media (min-width: 360px) {
+    order: 2;
+  }
+}
 @media (min-width: 1440px){
   .q-footer .q-tab__content, .q-header .q-tab__content {
       min-width: 50px!important;
@@ -630,4 +653,14 @@ table.table td, table.table td * {
 }
 .glide__bullet.glide__bullet--active {
   background-color: #fff;
+}
+
+.rounded20 {
+  border-radius: 20px;
+}
+.rounded10 {
+  border-radius: 10px;
+}
+.rounded15 {
+  border-radius: 15px;
 }

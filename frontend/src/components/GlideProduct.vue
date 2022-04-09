@@ -39,7 +39,6 @@ import SwiperProductCard from 'components/SwiperProductCard'
     },
     created() {
       if(window.innerWidth < 321) {
-
          this.glideOptions.perView = 1
          this.glideOptions.peek.after = 90
 

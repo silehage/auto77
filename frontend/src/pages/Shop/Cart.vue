@@ -14,20 +14,20 @@
       <q-list class="bg-white" separator>
         <q-item v-for="cart in carts.items" :key="cart.sku" class="q-pa-sm">
           <q-item-section side class="q-pr-sm">
-            <q-btn @click="removeCart(cart)" icon="close" flat color="red" padding="4px" size="12px" round></q-btn>
-          </q-item-section>
-          <q-item-section side>
            <q-img :src="cart.image_url" style="width:90px;height:90px;"></q-img>
           </q-item-section>
           <q-item-section>
             <div class="col overflow-hidden full-width">
               <div class="text-weight-medium ellipsis">{{ cart.name }}</div>
-              <div class="text-grey-7 q-mb-xs text-caption">{{ cart.note }}</div>
+              <div class="text-grey-7 q-mb-xs text-caption" v-if="cart.note">{{ cart.note }}</div>
               <div>Harga {{  moneyIDR(cart.price) }}</div>
-              <div class="q-gutter-x-sm ro items-center">
-                <q-btn flat padding="3px" round icon="remove_circle_outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
-                <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
-                <q-btn flat padding="3px" round icon="add_circle_outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
+              <div class="flex items-center justify-between q-mt-sm">
+                <div class="q-gutter-x-sm items-center">
+                  <q-btn flat padding="3px" round icon="remove_circle_outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
+                  <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
+                  <q-btn flat padding="3px" round icon="add_circle_outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
+                </div>
+                <q-btn @click="removeCart(cart)" unelevated size="10px" color="red" no-caps padding="2px 4px">hapus</q-btn>
               </div>
             </div>
           </q-item-section>
@@ -56,12 +56,14 @@
                 </tr>
               </table>
             </div>
-            <div class="text-teal text-underline cursor-pointer q-mt-md" v-if="!showCouponForm" @click="isCoupon = true">Punya kode kupon?</div>
-            <div class="q-mt-md" v-if="showCouponForm && !coupon_discount">
+            <div class="cart-coupon q-mt-lg">
+              <div class="text-medium q-mb-md text-grey-7">Punya Code voucher?</div>
               <q-form @submit.prevent="handleRedeemCoupon">
-                <div class="row items-center no-wrap">
-                  <input class="input-coupon" required v-model="couponCode" placeholder="Input Kupon"/>
-                  <q-btn no-caps size="14px" color="teal" unelevated type="submit" label="Gunakan" style="border-radius:0;"></q-btn>
+                <div class="flex items-center flex-no-wrap q-gutter-x-sm">
+                  <q-input padding="10px" required v-model="couponCode" borderless class="q-px-md bg-grey-3 col rounded15" placeholder="Masukan Kode..."></q-input>
+                  <q-btn type="submit" no-caps outline color="teal" class="rounded15 text-weight-bold" unelevated style="padding:8px;">
+                    <span>Gunakan</span>
+                  </q-btn>
                 </div>
               </q-form>
             </div>
@@ -183,6 +185,12 @@ export default {
       this.$store.dispatch('getShop')
     }
   },
+  mounted() {
+    if(this.coupon_discount) {
+      console.log(this.coupon_discount);
+      this.couponCode = this.coupon_discount.code
+    }
+  },
   methods: {
     ...mapActions('coupon', ['redeemCoupon']),
     handleRedeemCoupon() {
@@ -260,10 +268,7 @@ export default {
 </script>
 
 <style scoped>
-.input-coupon {
-  width: 180px;
-  padding: 6px 10px;
-  border: 1px solid #c3c3c3;
-  outline: none;
+.cart-coupon .q-field__control {
+    height: 50px;
 }
 </style>

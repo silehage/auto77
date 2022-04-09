@@ -93,11 +93,11 @@
         </div>
      
     </div>
-    <div class="q-px-sm q-py-md">
+    <div class="q-px-sm q-pb-md q-pt-lg">
       <div class="text-md q-pb-xs">Kurir</div>
     </div>
     <div id="cod" v-if="codItem" class="q-mb-md">
-      <div class="q-px-sm q-pb-xs">Pengiriman via COD tersedia</div>
+      <div class="q-px-sm q-pb-xs">Pengiriman oleh penjual</div>
       <q-list class="q-pa-sm">
         <q-item @click="selectCostCod(codItem)" clickable class="bg-grey-2">
           <q-item-section avatar>
@@ -110,8 +110,8 @@
         </q-item>
       </q-list>
     </div>
-    <div class="q-px-sm q-pb-xs">Pengiriman via Ekspedisi</div>
     <div id="courier" ref="courier" class="q-pa-sm">
+      <div class="q-py-sm">Pengiriman via Ekspedisi</div>
       <q-select 
         :disable="!canSelectCourier"
         filled
@@ -597,7 +597,7 @@ export default {
     },
     scrollToBottom () {
       setTimeout(() => {
-        var elem = this.$refs.courier_skeleton;
+        var elem = this.$refs.courier;
         elem.scrollIntoView({behavior: 'smooth'})
       }, 300)
     }
