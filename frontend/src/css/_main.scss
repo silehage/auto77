@@ -59,6 +59,11 @@ div,
 .bg-blue-light {
   background-color: var(--blue-light);
 }
+.sticky-right-bottom-middle{
+  position:sticky;
+  bottom:5%;
+  right:0;
+}
 .bg-glass-blue {
   position: relative;
   overflow: hidden;

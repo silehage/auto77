@@ -20,6 +20,7 @@
 import { mapActions } from 'vuex'
 import ProductSection from 'components/ProductSection.vue'
 import ShoppingCart from 'components/ShoppingCart.vue'
+
 import { Api } from 'boot/axios'
 export default {
   name: 'ProductIndex',
@@ -28,13 +29,14 @@ export default {
     return {
       title: 'Katalog Produk',
       description: this.$store.state.meta.description,
-      isLoadmore: false
+      isLoadmore: false,
+      isFilter: true
     }
   },
   computed: {
     products() {
-        return this.$store.state.product.products
-      },
+      return this.$store.state.product.products
+    },
   },
   methods: {
     ...mapActions('product', ['getProducts']),

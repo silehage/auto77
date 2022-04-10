@@ -1,5 +1,5 @@
 <template>
-  <q-page :class="{'flex flex-center':!products.available}" class="q-pb-xl q-pt-sm">
+  <q-page :class="{'flex flex-center':!products.available}" class="q-pb-xl">
      <q-header class="text-primary bg-white">
        <q-toolbar>
          <q-btn @click="backButton"
@@ -12,8 +12,8 @@
     <template v-if="products.available">
       <product-section title="Produk Katalog" :products="products"></product-section>
       <div class="flex justify-center q-py-lg" v-if="products.links">
-      <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
-    </div>
+        <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
+      </div>
     </template>
     <template v-if="!products.available">
       <div class="column items-center">
@@ -84,6 +84,15 @@ export default {
   },
   mounted() {
     this.getCategoryTitle()
+  },
+  watch: {
+    "$route.params.id": {
+      handler: function(value) {
+        this.getProductsByCategory(value)
+      },
+      deep: true,
+      immediate: true,
+    },
   },
   created() {
     if(this.products.data.length) {

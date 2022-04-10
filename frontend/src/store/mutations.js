@@ -65,5 +65,9 @@ export default {
       state.session_id = payload
     }
   },
+  SET_MENU_CATEGORY: (state, status) => {
+    console.log('muta', status);
+    state.isMenuCategory = status
+  }
 
 }

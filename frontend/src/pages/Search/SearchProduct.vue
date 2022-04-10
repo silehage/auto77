@@ -9,21 +9,23 @@
             <q-btn flat label="Cari Order" :to="{ name: 'OrderSearch'}"></q-btn>
        </q-toolbar>
     </q-header>
-    <div class="col bg-white border q-ma-md">
-      <q-input ref="input" outlined dense color="grey-2" v-model="search" autofocus @keyup.enter="searchProduct" placeholder="ketik nama produk"
-      >
-      <template v-slot:append>
-        <q-icon
-          name="search"
-          class="cursor-pointer"
-          @click="searchProduct"
-        />
+    <div class="q-px-md q-pt-lg">
+      <div class="col bg-white border">
+        <q-input ref="input" outlined dense color="grey-2" v-model="search" autofocus @keyup.enter="searchProduct" placeholder="ketik nama produk"
+        >
+        <template v-slot:append>
+          <q-icon
+            name="search"
+            class="cursor-pointer"
+            @click="searchProduct"
+          />
+        </template>
+        </q-input>
+      </div>
+      <template v-if="products.ready && products.available">
+        <div class="q-pt-sm"><b>{{ products.data.length }}</b> produk hasil pencarian "<b>{{ searchTitle }}</b></div>
       </template>
-      </q-input>
     </div>
-    <template v-if="products.ready && products.available">
-      <div class="text-center"><b>{{ products.data.length }}</b> produk hasil pencarian "<b>{{ searchTitle }}</b></div>
-    </template>
     <template v-if="products.data.length">
       <product-section :products="products"></product-section>
     </template>

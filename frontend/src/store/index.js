@@ -55,6 +55,7 @@ export default function (/* { ssrContext } */) {
       shop: null,
       config: null,
       deferredPrompt: null,
+      isMenuCategory: false,
       session_id: null,
       meta: {
         title: '',
