@@ -34,7 +34,7 @@ export default function () {
       payment_code: '',
       payment_fee: 0,
       address: '',
-    }
-
+    },
+    orderItems: [],
   }
 }

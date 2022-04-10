@@ -62,7 +62,11 @@ export function SET_FORM_ORDER (state, payload) {
   state.formOrder[payload.key] = payload.value
 }
 
-      
+export function SET_NOTIFY_ORDER_ITEMS (state, payload) {
+
+  state.orderItems = payload
+
+}
 
 
 

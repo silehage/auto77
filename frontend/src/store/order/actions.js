@@ -109,4 +109,3 @@ export function updateStatusOrder ({dispatch, commit}, payload) {
     commit('SET_LOADING', false, { root: true})
   })
 }
-

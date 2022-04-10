@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductVariantValue;
+use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
@@ -360,12 +361,31 @@ class OrderController extends Controller
 
     public function getRandomOrder()
     {
-        return response()->json([
-            'results' => OrderItem::with('images', 'order:id,customer_name,created_at')
-                        ->inRandomOrder()
-                        ->take(20)
-                        ->get()
-        ], 200);
+        Cache::flush();
+        // $items = OrderItem::with('images', 'order:id,customer_name,created_at')
+        // ->inRandomOrder()
+        // ->take(20)
+        // ->get();
+        $items = DB::table('order_items')
+        ->select('order_items.id', 'order_items.name', 'order_items.created_at', 'orders.customer_name', 'assets.filename')
+        ->join('orders', 'order_items.order_id', 'orders.id')
+        ->join('products', 'order_items.product_id', 'products.id')
+        ->join('assets', function($join) {
+            $join->on('products.id', '=', 'assets.assetable_id')
+                    ->where('assets.assetable_type', '=', 'App\Models\Product');
+        })
+        ->inRandomOrder()
+        ->get()->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'customer_name' => $item->customer_name,
+                'created' => $item->created_at >= Carbon::now()->subDays(2)? Carbon::parse($item->created_at)->diffForHumans() : 'Beberapa waktu lalu',
+                'image' => url('/upload/images/' . $item->filename)
+            ];
+        });
+
+        return response()->json(['results' => $items], 200);
     }
     public function updateStatusOrder(Request $request)
     {

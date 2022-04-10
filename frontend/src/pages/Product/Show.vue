@@ -536,9 +536,9 @@ export default {
       })
     },
     getCartNote() {
-      let str = 'Varian: '
+      let str = ''
       if(this.isHasVariant) {
-        str += this.product.variants[0].variant_name + ' ' + this.variantItemSelected.variant_item_label + ', ' + this.product.variants[0].variant_item_name + ' ' + this.varianValueSelected.item_label
+        str += 'Varian: ' +this.product.variants[0].variant_name + ' ' + this.variantItemSelected.variant_item_label + ', ' + this.product.variants[0].variant_item_name + ' ' + this.varianValueSelected.item_label
       }
       return str
     },
