@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Review extends Model
 {
@@ -15,6 +16,19 @@ class Review extends Model
         'rating', 
         'name'
     ];
+
+    public $appends = [
+        'created'
+    ];
+
+    public function getCreatedAttribute()
+    {
+        if($this->created_at > Carbon::now()->subWeek()) {
+            return Carbon::parse($this->created_at)->diffForHumans();
+        } else {
+            return Carbon::parse($this->created_at)->format('d F Y');
+        }
+    }
 
     public function product()
     {

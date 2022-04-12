@@ -18,7 +18,10 @@ class ProductRepository
     public $limit = 6;
     public function show($slug)
     {
-        $product = new ProductResource(Product::with(['assets', 'category:id,title,slug','reviews', 'variants.variant_items.variant_item_values'])
+        $product = new ProductResource(Product::with(['assets', 'category:id,title,slug','reviews' => function($q) {
+            $q->limit(5);
+            $q->latest();
+        }, 'variants.variant_items.variant_item_values'])
         ->withCount('reviews')
         ->withSum('variantItems', 'item_stock')
         ->where('slug', $slug) 

@@ -48,95 +48,126 @@
               <div class="text-h6 text-weight-medium">{{ moneyIDR(parseInt(totalPrice)) }}</div>
               <div v-if="product.pricing.is_discount" class="row items-start">
                 <div class="text-md text-weight-bsemibold text-red text-strike q-ml-xs">{{ moneyIDR(parseInt(product.pricing.default_price)) }}</div>
-                <!-- <span v-if="product.discount" class="bg-red-6 text-white rounded-borders" style="padding:2px 3px;font-size:12px;">{{ product.pricing.discount_percent }}%</span> -->
               </div>
             </div>
-            <div class="row q-gutter-md text-h6 items-center">
+            <!-- <div class="row q-gutter-md text-h6 items-center">
               <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
               <div>{{ quantity }}</div>
               <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
+            </div> -->
+            <div class="flex items-center" v-if="product.rating > 0">
+              <q-icon name="star" color="amber" size="25px"></q-icon>
+              <div class="text-md text-weight-bold">{{ product.rating }}</div>
             </div>
-          </div>
-
-          <div class="row items-center q-gutter-x-md">
-            <q-rating 
-              v-model="productRating"
-              readonly
-              color="green"
-              icon="star_border"
-              icon-selected="star"
-              icon-half="star_half"
-              size="sm" 
-            />
-            <!-- <div v-if="parseFloat(product.rating) > 0" class="text-weight-bold text-green text-subtitle1 text-md"> {{ product.rating }}</div> -->
           </div>
       
            <div id="variations" v-if="product.variants.length" class="q-mt-md">
             <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
               <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
               <div class="q-gutter-sm">
-                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green-6" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
               </div>
               <div v-if="variantItemSelected" class="q-pt-sm q-gutter-sm">
                 <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
-                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green-6'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
+                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
               </div>
             </div>
             </div>
             <div v-if="isHasVariant">
-             <div v-if="varianValueSelected" class="text-subtitle1 text-weight-medium q-mt-sm" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
+             <div v-if="varianValueSelected" class="text-subtitle1 text-weight-medium q-mt-sm" :class="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
               </div>
             </div>
             <div v-if="!isHasVariant">
-              <div class="text-subtitle1 text-weight-medium q-mt-sm" :style="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
+              <div class="text-subtitle1 text-weight-medium q-mt-sm" :class="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
               </div>
             </div>
-          <div class="q-py-md">
-            <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
-            <div class="" v-html="product.description"></div>
-          </div>
-        </q-card-section>
-        <q-card-section>
-          <div class="flex justify-between items-center">
-            <q-btn unelevated color="primary" @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
-            <div class="text-weight-medium text-primary text-subtitle2 q-my-xs">
-             {{ product.reviews_count > 0 ? 'Total ' + product.reviews_count +' ulasan' : 'Belum ada ulasan'}}
-            </div>
-          </div>
         </q-card-section>
       </q-card>
-      <div id="ulasan">
-        <q-card flat>
-          <q-card-section>
-            <div class="q-gutter-y-md">
-              <div v-for="(review, index) in product.reviews" :key="index">
-                <div class="row justify-between items-center">
-                  <div class="text-subtitle2 q-pa-sm">{{ review.name }}</div>
-                  <q-item-section side>
-                      <q-rating 
-                      readonly
-                      v-model="review.rating"
-                      color="green-7"
-                      icon="star_border"
-                      icon-selected="star"
-                      icon-half="star_half"
-                    />
-                  </q-item-section>
+      
+    </div>
+     <div class="q-py-sm">
+      <q-tabs 
+      v-model="tab" 
+      align="left"
+      active-color="primary"
+      >
+        <q-tab name="description" label="Deskripsi Produk"></q-tab>
+        <q-tab name="review" label="Ulasan Produk"></q-tab>
+      </q-tabs>
+        <q-separator />
+      <q-tab-panels v-model="tab">
+        <q-tab-panel name="description">
+          <h3 class="text-md q-my-sm">Deskripsi Produk</h3>
+          <div class="" v-html="product.description"></div>
+        </q-tab-panel>
+        <q-tab-panel name="review">
+          <div id="ulasan" v-if="product.reviews_count > 0">
+            <div class="column items-center q-py-lg product-rating">
+               <div v-if="productRating > 0" class="rating-total"> {{ product.rating }}</div>
+               <q-rating 
+                v-model="productRating"
+                readonly
+                color="amber"
+                icon="star_border"
+                icon-selected="star"
+                icon-half="star_half"
+                size="1.8rem" 
+              />
+              <div class="text-weight-medium text-md q-mt-xs">
+              {{ 'Total ' + product.reviews_count +' ulasan' }}
+              </div>
+              <q-btn outline color="primary" no-caps @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
+            </div>
+              <div>
+                <div class="q-gutter-y-md">
+                  <div v-for="(review, index) in product.reviews" :key="index">
+                    <q-item class="q-px-none">
+                      <q-item-section avatar>
+                        <q-avatar>
+                          <q-icon :name="getIcon(review.rating)" size="29px" color="grey-7"></q-icon>
+                        </q-avatar>
+                      </q-item-section>
+
+
+                      <q-item-section>
+                        <q-item-label class="text-weight-medium">{{ review.name }}</q-item-label>
+                        <q-item-label >
+                            <q-rating 
+                            readonly
+                            v-model="review.rating"
+                            color="amber"
+                            icon="star_border"
+                            icon-selected="star"
+                            icon-half="star_half"
+                            size="1.2rem"
+                          />
+                        </q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-item-label caption>{{ review.created }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <div class="q-pa-sm text-grey-8">{{ review.comment }} </div>
+                  </div>
                 </div>
-                <div class="q-pa-md bg-grey-2 text-grey-7 text-sm"> {{ review.comment }} </div>
+              </div>
+              <div class="q-my-md row justify-center">
+                <q-btn flat color="primary" :loading="loadMoreLoading" v-if="product.reviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
+                  <template v-slot:loading>
+                    <q-spinner-facebook />
+                  </template>
+                </q-btn>
               </div>
             </div>
-          </q-card-section>
-        </q-card>
-        <div class="q-my-md row justify-center">
-          <q-btn flat color="primary" :loading="loadMoreLoading" v-if="product.reviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
-            <template v-slot:loading>
-              <q-spinner-facebook />
-            </template>
-          </q-btn>
-        </div>
+            <div v-else>
+              <div class="text-center flex column items-center justify-center" style="min-height:200px">
+                <div>Belum ada ulasan</div>
+                <q-btn outline color="primary" @click="handleReviewModal" label="Berikan ulasan" class="q-my-sm"></q-btn>
+              </div>
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
       </div>
-    </div>
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
         <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
@@ -154,7 +185,7 @@
             <div class="text-subtitle2 q-mb-sm">Berikan Ulasan Anda</div>
               <q-rating 
                 v-model="form.rating"
-                color="green"
+                color="amber"
                 icon="star_border"
                 icon-selected="star"
                 icon-half="star_half"
@@ -185,8 +216,8 @@
               </div>
             </div>
             <div class="row justify-end q-gutter-x-sm">
-              <q-btn type="button" @click.prevent="reviewModal = false" label="Batal" color="secondary"></q-btn>
-              <q-btn :disabled="chalengeTesting" type="submit" :loading="loading" label="Kirim Ulasan" color="primary"></q-btn>
+              <q-btn unelevated type="button" @click.prevent="reviewModal = false" label="Batal" color="secondary"></q-btn>
+              <q-btn unelevated :disabled="chalengeTesting" type="submit" :loading="loading" label="Kirim Ulasan" color="primary"></q-btn>
             </div>
           </div>
           </q-form>
@@ -289,6 +320,7 @@ export default {
   components: { ShoppingCart },
   data () {
     return {
+      tab: 'description',
       defaultChat: ['Apakah ini masih ada?', 'Apakah bisa grosir?'],
       chatText: '',
       chatModal: false,
@@ -422,7 +454,19 @@ export default {
         this.$router.push({name: 'ProductIndex'})
       }
     },
-    
+    getIcon(rating) {
+      let rtg = parseInt(rating)
+
+      if(rtg <= 2) {
+        return 'sentiment_very_dissatisfied'
+      } else if(rtg == 3) {
+        return 'sentiment_neutral'
+      } else if(rtg == 4) {
+        return 'sentiment_satisfied_alt'
+      }else {
+         return 'sentiment_very_satisfied'
+      }
+    },
     varItemGetColor(id) {
       if(this.variantItemSelected) {
         return this.variantItemSelected.id == id ?  false : true
@@ -470,9 +514,9 @@ export default {
       return this.subtotal()
     },
     stockStyle() {
-      if(this.currentStock >= 6 ) return 'color:green'
-      if(this.currentStock > 0 && this.currentStock <= 5) return 'color:#ffa800fc'
-      if(this.currentStock <= 0 ) return 'color:red'
+      if(this.currentStock > 0 && this.currentStock <= 5) return 'text-amber'
+      if(this.currentStock <= 0 ) return 'text-red'
+      return 'text-green'
     },
     addToCart() {
       this.formVariantModal = false
