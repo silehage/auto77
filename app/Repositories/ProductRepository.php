@@ -65,9 +65,15 @@ class ProductRepository
     public function getInitialProducts()
     {
 
-        $data = Category::where('is_front', 1)->whereHas('products')
-            ->with(['products.assets', 'products.discount', 'products.promote'])
+        $data = Category::whereHas('products')
+            ->with(['products' => function($query) {
+                $query->with('assets');
+                $query->with('promote');
+                $query->withAvg('reviews', 'rating');
+            }])
+            ->where('is_front', 1)
             ->get()
+            //  return view('welcome');
             ->map(function($cat) {
 
                 $categoryItem = new stdClass();
@@ -96,7 +102,7 @@ class ProductRepository
                         'status'  =>  $product->status,
                         'sold'    =>  $product->sold,
                         'weight'  =>  $product->weight,
-                        'rating'  =>  $product->rating ? (float) number_format($product->rating, 1) : 0.0,
+                        'rating'  =>  $product->reviews_avg_rating ? (float) number_format($product->reviews_avg_rating, 1) : 0,
                         'pricing' =>  $this->setPricing($product),
                         'category' => $newCat,
                         'assets'  =>  $product->assets,

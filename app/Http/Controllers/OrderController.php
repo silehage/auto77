@@ -361,11 +361,6 @@ class OrderController extends Controller
 
     public function getRandomOrder()
     {
-        Cache::flush();
-        // $items = OrderItem::with('images', 'order:id,customer_name,created_at')
-        // ->inRandomOrder()
-        // ->take(20)
-        // ->get();
         $items = DB::table('order_items')
         ->select('order_items.id', 'order_items.name', 'order_items.created_at', 'orders.customer_name', 'assets.filename')
         ->join('orders', 'order_items.order_id', 'orders.id')
