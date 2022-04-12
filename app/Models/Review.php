@@ -26,7 +26,7 @@ class Review extends Model
         if($this->created_at > Carbon::now()->subWeek()) {
             return Carbon::parse($this->created_at)->diffForHumans();
         } else {
-            return Carbon::parse($this->created_at)->format('d F Y');
+            return Carbon::parse($this->created_at)->format('d M Y');
         }
     }
 
