@@ -24,6 +24,7 @@ class ProductRepository
         }, 'variants.variant_items.variant_item_values'])
         ->withCount('reviews')
         ->withSum('variantItems', 'item_stock')
+        ->withAvg('reviews', 'rating')
         ->where('slug', $slug) 
         ->first());
 
@@ -34,6 +35,7 @@ class ProductRepository
     {
 
         return Product::with('assets', 'category:id,title,slug','discount', 'promote')
+            ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
         
     }
@@ -42,6 +44,7 @@ class ProductRepository
     {
         return Product::with('assets', 'category:id,title,slug','discount', 'promote')
             ->whereIn('id', $pids)
+            ->withAvg('reviews', 'rating')
             ->get();
     }
     
@@ -51,6 +54,7 @@ class ProductRepository
         return Product::with('assets', 'category:id,title,slug','discount', 'promote')
             ->where('title', 'like', '%'.$key.'%')
             ->orWhere('description', 'like', '%'.$key.'%')
+            ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
 
     }
@@ -59,6 +63,7 @@ class ProductRepository
     {
         return Product::with('assets', 'category:id,title,slug','discount', 'promote')
             ->where('category_id', $id)
+            ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
     }
 

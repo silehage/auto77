@@ -27,7 +27,7 @@ class ProductListResource extends JsonResource
             'status'  =>  $this->status,
             'sold'    =>  $this->sold,
             'weight'  =>  $this->weight,
-            'rating'  =>  $this->rating ? (float) number_format($this->rating, 1) : 0,
+            'rating'  =>  $this->reviews_avg_rating ? (float) number_format($this->reviews_avg_rating, 1) : 0,
             'pricing' =>  $this->setPricing($this),
             'category' => $this->category,
             'assets'  =>  $this->assets,

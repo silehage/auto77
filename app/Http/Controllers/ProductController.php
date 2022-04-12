@@ -30,7 +30,8 @@ class ProductController extends Controller
 
         try {
           
-           return ProductListResource::collection($this->productRepository->getAll());
+            return new ProductListCollection($this->productRepository->getAll());
+            // return view('welcome');
 
         } catch (Exception $e) {
 
