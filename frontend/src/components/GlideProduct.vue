@@ -27,6 +27,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
     data() {
       return {
         glideOptions: {
+          rewind: false,
           perView: 2,
           gap: 8,
           bound: true,

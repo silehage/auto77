@@ -19,6 +19,7 @@ export default {
   data () {
     return {
       glideOptions: {
+        rewind: false,
         gap:10,
         perView: 1,
         animationDuration: 1000,

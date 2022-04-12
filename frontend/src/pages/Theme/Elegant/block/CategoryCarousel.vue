@@ -22,6 +22,7 @@ export default {
   data () {
     return {
       glideOptions: {
+        rewind: false,
         perView: 4,
         gap: 12,
         bound: true

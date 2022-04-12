@@ -21,6 +21,7 @@ export default {
   data () {
     return {
       carouselOptions: {
+        rewind: false,
         perView: 3,
         gap: 5,
         bound: true
