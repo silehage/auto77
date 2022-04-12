@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Config extends Model
 {
@@ -90,11 +91,10 @@ class Config extends Model
     }
     public function getIsBankReadyAttribute()
     {
-        if(BankAccount::count() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $countBankAccount = Cache::rememberForever('bank_account_count', function() {
+            return BankAccount::count();
+        });
+        return  $countBankAccount > 0 ? true : false;
     }
     public function getCourierAvailableAttribute()
     {

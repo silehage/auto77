@@ -15,8 +15,7 @@ class BankAccountObserver
      */
     public function created(bankAccount $bankAccount)
     {
-        Cache::forget('shop_config');
-        Cache::forget('admin_config');
+        $this->clearCache();
     }
 
     /**
@@ -27,8 +26,7 @@ class BankAccountObserver
      */
     public function updated(bankAccount $bankAccount)
     {
-        Cache::forget('shop_config');
-        Cache::forget('admin_config');
+        $this->clearCache();
     }
 
     /**
@@ -39,6 +37,12 @@ class BankAccountObserver
      */
     public function deleted(bankAccount $bankAccount)
     {
+        $this->clearCache();
+    }
+
+    protected function clearCache() 
+    {
+        Cache::forget('bank_account_count');
         Cache::forget('shop_config');
         Cache::forget('admin_config');
     }
