@@ -191,6 +191,11 @@ module.exports = function (ctx ) {
             'sizes': '256x256',
             'type': 'image/png'
           },
+          {
+            'src': 'icon/icon-384x384.png',
+            'sizes': '384x384',
+            'type': 'image/png'
+          },
         ],
         prefer_related_applications: false
       },
