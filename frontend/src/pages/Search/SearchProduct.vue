@@ -9,7 +9,7 @@
             <q-btn flat label="Cari Order" :to="{ name: 'OrderSearch'}"></q-btn>
        </q-toolbar>
     </q-header>
-    <div class="q-px-md q-pt-lg">
+    <div class="q-px-md q-pt-md">
       <div class="col bg-white border">
         <q-input ref="input" outlined dense color="grey-2" v-model="search" autofocus @keyup.enter="searchProduct" placeholder="ketik nama produk"
         >
@@ -23,7 +23,7 @@
         </q-input>
       </div>
       <template v-if="products.ready && products.available">
-        <div class="q-pt-sm"><b>{{ products.data.length }}</b> produk hasil pencarian "<b>{{ searchTitle }}</b></div>
+        <div class="q-pt-sm">Produk hasil pencarian "<b>{{ searchTitle }}</b>"</div>
       </template>
     </div>
     <template v-if="products.data.length">

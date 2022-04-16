@@ -15,7 +15,7 @@
               </template>
               </q-input>
             </div>
-           <shopping-cart noFavorite />
+           <!-- <shopping-cart noFavorite /> -->
         </q-toolbar>
       </q-header>
       <div class="header">
@@ -80,7 +80,7 @@ import ProductBlock from './../shared-components/ProductBLock.vue'
 export default {
   name: 'PageIndex',
   components: {
-    ShoppingCart,
+    // ShoppingCart,
     Slider, 
     ProductBlock, 
     'category-carousel': () => import('./block/CategoryCarousel.vue'),
