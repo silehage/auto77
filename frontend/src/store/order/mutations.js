@@ -50,6 +50,8 @@ export function SET_LOAD_MORE_CUSTOMER (state, status) {
 }
 export function COLLECT_ORDER (state, payload) {
 
+  console.log(payload);
+
   state.formOrder.items = payload.items
   state.formOrder.quantity = payload.qty
   state.formOrder.weight = payload.weight

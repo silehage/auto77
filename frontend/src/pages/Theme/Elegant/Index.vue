@@ -4,7 +4,7 @@
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
           <div class="col q-mx-sm inline-flex">
-            <q-input ref="input" borderless dense class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
+            <q-input dense ref="input" borderless class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
               >
               <template v-slot:prepend>
                 <q-icon
@@ -15,7 +15,7 @@
               </template>
               </q-input>
             </div>
-           <shopping-cart  />
+           <shopping-cart noFavorite />
         </q-toolbar>
       </q-header>
       <div class="header">

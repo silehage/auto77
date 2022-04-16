@@ -40,19 +40,19 @@
             <div style="font-size:14px;">
               <table class="dense text-weight-medium">
                 <tr>
-                  <td align="right">Subtotal</td>
+                  <td align="right" >Subtotal</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(carts.subtotal) }}</td>
+                  <td align="right"  class="text-no-wrap">{{ moneyIDR(carts.subtotal) }}</td>
                 </tr>
                 <tr v-if="coupon_discount">
                   <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> {{ coupon_discount.label }} <span class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ carts.discount_percent }}%</span></td>
                   <td>:</td>
                   <td align="right">{{ moneyIDR(carts.discount_amount) }}</td>
                 </tr>
-                <tr class=""> 
+                <tr> 
                   <td align="right">Total</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(carts.subtotal-carts.discount_amount) }}</td>
+                  <td align="right" class="text-no-wrap">{{ moneyIDR(carts.subtotal-carts.discount_amount) }}</td>
                 </tr>
               </table>
             </div>
