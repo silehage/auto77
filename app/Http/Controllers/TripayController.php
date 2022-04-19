@@ -140,7 +140,7 @@ class TripayController extends Controller
 
         $transaction = $order->transaction;
 
-        if ((int) $data->total_amount !== (int) $order->order_total) {
+        if ((int) $data->total_amount !== (int) $order->order_total + (int) $order->payment_fee) {
             return 'Invalid amount, Expected: ' . $order->order_total . ' - Received: ' . $data->total_amount;
         }
 
