@@ -10,17 +10,18 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <div class="q-pa-md ">
-      <div class="row items-center q-gutter-x-sm">
-        <q-btn color="primary" :icon="isFilter? 'search' : 'sort'" unelevated readonly @click="handleSelectMode"></q-btn>
-        <div class="col">
-          <q-select v-if="isFilter" v-model="filter" class="bg-grey-3 q-px-sm" dense borderless :options="options" @input="handleFilterOrder" placeholder="Filter Order">
-          </q-select>
-          <q-input v-model="search" v-if="!isFilter" placeholder="Ketik no invoice atau whatsapp" dense borderless class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder"></q-input>
-        </div>
-        <div>
-          <q-btn v-if="!isFilter" label="Cari" @click="handleSearchOrder" unelevated color="primary"></q-btn>
-        </div>
+    <div class="q-pt-sm">
+      <q-tabs v-model="tab" @input="changeTab" active-color="primary" outside-arrows>
+        <q-tab v-for="option in options" :key="option.value" :name="option.value" :label="option.label" no-caps></q-tab>
+      </q-tabs>
+    </div>
+    <div class="q-px-md q-my-sm">
+      <div class="q-gutter-x-sm q-mt-sm">
+          <q-input v-model="search" placeholder="Ketik no invoice atau whatsapp" dense borderless class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder">
+            <template v-slot:append>
+              <q-icon name="search" class="cursor-pointer" @click="handleSearchOrder"></q-icon>
+            </template>
+          </q-input>
       </div>
     </div>
     <template v-if="orders.data.length">
@@ -142,8 +143,17 @@ export default {
   components: { FollowUp },
   data() {
     return {
+      tab: 'ALL',
       isFilter: true,
-      options: ['ALL', 'UNPAID', 'PAID', 'PROCESS', 'SHIPPING', 'COMPLETE', 'CANCELED'],
+      options: [
+       { value: 'ALL', label: 'Semua'},
+       { value: 'UNPAID', label: 'Belum Bayar' },
+       { value: 'PAID', label: 'Dibayar'},
+       { value: 'PROCESS', label: 'Proses' },
+       { value: 'SHIPPING', label: 'Dikirim'}, 
+       { value: 'COMPLETE', label: 'Selesai'},
+       { value: 'CANCELED', label: 'Batal'}
+        ],
       inputResiModal: false,
       orderSelected: '',
       followUpModal: false,
@@ -164,7 +174,13 @@ export default {
     }),
   },
   created() {
-    this.getOrders()
+    if(this.$route.query.filter) {
+      this.tab = this.$route.query.filter
+      this.filterOrder(this.tab)
+
+    } else {
+      this.getOrders()
+    }
   },
   methods: {
     ...mapActions('order', ['getOrders', 'getPaginateOrder', 'getPaginateFilterOrder', 'destroyOrder', 'acceptPayment', 'inputResi', 'updateStatusOrder', 'searchOrder', 'filterOrder', 'cancelOrder']),
@@ -175,6 +191,10 @@ export default {
       this.isFilter = !this.isFilter
       this.search = ''
       this.filter = ''
+    },
+    changeTab(evt) {
+      this.$router.push({ name: 'OrderIndex', query: { filter: evt}})
+      this.filterOrder(evt)
     },
     handleKirimCod(order) {
       this.$q.dialog({
@@ -229,8 +249,11 @@ export default {
       
     },
     handleSearchOrder() {
-      this.$store.commit('SET_LOADING', true)
-      this.searchOrder(this.search)
+      if(this.search) {
+
+        this.$store.commit('SET_LOADING', true)
+        this.searchOrder(this.search)
+      }
     },
     handleFilterOrder() {
       this.filterOrder(this.filter)
@@ -273,9 +296,6 @@ export default {
     messageButtonLabel(status) {
       if(status == 'UNPAID' || status == 'OVERDUE') return 'Follow Up Order'
       return 'Kirim Pesan'
-    },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
     },
     handleDeleteOrder(id) {
       this.$q.dialog({

@@ -128,9 +128,9 @@ export default {
       }
     },
     changeBadgeColor(type) {
-      if(type == 'PAID' || type == 'SHIPPING') return 'green-7'
-      if(type == 'PROCESS') return 'blue-7'
-      if(type == 'UNPAID') return 'grey-6'
+      if(type == 'PAID' || type == 'COMPLETE') return 'green'
+      if(type == 'PROCESS') return 'blue'
+      if(type == 'SHIPPING') return 'teal'
       return 'grey-7'
     },
      money(number) {

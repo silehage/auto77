@@ -400,7 +400,8 @@ export default {
       throtle: 1,
       interval: null,
       isPrintPacking: false,
-      isPrintInvoice: false
+      isPrintInvoice: false,
+      timeout: null
     }
   },
   computed: {
@@ -518,21 +519,22 @@ export default {
        this.getOrderById(this.$route.params.order_ref).then(response => {
           if(response.status == 200) {
             this.$store.commit('order/SET_INVOICE', response.data.results)
+            this.checkOrderStatus()
           }
         })
     },
     checkOrderStatus() {
       if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS') {
-        this.interval = setInterval(() => {
+        this.timeout = setTimeout(() => {
           this.getCheckOrder()
-        }, 20000)
+        }, 15000)
       } else {
-        clearInterval(this.interval)
+        clearTimeout(this.timeout)
       }
     }
   },
   beforeDestroy() {
-    clearInterval(this.interval)
+    clearTimeout(this.timeout)
   }
 
 }

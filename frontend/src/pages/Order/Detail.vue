@@ -393,7 +393,8 @@ export default {
       modalPayment: false,
       throtle: 1,
       isPrintPacking: false,
-      isPrintInvoice: false
+      isPrintInvoice: false,
+      timeout: null
     }
   },
   computed: {
@@ -423,14 +424,14 @@ export default {
     },
     
     getOrder() {
-      let self = this;
-      self.$store.commit('SET_LOADING', true)
+      this.$store.commit('SET_LOADING', true)
       if(this.$route.params.order_ref) {
         this.getOrderById(this.$route.params.order_ref).then(response => {
           if(response.status == 200) {
-            self.$store.commit('order/SET_INVOICE', response.data.results)
+            this.$store.commit('order/SET_INVOICE', response.data.results)
           }
-          self.$store.commit('SET_LOADING', false)
+          this.$store.commit('SET_LOADING', false)
+           this.checkOrderStatus()
         }).catch(() => {
           this.$router.push({name: 'Cart'})
         })
@@ -481,6 +482,23 @@ export default {
     handlePaymentModal() {
       this.modalPayment = true
     },
+    getCheckOrder() {
+      this.getOrderById(this.$route.params.order_ref).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('order/SET_INVOICE', response.data.results)
+          this.checkOrderStatus()
+        }
+      })
+    },
+    checkOrderStatus() {
+      if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS') {
+        this.timeout = setTimeout(() => {
+          this.getCheckOrder()
+        }, 15000)
+      } else {
+        clearTimeout(this.timeout)
+      }
+    },
     printInvoice() {
       const today = new Date().toDateString()
       document.title = `INVOICE #${this.invoice.order_ref} ${today}`
@@ -500,6 +518,9 @@ export default {
       }, 200)
     },
   },
+  beforeDestroy() {
+    clearTimeout(this.timeout)
+  }
 
 }
 </script>
