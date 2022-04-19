@@ -45,7 +45,7 @@
                   <q-item class="bg-grey-2">
                     <q-item-section>{{ destinationAddressFormat(address_subdistrict) }}</q-item-section>
                     <q-item-section side>
-                      <q-btn flat no-caps color="red" @click="clearAddress">
+                      <q-btn dense flat no-caps color="red" @click="clearAddress">
                       <q-icon name="close" size="19px"></q-icon>
                       <span>Ganti</span>
                       </q-btn>
@@ -93,12 +93,12 @@
         </div>
      
     </div>
-    <div class="q-px-sm q-pb-md q-pt-lg">
-      <div class="text-md q-pb-xs">Kurir</div>
+    <div class="q-px-sm q-pt-lg">
+      <div class="text-md">Kurir</div>
     </div>
-    <div id="cod" v-if="codItem" class="q-mb-md">
-      <div class="q-px-sm q-pb-xs">Pengiriman oleh penjual</div>
-      <q-list class="q-pa-sm">
+    <div id="cod" v-if="codItem" class="q-mb-sm">
+      <div class="q-pa-sm">Pengiriman oleh penjual</div>
+      <q-list class="q-px-sm">
         <q-item @click="selectCostCod(codItem)" clickable class="bg-grey-2">
           <q-item-section avatar>
             <q-icon :name="isSelectedCostCod ? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCostCod ? 'green-6' : 'grey-6'"></q-icon>
@@ -110,20 +110,24 @@
         </q-item>
       </q-list>
     </div>
-    <div id="courier" ref="courier" class="q-pa-sm">
-      <div class="q-py-sm">Pengiriman via Ekspedisi</div>
-      <q-select 
-        :disable="!canSelectCourier"
-        filled
-        square
-        stack-label
-        label="Pilih Kurir"
-        :options="couriers"  
-        v-model="formGetCost.courier" 
-        emit-value
-        map-options
-        @input="courierSelected"
-        />
+    <div id="courier" ref="courier" class="">
+      <div class="q-pa-sm">
+        <div>Pengiriman via Ekspedisi</div>
+        <div class="q-pt-sm">
+          <q-select 
+            :disable="!canSelectCourier"
+            filled
+            square
+            stack-label
+            label="Pilih Kurir"
+            :options="couriers"  
+            v-model="formGetCost.courier" 
+            emit-value
+            map-options
+            @input="courierSelected"
+            />
+        </div>
+      </div>
       <q-list v-if="shippingCost.ready">
         <template v-if="shippingCost.costs.length">
         <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable>

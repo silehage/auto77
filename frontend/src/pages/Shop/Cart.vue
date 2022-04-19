@@ -27,7 +27,7 @@
                   <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
                   <q-btn flat padding="3px" round icon="add_circle_outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
                 </div>
-                <q-btn @click="removeCart(cart)" unelevated size="10px" color="red" no-caps padding="2px 4px">hapus</q-btn>
+                <q-btn @click="removeCart(cart)" outline size="10px" color="red" no-caps padding="2px 4px">hapus</q-btn>
               </div>
             </div>
           </q-item-section>
