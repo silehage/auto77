@@ -23,8 +23,12 @@ class FrontController extends Controller
 
     public function homepage()
     {
+        $title = $this->shop->name;
+        if($this->shop->description) {
+            $title += ' | ' . $this->shop->description;
+        }
         return View::vue([
-            'title' => $this->shop->name,
+            'title' => $title,
             'description' => $this->shop->description,
             'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
         ]);
