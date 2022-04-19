@@ -17,6 +17,7 @@ class TripayController extends Controller
     public function __construct()
     {
         $this->apiKey = config('tripay.api_key');
+        $this->privateKey = config('tripay.private_key');
         
     }
     public function getPaymentChanels()
@@ -104,6 +105,8 @@ class TripayController extends Controller
     }
     public function callback(Request $request)
     {
+
+        return $this->privateKey;
  
         $callbackSignature = $request->server('HTTP_X_CALLBACK_SIGNATURE') ?? '';
 
