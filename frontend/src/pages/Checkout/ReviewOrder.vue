@@ -19,7 +19,7 @@
           <tr>
             <th align="left">Whatsapp</th>
             <td>:</td>
-            <td>{{ formOrder.customer_whatsapp  }}</td>
+            <td>{{ formOrder.customer_phone }}</td>
           </tr>
           <tr>
             <th align="left">Alamat</th>
