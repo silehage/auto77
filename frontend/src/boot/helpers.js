@@ -5,5 +5,10 @@ Vue.mixin({
     moneyIDR(numb) {
       return 'Rp '+ numb.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
+  },
+  data() {
+    return {
+      datapage: window.datapage
+    }
   }
 })

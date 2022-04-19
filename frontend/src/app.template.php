@@ -33,6 +33,9 @@
     @else 
     <meta property="og:image" content="icon/icon-384x384.png" data-qmeta="ogImage">
     @endif
+    <script>
+      window.datapage = @json($jsapp['page']['data'])
+    </script>
   </head>
   <body class="bg-blue-grey-1">
   @if(isset($jsapp['page']['featured_image']) && $jsapp['page']['featured_image'])

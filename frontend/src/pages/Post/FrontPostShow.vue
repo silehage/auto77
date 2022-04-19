@@ -35,8 +35,8 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      post: null,
-      ready: false
+      ready: false,
+      post: window.datapage
     }
   },
   methods: {
@@ -48,7 +48,11 @@ export default {
     }
   },
   created() {
-   this.getPost()
+    if(!this.post || this.post.slug != this.$route.params.slug) {
+      this.getPost()
+    } else {
+      this.ready = true
+    }
   },
   meta() {
     return {

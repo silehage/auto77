@@ -334,8 +334,7 @@ export default {
       discount: 0,
       fullscreen: false,
       shop: this.$store.state.shop,
-      ready: false,
-      product: null,
+      ready: false, 
       loadMoreLoading: false,
       form: {
         product_id: null,
@@ -347,7 +346,8 @@ export default {
       alreadyItemModal: false,
       variantItemSelected: null,
       varianValueSelected: null,
-      formVariantModal: false
+      formVariantModal: false,
+      product: window.datapage,
     }
   },
   computed: {
@@ -737,8 +737,13 @@ export default {
     }
 
   },
-  mounted() {
-    this.getProduct()
+  created() {
+    if(!this.product || this.product.slug != this.$route.params.slug) {
+      this.getProduct()  
+
+    } else {
+      this.ready = true
+    }
     this.getRandomNumber()
       
   },

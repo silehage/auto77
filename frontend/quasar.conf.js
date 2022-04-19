@@ -143,7 +143,7 @@ module.exports = function (ctx ) {
         short_name: "NextShop",
         name: "NextShop App",
         lang: "id",
-        description: "Simple clean dan elegan aplikasi toko online SPA dan PWA ready",
+        description: "Next Generation Web store App",
         start_url: "/",
         background_color: "#b5cfb4",
         theme_color: "#0da0ba",

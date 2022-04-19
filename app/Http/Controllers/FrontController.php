@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\ProductResource;
 
 class FrontController extends Controller
 {
@@ -30,7 +31,8 @@ class FrontController extends Controller
         return View::vue([
             'title' => $title,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'data' => null
         ]);
     }
     
@@ -39,12 +41,21 @@ class FrontController extends Controller
         return View::vue([
             'title' => 'Produk Katalog | ' . $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'data' => null
         ]);
     }
     public function productDetail($slug)
     {
-        $product = Product::with('assets', 'category','reviews')->withCount('reviews')->where('slug', $slug)->first();
+        $product = new ProductResource(Product::with(['assets', 'category:id,title,slug','reviews' => function($q) {
+            $q->limit(5);
+            $q->latest();
+        }, 'variants.variant_items.variant_item_values'])
+            ->withCount('reviews')
+            ->withSum('variantItems', 'item_stock')
+            ->withAvg('reviews', 'rating')
+            ->where('slug', $slug) 
+            ->first());
         
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,
@@ -61,6 +72,7 @@ class FrontController extends Controller
             'title' => $category->title . ' | ' . $this->shop->name,
             'description' => $category->description?? $this->shop->description,
             'featured_image' => url('/upload/images/' . $category->filename),
+            'data' => null
         ]);
 
     }
@@ -69,7 +81,8 @@ class FrontController extends Controller
         return View::vue([
             'title' => 'Artikel | ' . $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'data' => null
         ]);
     }
     public function postDetail($slug)
@@ -80,6 +93,7 @@ class FrontController extends Controller
             'title' => $post->title . ' | ' . $this->shop->name,
             'description' => $this->createTeaser($post->body),
             'featured_image' => url('/upload/images/' . $post->image),
+            'data' => $post
         ]);
     }
     public function any()
@@ -87,7 +101,8 @@ class FrontController extends Controller
         return View::vue([
             'title' => $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null
+            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'data' => null
         ]);
     }
     public function clearCache()
