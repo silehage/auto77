@@ -10,7 +10,6 @@ export function ADD_TO_CART (state, payload) {
   
       let index = state.carts.findIndex(ej => ej.sku == payload.sku)
   
-      console.log(payload);
       state.carts[index].quantity += payload.quantity
   
     } else {

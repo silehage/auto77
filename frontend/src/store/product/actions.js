@@ -69,7 +69,9 @@ export function getProductsByCategory ({ commit }, id) {
   Api().get('getProductsByCategory/'+id).then(response => {
     if(response.status == 200) {
       commit('SET_PRODUCT_CATEGORY', response.data)
-      commit('SET_META_TITLE', response.data.data[0].category.title, { root: true })
+      if(response.data.data.length) {
+        commit('SET_META_TITLE', response.data.data[0].category.title, { root: true })
+      }
     }
   })
  }

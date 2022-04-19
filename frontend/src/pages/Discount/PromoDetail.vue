@@ -133,7 +133,6 @@ export default {
       Api().get('findNotDiscountProduct').then(response => {
         if(response.status == 200) {
           this.productSearch = response.data.results
-          console.log(this,productSearch);
         }
       })
       .finally(() => {

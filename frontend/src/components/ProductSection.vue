@@ -81,7 +81,6 @@ export default {
     },
     handleMenuCategory() {
       this.isMenuCategory = !this.isMenuCategory
-      console.log(this.isMenuCategory);
     }
     
   }

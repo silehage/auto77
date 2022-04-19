@@ -187,7 +187,6 @@ export default {
   },
   mounted() {
     if(this.coupon_discount) {
-      console.log(this.coupon_discount);
       this.couponCode = this.coupon_discount.code
     }
   },

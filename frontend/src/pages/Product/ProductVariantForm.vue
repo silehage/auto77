@@ -119,7 +119,6 @@ export default {
     },
     handleRemoveVariantValue(varIndex, itemIndex, subItemIndex) {
       this.variants[varIndex].variant_items[itemIndex].variant_item_values.splice(subItemIndex, 1)
-      console.log(this.variants[varIndex].variant_items[itemIndex].variant_item_values.length < 1);
       if(this.variants[varIndex].variant_items[itemIndex].variant_item_values.length < 1) {
         this.variants[varIndex].variant_items.splice(itemIndex, 1)
       }

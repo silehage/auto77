@@ -40,7 +40,7 @@
         </template>
       </q-carousel>
       <q-card flat class="product-detail relative">
-        <q-card-section class="q-pt-xs">
+        <q-card-section class="q-py-xs">
           
           <h1 class="text-h6 text-weight-semibold q-mb-md" v-if="product">{{ product.title }}</h1>
           <div class="row items-center justify-between">

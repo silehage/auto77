@@ -66,7 +66,6 @@ export default {
     }
   },
   SET_MENU_CATEGORY: (state, status) => {
-    console.log('muta', status);
     state.isMenuCategory = status
   }
 
