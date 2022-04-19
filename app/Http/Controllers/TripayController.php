@@ -110,38 +110,41 @@ class TripayController extends Controller
         $json = $request->getContent();
 
         $data = json_decode($json);
+        
 
         $signature = hash_hmac('sha256', $json, $this->privateKey);
 
-        if( $callbackSignature !== $signature ) {
-            return "Invalid Signature"; // signature tidak valid, hentikan proses
+        if ($signature !== (string) $callbackSignature) {
+            return 'Invalid signature';
         }
+
+        if ('payment_status' !== (string) $request->server('HTTP_X_CALLBACK_EVENT')) {
+            return 'Invalid callback event, no action was taken';
+        }
+
+        $data = json_decode($json);
+        $status = strtoupper((string) $data->status);
             
-        $event = $request->server('HTTP_X_CALLBACK_EVENT');
+        $merchantRef = $data->merchant_ref;
         
-        if( $event == 'payment_status' )
-        {
-            $merchantRef = $data->merchant_ref;
+        $order = Order::where('order_ref', $merchantRef)
+            ->where('order_status', 'UNPAID')
+            ->first();
+        
+        
+        if( !$order ) {
             
-            $order = Order::where('order_ref', $merchantRef)
-                ->where('order_status', 'UNPAID')
-                ->first();
-            
-            
-            if( !$order ) {
-                
-                return "Invoice not found or current status is not UNPAID";
-            }
+            return "Invoice not found or current status is not UNPAID";
+        }
 
-            $transaction = $order->transaction;
+        $transaction = $order->transaction;
 
-            if ((int) $data->total_amount !== (int) $order->order_total) {
-                return 'Invalid amount';
-            }
-  
+        if ((int) $data->total_amount !== (int) $order->order_total) {
+            return 'Invalid amount, Expected: ' . $order->order_total . ' - Received: ' . $data->total_amount;
+        }
 
-            if( $data->status == 'PAID' ) // handle status PAID
-            {
+        switch ($status) {
+            case 'PAID':
                 $order->update([
                     'order_status'	=> 'PAID',
                 ]);
@@ -151,44 +154,44 @@ class TripayController extends Controller
                     'paid_at' => Carbon::createFromTimestamp($data->paid_at),
                     'note' => $data->note
                 ]);
-
-
+    
+    
                 return response()->json(['success' => true ]);
-            }
-            elseif( $data->status == 'EXPIRED' ) // handle status EXPIRED
-            {
+
+            case 'EXPIRED':
                 $order->update([
                     'order_status'	=> 'CANCELED',
                 ]);
-
+    
                 $transaction->update([
                     'status' => 'CANCELED',
                     'note' => $data->note
                 ]);
-
+    
                 $this->resetStock($order);
-
-
+    
+    
                 return response()->json(['success' => true ]);
-            }
-            elseif( $data->status == 'FAILED' ) // handle status FAILED
-            {
+
+            case 'FAILED':
                 $order->update([
                     'order_status'	=> 'CANCELED',
                 ]);
-
+    
                 $transaction->update([
                     'status' => 'CANCELED',
                     'note' => $data->note
                 ]);
-
+    
                 $this->resetStock($order);
-
+    
+    
                 return response()->json(['success' => true ]);
-            }
+
+            default:
+                return response()->json(['error' => 'Unrecognized payment status']);
         }
 
-        return "No action was taken";
     }
 
     protected function resetStock($order) 
