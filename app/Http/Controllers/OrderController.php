@@ -14,8 +14,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\ProductVariantValue;
-use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {

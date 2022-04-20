@@ -11,7 +11,7 @@
       </q-toolbar>
     </q-header>
     <div class="q-pt-sm">
-      <q-tabs v-model="tab" @input="changeTab" active-color="primary" outside-arrows>
+      <q-tabs v-model="filter" @input="changeTab" active-color="primary" outside-arrows>
         <q-tab v-for="option in options" :key="option.value" :name="option.value" :label="option.label" no-caps></q-tab>
       </q-tabs>
     </div>
@@ -98,7 +98,7 @@
       </q-list>
     </div>
    <div class="flex justify-center q-py-xl">
-     <q-btn outline :loading="orders.isLoadMore" v-if="orders.canLoadMore && isFilter" label="loadmore..." @click="loadMore" unelevated color="primary"></q-btn>
+     <q-btn outline :loading="orders.isLoadMore" v-if="orders.canLoadMore" label="loadmore..." @click="loadMore" unelevated color="primary"></q-btn>
    </div>
     </template>
      <template v-else>
@@ -143,7 +143,6 @@ export default {
   components: { FollowUp },
   data() {
     return {
-      tab: 'ALL',
       isFilter: true,
       options: [
        { value: 'ALL', label: 'Semua'},
@@ -175,8 +174,8 @@ export default {
   },
   created() {
     if(this.$route.query.filter) {
-      this.tab = this.$route.query.filter
-      this.filterOrder(this.tab)
+      this.filter = this.$route.query.filter
+      this.filterOrder(this.filter)
 
     } else {
       this.getOrders()
@@ -194,6 +193,7 @@ export default {
     },
     changeTab(evt) {
       this.$router.push({ name: 'OrderIndex', query: { filter: evt}})
+      this.search = ''
       this.filterOrder(evt)
     },
     handleKirimCod(order) {
