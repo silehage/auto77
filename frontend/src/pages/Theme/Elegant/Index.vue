@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-2 elegant" :class="{'flex flex-center' : loading }">
+  <q-page class="bg-grey-1 elegant" :class="{'flex flex-center' : loading }">
      <q-header reveal :reveal-offset="10" class="bg-primary text-white">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />

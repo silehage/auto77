@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-2 default" :class="{'flex flex-center' : loading }">
+  <q-page class="bg-grey-1 default" :class="{'flex flex-center' : loading }">
     <q-header class="bg-white text-dark">
       <q-toolbar class="items-center sans">
         <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
