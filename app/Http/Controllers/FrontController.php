@@ -31,7 +31,7 @@ class FrontController extends Controller
         return View::vue([
             'title' => $title,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'featured_image' => $this->shop->logo_path? url($this->shop->logo_path) : null,
             'data' => null
         ]);
     }
@@ -41,7 +41,7 @@ class FrontController extends Controller
         return View::vue([
             'title' => 'Produk Katalog | ' . $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'featured_image' => $this->shop->logo_path? url($this->shop->logo_path) : null,
             'data' => null
         ]);
     }
@@ -81,7 +81,7 @@ class FrontController extends Controller
         return View::vue([
             'title' => 'Artikel | ' . $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'featured_image' => $this->shop->logo_path? url($this->shop->logo_path) : null,
             'data' => null
         ]);
     }
@@ -101,7 +101,7 @@ class FrontController extends Controller
         return View::vue([
             'title' => $this->shop->name,
             'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url('/upload/images/' . $this->shop->logo_path) : null,
+            'featured_image' => $this->shop->logo_path? url($this->shop->logo_path) : null,
             'data' => null
         ]);
     }
