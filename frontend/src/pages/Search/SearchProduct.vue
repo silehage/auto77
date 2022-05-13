@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pb-lg">
-    <q-header class="text-primary bg-white">
+  <q-page class="q-pb-lg bg-grey-1">
+    <q-header class="text-primary bg-white box-shadow">
        <q-toolbar>
          <q-btn :to="{name: 'Home'}"
             flat round dense

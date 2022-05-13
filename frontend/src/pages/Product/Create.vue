@@ -136,27 +136,43 @@
             </q-btn>
         </q-footer>
       </q-form>
-      <q-dialog 
-      v-model="variantModalForm"
-      persistent
-      maximized
-      seamless
-      transition-show="slide-up"
-      transition-hide="slide-down"
-      >
-        <product-variant-form @onSubmitForm="onSubmitForm" @onClose="variantModalForm = false" :props="form.variants"/>
+      <q-dialog v-model="variantModalForm">
+        <q-card class="card-medium">
+          <q-form @submit.prevent="addVariant">
+            <div class="card-heading">Tambah Produk Varian</div>
+            <q-card-section>
+              <q-input required stack-label label="Nama Varian" v-model="tempVarian"></q-input>
+              <div class="text-sm text-teal q-mt-xs q-mb-sm">
+                Nama Varian, Contoh: Warna
+              </div>
+              <q-input required stack-label label="Nama Subvarian" v-model="tempSubvarian"></q-input>
+              <div class="text-sm text-teal q-mt-xs q-mb-sm">
+                Contoh: Ukuran
+              </div>
+              <q-input required stack-label label="Varian Item" v-model="tempVarianItem"></q-input>
+              <div class="text-sm text-teal q-mt-xs q-mb-sm">
+                Gunakan tanda koma (,) jika ingin membuat banyak sekaligus contoh: S,M,L,XL
+              </div>
+              <div class="row justify-end q-mt-md q-gutter-x-sm">
+                <q-btn type="button" label="Batal" unelevated color="primary" outline v-close-popup></q-btn>
+                <q-btn type="submit" label="Tambah" unelevated color="primary"></q-btn>
+              </div>
+            </q-card-section>
+          </q-form>
+        </q-card>
       </q-dialog>
   </q-page>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import ProductVariantForm from './ProductVariantForm.vue'
 export default {
   name: 'ProductFormCreate',
-  components: { ProductVariantForm },
   data () {
     return {
+      tempVarian: '',
+      tempSubvarian:'',
+      tempVarianItem: '',
       requiredRules: [
         val => (val && val.length > 0) || 'Field harus diisi.'
       ],
@@ -189,9 +205,39 @@ export default {
   methods: {
     ...mapActions('product', ['productStore']),
     ...mapActions('category', ['getCategories']),
-    onSubmitForm(data) {
-      this.form.variants = data
-      this.variantModalForm = false
+    addVariant() {
+      let tpl = { variant_name: this.tempVarian, variant_item_name: this.tempSubvarian, variant_items: [] }
+      // let arrItem = this.tempVarianItem.split(',');
+
+      // arrItem.forEach(el => {
+      //     tpl.variant_items.push(
+      //       {item_sku: this.getSku(), item_label: el.trim(), additional_price: 0, item_stock: 0 },
+      //     )
+      // });
+
+      this.form.variants.push(tpl)
+      this.tempVarian = ''
+      this.tempSubvarian = ''
+      this.tempVarianItem = ''
+      this.variantModal = false
+    },
+    addVariantItem() {
+      let tpl = {
+            variant_item_label: this.tempVarianItem, 
+            variant_item_values: []
+          }
+      let arrItem = this.tempVarianValue.split(',');
+
+      arrItem.forEach(el => {
+          tpl.variant_item_values.push(
+            {item_sku: this.getSku(), item_label: el.trim(), additional_price: 0, item_stock: 0},
+          )
+      });
+
+      this.variants[this.variantSelectedIndex].variant_items.push(tpl)
+      this.variantSelectedIndex = null
+      this.tempVarianItem = ''
+      this.variantItemModal = false
     },
     handleAddVariant() {
       this.variantModalForm = true
@@ -254,8 +300,14 @@ export default {
         return i !== index;
       })
     },
-    money(number) {
-     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR'}).format(number)
+    getSku() {
+      var randomChars = 'ABCDEFGHIJKL9MNOPQRST8UVWXYZabcdeAfghijklmnopqZrstuvwxyz01T2343567hD89';
+
+      var result = 'VAR';
+        for ( var i = 0; i < 17; i++ ) {
+            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+        }
+      return result;
     },
  
   },

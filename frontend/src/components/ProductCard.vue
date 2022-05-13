@@ -1,6 +1,6 @@
 <template>
   <div class="col-6 q-px-xs q-pb-xs q-mb-sm">
-    <div class="column full-height relative bg-white">
+    <div class="column full-height relative bg-white box-shadow">
       <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
          <template v-slot:error>
           <div class="absolute-full flex flex-center bg-grey-6 text-white">

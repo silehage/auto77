@@ -363,11 +363,10 @@ h1,h2,h3,h4,h5,h6 {
   top:0;
   z-index: 100;
 }
+
+.box-shadow,
 .q-card.shadow {
-  box-shadow: 0px 2px 11px 0px rgb(60 60 60 / 5%);
-}
-.box-shadow {
-  box-shadow: 0px 2px 11px 0px rgb(60 60 60 / 5%);
+  box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
 }
 #checkout {
   .q-stepper__tab {
