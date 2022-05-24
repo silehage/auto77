@@ -39,12 +39,18 @@ import SwiperProductCard from 'components/SwiperProductCard'
       }
     },
     created() {
-      if(window.innerWidth < 321) {
-         this.glideOptions.perView = 1
-         this.glideOptions.peek.after = 90
-
-      }else if(window.innerWidth < 481) {
-        this.glideOptions.peek.after = 20
+      if(window.innerWidth < 600) {
+        this.glideOptions.peek.after = 40
+      }
+      if(window.innerWidth < 481) {
+        this.glideOptions.gap = 5
+        this.glideOptions.peek.after = 10
+      }
+      
+      if(window.innerWidth < 300) {
+        this.glideOptions.perView = 1
+        this.glideOptions.gap = 4
+        this.glideOptions.peek.after = 100
       }
     }
   }

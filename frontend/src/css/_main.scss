@@ -634,16 +634,6 @@ table.table td, table.table td * {
 .card-price {
   font-weight: 500;
   font-size: 16px;
-  order: 2;
-  @media (min-width: 360px) {
-    order: 1;
-  }
-}
-.card-discount {
-  order: 1;
-  @media (min-width: 360px) {
-    order: 2;
-  }
 }
 @media (min-width: 1440px){
   .q-footer .q-tab__content, .q-header .q-tab__content {
