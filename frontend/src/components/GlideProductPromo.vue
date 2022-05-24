@@ -41,7 +41,7 @@ import { Api } from 'boot/axios'
           bound: true,
           peek: {
            before: 0, 
-           after: 100
+           after: 80
           }
         },
         dayEl: 0,
@@ -53,13 +53,20 @@ import { Api } from 'boot/axios'
       }
     },
     created() {
+      if(window.innerWidth < 600) {
+        this.glideOptions.peek.after = 40
+      }
       if(window.innerWidth < 481) {
         this.glideOptions.gap = 5
         this.glideOptions.peek.after = 10
       }
-      if(window.innerWidth < 600) {
-        this.glideOptions.peek.after = 40
+      
+      if(window.innerWidth < 300) {
+        this.glideOptions.perView = 1
+        this.glideOptions.gap = 4
+        this.glideOptions.peek.after = 100
       }
+      
     },
     mounted() {
       if(this.promo) {
