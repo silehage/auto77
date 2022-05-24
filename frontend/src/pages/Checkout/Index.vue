@@ -252,6 +252,9 @@ export default {
 
       let whatsappUrl = 'https://api.whatsapp.com'
       
+      if(this.$q.platform.is.desktop) {
+        whatsappUrl = 'https://web.whatsapp.com'
+      }
       let whatsapp = this.formatPhoneNumber(this.shop.phone)
 
       let str = `Halo kak, saya mau order:\n\n`

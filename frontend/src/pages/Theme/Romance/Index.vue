@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-1 romance" :class="{'flex flex-center' : loading }">
+  <q-page class="romance bg-light" :class="{'flex flex-center' : loading }">
     <q-header reveal :reveal-offset="10" class="bg-white box-shadow">
         <q-toolbar class="q-py-sm">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
@@ -38,6 +38,11 @@
           <category-carousel :datas="categories.data" />
         </div>
       </div>
+
+      <div id="product-promo" v-if="productPromo.length" >
+        <product-promo :product_promo="productPromo" />
+      </div>
+
       <div v-if="banner1" class="banner auto-padding-side block-container">
         <img :src="banner1.image_url" @click="goToPost(banner1)">
       </div>
@@ -86,6 +91,7 @@ export default {
     Slider, 
     ProductBlock, 
     'category-carousel': () => import('./block/CategoryCarousel.vue'),
+    'product-promo': () => import('./../shared-components/ProductPromo.vue'),
     'featured-carousel': () => import('./../shared-components/FeaturedCarousel.vue'),
     'partner-carousel': () => import('components/PartnerCarousel.vue'),
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
@@ -108,7 +114,8 @@ export default {
       shop: state => state.shop,
       loading: state => state.loading,
       posts: state => state.post.initialPost,
-      config: state => state.config
+      config: state => state.config,
+      productPromo: state => state.product.product_promo,
     }),
     cheight: function() {
       let n =(this.$q.screen.width /1.7)

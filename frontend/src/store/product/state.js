@@ -3,12 +3,12 @@ export default function () {
     products: {
       data: [],
       ready: false,
-      available: true,
-      links: null,
-      meta: null
+      available: true
     },
     admin_products: {
-      data: [],
+      item: {
+        data: [],
+      },
       ready: false,
       available: true
     },
@@ -35,6 +35,7 @@ export default function () {
       data: [],
       ready: false,
       available: true
-    }
+    },
+    product_promo: []
   }
 }

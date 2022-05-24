@@ -5,6 +5,7 @@ namespace App\Repositories;
 use stdClass;
 use Exception;
 use App\Models\Asset;
+use App\Models\Promo;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -15,26 +16,30 @@ use App\Http\Resources\ProductResource;
 
 class ProductRepository
 {
-    public $limit = 6;
+    protected $limit = 3;
+    
     public function show($slug)
     {
-        $product = new ProductResource(Product::with(['assets', 'category:id,title,slug','reviews' => function($q) {
+        $product = new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
+            $query->whereHas('promoActive');
+        },'reviews' => function($q) {
             $q->limit(5);
             $q->latest();
-        }, 'variants.variant_items.variant_item_values'])
-        ->withCount('reviews')
-        ->withSum('variantItems', 'item_stock')
-        ->withAvg('reviews', 'rating')
-        ->where('slug', $slug) 
-        ->first());
+        }])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->where('slug', $slug) 
+            ->orWhere('id', $slug)
+            ->first());
 
         return $product;
     }
 
     public function getAll()
     {
-
-        return Product::with('assets', 'category:id,title,slug','discount', 'promote')
+            return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
+                $query->whereHas('promoActive');
+            }])
             ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
         
@@ -42,29 +47,71 @@ class ProductRepository
 
     public function getProductsFavorites($pids)
     {
-        return Product::with('assets', 'category:id,title,slug','discount', 'promote')
+        return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
+            $query->whereHas('promoActive');
+        }])
             ->whereIn('id', $pids)
             ->withAvg('reviews', 'rating')
             ->get();
+
     }
-    
+  
     public function search($key)
     {
 
-        return Product::with('assets', 'category:id,title,slug','discount', 'promote')
+        return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
+            $query->whereHas('promoActive');
+        }])
             ->where('title', 'like', '%'.$key.'%')
-            ->orWhere('description', 'like', '%'.$key.'%')
             ->withAvg('reviews', 'rating')
-            ->simplePaginate($this->limit);
+            ->get();
 
     }
 
     public function getProductsByCategory($id)
     {
-        return Product::with('assets', 'category:id,title,slug','discount', 'promote')
+        return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
+            $query->whereHas('promoActive');
+        }])
             ->where('category_id', $id)
             ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
+
+        }
+
+    public function getProductPromo()
+    {
+        return Promo::active()->with(['products' => function($query) {
+            $query->with('assets');
+            $query->with('productPromo', function($q) {
+                $q->whereHas('promoActive');
+            });
+            $query->withAvg('reviews', 'rating');
+        }])->get()->map(function($item) {
+
+            $promo = new stdClass();
+            $promo->id = $item->id;
+            $promo->label = $item->label;
+            $promo->start_date = $item->start_date;
+            $promo->end_date = $item->end_date;
+
+            $promo->products = $item->products->map(function($product) {
+
+                return [
+                    'id'      => $product->id,
+                    'title'   => $product->title,
+                    'slug'    => $product->slug,
+                    'status'  =>  $product->status,
+                    'rating'  =>  $product->reviews_avg_rating ? (float) number_format($product->reviews_avg_rating, 1) : 0,
+                    'pricing' =>  $this->setPricing($product),
+                    'assets'  =>  $product->assets,
+                ];
+            });
+
+            return $promo;
+
+        });
+        
     }
 
     public function getInitialProducts()
@@ -73,7 +120,10 @@ class ProductRepository
         $data = Category::whereHas('products')
             ->with(['products' => function($query) {
                 $query->with('assets');
-                $query->with('promote');
+                $query->with('productPromo', function($q) {
+                    $q->whereHas('promoActive');
+                });
+                $query->with('varians.subvarian');
                 $query->withAvg('reviews', 'rating');
             }])
             ->where('is_front', 1)
@@ -86,8 +136,8 @@ class ProductRepository
                 $categoryItem->category_id = $cat->id;
                 $categoryItem->category_slug = $cat->slug;
                 $categoryItem->id = Str::random(16);
-                $categoryItem->banner_src = $cat->banner? $cat->banner_src : '';
                 $categoryItem->description = $cat->description ?? '';
+                $categoryItem->banner = $cat->banner ? url('upload/images/' . $cat->banner) : '';
 
                 $categoryItem->items = $cat->products->map(function($product) use($cat) {
 
@@ -101,16 +151,14 @@ class ProductRepository
                     return [
                         'id'      => $product->id,
                         'title'   => $product->title,
+                        'sku'   => $product->sku,
                         'slug'    => $product->slug,
-                        'sku'     => $product->sku,
-                        'description' =>  $product->description,
                         'status'  =>  $product->status,
-                        'sold'    =>  $product->sold,
-                        'weight'  =>  $product->weight,
                         'rating'  =>  $product->reviews_avg_rating ? (float) number_format($product->reviews_avg_rating, 1) : 0,
                         'pricing' =>  $this->setPricing($product),
                         'category' => $newCat,
                         'assets'  =>  $product->assets,
+                        // 'promo' => $product->promo
                     ];
                 });
 
@@ -140,16 +188,15 @@ class ProductRepository
             $product->price = $request->price;
             $product->stock = $request->stock;
             $product->weight = $request->weight;
+            $product->sku = 'PF-'. $request->sku;
             
             $product->category_id =  $request->category_id;
 
             $product->description = $request->description;
 
-            $product->sku = 'PRD' . Str::random(14);
-            
             $product->save();
 
-            if($request->images) {
+            if($request->images && count($request->images) > 0) {
                 foreach($request->images as $file) {
                     
                     $filename = Str::random(41).'.' . $file->extension();
@@ -161,50 +208,42 @@ class ProductRepository
                     ]);
                 }
             }
-            
 
-            if($request->variants) {
-                
-                $product->refresh();
+            $product->fresh();
 
-                $variants = json_decode($request->variants, true);
+            if($request->varians) {
+                $datas = json_decode($request->varians, true);
 
-                foreach($variants as $var) {
+                foreach($datas as $data) {
 
-                    if(count($var['variant_items']) > 0) {
-                        
-                        $variant = $product->variants()->create([
-                            'variant_name' => $var['variant_name'],
-                            'variant_item_name' => $var['variant_item_name']
-                        ]);
-    
-                        foreach($var['variant_items'] as $varItem) {
-    
-                            if(count($varItem['variant_item_values']) > 0) {
-    
-                                $item = $variant->variant_items()->create([
-                                    'variant_item_label' => $varItem['variant_item_label']
-                                ]);
+                    if($request->boolean('has_subvarian') === true) {
+
+                        $varian =  $product->varians()->create([
+                                'has_subvarian' => $data['has_subvarian'],
+                                'label' => $data['label'],
+                                'value' => $data['value'],
+                            ]);
         
-                                foreach($varItem['variant_item_values'] as $value) {
-
-                                    $value['product_id'] = $product->id;
-                                    $item->variant_item_values()->create($value);
-                                }
+                            foreach($data['subvarian'] as $item) {
+        
+                                $varian->subvarian()->create($item);
                             }
-    
-                        }
+        
+                    } else {
+                    
+                        $product->varians()->create($data);
                     }
 
-                }
-            }
+                } 
 
+                
+            }
 
             DB::commit();
 
             $this->clearCache();
 
-            return $product->load('assets','variants.variant_items.variant_item_values');
+            return $product->load('assets','varians.subvarian');
 
 
         } catch (Exception $e) {
@@ -261,49 +300,43 @@ class ProductRepository
 
             $product->save();
 
-            
-            if($request->variants) {
+            $product->varians()->delete();
 
-                $product->variants()->delete();
+            if($request->varians) {
+                $datas = json_decode($request->varians, true);
 
-                $variants = json_decode($request->variants, true);
+                foreach($datas as $data) {
 
-                foreach($variants as $var) {
+                    if($request->boolean('has_subvarian') === true) {
 
-                    if(count($var['variant_items']) > 0) {
-                        
-                        $variant = $product->variants()->create([
-                                'variant_name' => $var['variant_name'],
-                                'variant_item_name' => $var['variant_item_name']
+                        $varian =  $product->varians()->create([
+                                'has_subvarian' => $data['has_subvarian'],
+                                'label' => $data['label'],
+                                'value' => $data['value'],
                             ]);
         
-                            foreach($var['variant_items'] as $varItem) {
+                            foreach($data['subvarian'] as $item) {
         
-                                if(count($varItem['variant_item_values']) > 0) {
-        
-                                    $item = $variant->variant_items()->create([
-                                        'variant_item_label' => $varItem['variant_item_label']
-                                    ]);
-            
-                                    foreach($varItem['variant_item_values'] as $value) {
-
-                                    $value['product_id'] = $product->id;
-                                    $item->variant_item_values()->create($value);
-                                    }
-                                }
-        
+                                $varian->subvarian()->create($item);
                             }
+        
+                    } else {
+                    
+                        $product->varians()->create($data);
                     }
 
-                }
+                } 
+
+                
             }
 
+            $product->fresh();
 
             DB::commit();
 
             $this->clearCache();
 
-            return $product->fresh();
+            return $product;
 
         } catch (Exception $e) {
 
@@ -346,71 +379,61 @@ class ProductRepository
         }
     }
 
-    public function addProductReview($request)
-    {   
-        $product = Product::findOrFail($request->product_id);
-
-        $review = $product->reviews()->create([
-            'comment' => $request->comment,
-            'rating' => $request->rating,
-            'name' => $request->name,
-        ]);
-
-        return $review;
-
-    }
-
     protected function setPricing($product)
     {
-        $pricing = [
-        'default_price' => $product->price,
-        'current_price' => $product->price,
-        'discount_value' => 0,
-        'discount_percent' => 0,
-        'is_discount' => false 
-        ];
-        
-        $disc = null;
-        
-        if($product->discount_id != null) {
-            $disc = $product->discount;
-        } elseif($product->promote_id != null && $product->promote) {
-            $disc = $product->promote->discount;
-        }
+        $defaultPrice = $product->price;
 
-        
-        if($disc) {
-        
-            $pricing['is_discount'] = true;
-        
-            $discValue = 0;
-            
-        
-            if($disc->unit == 'percent') {
-        
-                $discValue = ($product->price*$disc->value) / 100;
-        
-                $pricing['current_price'] = $product->price - ($product->price*$disc->value / 100);
-                $pricing['discount_percent'] = $disc->value;
+            $pricing = [
+                'default_price' => $defaultPrice,
+                'current_price' => $defaultPrice,
+                'discount_percent' => 0,
+                'discount_amount' => 0,
+                'is_discount' => false,
+            ];
+
+
+            $disc = null;
+    
+            if($product->productPromo) {
+                $disc = $product->productPromo;
+            } 
+
+            if($disc) {
+
+                $pricing['is_discount'] = true;
+
+                $discountVal = 0;
                 
-            } else{
-        
-                $discValue = $disc->value;
-                $pricing['current_price'] = $product->price - (int) $disc->value;
-                $pricing['discount_percent'] = number_format(((int)$disc->value / $product->price)*100, 1);
-        
+
+                if($disc->discount_type == 'PERCENT') {
+    
+                    $discountVal = ($defaultPrice*$disc->discount_amount) / 100;
+
+                    $pricing['current_price'] = $defaultPrice - (int) $discountVal;
+
+                    $pricing['discount_percent'] = (int) $disc->discount_amount;
+                    
+                } else{
+    
+                    $discountVal = $disc->discount_amount;
+
+                    $pricing['current_price'] = $defaultPrice - (int) $discountVal;
+
+                    $pricing['discount_percent'] = number_format(((int)$disc->discount_amount / $defaultPrice)*100, 0);
+    
+                }
+
+                $pricing['discount_amount'] = $discountVal;
             }
         
-            $pricing['discount_value'] = $discValue;
-        }
-        
-        return $pricing;
+            return $pricing;
     }
-
+    
     protected function clearCache()
     {
         Cache::forget('products');
         Cache::forget('initial_products');
+        Cache::forget('product_promo');
     }
 
 }

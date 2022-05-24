@@ -19,11 +19,18 @@ export function SET_PAGINATE (state, payload)
   state.products.meta = payload.meta
 
 }
+
+export function SET_PRODUCT_PROMO (state, payload) 
+{
+  state.product_promo = payload
+
+}
 export function SET_ADMIN_PRODUCTS (state, payload) 
 {
-  state.admin_products.data = payload
+  state.admin_products.item = payload
   state.admin_products.ready = true
-  state.admin_products.available = payload.length > 0 ? true : false
+
+  state.admin_products.available = payload.data.length > 0 ? true : false
 }
 export function SET_INITIAL_PRODUCTS (state, payload) 
 {
@@ -37,7 +44,6 @@ export function SET_PRODUCT_SEARCH (state, payload)
   state.productSearch.ready = true
   state.productSearch.available = payload.length > 0 ? true : false
 }
-
 export function CLEAR_PRODUCT_SEARCH (state) 
 {
   state.productSearch.data = []
@@ -51,6 +57,7 @@ export function SET_SEARCH_KEY(state, payload)
 export function ADD_REMOVE_TO_FAVORITE (state, fid) 
 {
   state.productFavorites.data = state.productFavorites.data.filter(el => el.id != fid)
+
   if(state.productFavorites.data.length == 0) {
     state.productFavorites.available = false
     state.productFavorites.ready = true
@@ -66,6 +73,7 @@ export function ADD_REMOVE_TO_FAVORITE (state, fid)
   } else {
     state.favorites.push(fid)
   }
+  // localStorage.setItem('wacommerce-favorites', JSON.stringify(state.favorites))
 }
 export function SET_FRONT_RODUCT_READY (state, status) 
 {
@@ -75,16 +83,18 @@ export function SET_FRONT_RODUCT_READY (state, status)
 export function SET_PRODUCT_CATEGORY (state, payload) 
 {
   state.productByCategory.data = payload.data
-  state.productByCategory.ready = true
-  state.productByCategory.available = payload.data.length > 0 ? true : false
   state.productByCategory.links = payload.links
   state.productByCategory.meta = payload.meta
+  state.productByCategory.ready = true
+  state.productByCategory.available = payload.data.length > 0 ? true : false
 }
-export function SET_PRODUCT_CATEGORY_PAGINATE (state, payload) 
+
+export function PAGINATE_PRODUCT_CATEGORY (state, payload) 
 {
   state.productByCategory.data = [...state.productByCategory.data, ...payload.data]
   state.productByCategory.links = payload.links
   state.productByCategory.meta = payload.meta
+
 }
 export function CLEAR_PRODUCT_CATEGORY (state) 
 {
@@ -98,14 +108,11 @@ export function SET_PRODUCT_FAVORITE (state, payload)
   state.productFavorites.ready = true
   state.productFavorites.available = payload.data.length > 0 ? true : false
 }
-
 export function CLEAR_PRODUCT_FAVORITE (state) 
 {
   state.productFavorites.data = []
   state.productFavorites.ready = false
   state.productFavorites.available = true
-  state.productFavorites.links = null
-  state.productFavorites.meta = null
 }
 export function SET_PRODUCT_FAVORITE_STATUS (state, payload) 
 {

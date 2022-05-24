@@ -7,21 +7,22 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\FrontApiController;
-use App\Http\Controllers\NotifyController;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
 
@@ -71,6 +72,15 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('toggleProductPromo', [ProductController::class, 'toggleProductPromo']);
     Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
     Route::get('findNotDiscountProduct', [ProductController::class, 'findNotDiscountProduct']);
+    Route::get('searchAdminProducts/{key}', [ProductController::class, 'searchAdminProducts']);
+    // new
+    Route::apiResource('promo', PromoController::class);
+    Route::get('getPromoDetail/{id}', [PromoController::class, 'getPromoDetail']);
+    Route::post('removeProductPromo', [PromoController::class, 'removeProductPromo']);
+
+    Route::post('submitProductPromo', [ProductController::class, 'submitProductPromo']);
+    Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
+    Route::get('findProductWithoutPromo', [ProductController::class, 'findProductWithoutPromo']);
     
 });
 

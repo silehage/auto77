@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
+use App\Models\ProductVarian;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -108,7 +109,7 @@ class OrderController extends Controller
                 
             foreach($request->items as $item) {
 
-                $order->items()->create([
+                $item = $order->items()->create([
                     'sku' => $item['sku'],
                     'name' => $item['name'],
                     'product_id' => $item['product_id'],
@@ -117,8 +118,7 @@ class OrderController extends Controller
                     'note' => $item['note']
                 ]);
 
-                DB::table('products')->where('sku', $item['sku'])->decrement('stock', intval($item['quantity']));
-                DB::table('product_variant_values')->where('product_id', $item['product_id'])->decrement('item_stock', intval($item['quantity']));
+                $this->setStock($item->sku, $item->quantity, true);
 
             }
 
@@ -255,8 +255,7 @@ class OrderController extends Controller
         $transaction->save();
 
         foreach($order->items as $item) {
-           DB::table('products')->where('sku', $item->sku)->decrement('stock', $item->quantity);
-           DB::table('product_variant_values')->where('item_sku', $item->sku)->decrement('item_stock', $item->quantity);
+           $this->setStock($item->sku, $item->quantity, true);
         }
 
         return response([ 'success' => true ], 200);
@@ -410,14 +409,38 @@ class OrderController extends Controller
 
             foreach($order->items as $item) {
 
-                DB::table('products')->where('sku', $item->sku)->increment('stock', intval($item->quantity));
-                DB::table('product_variant_values')->where('item_sku', $item->sku)->increment('item_stock', intval($item->quantity));
+                $this->setStock($item->sku, $item->quantity);
 
             }
 
         $order->update(['order_status' => 'CANCELED']);
 
         return response()->json(['success' => true]);
+    }
+    protected function setStock($sku, $qty, $decrement = false)
+    {
+        $productData = Product::where('sku', $sku)->first();
+        if($productData) {
+
+            if($decrement) {
+                $productData->stock -= $qty;
+            } else {
+                $productData->stock += $qty;
+            }
+            $productData->save();
+
+        } else {
+
+            $variantData = ProductVarian::where('sku', $sku)->first();
+            if($variantData) {
+                if($decrement) {
+                    $variantData->stock -= $qty;
+                }else {
+                    $variantData->stock += $qty;
+                }
+                $variantData->save();
+            }
+        }
     }
     
 }

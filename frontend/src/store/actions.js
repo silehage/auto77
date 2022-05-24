@@ -43,6 +43,7 @@ export default {
         commit('SET_CONFIG', response.data.results.config)
         commit('block/SET_BLOCKS', response.data.results.blocks, { root: true }),
         commit('product/SET_INITIAL_PRODUCTS', response.data.results.products, { root: true })
+        commit('product/SET_PRODUCT_PROMO', response.data.results.product_promo, { root: true })
         commit('category/SET_CATEGORIES', response.data.results.categories, { root: true })
         commit('slider/SET_SLIDERS', response.data.results.sliders, { root: true })
         commit('post/SET_INITIAL_POST', response.data.results.posts, { root: true })

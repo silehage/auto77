@@ -167,6 +167,7 @@ return [
         */
         Silehage\Rajaongkir\RajaongkirServiceProvider::class,
         Silehage\Tripay\TripayServiceProvider::class,
+        Silehage\Starsender\StarsenderServiceProvider::class,
         
         /*
         * Application Service Providers...
@@ -232,8 +233,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Tripay' => Silehage\Tripay\TripayFacade::class,
-        'Rajaongkir' => Silehage\Rajaongkir\RajaongkirFacade::class,
+        'Tripay' => Silehage\Tripay\Facades\Tripay::class,
+        'Rajaongkir' => Silehage\Rajaongkir\Facades\Rajaongkir::class,
+        'Starsender' => \Silehage\Starsender\Facades\Starsender::class,
 
     ],
 

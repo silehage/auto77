@@ -23,6 +23,11 @@
           <category-carousel :datas="categories.data" />
         </div>
       </div>
+
+      <div id="product-promo" v-if="productPromo.length" >
+        <product-promo :product_promo="productPromo" />
+      </div>
+      
       <div v-if="banner1" class="banner auto-padding-side block-container">
         <img :src="banner1.image_url" @click="goToPost(banner1)">
       </div>
@@ -71,6 +76,8 @@ export default {
     Slider, 
     ProductBlock, 
     'category-carousel': () => import('./block/CategoryCarousel.vue'),
+    'product-promo': () => import('./../shared-components/ProductPromo.vue'),
+    'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'featured-carousel': () => import('./../shared-components/FeaturedCarousel.vue'),
     'partner-carousel': () => import('components/PartnerCarousel.vue'),
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
@@ -93,7 +100,8 @@ export default {
       shop: state => state.shop,
       loading: state => state.loading,
       posts: state => state.post.initialPost,
-      config: state => state.config
+      config: state => state.config,
+      productPromo: state => state.product.product_promo,
     }),
     cheight: function() {
       let n =(this.$q.screen.width /1.7)

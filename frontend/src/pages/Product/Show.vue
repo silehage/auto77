@@ -7,7 +7,7 @@
         @click="backButton"
         flat dense icon="keyboard_backspace" icon-size="27px" style="cursor:pointer;opacity:.9;">
         </q-btn>
-        <shopping-cart  />
+        <shopping-cart />
       </div>
     </div>
     <div class="col relative overflow-x-hidden">
@@ -39,139 +39,167 @@
           </q-carousel-control>
         </template>
       </q-carousel>
-      <q-card flat class="product-detail relative">
-        <q-card-section class="q-py-xs">
+      <q-card class="product-detail relative box-shadow">
+        <q-card-section class="q-pt-xs">
           
           <h1 class="text-h6 text-weight-semibold q-mb-md" v-if="product">{{ product.title }}</h1>
           <div class="row items-center justify-between">
-            <div class="row items-center">
-              <div class="text-h6 text-weight-medium">{{ moneyIDR(parseInt(totalPrice)) }}</div>
-              <div v-if="product.pricing.is_discount" class="row items-start">
-                <div class="text-md text-weight-bsemibold text-red text-strike q-ml-xs">{{ moneyIDR(parseInt(product.pricing.default_price)) }}</div>
+            <div class="flex items-center">
+              <div class="flex items-center text-secondary">
+                  <span class="text-md">Rp</span>
+                  <span class="text-lg text-weight-medium">
+                  {{ $money(parseInt(totalPrice)) }} 
+                  </span>
+                </div>
+                <div class="flex items-center text-strike text-xs q-ml-xs" v-if="product.pricing.is_discount">
+                  <span class="text-sm">Rp</span>
+                  <span class="text-md">{{ $money(product.pricing.default_price * quantity) }} </span>
+                </div>
+              <div>
               </div>
             </div>
-            <!-- <div class="row q-gutter-md text-h6 items-center">
+            <div class="row q-gutter-md text-h6 items-center">
               <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
               <div>{{ quantity }}</div>
               <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
-            </div> -->
-            <div class="flex items-center" v-if="product.rating > 0">
-              <q-icon name="star" color="amber" size="25px"></q-icon>
-              <div class="text-md text-weight-bold">{{ product.rating }}</div>
             </div>
           </div>
-      
-           <div id="variations" v-if="product.variants.length" class="q-mt-md">
-            <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
-              <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
-              <div class="q-gutter-sm">
-                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
-              </div>
-              <div v-if="variantItemSelected" class="q-pt-sm q-gutter-sm">
-                <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
-                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey-8' : 'green'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
-              </div>
-            </div>
-            </div>
-            <div v-if="isHasVariant">
-             <div v-if="varianValueSelected" class="text-subtitle1 text-weight-medium q-mt-sm" :class="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
-              </div>
-            </div>
-            <div v-if="!isHasVariant">
-              <div class="text-subtitle1 text-weight-medium q-mt-sm" :class="stockStyle()">Stok: {{ currentStock == 0 ? 'Habis' : currentStock }}
-              </div>
-            </div>
+
+          <div class="row items-center q-gutter-x-sm">
+            <q-rating 
+              v-model="productRating"
+              readonly
+              color="accent"
+              icon="star_border"
+              icon-selected="star"
+              icon-half="star_half"
+              size="1.3rem" 
+            />
+            <div class="text-weight-medium text-sm"> {{ product.reviews_count > 0 ? product.reviews_count +' ulasan' : ''}}</div>
+          </div>
         </q-card-section>
       </q-card>
-      
-    </div>
-     <div class="q-py-sm">
-      <q-tabs 
-      v-model="tab" 
-      align="left"
-      active-color="primary"
-      >
-        <q-tab name="description" label="Deskripsi Produk"></q-tab>
-        <q-tab name="review" label="Ulasan Produk"></q-tab>
-      </q-tabs>
-        <q-separator />
-      <q-tab-panels v-model="tab">
-        <q-tab-panel name="description">
-          <h3 class="text-md q-my-sm">Deskripsi Produk</h3>
-          <div class="" v-html="product.description"></div>
-        </q-tab-panel>
-        <q-tab-panel name="review">
-          <div id="ulasan" v-if="product.reviews_count > 0">
-            <div class="column items-center q-py-lg product-rating">
-               <div v-if="productRating > 0" class="rating-total"> {{ product.rating }}</div>
-               <q-rating 
-                v-model="productRating"
-                readonly
-                color="amber"
-                icon="star_border"
-                icon-selected="star"
-                icon-half="star_half"
-                size="1.8rem" 
-              />
-              <div class="text-weight-medium text-md q-mt-xs">
-              {{ 'Total ' + product.reviews_count +' ulasan' }}
+
+     <div class="box-shadow bg-white q-pa-md q-mt-md" v-if="product.varians.length">
+        <div>
+          <div class="text-md">Pilih Varian <span class="text-sm text-weight-normal text-grey-7"></span></div>
+          <div class="q-mt-sm">
+          <div class="q-mb-xs">{{ product.varians[0].label}}</div>
+          <div class="q-gutter-sm">
+            <q-btn class="product-varian--btn" outline v-for="item in product.varians" :key="item.id" :label="item.value" :color="varianSelected && varianSelected.id == item.id? 'accent' : 'grey-9'" @click="selectProductVarian(item)">
+            <badge-tick v-if="varianSelected && varianSelected.id == item.id " />
+            </q-btn>
+          </div>
+          </div>
+            <div class="q-mt-md" v-if="varianSelected && varianSelected.has_subvarian">
+              <div class="q-mb-xs">{{ varianSelected.subvarian[0].label }}</div>
+              <div class="q-gutter-sm">
+                <q-btn outline v-for="item in varianSelected.subvarian" 
+                :key="item.id" 
+                :label="item.value" 
+                :disable="item.stock < 1 && !item.is_preorder"
+                @click="selectProductSubvarian(item)" 
+                :color="subvarianSelected && subvarianSelected.id == item.id ? 'accent' : 'grey-9'" 
+                class="relative product-variation product-varian--btn"
+                >
+                  <badge-tick v-if="subvarianSelected && subvarianSelected.id == item.id " />
+                </q-btn>
               </div>
-              <q-btn outline color="primary" no-caps @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
-            </div>
+          </div>
+        </div>
+      </div>
+     
+      <q-card class="box-shadow q-mt-md">
+        <q-tabs 
+        v-model="tab"
+        active-color="accent"
+        align="left"
+        >
+          <q-tab name="Description" label="Deskripsi Produk"></q-tab>
+          <q-tab name="Review" label="Ulasan Produk"></q-tab>
+        </q-tabs>
+         <q-separator />
+        <q-tab-panels v-model="tab">
+          <q-tab-panel name="Description">
+            <div id="description" class="q-mt-md" style="min-height:150px;">
               <div>
-                <div class="q-gutter-y-md">
-                  <div v-for="(review, index) in product.reviews" :key="index">
-                    <q-item class="q-px-none">
-                      <q-item-section avatar>
-                        <q-avatar>
-                          <q-icon :name="getIcon(review.rating)" size="29px" color="grey-7"></q-icon>
-                        </q-avatar>
-                      </q-item-section>
-
-
-                      <q-item-section>
-                        <q-item-label class="text-weight-medium">{{ review.name }}</q-item-label>
-                        <q-item-label >
-                            <q-rating 
-                            readonly
-                            v-model="review.rating"
-                            color="amber"
-                            icon="star_border"
-                            icon-selected="star"
-                            icon-half="star_half"
-                            size="1.2rem"
-                          />
-                        </q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-item-label caption>{{ review.created }}</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <div class="q-pa-sm text-grey-8">{{ review.comment }} </div>
+                  <h3 class="text-md q-mb-sm">Deskripsi Produk</h3>
+                <div class="" v-html="product.description"></div>
+              </div>
+              <div id="product-images" class="q-mt-lg">
+                <div class="product-image--container">
+                  <div v-for="img in product.images" :key="img.id" class="product-image">
+                    <div class="product-image--content">
+                      <img class="product-image--img" :src="img.src" :alt="img.caption" />
+                      <div class="product-image--caption">{{ img.caption }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="q-my-md row justify-center">
-                <q-btn flat color="primary" :loading="loadMoreLoading" v-if="product.reviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
-                  <template v-slot:loading>
-                    <q-spinner-facebook />
-                  </template>
-                </q-btn>
-              </div>
             </div>
-            <div v-else>
-              <div class="text-center flex column items-center justify-center" style="min-height:200px">
-                <div>Belum ada ulasan</div>
-                <q-btn outline color="primary" @click="handleReviewModal" label="Berikan ulasan" class="q-my-sm"></q-btn>
+          </q-tab-panel>
+          <q-tab-panel name="Review">
+            <div id="ulasan" class="q-mt-lg">
+              <div class="flex column justify-center items-center">
+                <div class="text-center" v-if="productRating > 0">
+                  <div class="text-3xl text-weight-bold">{{ product.rating }}</div>
+                  <q-rating 
+                    readonly
+                    v-model="productRating"
+                    color="accent"
+                    icon="star_border"
+                    icon-selected="star"
+                    icon-half="star_half"
+                    size="30px"
+                  />
+                </div>
+                <div class="text-weight-medium text-md q-my-sm">
+                {{ product.reviews_count > 0 ? 'Total ' + product.reviews_count +' ulasan' : 'Belum ada ulasan'}}
+                </div>
+                <q-btn outline color="accent" @click="handleReviewModal" label="Berikan ulasan" class="q-my-xs"></q-btn>
               </div>
+              <div class="q-pt-md">
+                <div class="q-gutter-y-md">
+                  <div v-for="(review, index) in product.reviews" :key="index">
+                    <q-list>
+                      <q-item class="q-px-xs">
+                        <q-item-section>
+                          <q-item-label class="text-md">{{ review.name }}</q-item-label>
+                           <q-rating 
+                            readonly
+                            v-model="review.rating"
+                            color="accent"
+                            icon="star_border"
+                            icon-selected="star"
+                            icon-half="star_half"
+                            size="1.1rem"
+                          />
+                        </q-item-section>
+                        <q-item-section side>
+                          <div class="text-xs">{{ review.created_format }}</div>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                    <div class="q-pa-sm bg-grey-1 text-grey-7 text-sm"> {{ review.comment }} </div>
+                  </div>
+                </div>
+              </div>
+            <div class="q-my-md row justify-center">
+              <q-btn flat color="primary" :loading="loadMoreLoading" v-if="product.reviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
+                <template v-slot:loading>
+                  <q-spinner-facebook />
+                </template>
+              </q-btn>
+            </div>
             </div>
           </q-tab-panel>
         </q-tab-panels>
-      </div>
+      </q-card>
+    </div>
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
         <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
-        <q-btn unelevated rounded :disabled="outOfStock" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="col"></q-btn>
+        <q-btn unelevated rounded @click="addNewItem" icon="shopping_basket" label="Beli" color="primary" class="col"></q-btn>
     </q-footer>
     </template>
       <q-inner-loading :showing="!ready">
@@ -288,24 +316,38 @@
       transition-show="slide-up"
       transition-hide="slide-down"
       >
-      <q-card class="max-width" flat v-if="product">
+      <q-card class="max-width" flat v-if="product && product.varians.length">
         <q-card-section>
-          <div class="text-weight-medium text-md2 q-mb-sm text-green">{{ moneyIDR(parseInt(totalPrice)) }}</div>
-          <div id="variations" v-if="product.variants.length" class="">
-            <div v-for="(variant, varIndex) in product.variants" :key="varIndex">
-              <div class="q-py-sm text-weight-medium">Pilih {{ variant.variant_name }}</div>
+          <div class="text-weight-medium text-lg q-mb-sm text-secondary">{{ moneyIDR(parseInt(totalPrice)) }}</div>
+            <div>
+              <div class="text-md">Pilih Varian <span class="text-sm text-weight-normal text-grey-7"></span></div>
+              <div class="q-mt-sm">
+              <div class="q-mb-xs">{{ product.varians[0].label}}</div>
               <div class="q-gutter-sm">
-                <q-btn unelevated :outline="varItemGetColor(varItem.id)" color="green" v-for="(varItem, varItemIndex) in variant.variant_items" :key="varItemIndex" :label="varItem.variant_item_label" @click="handleVariantItemSelectted(varItem)"></q-btn>
+                <q-btn class="product-varian--btn" outline v-for="item in product.varians" :key="item.id" :label="item.value" :color="varianSelected && varianSelected.id == item.id? 'accent' : 'grey-9'" @click="selectProductVarian(item)">
+                <badge-tick v-if="varianSelected && varianSelected.id == item.id " />
+                </q-btn>
               </div>
-              <div v-if="variantItemSelected" class="q-pt-md q-gutter-sm">
-                <div class="q-pt-sm text-weight-medium">Pilih {{ variant.variant_item_name }}</div>
-                <q-btn unelevated :disabled="itemVal.item_stock < 1" :color="itemVal.item_stock < 1? 'grey' : 'green'" :outline="varValueGetColor(itemVal.id)" v-for="(itemVal, itemValIndex) in variantItemSelected.variant_item_values" :key="itemValIndex" :label="itemVal.item_label" @click="handleSelectedItemValue(itemVal)"></q-btn>
               </div>
-            </div>
+                <div class="q-mt-md" v-if="varianSelected && varianSelected.has_subvarian">
+                  <div class="q-mb-xs">{{ varianSelected.subvarian[0].label }}</div>
+                  <div class="q-gutter-sm">
+                    <q-btn outline v-for="item in varianSelected.subvarian" 
+                    :key="item.id" 
+                    :label="item.value" 
+                    :disable="item.stock < 1 && !item.is_preorder"
+                    @click="subvarianSelected = item" 
+                    :color="subvarianSelected && subvarianSelected.id == item.id ? 'accent' : 'grey-9'" 
+                    class="relative product-variation product-varian--btn"
+                    >
+                      <badge-tick v-if="subvarianSelected && subvarianSelected.id == item.id " />
+                    </q-btn>
+                  </div>
+              </div>
             </div>
         </q-card-section>
         <q-card-section>
-        <q-btn unelevated :disabled="outOfStock" @click="addNewItem" icon="shopping_basket" :label="cartTextButton" :color="cartTextColor" class="full-width"></q-btn>
+        <q-btn unelevated rounded @click="addNewItem" icon="shopping_basket" label="Beli Sekarang" color="green" class="full-width"></q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -315,12 +357,13 @@
 <script>
 import { mapMutations, mapActions } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
+import BadgeTick from 'components/BadgeTick.vue'
 export default {
   name: 'ProductShow',
-  components: { ShoppingCart },
+  components: { ShoppingCart, BadgeTick },
   data () {
     return {
-      tab: 'description',
+      tab: 'Description',
       defaultChat: ['Apakah ini masih ada?', 'Apakah bisa grosir?'],
       chatText: '',
       chatModal: false,
@@ -344,8 +387,8 @@ export default {
       },
       cartModal: false,
       alreadyItemModal: false,
-      variantItemSelected: null,
-      varianValueSelected: null,
+      varianSelected: null,
+      subvarianSelected: null,
       formVariantModal: false,
       product: window.datapage,
     }
@@ -361,7 +404,8 @@ export default {
       return parseFloat(this.product.rating)
     },
     carts() {
-      return this.$store.getters['cart/getCarts']
+      // return this.$store.getters['cart/getCarts']
+      return this.$store.state.cart.carts
     },
     favorites: function() {
       return this.$store.state.product.favorites
@@ -382,53 +426,97 @@ export default {
       return this.$q.screen.width+'px'
     },
     productStock() {
-      return this.product.variant_items_sum_item_stock? parseInt(this.product.variant_items_sum_item_stock) : this.product.stock
-    },
-    outOfStock() {
-      return (this.currentStock-this.quantity) < 0
+      if(this.product.varians.length) {
+        if(this.subvarianSelected) {
+          return this.subvarianSelected.stock
+        }
+        return 0
+      } 
+      return this.product.stock
     },
     currentStock() {
+      let hasCart = this.carts.find(el => el.sku == this.currentProductSku)
 
-      let hasCart = this.carts.items.find(el => el.sku == this.currentProductSku)
+      if(this.isHasVarian) {
 
-      if(hasCart != undefined) {
+        if(this.varianSelected) {  
+        
+          if(!this.varianSelected.has_subvarian) {
+            return hasCart != undefined ? this.varianSelected.stock-hasCart.quantity : this.varianSelected.stock
+          }
 
-        if(this.varianValueSelected) {
+          if(this.subvarianSelected) {
+  
+            return hasCart != undefined ? this.subvarianSelected.stock-hasCart.quantity : this.subvarianSelected.stock
+          }
 
-          return parseInt(this.varianValueSelected.item_stock)-hasCart.quantity
+          return hasCart != undefined ? this.productStock-hasCart.quantity : this.productStock
+
+        } else {
+
+           if(this.subvarianSelected) {
+
+            return hasCart != undefined ? this.subvarianSelected.stock-hasCart.quantity :  this.productStock
+          }
+
+          return hasCart != undefined ?  this.productStock-hasCart.quantity :  this.productStock
         }
-       return this.productStock-hasCart.quantity
 
-      } else {
-        if(this.varianValueSelected) {
+      }else {
 
-          return parseInt(this.varianValueSelected.item_stock)
-        }
-        return this.productStock
+        return hasCart != undefined ?  this.productStock-hasCart.quantity :  this.productStock
+
       }
+
     },
-    isHasVariant() {
-      return this.product.variants.length > 0
+    isHasVarian() {
+      return this.product.varians.length > 0
     },
     currentProductSku() {
-      if(this.varianValueSelected) {
-        return this.varianValueSelected.item_sku
+      if(this.varianSelected) {
+        if(!this.varianSelected.has_subvarian) {
+          return this.varianSelected.sku
+        }
+        if(this.subvarianSelected) {
+          return this.subvarianSelected.sku
+        }
       }
       return this.product.sku ? this.product.sku : this.product.id
     },
     realPrice() {
-      if(this.varianValueSelected) {
+      if(this.varianSelected) {
 
-        return (parseInt(this.product.pricing.current_price)+parseInt(this.varianValueSelected.additional_price))
+        if(!this.varianSelected.has_subvarian) {
+          return this.product.pricing.current_price + this.varianSelected.price
+        }
+
+        if(this.subvarianSelected) {
+  
+          return  this.product.pricing.current_price + this.subvarianSelected.price
+        }
       }
-      return parseInt(this.product.pricing.current_price)
+      return this.product.pricing.current_price
     },
     totalPrice() {
-      if(this.varianValueSelected) {
+      if(this.varianSelected) {
 
-        return (parseInt(this.product.pricing.current_price)+parseInt(this.varianValueSelected.additional_price)) * this.quantity
+        if(!this.varianSelected.has_subvarian) {
+
+          return (this.product.pricing.current_price + this.varianSelected.price) * this.quantity
+
+        } else {
+
+          if(this.subvarianSelected) {
+    
+            return (this.product.pricing.current_price + this.subvarianSelected.price) * this.quantity
+          } 
+  
+            return (this.product.pricing.current_price + this.varianSelected.subvarian[0].price) * this.quantity
+        }
+
       }
-      return parseInt(this.product.pricing.current_price) * this.quantity
+
+      return this.product.pricing.current_price * this.quantity
     },
     cartTextButton() {
        if(this.currentStock >= 1) {
@@ -447,6 +535,15 @@ export default {
   methods: {
     ...mapMutations('product',['ADD_REMOVE_TO_FAVORITE']),
     ...mapActions('product', ['getProductBySlug', 'loadProductReview', 'addProductReview']),
+    selectProductVarian(item) {
+      this.varianSelected = item
+      this.subvarianSelected = null
+      this.quantity = 1
+    },
+    selectProductSubvarian(item) {
+      this.subvarianSelected = item
+      this.quantity = 1
+    },
     backButton() {
       if(window.history.length > 2) {
         window.history.back()
@@ -468,44 +565,46 @@ export default {
       }
     },
     varItemGetColor(id) {
-      if(this.variantItemSelected) {
-        return this.variantItemSelected.id == id ?  false : true
+      if(this.varianSelected) {
+        return this.varianSelected.id == id ?  false : true
       }
       return true
     },
     varValueGetColor(id) {
-      if(this.varianValueSelected) {
-        return this.varianValueSelected.id == id ? false : true
+      if(this.subvarianSelected) {
+        return this.subvarianSelected.id == id ? false : true
       }
       return true
     },
     handleVariantItemSelectted(item) {
-      this.variantItemSelected = item
-      this.varianValueSelected = null
+      this.varianSelected = item
+      this.subvarianSelected = null
       this.quantity = 1
+      this.setViewProductPattern()
     },
     handleSelectedItemValue(value) {
-      this.varianValueSelected = value
+      this.subvarianSelected = value
       this.quantity = 1
+      this.setViewProductPattern()
     },
     discountPriceFormat() {
       return (this.subtotal()*this.discount)/100
     },
     subQty() {
-      if(this.carts.items.length > 1) {
-        return this.carts.items.reduce((a,b) => a.quantity + b.quantity) 
+      if(this.carts.length > 1) {
+        return this.carts.reduce((a,b) => a.quantity + b.quantity) 
       }
-      return this.carts.items[0].quantity
+      return this.carts[0].quantity
     },
     subtotal() {
-      if(this.carts.items.length > 1) {
+      if(this.carts.length > 1) {
         let j = [];
-        this.carts.items.forEach(element => {
+        this.carts.forEach(element => {
           j.push(element.quantity*element.price)
         });
         return j.reduce((a,b) => a + b)
       }
-      return this.carts.items[0].quantity * this.carts.items[0].price
+      return this.carts[0].quantity * this.carts[0].price
     },
     total () {
       if(this.discount || this.discount !== 0) {
@@ -520,8 +619,8 @@ export default {
     },
     addToCart() {
       this.formVariantModal = false
-     if(! this.session_id) this.makeSessionId()
-      this.$store.dispatch('cart/addToCart' , {
+
+      let cartItem = {
         session_id: this.session_id, 
         product_id: this.product.id, 
         product_stock: this.currentStock, 
@@ -529,25 +628,46 @@ export default {
         name: this.product.title, 
         price: this.realPrice, 
         quantity: this.quantity, 
-        note: this.getCartNote(),
+        note: this.getVarianTextNote(),
         product_url: this.getRoutePath(), 
         image_url: this.product.assets[0].src, 
-        weight: this.product.weight})
+        weight: this.product.weight
+      }
+
+     if(! this.session_id) this.makeSessionId()
+
+      this.$store.dispatch('cart/addToCart' , cartItem)
 
         this.quantity = 1
     },
+    showNotifyHasSelectVarian() {
+      if(this.formVariantModal) {
+        this.$q.notify({
+          type: 'info',
+          message: 'Silahkan pilih produk varian terlebih dahulu',
+        })
+      } else {
+        this.formVariantModal = true
+      }
+    },
     addNewItem() {
-      if(this.isHasVariant) {
-        if(!this.varianValueSelected || !this.variantItemSelected) {
-          if(this.formVariantModal) {
-            this.$q.notify({
-              type: 'info',
-              message: 'Silahkan pilih produk varian terlebih dahulu',
-            })
-          } else {
-            this.formVariantModal = true
+      if(this.isHasVarian) {
+        if(this.varianSelected) {
+
+          if(this.varianSelected.has_subvarian) {
+
+            if(!this.subvarianSelected) {
+
+              this.showNotifyHasSelectVarian()
+
+              return 
+            }
           }
+
+        } else {
+          this.showNotifyHasSelectVarian()
           return
+
         }
       }
       this.checkCart().then(res => {
@@ -566,7 +686,7 @@ export default {
       return new Promise((resolve, reject) => {
         let cartAlready;
 
-          cartAlready = this.carts.items.find(el => el.sku == this.currentProductSku)
+          cartAlready = this.carts.find(el => el.sku == this.currentProductSku)
 
           if(cartAlready != undefined) {
 
@@ -579,10 +699,14 @@ export default {
 
       })
     },
-    getCartNote() {
-      let str = ''
-      if(this.isHasVariant) {
-        str += 'Varian: ' +this.product.variants[0].variant_name + ' ' + this.variantItemSelected.variant_item_label + ', ' + this.product.variants[0].variant_item_name + ' ' + this.varianValueSelected.item_label
+    getVarianTextNote() {
+       let str = ''
+      if(this.varianSelected) {
+        if(this.varianSelected.has_subvarian && this.subvarianSelected) {
+          str += `${this.varianSelected.label} ${this.varianSelected.value}, ${this.subvarianSelected.label} ${this.subvarianSelected.value}`
+        } else {
+          str += `${this.varianSelected.label} ${this.varianSelected.value}`
+        }
       }
       return str
     },
@@ -600,7 +724,26 @@ export default {
     setPrice() {
       this.priceTotal = this.price*this.quantity
     },
+    checkVarianIsReady() {
+      if(this.isHasVarian) {
+        if(!this.varianSelected) return false
+
+        if(this.varianSelected.has_subvarian) {
+          if(!this.subvarianSelected) return false
+        }
+      }
+      return true
+    },
     incrementQty() {
+      console.log(this.checkVarianIsReady());
+      if(!this.checkVarianIsReady()) {
+        this.$q.dialog({
+          title: 'Pilih Varian!',
+          message: 'Silahkan pilih varian untuk melanjutkan.'
+        })
+        return
+      } 
+
       if(this.quantity < this.currentStock) {
         this.quantity += 1
       } else {
@@ -609,8 +752,17 @@ export default {
           message: 'Stok tidak cukup, stok tersisa ' + this.currentStock + ' item.'
         })
       }
+
     },
     decrementQty() {
+       if(!this.checkVarianIsReady) {
+        this.$q.dialog({
+          title: 'Pilih Varian!',
+          message: 'Silahkan pilih varian untuk melanjutkan.'
+        })
+        return
+      } 
+
       if(this.quantity > 1) {
         this.quantity -= 1
       }
@@ -673,14 +825,16 @@ export default {
         if(response.status == 200) {
           this.product = response.data.data
           this.ready = true
-          if(this.isHasVariant) {
-            this.variantItemSelected = this.product.variants[0].variant_items[0];
+          if(this.isHasVarian) {
+            if(this.product.varians[0].has_subvarian) {
+              this.varianSelected = this.product.varians[0];
+            }
           }
         } else {
-          this.$router.push({name: 'ProductIndex'})
+          // this.$router.push({name: 'ProductIndex'})
         }
       }).catch(() => {
-        this.$router.push({name: 'ProductIndex'})
+        // this.$router.push({name: 'ProductIndex'})
       })
     },
     getRandomNumber() {
@@ -725,16 +879,6 @@ export default {
       }, 2000)
 
     },
-    makeSessionId() {
-      var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-      var result = '';
-        for ( var i = 0; i < 60; i++ ) {
-            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-        }
-
-       this.$store.commit('SET_SESSION_ID', result);
-    }
 
   },
   created() {

@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-pb-xl">
     <q-header>
       <q-toolbar>
         <q-btn v-go-back.single
@@ -8,7 +8,7 @@
         <q-toolbar-title>
          Tambah Produk
         </q-toolbar-title>
-        <q-btn flat icon="add" label="Produk Variasi" @click="handleAddVariant" v-if="!form.variants.length"></q-btn>
+       
       </q-toolbar>
       </q-header>
       <q-form @submit.prevent="submit"> 
@@ -84,11 +84,16 @@
                                   @change="updateImagePreview" multiple>
               <!-- <jet-input-error :message="form.errors.images" class="mt-2" /> -->
 
-                  <q-list separator>
+                  <q-list separator v-if="imagePreview.length" class="q-mt-md">
+                    <q-item dense>
+                      <q-item-section>
+                        Gambar Utama
+                      </q-item-section>
+                    </q-item>
                   <q-item  v-for="(image, index) in imagePreview" :key="index">
 
                     <q-item-section>
-                      <img :src="image" class="shadow-4 q-pa-xs bg-white" style="width:100px;height:70px;object-fit:cover;"/>
+                      <img :src="image" class="bg-white" style="width:100px;height:70px;object-fit:contain;"/>
                     </q-item-section>
 
                     <q-item-section side>
@@ -97,37 +102,77 @@
                   </q-item>
                 </q-list>
             </section>
-          </div>
-           <!-- Start Product Variants -->
-      <div id="variants" v-if="form.variants.length">
-        <div class="row items-center q-mt-xl q-pa-md q-gutter-x-md">
-          <div class="text-md2 text-weight-medium">Produk Variasi</div>
-          <q-btn padding="4px 8px" size="13px" unelevated @click="handleAddVariant" color="blue-6">
-            <q-icon name="edit"></q-icon>
-            <span>Edit</span>
-          </q-btn>
         </div>
-          <div v-for="(variant, varIndex) in form.variants" :key="varIndex" class="q-pa-md bg-grey-2" style="min-height:100px;">
-            <div v-for="(item, itemIndex) in variant.variant_items" :key="itemIndex" class="q-mb-md">
-              <div class="text-md text-weight-medium q-pb-xs">{{ variant.variant_name }} {{ item.variant_item_label }}</div>
-              <q-list class="bg-grey-3 q-pa-sm">
-                <q-item  v-for="(subItem, subItemIndex) in item.variant_item_values" :key="subItemIndex" class="q-pa-md bg-white q-mb-sm">
-                  <q-item-section>
-                    <q-input stack-label filled square required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].item_label" dense :label="variant.variant_item_name"></q-input>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-input stack-label filled square required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].additional_price" dense label="Additional Price" type="number" min="0"></q-input>
+           <!-- Start Product Variants -->
+        <div id="variants">
+          <div class="row items-center justify-between q-mt-xl q-pa-md bg-green-1">
+            <div class="text-md2 text-weight-medium">Produk Variasi</div>
+            <q-btn v-if="canAddVarian" label="Tambah Variasi" @click="varianModal = true" color="accent" size="12px"></q-btn>
+          </div>
+          <div v-if="form.varians.length">
+            <div v-if="form.varians[0].has_subvarian">
 
-                  </q-item-section>
-                  <q-item-section>
-                    <q-input stack-label filled square required v-model="form.variants[varIndex].variant_items[itemIndex].variant_item_values[subItemIndex].item_stock" dense label="Stok" type="number" min="0"></q-input>
+              <div v-for="(varian, varIndex) in form.varians" :key="varIndex">
+                <div class="row items-start justify-between bg-grey-2 q-pa-md q-pt-lg">
+                    <div  class="text-weight-bold text-md">{{ form.varians[varIndex].label}} {{ form.varians[varIndex].value }}</div>
+                  <div class="q-gutter-x-sm">
+                    <q-btn unelevated size="10px" color="red" @click="deleteVarian(varIndex)">Hapus {{ form.varians[varIndex].value }}</q-btn>
+                    <q-btn unelevated size="10px" color="teal" @click="pushSubVarian(varIndex)">Tambah Item</q-btn>
+                  </div>
+                </div>
+              <div class="">
+                <q-list class="bg-white q-pa-sm q-mt-xs" v-if="form.varians[varIndex].subvarian.length">
+                  <q-item class="q-px-sm" v-for="(subvarian, subIndex) in form.varians[varIndex].subvarian" :key="subIndex">
+                    <q-item-section side>
+                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteSubvarian(varIndex, subIndex)"></q-btn>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].value" dense :label="form.varians[varIndex].subvarian[subIndex].label"></q-input>
+    
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].price" dense label="Tambahan Harga" mask="###########"></q-input>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].stock" dense label="Stok"  mask="#######"></q-input>
+                    </q-item-section>
 
-                  </q-item-section>
-                </q-item>
+                  </q-item>
+                </q-list>
+              </div>
+            </div>
+
+            </div>
+            <div v-else>
+              <div class="row items-start justify-between bg-grey-2 q-pa-md q-pt-lg">
+                    <div  class="text-weight-bold text-md">{{ form.varians[0].label}} </div>
+                  <div class="q-gutter-x-sm">
+                    <q-btn unelevated size="10px" color="teal" @click="pushVarian">Tambah Item</q-btn>
+                  </div>
+                </div>
+              <q-list>
+                <q-list class="bg-white q-pa-sm q-mt-xs">
+                  <q-item  v-for="(varian, vIndex) in form.varians" :key="vIndex">
+                    <q-item-section side>
+                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteVarian(vIndex)"></q-btn>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[vIndex].value" dense :label="form.varians[vIndex].label"></q-input>
+    
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[vIndex].price" dense label="Tambahan Harga"  mask="###########"></q-input>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-input stack-label filled square required v-model="form.varians[vIndex].stock" dense label="Stok"  mask="######"></q-input>
+                    </q-item-section>
+
+                  </q-item>
+                </q-list>
               </q-list>
             </div>
           </div>
-      </div>
+        </div>
       <!-- End Product Variants -->
         <!-- <textarea v-model="text" style="white-space:pre-wrap"/> -->
         <q-footer>
@@ -136,26 +181,32 @@
             </q-btn>
         </q-footer>
       </q-form>
-      <q-dialog v-model="variantModalForm">
+       <q-dialog v-model="varianModal">
         <q-card class="card-medium">
-          <q-form @submit.prevent="addVariant">
-            <div class="card-heading">Tambah Produk Varian</div>
+          <div class="card-heading">Tambah varian</div>
+          <q-form @submit.prevent="addVarianProduk">
             <q-card-section>
-              <q-input required stack-label label="Nama Varian" v-model="tempVarian"></q-input>
-              <div class="text-sm text-teal q-mt-xs q-mb-sm">
-                Nama Varian, Contoh: Warna
+              
+              <div>
+                <div class="text-md">Varian</div>
+                <q-input label="Label" v-model="tempVarian.label" placeholder="contoh: Ukuran"></q-input>
+                <q-input label="Item" v-model="tempVarian.value" placeholder="contoh: Small, Medium, Large"></q-input>
+                <div class="text-grey-7 text-xs q-py-xs">Untuk multiple item, gunakan sparator koma</div>
+                
               </div>
-              <q-input required stack-label label="Nama Subvarian" v-model="tempSubvarian"></q-input>
-              <div class="text-sm text-teal q-mt-xs q-mb-sm">
-                Contoh: Ukuran
+              <div v-if="canToggleSubvarian">
+                <q-checkbox v-model="form.has_subvarian" label="Subvarian?"></q-checkbox>
               </div>
-              <q-input required stack-label label="Varian Item" v-model="tempVarianItem"></q-input>
-              <div class="text-sm text-teal q-mt-xs q-mb-sm">
-                Gunakan tanda koma (,) jika ingin membuat banyak sekaligus contoh: S,M,L,XL
+              <div class="q-mt-md" v-if="mustHaveSubvarian"> 
+                <div class="text-md">Subvarian</div>
+                <q-input label="Label" v-model="tempSubvarian.label" placeholder="contoh: Warna"></q-input>
+                <q-input label="Item" v-model="tempSubvarian.value" placeholder="contoh: Merah, Biru, Ungu"> </q-input>
+                <div class="text-grey-7 text-xs q-py-xs">Untuk multiple item, gunakan sparator koma</div>
+                
               </div>
-              <div class="row justify-end q-mt-md q-gutter-x-sm">
-                <q-btn type="button" label="Batal" unelevated color="primary" outline v-close-popup></q-btn>
-                <q-btn type="submit" label="Tambah" unelevated color="primary"></q-btn>
+              <div class="flex justify-end q-mt-md q-gutter-sm">
+                <q-btn label="Tutup" v-close-popup flat color="primary"></q-btn>
+                <q-btn unelevated label="Tambah" type="submit" color="primary"></q-btn>
               </div>
             </q-card-section>
           </q-form>
@@ -170,9 +221,19 @@ export default {
   name: 'ProductFormCreate',
   data () {
     return {
-      tempVarian: '',
-      tempSubvarian:'',
-      tempVarianItem: '',
+      varianModal: false,
+      tempVarian: {
+        label: '',
+        value: '',
+      },
+      tempSubvarian: {
+        label: '',
+        value: '',
+        stock: '',
+        price: '',
+        items: '',
+        sku: ''
+      },
       requiredRules: [
         val => (val && val.length > 0) || 'Field harus diisi.'
       ],
@@ -183,12 +244,13 @@ export default {
         stock: '',
         description: '',
         category_id:'',
-        variants: [],
-        images: []
+        varians: [],
+        images: [],
+        sku: '',
+        has_subvarian: false
       },
       imagePreview: [],
-      variantModalForm: false
-
+      variantModalForm: false,
     }
   },
   computed: {
@@ -201,48 +263,113 @@ export default {
     categories() {
       return this.$store.getters['category/getValueOptions']
     },
+    canToggleSubvarian() {
+      if(this.form.varians.length) {
+        if(this.form.varians[0].has_subvarian) {
+          return false
+        }
+      }
+      return true
+    },
+    mustHaveSubvarian() {
+      if(this.form.varians.length) {
+        if(this.form.varians[0].has_varian) {
+          return true
+        }
+      }
+      if(this.form.has_subvarian) {
+        return true
+      }
+      return false
+    },
+    canAddVarian() {
+      if(this.form.varians.length) {
+        if(!this.form.varians[0].has_subvarian) {
+          return false
+        }
+      }
+      return true
+    }
   },
   methods: {
     ...mapActions('product', ['productStore']),
     ...mapActions('category', ['getCategories']),
-    addVariant() {
-      let tpl = { variant_name: this.tempVarian, variant_item_name: this.tempSubvarian, variant_items: [] }
-      // let arrItem = this.tempVarianItem.split(',');
-
-      // arrItem.forEach(el => {
-      //     tpl.variant_items.push(
-      //       {item_sku: this.getSku(), item_label: el.trim(), additional_price: 0, item_stock: 0 },
-      //     )
-      // });
-
-      this.form.variants.push(tpl)
-      this.tempVarian = ''
-      this.tempSubvarian = ''
-      this.tempVarianItem = ''
-      this.variantModal = false
+    ...mapActions('customerService', ['getCustomerServices']),
+    onUpdateImage(data) {
+      this.form.product_images.push(data)
     },
-    addVariantItem() {
-      let tpl = {
-            variant_item_label: this.tempVarianItem, 
-            variant_item_values: []
-          }
-      let arrItem = this.tempVarianValue.split(',');
-
-      arrItem.forEach(el => {
-          tpl.variant_item_values.push(
-            {item_sku: this.getSku(), item_label: el.trim(), additional_price: 0, item_stock: 0},
-          )
-      });
-
-      this.variants[this.variantSelectedIndex].variant_items.push(tpl)
-      this.variantSelectedIndex = null
-      this.tempVarianItem = ''
-      this.variantItemModal = false
+    onDeleteImage(idx) {
+      this.form.product_images.splice(idx, 1)
     },
-    handleAddVariant() {
-      this.variantModalForm = true
+    onSubmitForm(data) {
+      this.form.variants = data
+      this.variantModalForm = false
     },
+    deleteVarian(varIndex) {
+      this.$q.dialog({
+        title: 'Yakin akan menghapus data?',
+        cancel: true
+      }).onOk(() => {
+        this.form.varians.splice(varIndex,1)
+      })
+    },
+    deleteSubvarian(varIndex,subIndex) {
 
+      this.form.varians[varIndex].subvarian.splice(subIndex,1)
+
+      if(!this.form.varians[varIndex].subvarian.length) {
+        this.form.varians.splice(varIndex, 1)
+      }
+    },
+    pushSubVarian(varIndex) {
+      let varian = this.form.varians[varIndex]
+
+      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, sku: this.generateSku(8), price: 0 }
+
+      this.form.varians[varIndex].subvarian.push(tpl)
+    },
+    pushVarian() {
+      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, sku: this.generateSku(8), price: 0 })
+
+    },
+    handleAddVarian() {
+      this.varianModal = true
+    },
+    addVarianProduk() {
+
+      let varianArr = this.tempVarian.value.split(',')
+
+      if(this.form.has_subvarian) {
+        
+        varianArr.forEach(v => {
+          let varian = null
+           varian = { has_subvarian: true, label: this.tempVarian.label, value: v, subvarian: [] }
+  
+          let subArr = this.tempSubvarian.value.split(',')
+  
+            subArr.forEach(el => {
+              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, sku: this.generateSku(13), price: 0  }
+              varian.subvarian.push(sub)
+            })
+  
+          this.form.varians.push(varian)
+  
+        })
+      } else {
+
+         varianArr.forEach(v => {
+         
+         let varian = null
+           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, sku: this.generateSku(12), price: 0  }
+ 
+          this.form.varians.push(varian)
+  
+        })
+      }
+
+
+      this.varianModal = false
+    },
     // Submit Product
     submit() {
 
@@ -251,21 +378,23 @@ export default {
       formData.append('title', this.form.title)
       formData.append('price', this.form.price)
       formData.append('weight', this.form.weight)
+      formData.append('sku', this.generateSku())
+      formData.append('has_subvarian', this.form.has_subvarian)
       formData.append('stock', this.form.stock)
       formData.append('description', this.form.description)
-
+      
       if(this.form.category_id) {
         formData.append('category_id', this.form.category_id)
       }
-      if(this.form.variants.length) {
-        formData.append('variants', JSON.stringify(this.form.variants))
+
+      if(this.form.varians.length > 0) {
+        formData.append('varians', JSON.stringify(this.form.varians))
       }
 
+      for(var j = 0; j < this.form.images.length; j++ ){
+        let file = this.form.images[j];
 
-      for( var i = 0; i < this.form.images.length; i++ ){
-        let file = this.form.images[i];
-
-        formData.append('images[' + i + ']', file);
+        formData.append('images[' + j + ']', file);
       }
 
       this.productStore(formData)
@@ -300,21 +429,10 @@ export default {
         return i !== index;
       })
     },
-    getSku() {
-      var randomChars = 'ABCDEFGHIJKL9MNOPQRST8UVWXYZabcdeAfghijklmnopqZrstuvwxyz01T2343567hD89';
-
-      var result = 'VAR';
-        for ( var i = 0; i < 17; i++ ) {
-            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-        }
-      return result;
-    },
  
   },
   mounted() {
-    if(!this.categories.length) {
-      this.getCategories()
-    }
+    this.getCategories()
   }
 }
 </script>

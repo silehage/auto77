@@ -10,22 +10,23 @@
         </template>
         </q-img>
         <q-img v-else src="/static/no_image.png" ratio="1" class="image-list rounded-borders"/>
-        <q-rating 
-          readonly
-          v-model="rating"
-          color="primary"
-          icon="star_border"
-          icon-selected="star"
-          icon-half="star_half"
-        />
       </q-item-section>
       <q-item-section top>
         <div class="cursor-pointer" @click.prevent="$router.push({name: 'ProductShow', params:{slug: product.slug}})">
           <q-item-label class="ellipsis-2-lines text-subtitle2 text-weight-medium">{{ product.title }}</q-item-label>
+          <q-rating 
+            readonly
+            v-model="rating"
+            color="accent"
+            icon="star_border"
+            icon-selected="star"
+            icon-half="star_half"
+            size="1rem"
+          />
             <q-item-label caption class="ellipsis-2-lines q-mt-xs" v-html="getTeaser(product.description)"></q-item-label>
-            <div class="flex items-center q-gutter-x-md q-mt-md">
-            <div class="text-subtitle1 text-green-6 text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
-            <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-red-6">{{ moneyIDR(product.pricing.default_price) }}</div>
+            <div class="flex items-center q-gutter-x-md q-mt-sm">
+            <div class="text-subtitle1 text-secondary text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
+            <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-grey-8">{{ moneyIDR(product.pricing.default_price) }}</div>
             </div>
         </div>
         <div style="margin-top:auto;">
@@ -35,7 +36,7 @@
               {{ product.category.title }}
             </q-chip>
             <div>
-              <favorite-button outline :product="product" />
+              <favorite-button :product_id="product.id" />
             </div>
           </div>
         </div>

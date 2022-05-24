@@ -30,7 +30,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Silehage\\Rajaongkir\\": "packages/silehage/rajaongkir/src",
-            "Silehage\\Tripay\\": "packages/silehage/tripay/src"
+            "Silehage\\Tripay\\": "packages/silehage/tripay/src",
+            "Silehage\\Starsender\\": "packages/silehage/starsender/src"
         }
     },
     "autoload-dev": {

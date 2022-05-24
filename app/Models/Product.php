@@ -70,4 +70,16 @@ class Product extends Model
     {
         return $this->belongsTo(Promote::class, 'promote_id', 'id')->where('start_date', '<', now())->where('end_date', '>', now());
     }
+    public function promo()
+    {
+        return $this->belongsToMany(Promo::class, 'product_promos', 'product_id', 'promo_id')->withPivot('discount_type', 'discount_amount')->where('end_date', '>', now());
+    }
+    public function productPromo()
+    {
+        return $this->hasOne(ProductPromo::class, 'product_id', 'id');
+    }
+    public function varians()
+    {
+        return $this->hasMany(ProductVarian::class);
+    }
 }

@@ -103,7 +103,7 @@ div,
   border-radius: 8px;
   color: #101010c2;
 }
-.mbl{
+.mobile-view{
     max-width: var(--page-width);
     margin-left: auto;
     margin-right: auto;
@@ -358,15 +358,24 @@ h1,h2,h3,h4,h5,h6 {
   }
 
 }
+.q-rating__icon {
+  text-shadow: none;
+}
 .sticky-top {
   position: sticky;
   top:0;
   z-index: 100;
 }
-
+.bg-linear {
+  background: linear-gradient(180deg, #ffffff, transparent);
+}
+.box-shadow-top {
+  box-shadow: 0px -8px 19px rgb(0 0 0 / 5%);
+}
 .box-shadow,
 .q-card.shadow {
-  box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
+  // box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
+  box-shadow: 0px 14px 16px -10px rgba(48, 48, 48, 0.04);
 }
 #checkout {
   .q-stepper__tab {
@@ -394,6 +403,9 @@ h1,h2,h3,h4,h5,h6 {
     width:28px;
     height:28px;
   }
+}
+.bg-light {
+  background-color: #fbfbfb;
 }
 .romance {
   .logo {
@@ -615,8 +627,6 @@ table.table td, table.table td * {
 .card-price-container {
   margin-top: .3rem;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   @media (min-width: 360px) {
     flex-direction: row;
   }
@@ -676,4 +686,64 @@ table.table td, table.table td * {
 }
 .rounded15 {
   border-radius: 15px;
+}
+
+
+.card-price-container {
+  margin-top: .3rem;
+  display: flex;
+  overflow: hidden;
+  width:100%;
+  // flex-direction: column;
+  @media (min-width: 360px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.card-price {
+  // order: 2;
+  white-space: nowrap;
+  .prefix{
+    font-size: .8rem;
+    @media (max-width: 340px) {
+      // order: 1;
+      font-size: .7rem;
+    }
+  }
+  .amount {
+    font-size: .87rem;
+    font-weight: 500;
+    @media (min-width: 360px) {
+      // order: 1;
+      font-size: .9rem;
+    }
+    @media (min-width: 576px) {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.card-discount {
+  margin-left:2px;
+  display: inline;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  .amount {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .8rem;
+
+    @media (min-width: 360px) {
+      font-size: .84rem;
+    }
+    @media (min-width: 576px) {
+      font-size: .9rem;
+    }
+  }
+  .prefix {
+    font-size: .7rem;
+  }
 }

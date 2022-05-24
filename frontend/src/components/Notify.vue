@@ -118,7 +118,7 @@ export default {
         localStorage.removeItem('is_hide_notify')
         this.isShowen = true
 
-      }, this.notifyInterval*4)
+      }, this.notifyInterval*8)
 
     },
     getRandomOrder() {
