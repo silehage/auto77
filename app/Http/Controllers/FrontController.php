@@ -6,10 +6,8 @@ use App\Models\Post;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Resources\ProductResource;
 
 class FrontController extends Controller
 {
@@ -47,21 +45,13 @@ class FrontController extends Controller
     }
     public function productDetail($slug)
     {
-        $product = new ProductResource(Product::with(['assets', 'category:id,title,slug','reviews' => function($q) {
-            $q->limit(5);
-            $q->latest();
-        }, 'variants.variant_items.variant_item_values'])
-            ->withCount('reviews')
-            ->withSum('variantItems', 'item_stock')
-            ->withAvg('reviews', 'rating')
-            ->where('slug', $slug) 
-            ->first());
+        $product = Product::where('slug', $slug)->first();
         
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,
             'description' => $product->description ? $this->createTeaser($product->description) : $this->shop->description,
             'featured_image' => $product->assets[0]->src,
-            'data' => $product
+            'data' => null
         ]);
 
     }
@@ -93,7 +83,7 @@ class FrontController extends Controller
             'title' => $post->title . ' | ' . $this->shop->name,
             'description' => $this->createTeaser($post->body),
             'featured_image' => url('/upload/images/' . $post->image),
-            'data' => $post
+            'data' => null
         ]);
     }
     public function any()

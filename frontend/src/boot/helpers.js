@@ -40,9 +40,4 @@ Vue.mixin({
       this.$store.commit('SET_SESSION_ID', result);
     }
   },
-  data() {
-    return {
-      datapage: window.datapage
-    }
-  }
 })
