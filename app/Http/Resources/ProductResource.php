@@ -16,44 +16,47 @@ class ProductResource extends JsonResource
     {
         // return parent::toArray($request);
 
+        $defaultPrice = $this->price;
+
         $pricing = [
-            'default_price' => $this->price,
-            'current_price' => $this->price,
-            'discount_value' => 0,
-            'is_discount' => false ,
+            'default_price' => $defaultPrice,
+            'current_price' => $defaultPrice,
+            'discount_percent' => 0,
+            'discount_amount' => 0,
+            'is_discount' => false,
         ];
 
         $disc = null;
  
-        if($this->discount_id && $this->discount) {
-            $disc = $this->discount;
-        } elseif($this->promote_id && $this->promote) {
-            $disc = $this->promote->discount;
-        }
+        if($this->productPromo) {
+            $disc = $this->productPromo;
+        } 
 
         if($disc) {
 
             $pricing['is_discount'] = true;
 
-            $discValue = 0;
+            $discountVal = 0;
             
 
-            if($disc->unit == 'percent') {
+            if($disc->discount_type == 'PERCENT') {
  
-                $discValue = ($this->price*$disc->value) / 100;
+                $discountVal = ($defaultPrice*$disc->discount_amount) / 100;
 
-                $pricing['current_price'] = $this->price - ($this->price*$disc->value / 100);
-                $pricing['discount_percent'] = $disc->value;
+                $pricing['current_price'] = $defaultPrice - (int) $discountVal;
+                $pricing['discount_percent'] = (int) $disc->discount_amount;
                 
              } else{
  
-                 $discValue = $disc->value;
-                 $pricing['current_price'] = $this->price - (int) $disc->value;
-                 $pricing['discount_percent'] = number_format(((int)$disc->value / $this->price)*100, 1);
+                 $discountVal = $disc->discount_amount;
+
+                 $pricing['current_price'] = $defaultPrice - (int) $discountVal;
+
+                 $pricing['discount_percent'] = number_format(((int) $disc->discount_amount / $defaultPrice)*100, 0);
  
             }
 
-            $pricing['discount_value'] = $discValue;
+            $pricing['discount_amount'] = $discountVal;
          }
 
         return [
@@ -72,8 +75,9 @@ class ProductResource extends JsonResource
             'assets' => $this->assets,
             'reviews' => $this->reviews,
             'reviews_count' => $this->reviews_count,
-            'variants' => $this->variants,
-            'discount' => $disc
+            'varians' => $this->varians,
+            'discount' => $disc,
+            'images' => $this->images,
         ];
     }
 }

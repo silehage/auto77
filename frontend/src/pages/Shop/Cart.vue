@@ -1,8 +1,8 @@
 <template>
-  <q-page class="bg-grey-2"
+  <q-page class="bg-grey-1"
   :class="{'flex flex-center' : !carts.items.length}"
   >
-    <q-header class="text-primary bg-white">
+    <q-header class="text-primary bg-white box-shadow">
         <q-toolbar>
           <q-btn :to="{ name: 'ProductIndex'}"
             flat round dense
@@ -11,7 +11,7 @@
         </q-toolbar>
     </q-header>
     <div v-if="carts.items.length" class="q-py-sm">
-      <q-list class="bg-white" separator>
+      <q-list class="bg-white" separator padding>
         <q-item v-for="cart in carts.items" :key="cart.sku" class="q-pa-sm">
           <q-item-section side class="q-pr-sm">
            <q-img :src="cart.image_url" style="width:90px;height:90px;"></q-img>
@@ -33,29 +33,10 @@
           </q-item-section>
         </q-item>
       </q-list>
-    <q-card flat square class="">
+    <!-- <q-card flat square class="">
       <q-card-section>
         <div class="flex justify-end q-py-md q-px-sm bg-grey-1">
           <div class="column items-end">
-            <div style="font-size:14px;">
-              <table class="dense text-weight-medium">
-                <tr>
-                  <td align="right" >Subtotal</td>
-                  <td>:</td>
-                  <td align="right"  class="text-no-wrap">{{ moneyIDR(carts.subtotal) }}</td>
-                </tr>
-                <tr v-if="coupon_discount">
-                  <td align="right"><q-btn icon="close" flat padding="4px" size="12px" round color="red" @click="removeCoupon"></q-btn> {{ coupon_discount.label }} <span class="bg-green text-white rounded-borders text-weight-normal" style="padding:1px 3px;font-size:12px;">{{ carts.discount_percent }}%</span></td>
-                  <td>:</td>
-                  <td align="right">{{ moneyIDR(carts.discount_amount) }}</td>
-                </tr>
-                <tr> 
-                  <td align="right">Total</td>
-                  <td>:</td>
-                  <td align="right" class="text-no-wrap">{{ moneyIDR(carts.subtotal-carts.discount_amount) }}</td>
-                </tr>
-              </table>
-            </div>
             <div class="cart-coupon q-mt-lg">
               <div class="text-medium q-mb-md text-grey-7">Punya Code voucher?</div>
               <q-form @submit.prevent="handleRedeemCoupon">
@@ -70,7 +51,7 @@
           </div>
         </div>
     </q-card-section>
-  </q-card>
+  </q-card> -->
     </div>
     <div v-if="!carts.items.length" class="column items-center">
       <p class="text-grey-8 text-weight-bold text-center">Keranjang belanja anda masih kosong!</p>
@@ -91,6 +72,10 @@
       <login-block @onResponse="onResponse" @onClose="loginModal = false"/>
     </q-dialog>
     <q-footer v-if="carts.items.length" class="bg-white q-pa-md">
+      <div class="q-pb-sm flex justify-between">
+        <div class="text-md text-dark">Subtotal</div>
+        <div class="text-md2 text-weight-bold text-secondary">{{ moneyIDR(carts.subtotal) }}</div>
+      </div>
       <q-btn v-if="isCanChekout" unelevated @click="checkout" color="primary" class="full-width" no-caps>
         <svg
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -232,6 +217,7 @@ export default {
       }
     },
     incrementQty(cart) {
+      console.log(cart);
       if(parseInt(cart.quantity) >= parseInt(cart.product_stock)) return
       let qty = parseInt(cart.quantity)+1
       if(!this.session_id) return

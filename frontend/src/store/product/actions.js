@@ -40,6 +40,10 @@ export function getAdminProducts ({ commit }, q = null) {
      })
   }
 }
+export function searchAdminProducts ({ commit }, key) {
+  return  Api().get('searchAdminProducts/' + key)
+}
+
 export function getProducts ({ commit }) {
 
   Api().get('products').then(response => {
@@ -70,7 +74,7 @@ export function getProductsByCategory ({ commit }, id) {
     if(response.status == 200) {
       commit('SET_PRODUCT_CATEGORY', response.data)
       if(response.data.data.length) {
-        commit('SET_META_TITLE', response.data.data[0].category.title, { root: true })
+        commit('SET_META_TITLE', response.data.data[0].title, { root: true })
       }
     }
   })

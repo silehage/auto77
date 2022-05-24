@@ -401,7 +401,8 @@ export default {
       interval: null,
       isPrintPacking: false,
       isPrintInvoice: false,
-      timeout: null
+      timeout: null,
+      whatsappUrl: 'https://api.whatsapp.com'
     }
   },
   computed: {
@@ -429,7 +430,11 @@ export default {
       }
     }
   },
-
+  mounted() {
+    if(this.$q.platform.is.desktop) {
+        this.whatsappUrl = 'https://web.whatsapp.com'
+      }
+  },
   methods: {
     ...mapActions('order', ['getOrderById']),
     statusColor(status) {
@@ -477,14 +482,14 @@ export default {
     },
     chatToAdmin() {
       let text = `Halo ${this.shop.name},\nMohon pesanan saya untuk segera di proses.\nTerima Kasih.\n\nReferensi Order:\n${location.href}`
-      let url = `https://api.whatsapp.com/send?phone=${this.formatPhoneNumber(this.shop.phone)}&text=${encodeURI(text)}`
+      let url = `${this.whatsappUrl}/send?phone=${this.formatPhoneNumber(this.shop.phone)}&text=${encodeURI(text)}`
 
       window.open(url, '_blank')
     },
     kirimBuktiTransfer() {
       this.modalPayment = false
       let text = `Halo kak, saya akan mengkonfirmasi pembayaran atas pesanan\nInvoice ID: *${this.invoice.order_ref}*\nReferensi Order:\n${location.href}\n`
-      let url = `https://api.whatsapp.com/send?phone=${this.formatPhoneNumber(this.shop.phone)}&text=${encodeURI(text)}`
+      let url = `${this.whatsappUrl}/send?phone=${this.formatPhoneNumber(this.shop.phone)}&text=${encodeURI(text)}`
 
       window.open(url, '_blank')
     },

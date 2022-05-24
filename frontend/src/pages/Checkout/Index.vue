@@ -1,6 +1,6 @@
 <template>
   <q-page class="">
-    <q-header class="text-primary bg-white" reveal :reveal-offset="10">
+    <q-header class="text-primary bg-white box-shadow" reveal :reveal-offset="10">
         <q-toolbar>
           <q-btn @click="handleBackButton"
             flat round dense
@@ -252,6 +252,9 @@ export default {
 
       let whatsappUrl = 'https://api.whatsapp.com'
       
+      if(this.$q.platform.is.desktop) {
+        whatsappUrl = 'https://web.whatsapp.com'
+      }
       let whatsapp = this.formatPhoneNumber(this.shop.phone)
 
       let str = `Halo kak, saya mau order:\n\n`

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\ProductVarian;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -55,8 +56,19 @@ class ResetStockByOrder extends Command
 
                 foreach($orderItems as $item) {
 
-                    DB::table('products')->where('sku', $item->sku)->increment('stock', intval($item->quantity));
-                    DB::table('product_variant_values')->where('item_sku', $item->sku)->increment('item_stock', intval($item->quantity));
+                    $productData = Product::where('sku', $item->sku)->first();
+                    if($productData) {
+                        $productData->stock += $item->quantity;
+                        $productData->save();
+
+                    } else {
+
+                        $variantData = ProductVarian::where('sku', $item->sku)->first();
+                        if($variantData) {
+                            $productData->stock += $item->quantity;
+                            $variantData->save();
+                        }
+                    }
                 }
 
                 $order->update(['order_status' => 'CANCELED']);

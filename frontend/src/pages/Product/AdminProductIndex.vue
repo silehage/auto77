@@ -1,5 +1,5 @@
 <template>
-  <q-page :class="{'flex flex-center' : !products.available}">
+  <q-page>
      <q-header>
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
@@ -11,33 +11,43 @@
         <q-btn class="gt-xs" no-caps flat icon="add_circle" :to="{name: 'ProductCreate'}" label="Tambah Produk"/>
       </q-toolbar>
     </q-header>
+    <div class="border q-pa-md row item-center q-gutter-x-sm">
+      <div class="col">
+        <q-input :loading="loading" ref="input" outlined dense color="grey-2" v-model="search" @keyup.enter="searchProduct" placeholder="ketik nama produk"
+        >
+        </q-input>
+      </div>
+        <q-btn unelevated label="Cari" @click="searchProduct" color="primary"></q-btn>
+        <q-btn outline label="Reset" @click="getAdminProducts" color="primary"></q-btn>
+      </div>
     <template v-if="products.available">
      <div class="q-pt-sm q-pb-xl">
       <q-list separator>
-       <q-item v-for="product in products.data" :key="product.id" class="q-py-md">
+       <q-item v-for="product in products.item.data" :key="product.id" class="q-py-md">
 
-         <q-item-section avatar class="q-pr-sm">
+         <q-item-section avatar class="q-pr-sm" top>
            <q-img v-if="product.assets" :src="product.assets[0].src" class="bg-white img-product-admin" ratio="1"/>
         </q-item-section>
 
-        <q-item-section top>
-          <div class="q-gutter-y-xs">
-          <q-item-label lines="2">{{ product.title }}</q-item-label>
-          <q-item-label class="text-green-7 text-weight-medium">{{ moneyIDR(product.price) }}</q-item-label>
+        <q-item-section>
+          <div class="q-gutter-y-sm">
+            <q-item-label lines="2" class="text-md">{{ product.title }}</q-item-label>
+            <q-item-label caption class="ellipsis-2-lines" v-html="product.description"></q-item-label>
+            <q-item-label caption class="">
+              <q-chip v-if="product.is_preorder" class="bg-teal text-white" size="sm">Preorder</q-chip>
+              <q-chip outline color="teal" size="sm">{{ moneyIDR(product.price)}}</q-chip>
+              </q-item-label>
             </div>
-          <q-item-label caption class="ellipsis-2-lines" v-html="product.description"></q-item-label>
           <div class="q-mt-sm text-xs">
-           <q-chip v-if="product.category" dense size="12px" outline color="green-6">
+           <q-chip v-if="product.subcategory" dense size="12px" outline color="green-6">
             <q-avatar icon="sell" color="primary" text-color="white"/>
-           {{ product.category.title }}
+           {{ product.subcategory.title }}
           </q-chip>
-            <q-chip :label="product.weight + ' gram'" dense size="12px" outline color="green-6"></q-chip>
-            <q-chip :label="'Stok: ' +product.stock " dense size="12px" outline color="green-6"></q-chip>
           </div>
         </q-item-section>
 
-        <q-item-section side top>
-          <div class="text-grey-8 column q-gutter-y-xs">
+        <q-item-section side>
+          <div class="text-grey-8 q-gutter-xs column">
             <q-btn unelevated @click="remove(product.id)" size="sm" round icon="delete" glossy color="red"/>
             <q-btn unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" size="sm" round glossy color="info" icon="edit" />
             <q-btn unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" size="sm" round glossy color="teal" icon="visibility" />
@@ -45,14 +55,21 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <div class="q-my-md q-gutter-sm text-center" v-if="products.item.total > products.item.per_page">
+      <div>{{ products.item.current_page }} of {{ products.item.last_page }} page</div>
+      <q-btn no-caps size="12px" unelevated color="primary" @click="paginate(products.item.prev_page_url)" :disable="!products.item.prev_page_url">
+        <span>Sebelumnya</span>
+      </q-btn>
+    
+      <q-btn no-caps size="12px" unelevated color="primary" @click="paginate(products.item.next_page_url)" :disable="!products.item.next_page_url">
+        <span>Selanjutnya</span>
+      </q-btn>
+    </div>
     </div>
     </template>
-    <template v-else>
-      <div>Tidak ada data</div>
+    <template v-else >
+      <div class="text-center q-pt-xl">Tdak ada data</div>
     </template>
-     <q-inner-loading :showing="!products.ready">
-        <q-spinner-facebook size="50px" color="primary"/>
-    </q-inner-loading>
     <q-page-sticky class="lt-sm" position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="primary" :to="{name: 'ProductCreate'}" glossy/>
     </q-page-sticky>
@@ -61,17 +78,34 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import { Api } from 'boot/axios'
 export default {
-  name: 'PageAdminIndex',
+  name: 'AdminProductList',
+  data() {
+    return {
+      pageNumber: 1,
+      search: '',
+      productSearch: []
+    }
+  },
   computed: {
     ...mapState({
-      products: state => state.product.admin_products
-    })
+      products: state => state.product.admin_products,
+      loading: state => state.loading
+    }),
   },
   methods: {
-    ...mapActions('product', ['getAdminProducts', 'productDelete']),
-    money(number) {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
+    ...mapActions('product', ['getAdminProducts', 'productDelete', 'searchAdminProducts']),
+    searchProduct() {
+      this.$store.commit('SET_LOADING', true)
+      this.$refs.input.blur()
+      this.searchAdminProducts(this.search).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('product/SET_ADMIN_PRODUCTS', response.data.results)
+        }
+      }).finally(() => {
+        this.$store.commit('SET_LOADING', false)
+      })
     },
     remove(id) {
       this.$q.dialog({
@@ -92,10 +126,17 @@ export default {
       } else {
         return product.price-product.buy_price
       }
+    },
+    paginate(url) {
+      Api().get(url).then(response => {
+        if(response.status == 200) {
+          this.$store.commit('product/SET_ADMIN_PRODUCTS', response.data.results)
+        }
+      })
     }
   },
   created() {
-    if(!this.products.data.length) this.getAdminProducts()
+    if(!this.products.item.data.length) this.getAdminProducts()
   }
 }
 </script>

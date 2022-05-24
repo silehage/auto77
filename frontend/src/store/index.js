@@ -18,7 +18,7 @@ import bank from './bank'
 import cart from './cart'
 import discount from './discount'
 import coupon from './coupon'
-import promo from './promo'
+import promo from './promote'
 
 import mutations from './mutations'
 import getters from './getters'

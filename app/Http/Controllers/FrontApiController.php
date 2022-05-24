@@ -47,6 +47,12 @@ class FrontApiController extends Controller
             return Config::first();
         });
 
+        $productPromo = Cache::remember('product_promo', now()->addMinutes(15),  function() {
+
+            return $this->productRepository->getProductPromo();
+
+        });
+
         $initialProducts = Cache::rememberForever('initial_products', function() {
             
             return $this->productRepository->getInitialProducts();
@@ -63,6 +69,7 @@ class FrontApiController extends Controller
                 'posts' => $posts,
                 'config' => $config,
                 'sess_id' => Str::random(40),
+                'product_promo' => $productPromo
             ]
             
         ],200);

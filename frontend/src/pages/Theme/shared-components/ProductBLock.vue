@@ -1,13 +1,13 @@
 <template>
   <div id="product" v-if="products.data.length">
     <template v-for="item in products.data">
-      <div :key="item.id" v-if="item.items.length" class="block-container">
-        <div class="block-heading auto-padding-side">
+      <div :key="item.id" v-if="item.items.length" class="block-container bg-linear">
+        <div class="auto-padding">
           <div class="row items-end justify-between">
             <div class="block-title"><h2>{{ item.title }}</h2></div>
             <q-btn flat no-caps color="primary" padding="4px" :to="{name: 'ProductCategory', params:{ id: item.category_id }}">
-              <span>Semua</span>
-              <q-icon name="arrow_right"></q-icon>
+              <span>Lihat Semua</span>
+              <q-icon name="arrow_forward" size="16px"></q-icon>
             </q-btn>
           </div> 
           <div v-if="item.description" class="block-subtitle">{{ item.description }}</div>
@@ -21,7 +21,7 @@
             <div v-if="config && config.home_view_mode == 'list'">
               <product-list-section :ready="products.ready" :products="item" />
             </div>
-            <div v-else class="auto-padding">
+            <div v-else class="auto-padding-side">
               <swiper-product :products="item" />
             </div>
           </div>

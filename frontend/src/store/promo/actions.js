@@ -1,30 +1,30 @@
 import { Api } from 'boot/axios'
 
-export function getPromotes ({commit}) {
-  Api().get('promote').then(response => {
+export function getPromos ({commit}) {
+  Api().get('promo').then(response => {
     if(response.status == 200) {
-      commit('SET_PROMOTES',  response.data.results)
+      commit('SET_PROMOS',  response.data.results)
     }
   })
 }
-export function storePromote ({ dispatch }, payload) {
-  Api().post('promote', payload).then(() => {
-    dispatch('getPromotes')
+export function storePromo ({ dispatch }, payload) {
+  Api().post('promo', payload).then(() => {
+    dispatch('getPromos')
   })
 }
-export function updatePromote ({ dispatch }, payload) {
-  Api().post('promote/' + payload.id, payload).then(() => {
-    dispatch('getPromotes')
+export function updatePromo ({ dispatch }, payload) {
+  Api().post('promo/' + payload.id, payload).then(() => {
+    dispatch('getPromos')
   })
 }
-export function deletePromote ({ dispatch }, id) {
-  Api().delete('promote/' + id).then(() => {
-    dispatch('getPromotes')
+export function deletePromo ({ dispatch }, id) {
+  Api().delete('promo/' + id).then(() => {
+    dispatch('getPromos')
   })
 }
-export function getProducts ({ commit }, id) {
+export function getProductPromo ({ commit }, id) {
   Api().get('getProductPromo' + id).then((response) => {
-    if(response.statu == 200) {
+    if(response.status == 200) {
       commit('SET_PRODUCT_PROMO', response.data.results)
     }
   })

@@ -3,6 +3,8 @@
 use App\Http\Controllers\FrontApiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
+use App\Jobs\WhatsappJob;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,6 +17,11 @@ use App\Http\Controllers\FrontController;
 */
 
 Route::get('test', [FrontApiController::class, 'home']);
+Route::get('send-wa/{msg}', function($msg) {
+  WhatsappJob::dispatch($msg)->delay(now()->addSeconds(10));
+
+  return response('yes');
+});
 
 Route::get('/', [FrontController::class, 'homepage']);
 Route::get('products', [FrontController::class, 'products']);

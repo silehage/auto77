@@ -4,7 +4,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-      <q-footer class="bg-white text-primary footer-tab">
+      <q-footer class="bg-white text-primary footer-tab box-shadow-top">
         <q-tabs
           active-color="primary"
           class="text-grey-8 text-xs"

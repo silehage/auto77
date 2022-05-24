@@ -8,8 +8,8 @@
         </q-btn>
       </div>
       <div class="q-gutter-x-xs" v-if="config">
-        <q-btn @click="changeViewMode('grid')" outline size="12px" :color="config.product_view_mode == 'grid' ? 'green' : 'grey-7'" dense icon="grid_view"></q-btn>
-        <q-btn @click="changeViewMode('list')" outline size="12px" :color="config.product_view_mode == 'list' ? 'green' : 'grey-7'" dense icon="view_list"></q-btn>
+        <q-btn @click="changeViewMode('grid')" :outline="config.product_view_mode != 'grid'" unelevated size="12px" :color="config.product_view_mode == 'grid' ? 'secondary' : 'grey-7'" dense icon="grid_view"></q-btn>
+        <q-btn @click="changeViewMode('list')" :outline="config.product_view_mode != 'list'" unelevated size="12px" :color="config.product_view_mode == 'list' ? 'secondary' : 'grey-7'" dense icon="view_list"></q-btn>
       </div>
     </div>
     <div class="column q-gutter-y-sm" v-if="config && config.product_view_mode == 'list'">

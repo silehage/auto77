@@ -1,5 +1,5 @@
 <template>
-  <div id="q-app" class="mbl glass bg-white">
+  <div id="q-app" class="mobile-view glass bg-white">
     <router-view />
     <theme-setting />
   </div>

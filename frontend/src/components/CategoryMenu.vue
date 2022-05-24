@@ -13,6 +13,11 @@
         </q-item-section>
       </q-item>
       <q-item v-for="category in categories.data" :key="category.id" clickable @click="handleShowCategory(category.id)">
+        <q-item-section avatar>
+          <q-avatar>
+            <q-img :src="category.src"></q-img>
+          </q-avatar>
+        </q-item-section>
         <q-item-section>
           <q-item-label>{{ category.title }}</q-item-label>
         </q-item-section>
