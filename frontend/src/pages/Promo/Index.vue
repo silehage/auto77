@@ -49,6 +49,7 @@
               </div>
             </q-item-section>
           </q-item>
+          
           <q-item v-if="!promos.length">
             <q-item-section class="text-center">
               Tidak ada data
@@ -138,8 +139,8 @@ export default {
   },
    computed: {
     ...mapState({
+      products: state => state.promo.products,
       promos: state => state.promo.promos,
-      products: state => state.promo.products
     }),
     isDesktop() {
       return window.innerWidth > 600 ? true : false

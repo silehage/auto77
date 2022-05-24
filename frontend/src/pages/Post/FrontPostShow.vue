@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       ready: false,
-      post: window.datapage
+      post: null
     }
   },
   methods: {
@@ -66,7 +66,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

@@ -390,7 +390,7 @@ export default {
       varianSelected: null,
       subvarianSelected: null,
       formVariantModal: false,
-      product: window.datapage,
+      product: null,
     }
   },
   computed: {
