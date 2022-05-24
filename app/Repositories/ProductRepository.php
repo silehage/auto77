@@ -16,7 +16,7 @@ use App\Http\Resources\ProductResource;
 
 class ProductRepository
 {
-    protected $limit = 3;
+    protected $limit = 6;
     
     public function show($slug)
     {
