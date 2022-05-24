@@ -20,17 +20,21 @@ class ProductRepository
     
     public function show($slug)
     {
-        $product = new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
-            $query->whereHas('promoActive');
-        },'reviews' => function($q) {
-            $q->limit(5);
-            $q->latest();
-        }])
-            ->withCount('reviews')
-            ->withAvg('reviews', 'rating')
-            ->where('slug', $slug) 
-            ->orWhere('id', $slug)
-            ->first());
+        $product = Cache::remember($slug, now()->addMinute(), function() use ($slug) {
+
+            return new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
+                $query->whereHas('promoActive');
+            },'reviews' => function($q) {
+                $q->limit(5);
+                $q->latest();
+            }])
+                ->withCount('reviews')
+                ->withAvg('reviews', 'rating')
+                ->where('slug', $slug) 
+                ->orWhere('id', $slug)
+                ->first());
+        });
+
 
         return $product;
     }
