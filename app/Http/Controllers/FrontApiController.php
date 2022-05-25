@@ -47,7 +47,7 @@ class FrontApiController extends Controller
             return Config::first();
         });
 
-        $productPromo = Cache::remember('product_promo', now()->addMinutes(15),  function() {
+        $productPromo = Cache::remember('product_promo', now()->addMinutes(2),  function() {
 
             return $this->productRepository->getProductPromo();
 

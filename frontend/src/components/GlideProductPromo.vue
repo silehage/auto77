@@ -2,9 +2,8 @@
   <div class="overflow-hidden glide-product">
     <div class="row items-center q-gutter-x-sm q-py-sm">
       <div class="text-weight-bold text-lg text-secondary q-py-xs">{{ promo.label }}</div>
-      <div class="flex">
-        <div class="bg-dark text-white rounded-borders q-px-xs q-mr-sm"><span class="text-weight-bold">{{ dayEl }} </span><span class="text-xs">hari</span></div>
         <div class="row text-sm q-gutter-x-xs text-weight-bold">
+          <div class="bg-dark text-white rounded-borders q-px-xs">{{ dayEl }}</div>
           <div class="bg-dark text-white rounded-borders q-px-xs">{{ hourEl }}</div>
           <div class="bg-dark text-white rounded-borders q-px-xs">{{ minuteEl }}</div>
           <div class="bg-dark text-white rounded-borders q-px-xs">
@@ -13,7 +12,6 @@
             </transition>
           </div>
         </div>
-      </div>
     </div>
     <vue-glide :options="glideOptions" class="">
       <vue-glide-slide v-for="product in promo.products" :key="product.id" class="relative">

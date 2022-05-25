@@ -162,6 +162,7 @@ class ProductRepository
                         'pricing' =>  $this->setPricing($product),
                         'category' => $newCat,
                         'assets'  =>  $product->assets,
+                        'description' =>  $this->description,
                         // 'promo' => $product->promo
                     ];
                 });

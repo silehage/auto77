@@ -208,12 +208,12 @@
                     <td align="left">Dibuat</td>
                     <td>: {{ invoice.created_at }}</td>
                   </tr>
-                  <!-- <tr>
+                  <tr>
                     <td align="left">Status</td>
                     <td>: {{ invoice.status_label }}</td>
-                  </tr> -->
+                  </tr>
                 </table>
-              <div>
+              <div class="text-center">
                 <!-- <div>Metode Pembayaran</div> -->
                 <div class="text-center border q-pa-sm q-mb-sm text-weight-bold" style="border:1px solid #efefef;">{{ invoice.status_label }}</div>
                 <div>{{ invoice.transaction.payment_name }}</div>
@@ -356,7 +356,7 @@
               </table>
             </div>
           </div>
-          <div class="">
+          <!-- <div class="">
             <div class="q-mb-xs text-weight-bold">Kurir:</div>
             <table>
               <tr>
@@ -375,7 +375,7 @@
                 <td>{{ invoice.shipping_courier_code? invoice.shipping_courier_code : '-'  }}</td>
               </tr>
             </table>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
