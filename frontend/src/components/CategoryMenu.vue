@@ -36,7 +36,10 @@ export default {
   methods: {
     handleShowCategory(id) {
       this.closeCategory()
-      this.$router.push({ name: 'ProductCategory', params: { id: id }})
+      if(id != this.$route.params.id) {
+        this.$store.dispatch('product/getProductsByCategory', id)
+        this.$router.push({ name: 'ProductCategory', params: { id: id }})
+      }
     },
     closeCategory() {
       this.$store.commit('SET_MENU_CATEGORY', false)

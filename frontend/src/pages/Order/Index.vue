@@ -71,7 +71,7 @@
                 </tr>
                 <tr>
                   <td>Pembayaran</td>
-                  <td>{{ order.transaction? order.transaction.payment_name : '' }}</td>
+                  <td>{{ order.transaction? order.transaction.payment_method.split('_').join(' ') : '' }}</td>
                 </tr>
                 <tr>
                   <td>Status</td>
@@ -84,14 +84,14 @@
           </q-item-section>
           <q-item-section side top>
             <div class="column q-gutter-y-sm">
-              <q-btn unelevated @click="handleFollowUp(order)" no-caps size="12px" :label="messageButtonLabel(order.order_status)" color="green-7"></q-btn>
-              <q-btn unelevated v-if="canConfirm(order)" no-caps size="12px" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-btn>
-              <q-btn unelevated no-caps size="12px" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-btn>
-              <q-btn unelevated no-caps size="12px" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-btn>
-              <q-btn unelevated v-if="canInputResi(order)" no-caps size="12px" label="Input Resi" color="orange" @click="handleInputResi(order)"></q-btn>
-              <q-btn unelevated v-if="canShip(order)" no-caps size="12px" label="Kirim COD" color="orange" @click="handleKirimCod(order)"></q-btn>
-              <q-btn unelevated v-if="canComplete(order)" no-caps size="12px" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-btn>
-              <q-btn unelevated v-if="canCancelOrder(order)" no-caps size="12px" label="Batalkan Order" color="pink" @click="handleCancelOrder(order)"></q-btn>
+              <q-btn class="btn-order" unelevated @click="handleFollowUp(order)" no-caps size="12px" :label="messageButtonLabel(order.order_status)" color="green-7"></q-btn>
+              <q-btn class="btn-order" unelevated no-caps size="12px" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-btn>
+              <q-btn class="btn-order" unelevated v-if="canInputResi(order)" no-caps size="12px" label="Input Resi" color="blue" outline @click="handleInputResi(order)"></q-btn>
+              <q-btn class="btn-order" unelevated v-if="canShip(order)" no-caps size="12px" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-btn>
+              <q-btn class="btn-order" unelevated v-if="canComplete(order)" no-caps size="12px" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-btn>
+              <q-btn class="btn-order" unelevated v-if="canConfirm(order)" no-caps size="12px" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-btn>
+              <q-btn outline class="btn-order" unelevated v-if="canCancelOrder(order)" no-caps size="12px" label="Batalkan Order" color="red" @click="handleCancelOrder(order)"></q-btn>
+              <q-btn class="btn-order" unelevated no-caps size="12px" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-btn>
             </div>
           </q-item-section>
         </q-item>
@@ -110,22 +110,20 @@
 
     <q-dialog v-model="inputResiModal">
       <q-card square style="width:100%;max-width:420px;">
-        <div class="q-px-md q-py-sm bg-blue-7 text-white text-weight-bold">Input Resi  <span v-if="orderSelected"># {{ orderSelected.code }}</span></div>
+        <div class="q-px-md q-py-sm bg-dark text-white text-weight-bold">Input Resi  <span v-if="orderSelected"># {{ orderSelected.order_ref }}</span></div>
        <q-form @submit.prevent="submitResi" >
         <q-card-section>
+          <div class="text-grey-8">No Resi</div>
           <q-input 
-          filled
-          square
-          label="No Resi"
-          class="text-sm"
+          outlined
           v-model="form.resi"
           :rules="[val => val && val.length > 0 || 'Wajib diisi']"
           />
+          <div class="flex justify-end q-mt-sm q-gutter-x-sm">
+            <q-btn outline label="Batal" @click.prevent="closeModal" color="primary"></q-btn>
+            <q-btn unelevated type="submit" label="Simpan" color="primary"></q-btn>
+          </div>
         </q-card-section>
-        <q-card-actions class="justify-end">
-          <q-btn flat label="Batal" @click.prevent="closeModal" color="primary"></q-btn>
-          <q-btn unelevated type="submit" label="Simpan" color="primary"></q-btn>
-        </q-card-actions>
        </q-form>
       </q-card>
     </q-dialog>
@@ -294,7 +292,7 @@ export default {
 
     },
     messageButtonLabel(status) {
-      if(status == 'UNPAID' || status == 'OVERDUE') return 'Follow Up Order'
+      if(status == 'UNPAID' || status == 'OVERDUE') return 'FollowUp Order'
       return 'Kirim Pesan'
     },
     handleDeleteOrder(id) {
@@ -344,3 +342,10 @@ export default {
   
 }
 </script>
+
+<style scoped>
+.btn-order {
+  min-width:114px;
+  width:100%;
+}
+</style>

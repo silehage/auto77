@@ -6,6 +6,7 @@ use App\Models\Promo;
 use App\Models\ProductPromo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class PromoController extends Controller
 {
@@ -41,6 +42,8 @@ class PromoController extends Controller
             'start_date' => Carbon::parse($request->start_date),
             'end_date' => Carbon::parse($request->end_date),
         ]);
+
+        Cache::forget('product_promo');
         return response()->json([
             'success' => true,
             'results' => $promo
@@ -84,6 +87,8 @@ class PromoController extends Controller
             'promo_id' => 'required',
         ]);
 
+        Cache::forget('product_promo');
+
         ProductPromo::where('promo_id', $request->promo_id)->where('product_id', $request->product_id)->delete();
 
         return response()->json(['success' => true ]);
@@ -111,6 +116,7 @@ class PromoController extends Controller
             'start_date' => Carbon::parse($request->start_date),
             'end_date' => Carbon::parse($request->end_date),
         ]);
+        Cache::forget('product_promo');
         return response()->json([
             'success' => true,
             'results' => $promo->fresh()
@@ -127,6 +133,7 @@ class PromoController extends Controller
     public function destroy($id)
     {
         $promo = Promo::findOrFail($id);
+        Cache::forget('product_promo');
 
         $promo->delete();
 

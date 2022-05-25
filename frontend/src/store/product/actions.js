@@ -74,7 +74,9 @@ export function getProductsByCategory ({ commit }, id) {
     if(response.status == 200) {
       commit('SET_PRODUCT_CATEGORY', response.data)
       if(response.data.data.length) {
-        commit('SET_META_TITLE', response.data.data[0].title, { root: true })
+        if(response.data.data[0].category){
+          commit('SET_META_TITLE', response.data.data[0].category.title, { root: true })
+        }
       }
     }
   })
