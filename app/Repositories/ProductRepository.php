@@ -131,8 +131,8 @@ class ProductRepository
                 $query->withAvg('reviews', 'rating');
             }])
             ->where('is_front', 1)
+            ->orderBy('weight')
             ->get()
-            //  return view('welcome');
             ->map(function($cat) {
 
                 $categoryItem = new stdClass();
