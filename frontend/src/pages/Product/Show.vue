@@ -160,7 +160,7 @@
               </div>
               <div class="q-pt-md">
                 <div class="q-gutter-y-md">
-                  <div v-for="(review, index) in product.reviews" :key="index">
+                  <div v-for="(review, index) in productReviews" :key="index">
                     <q-list>
                       <q-item class="q-px-xs">
                         <q-item-section>
@@ -185,7 +185,7 @@
                 </div>
               </div>
             <div class="q-my-md row justify-center">
-              <q-btn flat color="primary" :loading="loadMoreLoading" v-if="product.reviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
+              <q-btn flat color="primary" :loading="loadMoreLoading" v-if="productReviews.length < product.reviews_count" label="loadmore.." @click="loadReview">
                 <template v-slot:loading>
                   <q-spinner-facebook />
                 </template>
@@ -391,6 +391,7 @@ export default {
       subvarianSelected: null,
       formVariantModal: false,
       product: null,
+      productReviews: []
     }
   },
   computed: {
@@ -809,12 +810,23 @@ export default {
       this.form.name = ''
       this.form.comment = ''
     },
-    loadReview() {
+    getReview() {
       this.loadMoreLoading = true
-      this.loadProductReview({ product_id: this.product.id, skip: this.product.reviews.length }).then(response => {
+      this.loadProductReview({ product_id: this.product.id }).then(response => {
         if(response.status == 200) {
           this.loadMoreLoading = false
-          this.product.reviews = [... this.product.reviews, ...response.data.results]
+          this.productReviews = response.data.results
+        }
+      }).catch(err => {
+         this.loadMoreLoading = false
+      })
+    },
+    loadReview() {
+      this.loadMoreLoading = true
+      this.loadProductReview({ product_id: this.product.id, skip: this.productReviews.length }).then(response => {
+        if(response.status == 200) {
+          this.loadMoreLoading = false
+          this.productReviews = [... this.productReviews, ...response.data.results]
         }
       }).catch(err => {
          this.loadMoreLoading = false
@@ -830,6 +842,7 @@ export default {
               this.varianSelected = this.product.varians[0];
             }
           }
+          this.getReview()
         } else {
           // this.$router.push({name: 'ProductIndex'})
         }

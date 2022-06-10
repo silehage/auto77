@@ -73,7 +73,6 @@ class ProductResource extends JsonResource
             'weight' => $this->weight,
             'category' => $this->category,
             'assets' => $this->assets,
-            'reviews' => $this->reviews,
             'reviews_count' => $this->reviews_count,
             'varians' => $this->varians,
             'discount' => $disc,

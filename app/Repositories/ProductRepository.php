@@ -20,13 +20,11 @@ class ProductRepository
     
     public function show($slug)
     {
+        Cache::flush();
         $product = Cache::remember($slug, now()->addMinute(), function() use ($slug) {
 
             return new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
-            },'reviews' => function($q) {
-                $q->limit(5);
-                $q->latest();
             }])
                 ->withCount('reviews')
                 ->withAvg('reviews', 'rating')
@@ -131,8 +129,8 @@ class ProductRepository
                 $query->withAvg('reviews', 'rating');
             }])
             ->where('is_front', 1)
+            ->orderBy('weight')
             ->get()
-            //  return view('welcome');
             ->map(function($cat) {
 
                 $categoryItem = new stdClass();
