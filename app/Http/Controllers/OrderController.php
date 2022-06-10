@@ -122,7 +122,7 @@ class OrderController extends Controller
 
             }
 
-            if($request->payment_type == 'DIRECT' || $request->payment_type == 'COD') {
+            if($request->payment_type == 'BANK_TRANSFER' || $request->payment_type == 'COD') {
   
                 $transaction = new Transaction();
     

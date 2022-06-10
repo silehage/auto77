@@ -10,14 +10,12 @@
     </q-header>
     <template v-if="ready">
       <template v-if="post">
-      <div class="q-pa-md">
-        <h1 class="text-lg text-weight-medium q-mb-md">{{ post.title }}</h1>
         <q-img :src="post.image_url" class="bg-grey-2 box-shadow"></q-img>
-        <div class="q-my-md">
-        <!-- <div v-if="post.tags" class="text-weight-bold text-orange-7">{{ post.tags }}</div> -->
-        <div class="text-grey-6 q-py-sm text-caption">{{ post.created_locale }}</div>
-          <div v-html="post.body"></div>
-        </div>
+      <div class="q-pa-md">
+        <div v-if="post.tags" class="text-weight-bold text-orange-7">{{ post.tags }}</div>
+        <h1 class="text-lg text-weight-medium q-mb-sm">{{ post.title }}</h1>
+        <div class="text-grey-6 text-caption">{{ post.created_locale }}</div>
+        <p class="q-mb-lg" v-html="post.body"></p>
       </div>
       </template>
       <template v-else>

@@ -181,11 +181,12 @@ export default {
       this.commitFormOrder(cod)
     },
     selectPayment(item) {
-      this.commitFormOrder({...item, payment_type: 'GATEWAY', payment_fee: this.calculateFee(item.fee_customer)})
+      this.commitFormOrder({...item, payment_type: 'PAYMENT_GATEWAY', payment_fee: this.calculateFee(item.fee_customer)})
 
     },
     selectPaymentBank(item){
-      this.commitFormOrder({...item, payment_type: 'DIRECT'})
+      console.log(item);
+      this.commitFormOrder({...item, payment_type: 'BANK_TRANSFER'})
     },
     commitFormOrder(item) {
 
@@ -194,7 +195,7 @@ export default {
       let formData = {
         payment_method: '',
         payment_name: '',
-        payment_name: '',
+        payment_code: '',
         payment_type: '',
         payment_fee: 0,
       }
@@ -203,14 +204,15 @@ export default {
         formData.payment_fee = parseInt(item.payment_fee)
       }
 
-      if(item.payment_type == 'DIRECT') {
+      if(item.payment_type == 'BANK_TRANSFER') {
 
         formData.payment_method = 'BANK_TRANSFER'
-        formData.payment_name = `${item.bank_name} - ${item.bank_office} ( a.n ${item.account_name} )`
-        formData.payment_name = item.account_number
+        formData.payment_name = `${item.bank_name} ${item.bank_office} - a/n ${item.account_name}`
+        formData.payment_code = item.account_number
         formData.payment_type = item.payment_type
+
       }
-      if(item.payment_type == 'GATEWAY') {
+      if(item.payment_type == 'PAYMENT_GATEWAY') {
         formData.payment_method = item.code
         formData.payment_name = item.name
         formData.payment_code = ''
@@ -219,7 +221,7 @@ export default {
       if(item.payment_type == 'COD') {
         formData.payment_method = item.payment_method
         formData.payment_name = item.payment_name
-        formData.payment_code = ''
+        formData.payment_code = 'COD'
         formData.payment_type = 'COD'
       }
 
