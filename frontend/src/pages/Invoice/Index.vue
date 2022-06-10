@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pb-lg bg-grey-2">
-    <q-header class="text-primary bg-white no-print">
+    <q-header class="text-primary bg-white no-print box-shadow">
       <q-toolbar>
         <q-btn :to="{name: 'CustomerOrder'}"
           flat round dense
@@ -153,7 +153,7 @@
                 <tr>
                   <td>Metode</td>
                   <td>:</td>
-                  <td>{{ invoice.transaction.payment_method.split('_').join(' ') }}</td>
+                  <td>{{ invoice.transaction.payment_type.split('_').join(' ') }}</td>
                 </tr>
                 <tr>
                   <td style="vertical-align:top;">Detil</td>
@@ -187,7 +187,7 @@
             </keep-alive>
         </q-card>
       </q-dialog>
-      <q-footer class="bg-grey-2 q-pa-md" v-if="!isPaid">
+      <q-footer class="bg-grey-2 q-pa-md" v-if="invoice.order_status == 'UNPAID'">
         <div class="text-center text-grey-7 column q-gutter-y-sm">
             <q-btn v-if="invoice && invoice.transaction.payment_method != 'COD'" label="Instruksi Pembayaran" no-caps icon="payments" @click.prevent="handlePaymentModal" color="green-7"></q-btn>
             <q-btn ref="chatAdmin" label="Chat admin" icon="chat" no-caps  @click="chatToAdmin" color="blue-7"></q-btn>
@@ -411,11 +411,12 @@ export default {
       shop: state => state.shop,
       invoice: state => state.order.invoice,
     }),
-    isPaid() {
-      return this.invoice.transaction.status == 'PAID' ? true : false
-    },
     isPaymentType: function() {
-      return this.invoice.transaction.payment_type == 'DIRECT' ? 'DirectPayment' : 'PaymentGateway';
+      let paymentType = this.invoice.transaction.payment_type 
+      if(paymentType == 'DIRECT' || paymentType == 'BANK_TRANSFER') {
+        return 'DirectPayment'
+      }
+      return 'PaymentGateway'
     },
   },
   created() {
@@ -532,7 +533,7 @@ export default {
       if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS') {
         this.timeout = setTimeout(() => {
           this.getCheckOrder()
-        }, 15000)
+        }, 20000)
       } else {
         clearTimeout(this.timeout)
       }

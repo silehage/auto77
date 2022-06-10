@@ -72,7 +72,8 @@ class StoreController extends Controller
                         'icon/icon-128x128.png',
                         'icon/icon-120x120.png',
                         'icon/icon-96x96.png',
-                        'icon/favicon.png'
+                        'icon/favicon.png',
+                        'icon/icon-512x512.png',
                     );
                     $shop->logo_path = NULL;
                 }
@@ -86,6 +87,7 @@ class StoreController extends Controller
                 $rawFile = Image::make($file);
         
                 $rawFile->resize(384,384)->encode('png')->save('icon/logo.png');
+                $rawFile->resize(384,384)->encode('png')->save('icon/icon-512x512.png');
                 $rawFile->resize(384,384)->encode('png')->save('icon/icon-384x384.png');
                 $rawFile->resize(256,256)->encode('png')->save('icon/icon-256x256.png');
                 $rawFile->resize(192,192)->encode('png')->save('icon/icon-192x192.png');

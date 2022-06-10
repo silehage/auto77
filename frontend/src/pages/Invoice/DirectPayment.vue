@@ -21,7 +21,7 @@
           <div class="">
             <div>
               <!-- <div class="text-md">Metode Pembayaran</div> -->
-              <div class="text-md text-weight-bold text-primary">{{ transaction.payment_method.split('_').join(' ') }}</div>
+              <div class="text-md text-weight-bold text-primary">{{ transaction.payment_type.split('_').join(' ') }}</div>
               <div class="text-grey-7 q-mt-sm" style="font-size:13.5px;">
                 Lakukan pembayaran sebelum melewati batas pembayaran, Pastikan nominal pembayaran sesuai dengan Tagihan, Konfirmasi pembayaran dengan megirim bukti transfer
             </div>
