@@ -389,7 +389,7 @@ class ProductController extends Controller
     }
     public function loadProductReview(Request $request, $id)
     {
-        $reviews = Review::where('product_id', $id)->latest()->skip($request->skip?? 0)->take(6)->get();
+        $reviews = Review::where('product_id', $id)->latest()->skip($request->skip?? 0)->take(5)->get();
         return response()->json([
             'success' => true,
             'results' => $reviews
