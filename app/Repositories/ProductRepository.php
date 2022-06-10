@@ -20,13 +20,11 @@ class ProductRepository
     
     public function show($slug)
     {
+        Cache::flush();
         $product = Cache::remember($slug, now()->addMinute(), function() use ($slug) {
 
             return new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
-            },'reviews' => function($q) {
-                $q->limit(5);
-                $q->latest();
             }])
                 ->withCount('reviews')
                 ->withAvg('reviews', 'rating')

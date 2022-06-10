@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Promo;
+use App\Models\Review;
 use App\Models\Product;
 use App\Models\ProductPromo;
 use Illuminate\Http\Request;
@@ -361,5 +362,37 @@ class ProductController extends Controller
         }
 
         return response()->json($this->result, $this->result['status']);
+    }
+    public function addProductReview(Request $request)
+    {
+        $request->validate([
+            'product_id' => ['required'],
+            'name' => ['required'],
+            'comment' => ['required'],
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+        ]);
+        $product = Product::findOrFail($request->product_id);
+
+        $product->reviews()->create([
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+            'name' => $request->name,
+        ]);
+
+        Cache::forget('products');
+        Cache::forget('initial_products');
+
+        return response()->json([
+            'success' => true,
+        ], 201);
+
+    }
+    public function loadProductReview(Request $request, $id)
+    {
+        $reviews = Review::where('product_id', $id)->latest()->skip($request->skip?? 0)->take(6)->get();
+        return response()->json([
+            'success' => true,
+            'results' => $reviews
+        ]);
     }
 }
