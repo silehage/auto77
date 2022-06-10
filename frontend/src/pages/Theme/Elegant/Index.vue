@@ -18,12 +18,12 @@
            <shopping-cart noFavorite />
         </q-toolbar>
       </q-header>
+    <template v-if="!loading">
       <div class="header">
         <div class="header-inner q-pt-sm q-pb-md" v-if="sliders.data.length">
           <slider :datas="sliders.data" />
         </div>
       </div>
-    <template v-if="!loading">
 
       <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
