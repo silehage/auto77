@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/icon
 /public/storage
 /public/upload/images
 /storage/*.key
