@@ -49,6 +49,13 @@ class StoreController extends Controller
                 File::makeDirectory($path, 0755, true, true);
             }
 
+            $iconPath = public_path('/icon');
+
+            if (!File::isDirectory($iconPath)) {
+    
+                File::makeDirectory($iconPath, 0777, true, true);
+            }
+
             $shop->name = $request->name;
             $shop->phone = $request->phone;
             if(!$shop->slug) {
@@ -57,7 +64,7 @@ class StoreController extends Controller
             $shop->address = $request->address;
             $shop->description = $request->description;
 
-            if($request->boolean('is_remove_logo')) {
+            if($request->boolean('is_remove_logo') || $request->file('logo')) {
                 if($shop->logo_path){
                     File::delete($shop->logo_path);
                     File::delete(
@@ -86,8 +93,8 @@ class StoreController extends Controller
            
                 $rawFile = Image::make($file);
         
-                $rawFile->resize(384,384)->encode('png')->save('icon/logo.png');
                 $rawFile->resize(512,512)->encode('png')->save('icon/icon-512x512.png');
+                $rawFile->resize(384,384)->encode('png')->save('icon/logo.png');
                 $rawFile->resize(384,384)->encode('png')->save('icon/icon-384x384.png');
                 $rawFile->resize(256,256)->encode('png')->save('icon/icon-256x256.png');
                 $rawFile->resize(192,192)->encode('png')->save('icon/icon-192x192.png');
@@ -106,12 +113,7 @@ class StoreController extends Controller
 
                 $shop->logo_path = 'upload/images/' .$filename;
 
-                $iconPath = public_path('/icon');
-
-                if (!File::isDirectory($iconPath)) {
-        
-                    File::makeDirectory($iconPath, 0777, true, true);
-                }
+                
             }
 
             $shop->save();
