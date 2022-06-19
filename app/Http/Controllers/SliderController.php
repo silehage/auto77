@@ -89,6 +89,8 @@ class SliderController extends Controller
 
         File::delete('upload/images/'. $slider->filename);
 
+        $slider->delete();
+
         return response([
             'success' => true, 
             'message' => 'Berhasil menghapus item',
