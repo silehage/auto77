@@ -9,6 +9,13 @@ class Subdistrict extends Model
 {
     use HasFactory;
 
-    protected $connection = 'rajaongkir';
-    protected $table = 'subdistricts';
+    protected $fillable = [
+        'subdistrict_id',
+        'subdistrict_name',
+        'city_id',
+        'city',
+        'type',
+        'province_id',
+        'province',
+    ];
 }
