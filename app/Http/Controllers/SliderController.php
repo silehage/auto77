@@ -87,21 +87,12 @@ class SliderController extends Controller
     {
         $slider = Slider::find($id);
 
-        if(File::delete('upload/images/'. $slider->filename)) {
+        File::delete('upload/images/'. $slider->filename);
 
-            $slider->delete();
-    
-            return response([
-                'success' => true, 
-                'message' => 'Berhasil menghapus item',
-            ], 200);
-        } else {
-            return response([
-                'success' => false, 
-                'message' => 'Gagal menghapus item, silahkan sesaat lagi',
-            ], 500);
-        }
-
+        return response([
+            'success' => true, 
+            'message' => 'Berhasil menghapus item',
+        ], 200);
     }
     /**
      * Update slider weight field.
