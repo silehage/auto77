@@ -5,25 +5,26 @@ namespace Silehage\Rajaongkir;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Silehage\Rajaongkir\Facades\Rajaongkir;
 
 class RajaongkirController extends Controller
 {
 
     public function getProvince()
     {
-        $result = RajaongkirFacade::province();
+        $result = Rajaongkir::province();
 
         return $result;
     }
     public function getCity($provinceId)
     {
-        $result = RajaongkirFacade::city($provinceId);
+        $result = Rajaongkir::city($provinceId);
 
         return $result;
     }
     public function getSubdistrict($provinceId)
     {
-        $result = RajaongkirFacade::subdistric($provinceId);
+        $result = Rajaongkir::subdistric($provinceId);
 
         return $result;
     }
@@ -36,7 +37,7 @@ class RajaongkirController extends Controller
            'courier' => ['required', 'string'],
        ]);
 
-        $result = RajaongkirFacade::cost($data);
+        $result = Rajaongkir::cost($data);
 
         return $result;
     }

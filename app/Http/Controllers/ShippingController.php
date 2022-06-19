@@ -168,9 +168,7 @@ class ShippingController extends Controller
     {
         $key = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
         
-        $subdistricts = DB::connection('rajaongkir')
-            ->table('subdistricts')
-            ->where('subdistrict_name', 'like', $key.'%')
+        $subdistricts = Subdistrict::where('subdistrict_name', 'like', $key.'%')
             ->get();
 
         return response()->json([
