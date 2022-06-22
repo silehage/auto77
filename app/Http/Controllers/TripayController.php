@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Tripay;
 use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
+
+use App\Models\ProductVarian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-
-use Tripay;
 
 class TripayController extends Controller
 {
@@ -199,9 +201,19 @@ class TripayController extends Controller
     {
         foreach($order->items as $item) {
 
-            DB::table('products')->where('sku', $item->sku)->increment('stock', intval($item->quantity));
-            DB::table('product_variant_values')->where('item_sku', $item->sku)->increment('item_stock', intval($item->quantity));
-
+            $productData = Product::where('sku', $item->sku)->first();
+            if($productData) {            
+                $productData->stock -= $item->quantity;
+                $productData->save();
+    
+            } else {
+    
+                $variantData = ProductVarian::where('sku', $item->sku)->first();
+                if($variantData) {
+                    $productData->stock -= $item->quantity;
+                    $variantData->save();
+                }
+            }
         }
     }
 
