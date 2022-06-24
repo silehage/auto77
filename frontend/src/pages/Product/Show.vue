@@ -795,8 +795,9 @@ export default {
       if(this.form.name && this.form.comment && this.form.rating) {
         this.loading = true
         this.reviewModal = false
-        this.addProductReview(this.form)
-        this.getProduct()
+        this.addProductReview(this.form).then(() => {
+          this.getProduct()
+        })
         this.resetForm()
         this.loading = false
       } else {

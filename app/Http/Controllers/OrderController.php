@@ -420,26 +420,25 @@ class OrderController extends Controller
     protected function setStock($sku, $qty, $decrement = false)
     {
         $productData = Product::where('sku', $sku)->first();
+
+        if(!$productData) {
+
+            $productData = ProductVarian::where('sku', $sku)->first();
+        }
+
         if($productData) {
 
             if($decrement) {
+
                 $productData->stock -= $qty;
+
             } else {
+
                 $productData->stock += $qty;
             }
+            
             $productData->save();
 
-        } else {
-
-            $variantData = ProductVarian::where('sku', $sku)->first();
-            if($variantData) {
-                if($decrement) {
-                    $variantData->stock -= $qty;
-                }else {
-                    $variantData->stock += $qty;
-                }
-                $variantData->save();
-            }
         }
     }
     
