@@ -109,7 +109,7 @@
                <div class="image" v-if="paymentSelected.icon_url">
                 <img :src="paymentSelected.icon_url" />
               </div>
-              <div class="flex justify-center items-center" v-if="paymentSelected.payment_type== 'DIRECT'" style="margin:auto;">
+              <div class="flex justify-center items-center" v-if="paymentSelected.payment_type== 'BANK_TRANSFER'" style="margin:auto;">
                 <div class=" text-weight-bold text-md">{{  paymentSelected.bank_name }}</div>
                 <div>Bank Transfer</div>
               </div>

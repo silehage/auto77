@@ -11,7 +11,7 @@
       </q-toolbar>
     </q-header>
     <div class="q-pt-sm">
-      <q-tabs v-model="filter" @input="changeTab" active-color="primary" outside-arrows>
+      <q-tabs v-model="filter" active-color="primary" outside-arrows>
         <q-tab v-for="option in options" :key="option.value" :name="option.value" :label="option.label" no-caps></q-tab>
       </q-tabs>
     </div>
@@ -164,6 +164,17 @@ export default {
       },
     }
   },
+  watch: {
+    'filter': function(newVal, oldVal) {
+      if(newVal != oldVal) {
+        this.form.status = newVal
+        this.filterOrder(newVal)
+      }
+    }
+  },
+  mounted() {
+    console.log('yes');
+  },
   computed: {
     ...mapState({
       orders: state => state.order.orders,
@@ -190,7 +201,7 @@ export default {
       this.filter = ''
     },
     changeTab(evt) {
-      this.$router.push({ name: 'OrderIndex', query: { filter: evt}})
+      this.$router.push({ name: 'OrderIndex', query: { filter: evt }})
       this.search = ''
       this.filterOrder(evt)
     },
@@ -202,8 +213,16 @@ export default {
       }).onOk(() => {
         this.form.status = 'SHIPPING'
         this.form.order_id = order.id
-        this.updateStatusOrder(this.form)
+        this.handleUpdateStatusOrder()
       })
+    },
+    handleUpdateStatusOrder() {
+      this.$store.commit('SET_LOADING', true)
+      this.updateStatusOrder(this.form).then(() => {
+        this.filter = this.form.status 
+        this.filterOrder(this.filter)
+        
+      }).finally(() =>  this.$store.commit('SET_LOADING', false))
     },
     handleCancelOrder(order) {
       this.$q.dialog({
@@ -211,9 +230,12 @@ export default {
         message: 'Akan membatalkan order ini?, perubahan ini tidak dapat dikembalikan',
         cancel: true,
       }).onOk(() => {
-        this.form.status = 'SHIPPING'
+        this.form.status = 'CANCELED'
         this.form.order_id = order.id
-        this.cancelOrder(order.id)
+        this.cancelOrder(order.id).then(() => {
+          this.filter = this.form.status 
+          this.filterOrder(this.filter)
+        })
       })
     },
     canShip(order) {
@@ -234,15 +256,15 @@ export default {
       return order.order_status == 'UNPAID'
     },
     handleCompletionOrder(order) {
-      this.form.status = 'COMPLETE'
-      this.form.order_id = order.id
-
+    
       this.$q.dialog({
         title: 'Konfirmasi',
         message: 'Ini akan merubah status pesanan menjadi "selesai"',
         cancel: true,
       }).onOk(() => {
-        this.updateStatusOrder(this.form)
+        this.form.status = 'COMPLETE'
+        this.form.order_id = order.id
+        this.handleUpdateStatusOrder()
       })
       
     },
@@ -252,9 +274,6 @@ export default {
         this.$store.commit('SET_LOADING', true)
         this.searchOrder(this.search)
       }
-    },
-    handleFilterOrder() {
-      this.filterOrder(this.filter)
     },
     resetOrder() {
       this.orderFiltered = []
@@ -302,7 +321,11 @@ export default {
         ok: {label: 'Hapus', flat: true, 'no-caps': true, 'color' :'red-7'},
         cancel: {label: 'Batal', flat: true, 'no-caps': true},
         }).onOk(() => {
-          this.destroyOrder(id)
+          this.destroyOrder(id).then(response => {
+              if(response.status == 200) {
+                this.filterOrder(this.filter)
+              }
+            })
         }).onCancel(() => {
         }).onDismiss(() => {
       })
@@ -314,7 +337,10 @@ export default {
         ok: {label: 'Konfirmasi', flat: true, 'no-caps': true, 'color' :'green-7'},
         cancel: {label: 'Batal', flat: true, 'no-caps': true},
         }).onOk(() => {
-          this.acceptPayment(id)
+          this.acceptPayment(id).then(() => {
+            this.filter = 'PROCESS'
+            this.filterOrder(this.filter)
+          })
         }).onCancel(() => {
         }).onDismiss(() => {
       })
@@ -335,7 +361,10 @@ export default {
       this.form.order_id = ''
     },
     submitResi() {
-      this.inputResi(this.form)
+      this.inputResi(this.form).then(() => {
+        this.filter = 'SHIPPING'
+        this.filterOrder(this.filter)
+      })
       this.closeModal()
     }
   },

@@ -71,41 +71,18 @@ export function updateOrder ({dispatch}, payload) {
   })
 }
 export function destroyOrder ({ dispatch }, id) {
-  Api().delete('orders/'+ id).then(response => {
-    if(response.status == 200) {
-      dispatch('getOrders')
-    }
-  })
+  return Api().delete('orders/'+ id)
 }
 export function acceptPayment ({ dispatch }, id) {
-  Api().post('paymentAccepted/'+ id).then(response => {
-    if(response.status == 200) {
-      dispatch('getOrders')
-    }
-  })
+  return Api().post('paymentAccepted/'+ id)
 }
 export function cancelOrder ({ dispatch }, id) {
-  Api().post('cancelOrder/'+ id).then(response => {
-    if(response.status == 200) {
-      dispatch('getOrders')
-    }
-  })
+  return Api().post('cancelOrder/'+ id)
 }
 
 export function inputResi ({ dispatch }, payload) {
-  Api().post('inputResi', payload).then(response => {
-    if(response.status == 200) {
-      dispatch('getOrders')
-    }
-  })
+  return Api().post('inputResi', payload)
 }
 export function updateStatusOrder ({dispatch, commit}, payload) {
-  commit('SET_LOADING', true, { root: true})
-  Api().post('updateStatusOrder', payload).then(response => {
-    if(response.status == 200) {
-      dispatch('getOrders')
-    }
-  }).finally(() => {
-    commit('SET_LOADING', false, { root: true})
-  })
+ return Api().post('updateStatusOrder', payload)
 }
