@@ -1,6 +1,5 @@
 <template>
   <div class="q-gutter-y-lg">
-    {{ payments }}
     <div v-if="payments.localbanks.length">
       <fieldset>
         <legend class="q-px-sm">Bank Transfer</legend>
