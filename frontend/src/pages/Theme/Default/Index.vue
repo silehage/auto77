@@ -116,8 +116,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 1)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null
@@ -127,8 +125,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 2)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null
@@ -138,8 +134,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 3)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null
@@ -165,7 +159,7 @@ export default {
       this.viewMode = this.config.home_view_mode
     }
   },
-created() {
+ created() {
   if(!this.shop || !this.products.data.length || this.$route.query.load) {
       this.getInitialData()
     }

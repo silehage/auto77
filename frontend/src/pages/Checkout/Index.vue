@@ -299,18 +299,16 @@ export default {
       return location.origin + props.href;
     },
     getLocalBanks() {
-      let self = this
       Api().get('banks').then(response => {
         if(response.status == 200) {
-          self.paymentChanels.localbanks = response.data.results
+          this.paymentChanels.localbanks = response.data.results
         }
       })
     },
     getPaymentChanel() {
-      let self = this
       Api().get('tripay/payment-chanel').then(response => {
-        if(response.status == 200) {
-          self.paymentChanels.paymentGateway = response.data.data
+        if(response.status == 200 && response.data.success) {
+          this.paymentChanels.paymentGateway = response.data.data
         }
       })
     },

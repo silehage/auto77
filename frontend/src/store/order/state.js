@@ -5,7 +5,8 @@ export default function () {
       ready: false,
       available: true,
       isLoadMore: false,
-      canLoadMore: false
+      count: 0,
+      limit: 0
     },
     customer_order: {
       data: [],

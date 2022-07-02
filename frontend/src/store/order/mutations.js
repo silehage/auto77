@@ -1,31 +1,31 @@
 
 export function SET_ORDERS (state, payload) {
 
-  state.orders.data = payload
+  state.orders.data = payload.results
   state.orders.ready = true
-  state.orders.available = payload.length > 0 ? true : false
-  state.orders.canLoadMore = payload.length < 4 ? false : true
+  state.orders.count = payload.count
+  state.orders.limit = payload.limit
+  state.orders.available = payload.count > 0 ? true : false
   
 }
 export function SET_PAGINATE_ORDERS (state, payload) {
 
-  state.orders.data = [...state.orders.data, ...payload]
-  state.orders.canLoadMore = payload.length < 4 ? false : true
-  
+  state.orders.data = [...state.orders.data, ...payload.results]
+
 }
 
 export function SET_CUSTOMER_ORDERS (state, payload) {
 
   state.customer_order.data = payload
   state.customer_order.ready = true
-  state.customer_order.available = payload.length > 0 ? true : false
-  state.customer_order.canLoadMore = payload.length < 4 ? false : true
+  state.customer_order.count = payload.count
+  state.customer_order.limit = payload.limit
+  state.customer_order.available = payload.count > 0 ? true : false
   
 }
 export function SET_PAGINATE_CUSTOMER_ORDERS (state, payload) {
 
-  state.customer_order.data = [...state.customer_order.data, ...payload]
-  state.customer_order.canLoadMore = payload.length < 4 ? false : true
+  state.customer_order.data = [...state.customer_order.data, ...payload.results]
   
 }
 export function SET_INVOICE (state, payload) {

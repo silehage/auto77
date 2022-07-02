@@ -129,8 +129,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 1)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null
@@ -140,8 +138,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 2)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null
@@ -151,8 +147,6 @@ export default {
         let banner = this.blocks.banner.find(b => b.weight == 3)
         if(banner != undefined) {
           return banner
-        } else {null
-          return 
         }
       }
       return null

@@ -6,9 +6,7 @@ use Tripay;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Config;
 use App\Models\Product;
-use App\Models\OrderItem;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -18,39 +16,77 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    protected $config;
+    protected $data = [
+        'success' => true,
+        'skip' => 0,
+        'limit' => 6,
+        'code' => 200,
+        'results' => null,
+    ];
+
     public function __construct()
     {
-        $this->config =  Config::first();
+        if(request()->limit) {
+            $this->data['limit'] = request()->limit;
+        }
+        if(request()->skip) {
+            $this->data['skip'] = request()->skip;
+        }
     }
     public function index(Request $request)
     {
-        return response([
-            'success' => true,
-            'results' => $this->getOrders($request)
-        ]);
+        try {
+
+            $search = $request->query('search') ?? null;
+            $filter = $request->query('filter') ?? null;
+
+            $instance = Order::with('transaction');
+
+            if($search) {
+                $instance->where('customer_whatsapp', $search)->orWhere('order_ref', $search);
+            }
+            if($filter && $filter != 'ALL') {
+                $instance->where('order_status', $filter);
+            }
+
+            $this->data['results'] = $instance
+                ->orderByDesc('updated_at')
+                ->skip($this->data['skip'])
+                ->take($this->data['limit'])
+                ->get();
+
+            $this->data['count'] = $instance->count();
+            
+        } catch (\Throwable $th) {
+
+            $this->data['message'] = $th->getMessage();
+            $this->data['code'] = 500;
+            $this->data['success'] = false;
+        }
+
+        return response($this->data);
     }
     public function getCustomerOrders(Request $request)
     {
-        $take = $request->take ?? 4;
+       
+        try {
 
-        $user = $request->user();
+           $this->data['results'] = Order::with('transaction')
+            ->where('user_id', $request->user()->id)
+            ->skip($this->data['skip'])
+            ->take($this->data['limit'])
+            ->get();
 
-        return response([
-            'success' => true,
-            'results' => $request->skip 
-            ? Order::with('transaction')
-            ->latest()
-            ->where('user_id', $user->id)
-            ->skip($request->skip)
-            ->take($take)
-            ->get()
-            : Order::with('transaction')
-            ->where('user_id', $user->id)
-            ->latest()
-            ->take($take)
-            ->get()
-        ]);
+            $this->data['count'] = Order::where('user_id', $request->user()->id)->count();
+            
+        } catch (\Throwable $th) {
+
+            $this->data['message'] = $th->getMessage();
+            $this->data['code'] = 500;
+            $this->data['success'] = false;
+        }
+
+        return response($this->data);  
     }
 
     public function store(Request $request)
@@ -266,17 +302,26 @@ class OrderController extends Controller
             'filter' => ['required', 'string']
         ]);
 
-        $skip = $request->skip?? 0;
+        try {
 
-        return response()->json([
-            'success' => true,
-            'results' => Order::with('items.product')
-                ->where('order_status', $request->filter)
-                ->orderByDesc('updated_at')
-                ->skip($skip)
-                ->take(4)
-                ->get()
-        ], 200);
+            $this->data['results'] = Order::with('transaction')
+             ->skip($this->data['skip'])
+             ->take($this->data['limit'])
+             ->where('order_status', $request->filter)
+             ->orderByDesc('updated_at')
+             ->get();
+ 
+             $this->data['count'] = Order::count();
+             
+         } catch (\Throwable $th) {
+ 
+             $this->data['message'] = $th->getMessage();
+             $this->data['code'] = 500;
+             $this->data['success'] = false;
+         }
+ 
+         return response($this->data);  
+
     }
     public function searchOrder(Request $request)
     {
@@ -284,32 +329,56 @@ class OrderController extends Controller
             'key' => ['required', 'string']
         ]);
         
-        $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
+        
+        try {
 
-        return response()->json([
-            'success' => true,
-            'results' => Order::with('items.product')
+            $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
+
+            $this->data['results'] = Order::with('transaction')
                 ->where('customer_whatsapp', $q)
                 ->orWhere('order_ref', $q)
                 ->orderByDesc('updated_at')
-                ->get()
-        ], 200);
+                ->get();
+ 
+             $this->data['count'] = Order::where('customer_whatsapp', $q)
+             ->orWhere('order_ref', $q)
+             ->count();
+             
+         } catch (\Throwable $th) {
+ 
+             $this->data['message'] = $th->getMessage();
+             $this->data['code'] = 500;
+             $this->data['success'] = false;
+         }
+ 
+         return response($this->data);  
+
     }
     public function searchAdminOrder(Request $request)
     {
         $request->validate([
             'key' => ['required', 'string']
         ]);
-        $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        return response()->json([
-            'success' => true,
-            'results' => Order::with('transaction')
+        try {
+
+            $q = filter_var($request->key, FILTER_SANITIZE_SPECIAL_CHARS);
+
+            $this->data['results'] = Order::with('transaction')
                 ->where('customer_whatsapp', 'like', '%'.$q .'%')
                 ->orWhere('order_ref', 'like', '%'.$q .'%')
                 ->orderByDesc('updated_at')
-                ->get()
-        ], 200);
+                ->get();
+             
+         } catch (\Throwable $th) {
+ 
+             $this->data['message'] = $th->getMessage();
+             $this->data['code'] = 500;
+             $this->data['success'] = false;
+         }
+ 
+         return response($this->data);  
+
     }
     public function inputResi(Request $request)
     {
@@ -326,32 +395,6 @@ class OrderController extends Controller
         $order->save();
 
         return response([ 'success' => true ], 200);
-    }
-
-    protected function getOrders($request) 
-    {
-        $search = $request->query('search') ?? null;
-        $filter = $request->query('filter') ?? null;
-        $skip = $request->query('skip')?? 0;
-        $take = $request->query('take')?? 4;
-
-        if($search) {
-            return Order::with('transaction')->where('customer_whatsapp', $search)
-                ->orWhere('order_ref', $search)
-                ->orderByDesc('updated_at')
-                ->get();
-        }
-        if($filter && $filter != 'ALL') {
-            return Order::with('transaction')
-                ->where('order_status', $filter)
-                ->orderByDesc('updated_at')
-                ->skip($skip)
-                ->take($take)
-                ->get();
-        }
-
-        return Order::with('transaction')->latest()->skip($skip)->take($take)->get();
-
     }
 
     public function getRandomOrder()

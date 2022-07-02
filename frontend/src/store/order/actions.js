@@ -2,7 +2,7 @@ import { Api } from 'boot/axios'
 export function getOrders ({commit}) {
   Api().get('orders').then(response => {
     if(response.status == 200) {
-      commit('SET_ORDERS', response.data.results)
+      commit('SET_ORDERS', response.data)
     }
   })
 }
@@ -10,7 +10,7 @@ export function getPaginateOrder ({commit}, payload) {
   commit('SET_LOAD_MORE', true)
   Api().get(`orders?filter=${payload.filter}&skip=${payload.skip}`).then(response => {
     if(response.status == 200) {
-      commit('SET_PAGINATE_ORDERS', response.data.results)
+      commit('SET_PAGINATE_ORDERS', response.data)
     }
   }).finally(() => {
     commit('SET_LOAD_MORE', false)
