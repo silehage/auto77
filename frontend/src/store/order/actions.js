@@ -20,7 +20,7 @@ export function searchOrder ({dispatch, commit}, search) {
   commit('SET_LOADING', true, { root: true})
   Api().get(`orders?search=${search}`).then(response => {
     if(response.status == 200) {
-      commit('SET_ORDERS', response.data.results)
+      commit('SET_ORDERS', response.data)
     }
   }).finally(() => {
     commit('SET_LOADING', false, { root: true})
@@ -30,7 +30,7 @@ export function filterOrder ({ commit }, payload) {
   commit('SET_LOADING', true, { root: true})
   Api().get('orders?filter='+ payload).then(response => {
     if(response.status == 200) {
-      commit('SET_ORDERS', response.data.results)
+      commit('SET_ORDERS', response.data)
     }
   }).finally(() => {
     commit('SET_LOADING', false, { root: true})

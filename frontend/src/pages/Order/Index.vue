@@ -24,7 +24,7 @@
           </q-input>
       </div>
     </div>
-    <template v-if="orders.data.length">
+    <template v-if="orders.count > 0">
     <div>
       <q-list separator>
         <q-item>
@@ -323,6 +323,8 @@ export default {
         }).onOk(() => {
           this.destroyOrder(id).then(response => {
               if(response.status == 200) {
+                //  this.getOrders()
+                // this.filter = this.form.status 
                 this.filterOrder(this.filter)
               }
             })
