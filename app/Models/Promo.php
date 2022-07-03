@@ -51,6 +51,7 @@ class Promo extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('start_date', '<', now())->where('end_date', '>', now());
+        $now = new \DateTime();
+        return $query->where('start_date', '<', $now)->where('end_date', '>', $now);
     }
 }
