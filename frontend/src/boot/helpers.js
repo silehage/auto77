@@ -13,7 +13,6 @@ Vue.mixin({
       var randomChars = 'ABCDEFGHIJKL9MNOPQRST8UVWXYZ01T2343567890';
 
       for(let j = 0; j < 2; j++) {
-
         
         for ( var i = 0; i < numb; i++ ) {
           result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
