@@ -1,8 +1,8 @@
 {
-  "name": "ukm-commerce",
+  "name": "nextshop",
   "version": "0.0.1",
-  "description": "Simple dan clean aplikasi toko online SPA dan PWA ready",
-  "productName": "UKM Commerce App",
+  "description": "Next Generation Online Shop Apps",
+  "productName": "Nextshop App",
   "author": "silehage <silehwage@gmail.com>",
   "private": true,
   "scripts": {
