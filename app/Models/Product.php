@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Models\Asset;
 use App\Models\Category;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Uuid as Generator; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -81,5 +84,18 @@ class Product extends Model
     public function varians()
     {
         return $this->hasMany(ProductVarian::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            try {
+                $model->sku = Generator::uuid4()->toString();
+            } catch (\Exception $e) {
+                $model->sku = Str::upper(Str::random(32));
+                Log::info($e->getMessage());
+            }
+        });
     }
 }

@@ -119,7 +119,7 @@
                 <div class="row items-start justify-between bg-grey-2 q-pa-md q-pt-lg">
                     <div  class="text-weight-bold text-md">{{ form.varians[varIndex].label}} {{ form.varians[varIndex].value }}</div>
                   <div class="q-gutter-x-sm">
-                    <q-btn unelevated size="10px" color="red" @click="deleteVarian(varIndex)">Hapus {{ form.varians[varIndex].value }}</q-btn>
+                    <q-btn unelevated size="10px" color="red" @click="deleteVarian(varIndex, varian)">Hapus {{ form.varians[varIndex].value }}</q-btn>
                     <q-btn unelevated size="10px" color="teal" @click="pushSubVarian(varIndex)">Tambah Item</q-btn>
                   </div>
                 </div>
@@ -127,7 +127,7 @@
                 <q-list class="bg-white q-pa-sm q-mt-xs" v-if="form.varians[varIndex].subvarian.length">
                   <q-item class="q-px-sm" v-for="(subvarian, subIndex) in form.varians[varIndex].subvarian" :key="subIndex">
                     <q-item-section side>
-                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteSubvarian(varIndex, subIndex)"></q-btn>
+                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteSubvarian(varIndex, subIndex, subvarian)"></q-btn>
                     </q-item-section>
                     <q-item-section>
                       <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].value" dense :label="form.varians[varIndex].subvarian[subIndex].label"></q-input>
@@ -157,7 +157,7 @@
                 <q-list class="bg-white q-pa-sm q-mt-xs">
                   <q-item  v-for="(varian, vIndex) in form.varians" :key="vIndex">
                     <q-item-section side>
-                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteVarian(vIndex)"></q-btn>
+                      <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteVarian(vIndex, varian)"></q-btn>
                     </q-item-section>
                     <q-item-section>
                       <q-input stack-label filled square required v-model="form.varians[vIndex].value" dense :label="form.varians[vIndex].label"></q-input>
@@ -233,7 +233,7 @@ export default {
         stock: '',
         is_preorder: false,
         price: '',
-        sku: 'twetwetwet',
+        sku: '',
         items: ''
       },
       requiredRules: [
@@ -251,7 +251,9 @@ export default {
         varians: [],
         images: [],
         del_images: [],
-        has_subvarian: false
+        has_subvarian: false,
+        remove_varian:[],
+        remove_subvarian:[]
 
       },
       imagePreview: [],
@@ -312,16 +314,18 @@ export default {
     onDeleteImage(idx) {
       this.form.product_images.splice(idx, 1)
     },
-    deleteVarian(varIndex) {
+    deleteVarian(varIndex, varian) {
       this.$q.dialog({
         title: 'Yakin akan menghapus data?',
         cancel: true
       }).onOk(() => {
         this.form.varians.splice(varIndex,1)
+        this.form.remove_varian.push(varian.id)
       })
     },
-    deleteSubvarian(varIndex,subIndex) {
+    deleteSubvarian(varIndex,subIndex, subvarian) {
 
+      this.form.remove_subvarian.push(subvarian.id)
       this.form.varians[varIndex].subvarian.splice(subIndex,1)
 
       if(!this.form.varians[varIndex].subvarian.length) {
@@ -331,12 +335,12 @@ export default {
     pushSubVarian(varIndex) {
       let varian = this.form.varians[varIndex]
 
-      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, sku: this.generateSku(8), price: 0 }
+      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, price: 0 }
 
       this.form.varians[varIndex].subvarian.push(tpl)
     },
     pushVarian() {
-      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, sku: this.generateSku(13), price: 0 })
+      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, price: 0 })
 
     },
     addVarianProduk() {
@@ -352,7 +356,7 @@ export default {
           let subArr = this.tempSubvarian.value.split(',')
   
             subArr.forEach(el => {
-              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, sku: this.generateSku(16), price: 0  }
+              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, price: 0  }
               varian.subvarian.push(sub)
             })
   
@@ -365,7 +369,7 @@ export default {
          varianArr.forEach(v => {
          
          let varian = null
-           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, sku: this.generateSku(7), price: 0  }
+           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, price: 0  }
  
           this.form.varians.push(varian)
   
@@ -396,6 +400,13 @@ export default {
       }
       if(this.form.varians.length) {
         formData.append('varians', JSON.stringify(this.form.varians))
+      }
+
+      if(this.form.remove_varian.length) {
+        formData.append('remove_varian', JSON.stringify(this.form.remove_varian))
+      }
+      if(this.form.remove_subvarian.length) {
+        formData.append('remove_subvarian', JSON.stringify(this.form.remove_subvarian))
       }
 
       if(this.form.images.length > 0) {

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\ProductResource;
+use App\Models\ProductVarian;
+use Ramsey\Uuid\Uuid;
 
 class ProductRepository
 {
@@ -20,8 +22,7 @@ class ProductRepository
     
     public function show($slug)
     {
-        Cache::flush();
-        $product = Cache::remember($slug, now()->addMinute(), function() use ($slug) {
+        $product = Cache::remember($slug, now()->addMinutes(2), function() use ($slug) {
 
             return new ProductResource(Product::with(['assets', 'category', 'varians.subvarian', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
@@ -143,6 +144,7 @@ class ProductRepository
 
                 $categoryItem->items = $cat->products->map(function($product) use($cat) {
 
+                    // Prevent recursive loop
                     $newCat = new stdClass();
                     $newCat->id = $cat->id;
                     $newCat->title = $cat->title;
@@ -219,7 +221,7 @@ class ProductRepository
 
                 foreach($datas as $data) {
 
-                    if($request->boolean('has_subvarian') === true) {
+                    if($request->boolean('has_subvarian') === true && count($data['subvarian']) > 0) {
 
                         $varian =  $product->varians()->create([
                                 'has_subvarian' => $data['has_subvarian'],
@@ -228,7 +230,6 @@ class ProductRepository
                             ]);
         
                             foreach($data['subvarian'] as $item) {
-        
                                 $varian->subvarian()->create($item);
                             }
         
@@ -303,7 +304,17 @@ class ProductRepository
 
             $product->save();
 
-            $product->varians()->delete();
+            if($request->remove_varian) {
+                $varianIds = json_decode($request->remove_varian);
+
+                ProductVarian::whereIn('id', $varianIds)->delete();
+            }
+
+            if($request->remove_subvarian) {
+                $subVarianIds = json_decode($request->remove_subvarian);
+
+                ProductVarian::whereIn('id', $subVarianIds)->delete();
+            }
 
             if($request->varians) {
                 $datas = json_decode($request->varians, true);
@@ -312,24 +323,48 @@ class ProductRepository
 
                     if($request->boolean('has_subvarian') === true) {
 
-                        $varian =  $product->varians()->create([
-                                'has_subvarian' => $data['has_subvarian'],
-                                'label' => $data['label'],
-                                'value' => $data['value'],
-                            ]);
-        
-                            foreach($data['subvarian'] as $item) {
-        
+                        if(isset($data['id'])) {
+
+                           $varian =  ProductVarian::find($data['id']);
+
+                        }else {
+
+                            $varian =  new ProductVarian();
+
+                        }    
+                        
+                        $varian->product_id = $product->id;
+                        $varian->has_subvarian = 1;
+                        $varian->label = $data['label'];
+                        $varian->value = $data['value'];
+                        $varian->save();
+    
+                        foreach($data['subvarian'] as $item) {
+    
+                            if(isset($item['id'])) {
+
+                                ProductVarian::find($item['id'])->update($item);
+                                
+                            }else {
                                 $varian->subvarian()->create($item);
                             }
+                            
+                        }
         
                     } else {
-                    
-                        $product->varians()->create($data);
+
+                        if(isset($data['id'])) {
+
+                            ProductVarian::find($data['id'])->update($data);
+
+                        }else {
+
+                            $product->varians()->create($data);
+                        }
+                        
                     }
 
                 } 
-
                 
             }
 

@@ -324,12 +324,12 @@ export default {
     pushSubVarian(varIndex) {
       let varian = this.form.varians[varIndex]
 
-      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, sku: this.generateSku(8), price: 0 }
+      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, price: 0 }
 
       this.form.varians[varIndex].subvarian.push(tpl)
     },
     pushVarian() {
-      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, sku: this.generateSku(8), price: 0 })
+      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, price: 0 })
 
     },
     handleAddVarian() {
@@ -348,7 +348,7 @@ export default {
           let subArr = this.tempSubvarian.value.split(',')
   
             subArr.forEach(el => {
-              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, sku: this.generateSku(13), price: 0  }
+              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, price: 0  }
               varian.subvarian.push(sub)
             })
   
@@ -360,7 +360,7 @@ export default {
          varianArr.forEach(v => {
          
          let varian = null
-           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, sku: this.generateSku(12), price: 0  }
+           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, price: 0  }
  
           this.form.varians.push(varian)
   
@@ -378,7 +378,6 @@ export default {
       formData.append('title', this.form.title)
       formData.append('price', this.form.price)
       formData.append('weight', this.form.weight)
-      formData.append('sku', this.generateSku())
       formData.append('has_subvarian', this.form.has_subvarian)
       formData.append('stock', this.form.stock)
       formData.append('description', this.form.description)

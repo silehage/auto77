@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Exception;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Uuid as Generator; 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductVarian extends Model
 {
@@ -24,5 +28,18 @@ class ProductVarian extends Model
     public function subvarian()
     {
         return $this->hasMany(ProductVarian::class, 'varian_id', 'id');
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            try {
+                $model->sku = Generator::uuid4()->toString();
+            } catch (Exception $e) {
+                $model->sku = Str::upper(Str::random(32));
+                Log::info($e->getMessage());
+            }
+        });
     }
 }

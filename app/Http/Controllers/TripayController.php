@@ -201,18 +201,15 @@ class TripayController extends Controller
     {
         foreach($order->items as $item) {
 
-            $productData = Product::where('sku', $item->sku)->first();
-            if($productData) {            
-                $productData->stock -= $item->quantity;
-                $productData->save();
-    
-            } else {
-    
-                $variantData = ProductVarian::where('sku', $item->sku)->first();
-                if($variantData) {
-                    $productData->stock -= $item->quantity;
-                    $variantData->save();
-                }
+            $product = Product::where('sku', $item->sku)->first();
+
+            if(!$product) {            
+                $product = ProductVarian::where('sku', $item->sku)->first();
+            }
+
+            if($product) {
+                $product->stock += $item->quantity;
+                $product->save();
             }
         }
     }
