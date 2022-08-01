@@ -119,7 +119,7 @@ class OrderController extends Controller
         $whatsapp = filter_var($request->customer_phone, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $uniqueCode = rand(56, 259);
-        $orderRef = 'INV' .Carbon::now()->format('ymdHis') .  rand(1,99) . Str::upper(Str::random(2));
+        $orderRef = 'INV' . Carbon::now()->format('ymdHis') .  rand(1,99) . Str::upper(Str::random(2));
 
         DB::beginTransaction();
 
@@ -170,7 +170,7 @@ class OrderController extends Controller
                 $transaction->payment_name = $request->payment_name;
                 $transaction->amount = $order->order_total;
     
-                $transaction->payment_ref = 'DTR-' .Str::upper(Str::random(8)) . $order->id;
+                $transaction->payment_ref = 'DTR' . Carbon::now()->format('ymd') . rand(100, 999) .Str::upper(Str::random(4)) . $order->id;
                 $transaction->expired_time = Carbon::now()->addDays(2)->timestamp;;
                 $transaction->total_fee = 0;
                 $transaction->amount_received = 0;
