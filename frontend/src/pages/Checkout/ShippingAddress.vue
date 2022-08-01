@@ -41,7 +41,7 @@
     </div>
 
     <div id="courier" ref="courier" class="q-mt-lg">
-      <div class="text-md text-weight-medium">Pilih Kurir</div>
+      <div class="text-md text-weight-medium">Pilih Pengiriman</div>
 
       <div class="q-py-sm">
         <q-radio v-model="shipping_method" val="Ekspedisi" label="Pengiriman Via Ekspedisi"></q-radio>
@@ -121,7 +121,7 @@
     </div>
 
     <div id="customer" class="q-mt-lg">
-      <div class="text-md q-pb-xs text-weight-medium">Penerima</div>
+      <div class="text-md q-pb-xs text-weight-medium">Detail Penerima</div>
         <div class="q-gutter-y-md">
         <q-input
         filled

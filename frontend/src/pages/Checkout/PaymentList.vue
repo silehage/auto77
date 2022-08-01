@@ -5,23 +5,24 @@
         <legend class="q-px-sm">Direct</legend>
         <div class="row q-gutter-sm payment-container">
           <div v-if="isCod && config.is_cod_payment"
-            class="box-shadow cursor-pointer payment-list bank_trf" 
+            class="box-shadow cursor-pointer payment-list column justify-center" 
             :class="{'is-selected text-primary' : isSelectedCod}" @click="selectCodPayment">
-              <div class="text-md text-weight-bold">COD</div>
-              <div class="text-no-wrap">Bayar Ditempat</div>
+              <div class="text-md text-weight-bold" >COD</div>
+              <div class="text-center name">Bayar Ditempat</div>
           </div>
           <div 
-            class="box-shadow cursor-pointer payment-list bank_trf" 
+            class="box-shadow cursor-pointer payment-list column justify-center" 
             :class="{'is-selected text-primary' : isSelectedBank(item.id)}"
             v-for="(item, index) in payments.localbanks" 
             :key="index" @click="selectPaymentBank(item)">
             <div>
               <div class="text-center text-weight-bold text-md">{{ item.bank_name }}</div>
-              <div class="text-no-wrap">{{ item.bank_office }}</div>
+              <div class="text-center text-weight-medium" style="font-size:12px;">Kcp {{ item.bank_office }}</div>
+              <div class="text-center text-weight-medium" style="font-size:12px;">Bank Transfer</div>
             </div>
           </div>
         </div>
-        <div class="q-pa-sm text-caption">*Verifikasi manual</div>
+        <div class="q-px-sm text-caption">*Verifikasi manual</div>
       </fieldset>
     </div>
     <div v-if="virtualAccounts.length">

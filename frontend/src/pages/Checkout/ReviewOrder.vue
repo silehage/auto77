@@ -113,13 +113,16 @@
           </div>
           </template>
           <template v-else>
-            <div class="box-shadow payment-list is-selected text-primary">
+            <div class="box-shadow payment-list is-selected">
                <div class="image" v-if="payment.icon_url">
                 <img  :src="payment.icon_url" />
               </div>
-              <div class="text-primary" v-if="formOrder.payment_type== 'BANK_TRANSFER'" style="margin:auto;">
-                <div class="text-weight-bold text-md">{{  payment.bank_name }}</div>
-                <div class="text-no-wrap">{{ payment.bank_office }}</div>
+              <div class="" v-if="formOrder.payment_type== 'BANK_TRANSFER'" style="margin:auto;">
+                 <div>
+                  <div class="text-center text-weight-bold text-md">{{ payment.bank_name }}</div>
+                  <div class="text-center text-weight-medium" style="font-size:12px;">Kcp {{ payment.bank_office }}</div>
+                  <div class="text-center text-weight-medium" style="font-size:12px;">Bank Transfer</div>
+                </div>
               </div>
               <div v-else class="text-center name">
                 {{ payment.name }}
