@@ -50,20 +50,20 @@
                   <td>{{ order.order_ref}}</td>
                 </tr>
                 <tr>
-                  <td>Nama</td>
-                  <td>{{ order.customer_name }}</td>
-                </tr>
-                <tr>
-                  <td>WA</td>
-                  <td>{{ order.customer_whatsapp }}</td>
+                  <td>Dibuat</td>
+                  <td>{{ order.created_at }}</td>
                 </tr>
                 <tr>
                   <td>Total</td>
                   <td>{{ moneyIDR(order.grand_total) }}</td>
                 </tr>
                 <tr>
-                  <td>Dibuat</td>
-                  <td>{{ order.created_at }}</td>
+                  <td>Nama</td>
+                  <td>{{ order.customer_name }}</td>
+                </tr>
+                <tr>
+                  <td>Ponsel</td>
+                  <td>{{ order.customer_whatsapp }}</td>
                 </tr>
                 <tr>
                   <td>Pengiriman</td>

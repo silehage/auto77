@@ -21,7 +21,7 @@
         />
       </div>
       <div class="flex justify-end q-mt-md">
-        <q-btn unelevated size="12px" type="submit" label="Simpan Telegram" color="blue-7"></q-btn>
+        <q-btn unelevated size="12px" type="submit" label="Simpan Pengaturan" color="blue-7"></q-btn>
       </div>
     </q-form>
   </q-card-section>
@@ -51,29 +51,22 @@ export default {
     updateData() {
       let data = {...this.config, ...this.form}
       Api().post('config',  this.form).then(() => {
-        this.showNotify()
+        this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil memperbarui data'
+        })
         this.$store.dispatch('getAdminConfig')
       }).catch(() => {
-        this.showNotify(error)    
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        })  
       })
     },
     setData() {
       if(this.config) {
         this.form.telegram_bot_token = this.config.telegram_bot_token
         this.form.telegram_user_id = this.config.telegram_user_id
-      }
-    },
-    showNotify(error = '') {
-      if(error) {
-        this.$q.notify({
-          type: 'negative',
-          message: 'Gagal memperbarui data'
-        })
-      } else {
-        this.$q.notify({
-          type: 'positive',
-          message: 'Berhasil memperbarui data'
-        })
       }
     },
   }

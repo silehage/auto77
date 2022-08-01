@@ -67,7 +67,7 @@
       </q-list>
     </div>
    <div class="flex justify-center q-py-xl">
-     <q-btn outline :loading="orders.isLoadMore" v-if="orders.canLoadMore && !isFilter && !isSearch" label="loadmore..." @click="loadMore" unelevated color="primary"></q-btn>
+     <q-btn outline :loading="orders.isLoadMore" v-if="orders.count > orders.data.length"  label="loadmore..." @click="loadMore" unelevated color="primary"></q-btn>
    </div>
     </template>
      <template v-else>

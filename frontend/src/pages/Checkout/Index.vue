@@ -1,6 +1,6 @@
 <template>
-  <q-page class="">
-    <q-header class="text-primary bg-white box-shadow" reveal :reveal-offset="10">
+  <q-page class="" padding>
+    <q-header class="text-primary bg-white box-shadow">
         <q-toolbar>
           <q-btn @click="handleBackButton"
             flat round dense
@@ -8,7 +8,7 @@
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
         </q-toolbar>
     </q-header>
-    <div id="checkout" v-if="carts && carts.items.length" ref="top" class="q-pb-xl">
+    <div id="checkout" v-if="carts && carts.length" ref="top" class="q-pb-xl">
       <q-stepper
         v-model="step"
         keep-alive
@@ -22,12 +22,10 @@
           title="Pengiriman"
           :done="step > 1"
           icon="local_shipping"
+          class="q-pa-none"
         >
           <shipping-address 
             canEmail 
-            :isModalAddress="isAvailableOldAddress"
-            @closeModal="isAvailableOldAddress = false"
-            @checkStep="checkStepOk"
           />
 
         </q-step>
@@ -37,15 +35,14 @@
           title="Pembayaran"
           :done="step > 2"
           icon="payments"
-          v-if="formOrder.shipping_courier_name != 'COD'"
           >
          
           <payment-list 
             ref="paymentList" 
+            :isCod="isCod" 
             :paymentSelected="paymentSelected" 
             :payments="paymentChanels" 
-             @checkStep="checkStepOk"
-             @onSelectPayment="onSelectPayment"
+            @onSelectPayment="onSelectPayment"
           />
           </q-step>
 
@@ -55,9 +52,7 @@
           :done="step > 3"
           icon="playlist_add_check"
           >
-         <review-order 
-         :paymentSelected="paymentSelected" 
-         :noPayment="isCantPaymentStep"/>
+         <review-order :payment="paymentSelected" :noPayment="isCantPaymentStep"/>
           </q-step>
 
       </q-stepper>
@@ -65,11 +60,9 @@
     <q-inner-loading :showing="loading">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
-    <div class="bg-white q-pa-md q-gutter-y-sm column" :class="{'sticky-bottom': $q.platform.is.desktop }">
-      <q-btn :disabled="!isOk" v-if="step != 3 && formOrder.shipping_courier_name != 'COD'" @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
-      <q-btn :disabled="!isOk" v-if="formOrder.shipping_courier_name == 'COD' && step != 3" @click="step = 3" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
+    <div class="bg-white q-py-md q-gutter-y-sm column" :class="{'sticky-bottom': $q.platform.is.desktop }">
+      <q-btn v-if="step != 3 " @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
       <q-btn :disabled="loading" v-if="step == 3" @click="submitOrder" no-caps unelevated label="Proses Pesanan" color="primary"></q-btn>
-      <!-- <q-btn :disabled="step == 1" @click="prev" no-caps outline label="Kembali" color="primary"></q-btn> -->
     </div>
   </q-page>
 </template>
@@ -85,42 +78,48 @@ export default {
   name: 'CheckoutPage',
   data () {
     return {
-      isAvailableOldAddress: false,
+      step: 1,
       isOk: false,
       formLoading: false,
+      paymentSelected: null,
       paymentChanels: {
         localbanks: [],
         paymentGateway: []
       },
-      step: 1,
-      paymentSelected: null,
     }
   },
   watch: {
     step: function() {
-      this.checkStepOk()
-      this.toTop()
-    },
+      setTimeout(() => {
+        this.jumpTo('checkout')
+      }, 300)
+    }
   },
   computed: {
     formOrder() {
       return this.$store.getters['order/getFormOrder']
     },
-    carts() {
-      return this.$store.getters['cart/getCarts']
-    },
-    shop() {
-      return this.$store.state.shop
-    },
-    config() {
-      return this.$store.state.config
+    isOVO() {
+      return this.formOrder.payment_method == 'OVO'
     },
     isCod() {
       return this.formOrder.shipping_courier_name == 'COD'
     },
+    carts() {
+        return this.$store.state.cart.carts
+    },
+    shop() {
+        return this.$store.state.shop
+      },
+    config() {
+        return this.$store.state.config
+      },
     loading() {
       return this.$store.state.loading
       },
+    isCodPayment() {
+      return this.formOrder.payment_method == 'COD'
+    },
     isCantPaymentStep() {
       return this.formOrder.shipping_courier_name == 'COD' || !this.config.is_payment_gateway? true : false
     },
@@ -128,14 +127,21 @@ export default {
       if(this.step == 1) return 'Pengiriman'
       if(this.step == 2) return 'Pembayaran'
       if(this.step == 3) return 'Review Order'
+
       return 'Checkout'
     },
     session_id() {
       return this.$store.state.session_id
     },
+    coupon_discount() {
+      return this.$store.state.coupon.coupon_discount
+    },
+    errors() {
+      return this.$store.state.errors
+    },
   },
   mounted() {
-    if(!this.carts.items.length) {
+    if(!this.carts.length) {
       this.$router.push({ name: 'Cart'})
     }
     if(this.config && this.config.is_payment_gateway && ! this.paymentChanels.paymentGateway.length) {
@@ -144,90 +150,74 @@ export default {
     if(! this.paymentChanels.localbanks.length) {
       this.getLocalBanks()
     }
-    this.checkDataUser()
     this.collectOrder()
   },
   methods: {
     ...mapActions('order', ['storeOrder']),
-    collectOrder() {
-      this.$store.commit('order/COLLECT_ORDER', this.carts)
-    },
-    checkDataUser() {
-      if(localStorage.getItem('user_data')) {
-        this.isAvailableOldAddress = true
-      }
-    },
-    handleBackButton() {
-      if(this.step > 1) {
-        if(this.isCod) {
-          this.step = 1
-          } else {
-          this.step -= 1
-        }
-      } else {
-        this.$router.push({ name: 'Cart'})
-      }
-    },
-    toTop() {
-      setTimeout(() => {
-        var elem = this.$refs.top;
-        elem.scrollIntoView({behavior: 'smooth'})
-      }, 500)
-    },
-    checkStepOk() {
-
-      if(this.step == 1) { 
-        if(this.formOrder.customer_name 
-            && this.formOrder.customer_email 
-            && this.formOrder.customer_phone 
-            && this.formOrder.shipping_courier_name
-            && this.formOrder.address) {
-               if(this.isCod) {
-                 this.isOk = true
-              } else {
-                this.formOrder.shipping_cost ?  this.isOk = true :  this.isOk = false
-              }
-            } else {
-              this.isOk = false
-            }
-      } else if(this.step == 2) {
-        if(this.formOrder.payment_name 
-            && this.formOrder.address 
-            && this.formOrder.payment_type) {
-              this.isOk = true
-          } else {
-              this.isOk = false
-          }
-        } else {
-              this.isOk = true
-        }
-      
+    commitFormOrder(key, val) {
+      this.$store.commit('order/SET_FORM_ORDER', { key: key, value: val})
     },
     onSelectPayment(item) {
       this.paymentSelected = item
     },
+    collectOrder() {
+      this.commitFormOrder('items', this.carts)
+      this.commitFormOrder('subtotal', this.sumSubtotal())
+      this.commitFormOrder('quantity', this.sumQty())
+      this.commitFormOrder('weight', this.sumWeight())
 
+      if(this.coupon_discount) {
+        this.commitFormOrder('coupon_discount', this.getDiscountAmount())
+      }
+    },
+    handleBackButton() {
+      if(this.step > 1) {
+        this.step -= 1
+      } else {
+        this.$router.push({ name: 'Cart'})
+      }
+    },
+    checkDiscount() {
+      if(this.coupon_discount) {
+        this.formOrder.coupon_discount = this.getDiscountAmount()
+      }
+    },
+    getLocalBanks() {
+      Api().get('banks').then(response => {
+        if(response.status == 200) {
+          this.paymentChanels.localbanks = response.data.results
+        }
+      })
+    },
+    getPaymentChanel() {
+      Api().get('tripay/payment-chanel').then(response => {
+        if(response.status == 200) {
+          if(response.data.success) {
+            this.paymentChanels.paymentGateway = response.data.data
+          }
+        }
+      })
+    },
     submitOrder() {
       this.$store.commit('SET_LOADING', true)
       this.storeOrder(this.formOrder)
       .then(response => {
-
           this.$store.commit('SET_LOADING', false)
-          this.$store.commit('cart/REMOVE_COUPON')
 
           if(response.status == 200) {
 
             this.$store.commit('order/SET_INVOICE', response.data.results)
+            this.$store.commit('coupon/SET_COUPON_DISCOUNT', null)
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)
-            }, 1000)
+            }, 20000)
 
-            if(this.formOrder.shipping_courier_name == 'COD') {
+            // if(this.isCod) {
   
-              this.directChekout(response.data.results)
+            //   this.directChekout(response.data.results)
               
-            }
+            // }
             
             this.$router.push({ name: 'UserInvoice', params: { order_ref: response.data.results.order_ref }})
 
@@ -251,10 +241,10 @@ export default {
     directChekout(data) {
 
       let whatsappUrl = 'https://api.whatsapp.com'
-      
       if(this.$q.platform.is.desktop) {
         whatsappUrl = 'https://web.whatsapp.com'
       }
+      
       let whatsapp = this.formatPhoneNumber(this.shop.phone)
 
       let str = `Halo kak, saya mau order:\n\n`
@@ -298,35 +288,135 @@ export default {
 
       return location.origin + props.href;
     },
-    getLocalBanks() {
-      Api().get('banks').then(response => {
-        if(response.status == 200) {
-          this.paymentChanels.localbanks = response.data.results
-        }
-      })
-    },
-    getPaymentChanel() {
-      Api().get('tripay/payment-chanel').then(response => {
-        if(response.status == 200 && response.data.success) {
-          this.paymentChanels.paymentGateway = response.data.data
-        }
-      })
-    },
     next() {
-      if(this.isCod) {
-        this.step = 3
-        } else {
-        this.step += 1
+      this.$store.commit('CLEAR_ERRORS')
+        let validationCustomer = ['customer_name', 'customer_phone', 'customer_email', 'customer_address']
+        let validationShipping = [ 'shipping_destination', 'shipping_courier_name', 'shipping_courier_service']
+        let validationStep2 = ['payment_method']
+
+
+        if(this.step == 1) {
+          for(let x in this.formOrder) {
+
+            if(validationCustomer.includes(x) || validationShipping.includes(x)) {
+              if(!this.formOrder[x] || this.formOrder[x] == '') {
+                this.$store.commit('PUSH_ERRORS', { key: x, value: true })
+              }
+            }
+          }
+
+        }
+        if(this.step == 2) {
+          for(let x in this.formOrder) {
+
+             if(validationStep2.includes(x)) {
+              if(!this.formOrder[x] || this.formOrder[x] == '') {
+                this.$store.commit('PUSH_ERRORS', { key: x, value: true })
+              }
+            }
+          }
+
+        }
+
+      if(Object.keys(this.errors).length > 0) {
+        for(let i in this.errors) {
+          if(i == 'shipping_destination') {
+            this.jumpTo('shipping')
+            this.$q.notify({
+              type: 'negative',
+              message: 'Tujuan pengiriman belum diisi'
+            })
+            return
+          }
+
+          if(i == 'shipping_courier_service') {
+            this.jumpTo('courier')
+            this.$q.notify({
+              type: 'negative',
+              message: 'Kurir belum dipilih'
+            })
+            return
+          }
+
+          if(validationCustomer.includes(i)) {
+            this.jumpTo('customer')
+            this.$q.notify({
+              type: 'negative',
+              message: 'Data penerima belum lengkap'
+            })
+            return
+          }
+
+          if(i == 'payment_method') {
+            this.$q.notify({
+              type: 'negative',
+              message: 'Metode pembayaran belum dipilih'
+            })
+            return
+          }
+        }
+        return
       }
+      this.step += 1
     },
     prev() {
-      if(this.isCod) {
-        this.step = 1
-        } else {
-        this.step -= 1
-      }
+      this.step -= 1
     },
-  
+    getDiscountPercent() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return parseInt(this.coupon_discount.discount.value)
+        } 
+        return (parseInt(this.coupon_discount.discount.value)/parseInt(this.sumSubtotal()))*100
+      }
+      return 0
+    },
+    getDiscountAmount() {
+      if(this.coupon_discount) {
+        if(this.coupon_discount.discount.unit == 'percent') {
+          return (parseInt(this.coupon_discount.discount.value)/ 100)*parseInt(this.sumSubtotal())
+        }
+        return parseInt(this.coupon_discount.discount.value)
+      }
+      return 0
+    },
+    sumQty() {
+      if(this.carts.length > 1) {
+        let q = [];
+        this.carts.forEach(el => {
+          q.push(parseInt(el.quantity))
+        });
+        return q.reduce((a,b) => a + b)
+      }
+      return parseInt(this.carts[0].quantity)
+    },
+    sumSubtotal() {
+      if(this.carts.length > 1) {
+        let j = [];
+        this.carts.forEach(el => {
+          j.push(parseInt(el.quantity)*parseInt(el.price))
+        });
+        return j.reduce((a,b) => a + b)
+      }
+      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].price)
+    },
+    sumGrandTotal() {
+      if(this.coupon_discount) {
+        return (this.sumSubtotal()-this.getDiscountAmount())+parseInt(this.formOrder.shipping_cost)
+      }
+      return this.sumSubtotal() + parseInt(this.formOrder.shipping_cost)
+
+    },
+    sumWeight() {
+      if(this.carts.length > 1) {
+        let w = [];
+        this.carts.forEach(el => {
+          w.push(parseInt(el.weight)*parseInt(el.quantity))
+        });
+        return w.reduce((a,b) => a + b)
+      }
+      return parseInt(this.carts[0].quantity) * parseInt(this.carts[0].weight)
+    },
   },
   meta() {
     return {

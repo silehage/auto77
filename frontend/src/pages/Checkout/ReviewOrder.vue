@@ -17,14 +17,14 @@
             <td>{{ formOrder.customer_name  }}</td>
           </tr>
           <tr>
-            <th align="left">Whatsapp</th>
+            <th align="left">Ponsel</th>
             <td>:</td>
-            <td>{{ formOrder.customer_phone }}</td>
+            <td>{{ formOrder.customer_phone}}</td>
           </tr>
           <tr>
             <th align="left">Alamat</th>
             <td>:</td>
-            <td><div v-html="formOrder.address"></div></td>
+            <td><div v-html="formOrder.customer_address"></div></td>
           </tr>
            <tr>
             <th align="left">Kurir</th>
@@ -40,41 +40,49 @@
     </fieldset>
     <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Ringkasan Order</legend>
-        <div v-if="formOrder.items.length" class="bg-grey-2 q-mb-md">
+        <div v-if="formOrder.items.length" class="q-mb-md">
+       <q-separator></q-separator>
           <q-list separator>
-            <q-item v-for="order in formOrder.items" :key="order.id">
-              <q-item-section side top>
-              <q-img :src="order.image_url" style="width:50px;height:50px;"></q-img>
+            <q-item class="bg-grey-1" dense>
+              <q-item-section>
+                <q-item-label>Produk</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-item-label>Subtotal</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item v-for="cart in formOrder.items" :key="cart.id">
+              <q-item-section avatar top>
+              <q-img :src="cart.image_url" style="width:50px;height:50px;"></q-img>
               </q-item-section>
               <q-item-section>
                 <div class="col">
-                  <div class="text-weight-medium">{{ order.name }}</div>
-                  <div class="text-caption text-grey-7">{{ order.note }}</div>
-                  <div class="text-grey-7">{{ order.quantity + 'x ' + moneyIDR(order.price) }}</div>
+                  <div class="text-weight-medium">{{ cart.name }}</div>
+                  <div class="text-caption text-grey-7">{{ cart.note }}</div>
+                  <div class="text-grey-7">{{ cart.quantity + 'X ' + moneyIDR(cart.price) }}</div>
                 </div>
+              </q-item-section>
+              <q-item-section side>
+                <q-item-label>{{ moneyIDR(cart.price*cart.quantity) }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </div>
-        <div class="flex justify-end">
+        <q-separator></q-separator>
+        <div class="flex justify-end q-py-sm">
           <table class="table dense">
             <tr>
-              <td align="right">Subtotal</td>
+              <td align="right">Jumlah</td>
               <td align="right">:</td>
               <td align="right">{{ moneyIDR(formOrder.subtotal) }}</td>
             </tr>
-            <tr v-if="formOrder.shipping_cost">
-              <td align="right">Ongkos Kirim (+)</td>
+            <tr>
+              <td align="right">Ongkos Kirim</td>
               <td align="right">:</td>
-              <td align="right">{{ moneyIDR(formOrder.shipping_cost) }}</td>
-            </tr>
-            <tr v-if="formOrder.coupon_discount">
-              <td align="right">Diskon (-)</td>
-              <td align="right">:</td>
-              <td align="right">{{ formOrder.coupon_discount? moneyIDR(formOrder.coupon_discount) : 0 }}</td>
+              <td align="right">{{ formOrder.shipping_cost? moneyIDR(formOrder.shipping_cost) : 0 }}</td>
             </tr>
             <tr style="border-bottom:1px solid">
-              <td align="right">Jumlah</td>
+              <td align="right">Total</td>
               <td align="right">:</td>
               <td align="right">{{ moneyIDR(formOrder.total) }}</td>
             </tr>
@@ -95,26 +103,26 @@
           </table>
         </div>
     </fieldset>
-    <fieldset class="q-mt-lg" v-if="formOrder.payment_method && paymentSelected">
+    <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Pembayaran</legend>
         <div class="row q-gutter-sm">
           <template v-if="formOrder.payment_method == 'COD'">
-          <div class="box-shadow payment-list is-selected">
-            <div class="text-weight-bold text-h5 text-center">COD</div>   
-            <div class="text-center name q-pa-xs">Bayar Ditempat</div>   
+          <div class="box-shadow payment-list is-selected text-primary">
+            <div class="text-weight-bold text-lg text-center">COD</div>   
+            <div class="text-center text-sm q-pa-xs">Bayar Ditempat</div>   
           </div>
           </template>
           <template v-else>
-            <div class="box-shadow payment-list is-selected">
-               <div class="image" v-if="paymentSelected.icon_url">
-                <img :src="paymentSelected.icon_url" />
+            <div class="box-shadow payment-list is-selected text-primary">
+               <div class="image" v-if="payment.icon_url">
+                <img  :src="payment.icon_url" />
               </div>
-              <div class="flex justify-center items-center" v-if="paymentSelected.payment_type== 'BANK_TRANSFER'" style="margin:auto;">
-                <div class=" text-weight-bold text-md">{{  paymentSelected.bank_name }}</div>
-                <div>Bank Transfer</div>
+              <div class="text-primary" v-if="formOrder.payment_type== 'BANK_TRANSFER'" style="margin:auto;">
+                <div class="text-weight-bold text-md">{{  payment.bank_name }}</div>
+                <div class="text-no-wrap">{{ payment.bank_office }}</div>
               </div>
               <div v-else class="text-center name">
-                {{ paymentSelected.name }}
+                {{ payment.name }}
               </div>
             </div>
           </template>
@@ -127,9 +135,7 @@
 export default {
   name: 'ReviewOrder',
   props: {
-    carts: Object,
-    form: Object,
-    paymentSelected: Object,
+    payment: Object,
     noPayment: Boolean
   },
   computed: {
@@ -145,7 +151,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

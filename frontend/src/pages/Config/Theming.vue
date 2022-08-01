@@ -1,7 +1,7 @@
 <template>
   <q-card flat>
      <q-card-section>
-      <div class="text-md text-weight-bold">Themes</div>
+      <div class="text-md text-weight-bold">Penaturan Tema</div>
       <div class="text-caption text-grey-7">Pengaturan tema dan warna dasar situs</div>
     </q-card-section>
     <q-form @submit.prevent="updateData">
@@ -24,7 +24,7 @@
         </q-item>
       </q-list>
       <q-card-section class="flex justify-end">
-        <q-btn unelevated size="12px" type="submit" label="Simpan Tema" color="blue-7"></q-btn>
+        <q-btn unelevated size="12px" type="submit" label="Simpan Pengaturan" color="blue-7"></q-btn>
       </q-card-section>
     </q-form>
   </q-card>
@@ -80,7 +80,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

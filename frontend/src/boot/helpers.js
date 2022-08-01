@@ -17,7 +17,21 @@ Vue.mixin({
       }
       
       return result;
-    } , 
+    },
+    jumpTo(id) {
+      let element = document.getElementById(id)
+      if(!element) return
+      var headerOffset = 55;
+      var elementPosition = element.getBoundingClientRect().top;
+      var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      setTimeout(() => {
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        }); 
+      }, 50)
+    }, 
     getRandomString(numb) {
       let result = ''
       var randomChars = 'ABCDEFGHIJKL9MNOPQRST8UVWXYZ01T2343567890abcdefghijklmnopqrstuvwxyz';

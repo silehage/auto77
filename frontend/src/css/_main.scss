@@ -393,7 +393,7 @@ h1,h2,h3,h4,h5,h6 {
     justify-content: center;
   }
   .q-stepper__step-inner {
-    padding: .6rem;
+    padding: .3rem;
   }
   fieldset {
     border-color: #d1d1d1;
@@ -556,6 +556,14 @@ table.table td, table.table td * {
     opacity: 1;
   }
 }
+.preline {
+  white-space: pre-line;
+}
+@media (min-width: 600px) {
+  .q-layout-padding {
+      padding: 10px 20px;
+  }
+}
 .payment-container {
   display: flex;
   flex-direction: row;
@@ -567,7 +575,7 @@ table.table td, table.table td * {
   max-width: 116px;
   text-align: center;
   display: flex;
-  min-height: 95px;
+  min-height: 102px;
   flex-direction: column;
   align-items: center;
   border-radius: 10px;
@@ -575,6 +583,7 @@ table.table td, table.table td * {
   border-width: 2px;
   border-style: solid;
   border-color: #ccc;
+  min-width: 118px;
   &.cod {
     justify-content: center;
   }
@@ -605,7 +614,7 @@ table.table td, table.table td * {
     }
   }
   .name{
-    margin-top: auto;
+    margin-top: 5px;
     font-size: 11px;
     font-weight: 600;
   }

@@ -1,14 +1,11 @@
 <template>
   <div id="q-app" class="mobile-view glass bg-white">
     <router-view />
-    <theme-setting />
   </div>
 </template>
 <script>
-import ThemeSetting from 'components/ThemeSetting.vue'
 export default {
   name: 'App',
-  components: { ThemeSetting },
   computed: {
     session_id() {
       return this.$store.state.session_id

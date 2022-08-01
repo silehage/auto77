@@ -1,7 +1,7 @@
 <template>
 <q-card flat>
   <q-card-section>
-    <div class="text-subtitle1 text-weight-bold">Basic</div>
+    <div class="text-subtitle1 text-weight-bold">Pengaturan Basic</div>
     <div class="text-caption text-grey-7">Pengaturan tampilan produk dan social proof</div>
   </q-card-section>
   <q-list>
@@ -68,7 +68,7 @@
     </q-item>
   </q-list>
   <q-card-section class="flex justify-end">
-    <q-btn unelevated size="12px" label="Simpan" color="blue-7" @click="saveTampilan"></q-btn>
+    <q-btn unelevated size="12px" label="Simpan Pengaturan" color="blue-7" @click="saveTampilan"></q-btn>
   </q-card-section>
 </q-card>
 </template>
@@ -100,19 +100,6 @@ export default {
     this.form.notifypro_timeout = this.config.notifypro_timeout
   },
   methods: {
-    showNotify(error = '') {
-      if(error) {
-        this.$q.notify({
-          type: 'negative',
-          message: 'Gagal memperbarui data'
-        })
-      } else {
-        this.$q.notify({
-          type: 'positive',
-          message: 'Berhasil memperbarui data'
-        })
-      }
-    },
     changeHomeViewMode(str) {
       this.form.home_view_mode = str
     },
@@ -125,10 +112,16 @@ export default {
         if(response.status == 200) {
           this.$store.dispatch('getAdminConfig')
         }
-        this.showNotify()
+        this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil memperbarui data'
+        })
 
       }).catch(() => {
-        this.showNotify(error)
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        })
       })
     }
   }

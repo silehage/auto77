@@ -21,10 +21,10 @@
             </q-input>
           </div>
           <div v-if="config && config.is_shippable" class="q-mt-lg">
-            <div class="text-grey-8 text-sm q-py-sm">Pengaturan Gudang Pengiriman</div>
+            <div class="text-grey-8 text-weight-medium q-py-sm">Pengaturan Gudang Pengiriman</div>
               <div @click="changeWarehouse" class="cursor-pointer q-pa-md full-width border q-filled">{{ warehouseTitle() }}</div>
               <div class="q-mt-md" v-if="theCouriers.length">
-                <div class="text-grey-8 text-sm q-py-sm">Pilih Kurir</div>
+                <div class="text-grey-8 text-weight-medium q-py-md">Pengaturan Kurir Aktif</div>
                   <div class="q-gutter-sm">
                     <q-btn unelevated rounded size="10px" v-for="(name, index) in theCouriers" :key="index" 
                     :color="isCourierActive(name)? 'green-5' : 'grey-5'" @click="handleSelectCourier(name)" :label="name"></q-btn>
@@ -32,82 +32,8 @@
               </div>
           </div>
         </q-card-section>
-        <q-card-section v-if="config && config.is_shippable">
-          <div>
-            <div class="text-md text-weight-bold">Pengaturan COD</div>
-            <div class="q-mb-sm text-caption text-grey-7">Pengaturan kecamatan tujuan untuk pengiriman COD <br>( Kosongkan untuk menonaktifkan ) </div>
-            <div>
-              <q-input filled :loading="searchLoading && searchType == 'cod'" placeholder="Ketik kecamatan tujuan COD" v-model="search" debounce="600" @input="searchCodData">
-                <template slot="append" v-if="search">
-                  <q-btn icon="close" flat @click="closeSubdistrictBox" color="red" round></q-btn>
-                </template>
-              </q-input>
-              <div class="relative" v-if="searchType == 'cod' && subdistrictOptions.length">
-                <transition
-                  appear
-                  enter-active-class="animated fadeIn"
-                  leave-active-class="animated fadeOut"
-                >
-                <div class="absolute full-width z-30">
-                  <q-card class="bg-white full-width full-height">
-                    <div class="scroll" style="height:100%;max-height:300px;">
-                      <q-list class="bg-grey-1">
-                        <q-item clickable v-for="(itemData, index) in subdistrictOptions" :key="index" @click="selectCodItemData(itemData)">
-                          <q-item-section side>
-                            <template v-if="hasCodData(itemData)">
-                            <q-icon name="remove_circle" size="17px" color="red"></q-icon>
-                            </template>
-                            <template v-else>
-                            <q-icon name="add_circle" size="17px" color="green"></q-icon>
-                            </template>
-                        </q-item-section>
-                          <q-item-section>
-                            <q-item-label>{{ itemData.subdistrict_name }} - {{ itemData.type }} {{ itemData.city }}</q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </q-list>
-                    </div>
-                      <q-inner-loading
-                        :showing="searchLoading"
-                      >
-                      </q-inner-loading>
-                  </q-card>
-                </div>
-                </transition>
-              </div>
-            </div>
-            <div class="q-py-md">
-              <q-list separator bordered dense>
-                <q-item>
-                  <q-item-section avatar>
-                    #
-                  </q-item-section>
-                  <q-item-section>
-                    Alamat
-                  </q-item-section>
-                  <q-item-section side>
-                    Ongkos Kirim
-                  </q-item-section>
-                </q-item>
-                <q-item v-for="(codItem, index) in formdata.cod_list" :key="index">
-                  <q-item-section avatar>
-                    <q-btn @click="removeCodList(index)" icon="close" color="red" round flat padding="5px" size="sm"></q-btn>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ codItem.subdistrict_name }} {{ codItem.type }} {{ codItem.city }}</q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <div>
-                    <q-input square outlined dense min="0" prefix="Rp" style="width:120px;"  mask="########" v-model="formdata.cod_list[index].price" required></q-input>
-                    </div>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </div>
-          </div>
-        </q-card-section>
         <q-card-actions class="q-pa-md justify-end">
-          <q-btn type="submit" unelevated size="12px" label="Simpan Ekspedisi" color="blue-7"></q-btn>
+          <q-btn type="submit" unelevated size="12px" label="Simpan Pengaturan" color="blue-7"></q-btn>
         </q-card-actions>
       </q-card>
     </q-form>
@@ -166,7 +92,6 @@ export default {
         warehouse_id: '',
         warehouse_address: null,
         rajaongkir_couriers: '',
-        cod_list: []
       },
     }
   },
@@ -192,7 +117,11 @@ export default {
     }
   },
   mounted() {
-    this.getAdminConfig()
+    if(!this.config) {
+      this.getAdminConfig()
+    }else {
+      this.setConfig(this.config)
+    }
   },
   methods: {
     changeWarehouse() {
@@ -208,7 +137,6 @@ export default {
       return 'Pilih Gudang Pengiriman'
     },
     setConfig(item) { 
-      this.formdata.cod_list = item.cod_list? item.cod_list : []
       this.formdata.rajaongkir_type = item.rajaongkir_type
       this.formdata.rajaongkir_apikey = item.rajaongkir_apikey
       this.formdata.rajaongkir_couriers = item.rajaongkir_couriers
@@ -242,26 +170,18 @@ export default {
         this.formdata.rajaongkir_couriers = courierTemp.join(',')
       }
     },
-    showNotify(error = '') {
-      if(error) {
-        this.$q.notify({
-          type: 'negative',
-          message: 'Gagal memperbarui data'
-        })
-      } else {
+    updateData() {
+      Api().post('config',  this.formdata).then(() => {
+        this.$store.dispatch('getAdminConfig')
         this.$q.notify({
           type: 'positive',
           message: 'Berhasil memperbarui data'
         })
-      }
-      
-    },
-    updateData() {
-      Api().post('config',  this.formdata).then(() => {
-        this.$store.dispatch('getAdminConfig')
-        this.showNotify()
       }).catch(() => {
-        this.showNotify(error)    
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        }) 
       })
     },
     submitWarehouse() {
@@ -277,36 +197,11 @@ export default {
       this.subdistrictOptions = []
       this.search = ''
     },
-    selectCodItemData(data) {
-      let hasData = this.formdata.cod_list.filter(elj => elj.subdistrict_id == data.subdistrict_id)
-      if(hasData.length) {
-        this.formdata.cod_list = this.formdata.cod_list.filter(elm => elm.subdistrict_id != data.subdistrict_id)
-      } else {
-        }
-      this.formdata.cod_list.push({...data, price: 0})
-      this.search = ''
-      this.subdistrictOptions = []
-    },
     isInWarehouseItem(item) {
       return this.formdata.warehouse_address.subdistrict_id == item.subdistrict_id ? true : false
     },
-    hasCodData(item) {
-      let has =  this.formdata.cod_list.filter(en => en.subdistrict_id == item.subdistrict_id)
-      if(has.length) {
-        return true
-      } else {
-        return false
-      }
-    },
-    removeCodList(index) {
-      this.formdata.cod_list.splice(index, 1)
-    },
     searchWarehouseData() {
       this.searchType = 'warehouse'
-      this.findSubdistrict()
-    },
-    searchCodData() {
-      this.searchType = 'cod'
       this.findSubdistrict()
     },
     getAdminConfig() {

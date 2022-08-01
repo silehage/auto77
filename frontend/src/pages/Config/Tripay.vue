@@ -30,7 +30,7 @@
         />
       </div>
       <div class="flex justify-end q-mt-md">
-        <q-btn unelevated size="12px" type="submit" label="Simpan Tripay" color="blue-7"></q-btn>
+        <q-btn unelevated size="12px" type="submit" label="Simpan Pengaturan" color="blue-7"></q-btn>
       </div>
     </q-form>
   </div> 
@@ -74,10 +74,16 @@ export default {
     updateDate() {
       let data = {...this.config, ...this.form}
       Api().post('config',  this.form).then(() => {
-        this.showNotify()
+        this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil memperbarui data'
+        })
         this.$store.dispatch('getAdminConfig')
       }).catch(() => {
-        this.showNotify(error)    
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        })  
       })
     },
     checkIsReady(evt) {
@@ -93,20 +99,6 @@ export default {
     },
     isReady() {
       return this.form.tripay_mode && this.form.tripay_api_key && this.form.tripay_private_key && this.form.tripay_merchant_code ? true : false
-    },
-    showNotify(error = '') {
-      if(error) {
-        this.$q.notify({
-          type: 'negative',
-          message: 'Gagal memperbarui data'
-        })
-      } else {
-        this.$q.notify({
-          type: 'positive',
-          message: 'Berhasil memperbarui data'
-        })
-      }
-      
     },
   }
 }

@@ -4,6 +4,12 @@ export default {
   SET_ERRORS: (state,payload) => {
     state.errors = payload
   },
+  PUSH_ERRORS: (state,payload) => {
+    state.errors[payload.key] = payload.value
+  },
+  CLEAR_ERRORS: (state) => {
+    state.errors = {}
+  },
   SET_LOADING: (state, payload) => {
     state.loading = payload
   },

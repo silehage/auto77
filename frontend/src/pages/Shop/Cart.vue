@@ -73,7 +73,7 @@
     </q-dialog>
     <q-footer v-if="carts.items.length" class="bg-white q-pa-md">
       <div class="q-pb-sm flex justify-between">
-        <div class="text-md text-dark">Subtotal</div>
+        <div class="text-md text-dark">Total Order</div>
         <div class="text-md2 text-weight-bold text-secondary">{{ moneyIDR(carts.subtotal) }}</div>
       </div>
       <q-btn v-if="isCanChekout" unelevated @click="checkout" color="primary" class="full-width" no-caps>

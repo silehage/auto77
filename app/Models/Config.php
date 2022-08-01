@@ -34,6 +34,7 @@ class Config extends Model
         'notifypro_interval', 
         'notifypro_timeout', 
         'cod_list', 
+        'is_cod_payment'
     ];
     public $appends = [
         'is_shippable', 
@@ -58,6 +59,7 @@ class Config extends Model
     public $casts = [
         'is_notifypro' => 'boolean',
         'is_payment_gateway' => 'boolean',
+        'is_cod_payment' => 'boolean',
         'is_whatsapp_checkout' => 'boolean',
         'is_guest_checkout' => 'boolean',
         'cod_list' => 'array',

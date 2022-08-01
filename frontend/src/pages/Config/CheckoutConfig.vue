@@ -26,7 +26,7 @@
     </q-item>
   </q-list>
   <div class="flex justify-end q-pa-md">
-      <q-btn unelevated size="12px" @click="updateData" label="Update Data" color="blue-7"></q-btn>
+      <q-btn unelevated size="12px" @click="updateData" label="Simpan Pengaturan" color="blue-7"></q-btn>
     </div>
   </q-card>
 </template>
@@ -54,29 +54,22 @@ export default {
     updateData() {
       let data = {...this.config, ...this.form}
       Api().post('config',  this.form).then(() => {
-        this.showNotify()
+        this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil memperbarui data'
+        })
         this.$store.dispatch('getAdminConfig')
       }).catch(() => {
-        this.showNotify(error)    
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        })  
       })
     },
     setData() {
       if(this.config) {
         this.form.is_whatsapp_checkout = this.config.is_whatsapp_checkout
         this.form.is_guest_checkout = this.config.is_guest_checkout
-      }
-    },
-    showNotify(error = '') {
-      if(error) {
-        this.$q.notify({
-          type: 'negative',
-          message: 'Gagal memperbarui data'
-        })
-      } else {
-        this.$q.notify({
-          type: 'positive',
-          message: 'Berhasil memperbarui data'
-        })
       }
     },
   }

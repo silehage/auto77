@@ -40,7 +40,7 @@ export function filterOrder ({ commit }, payload) {
 export function getCustomerOrders ({ commit }) {
   Api().get('getCustomerOrders').then(response => {
     if(response.status == 200) {
-      commit('SET_CUSTOMER_ORDERS', response.data.results)
+      commit('SET_CUSTOMER_ORDERS', response.data)
     }
   })
 }
@@ -48,7 +48,7 @@ export function getPaginateCustomerOrder ({ commit }, payload) {
   commit('SET_LOAD_MORE_CUSTOMER', true)
   Api().get('getCustomerOrders?skip=' + payload).then(response => {
     if(response.status == 200) {
-      commit('SET_PAGINATE_CUSTOMER_ORDERS', response.data.results)
+      commit('SET_PAGINATE_CUSTOMER_ORDERS', response.data)
     }
   }).finally(() => {
     commit('SET_LOAD_MORE_CUSTOMER', false)

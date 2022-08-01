@@ -74,6 +74,7 @@ class OrderController extends Controller
            $this->data['results'] = Order::with('transaction')
             ->where('user_id', $request->user()->id)
             ->skip($this->data['skip'])
+            ->latest()
             ->take($this->data['limit'])
             ->get();
 
@@ -107,7 +108,7 @@ class OrderController extends Controller
             'payment_method' => ['required', 'string'],
             'payment_type' => ['required', 'string'],
             'payment_name' => ['required', 'string'],
-            'address' => ['required', 'string'],
+            'customer_address' => ['required', 'string'],
             'items' => ['required', 'array'],
             'quantity' => ['required', 'numeric'],
             'subtotal' => ['required', 'numeric'],
@@ -129,7 +130,7 @@ class OrderController extends Controller
                 'customer_name' => $name,
                 'customer_whatsapp' => $whatsapp,
                 'customer_email' => $request->customer_email,
-                'shipping_address' => $request->address,
+                'shipping_address' => $request->customer_address,
                 'order_qty' => $request->quantity,
                 'order_weight' => $request->weight,
                 'order_unique_code' => $request->payment_type == 'DIRECT' ? $uniqueCode : 0,
