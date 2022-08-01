@@ -119,7 +119,7 @@ class OrderController extends Controller
         $whatsapp = filter_var($request->customer_phone, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $uniqueCode = rand(56, 259);
-        $orderRef = 'INV-' . rand(208, 5909). Str::upper(Str::random(5));
+        $orderRef = 'INV' .Carbon::now()->format('ymdHis') .  rand(1,99) . Str::upper(Str::random(2));
 
         DB::beginTransaction();
 

@@ -16,7 +16,7 @@
             <div class="q-mb-sm">
               <div class="text-weight-bold q-mb-xs">{{ shop.name }}</div>
               <div class="">{{ shop.phone }}</div>
-              <div class="text-weight-thin" v-html="shop.address"></div>
+              <div class="" v-html="shop.address"></div>
             </div>
             <div>
               <table>
@@ -61,7 +61,7 @@
             <div class="column justify-end items-end q-py-sm">
               <table class="dense">
                 <tr>
-                  <td align="right">SubTotal</td>
+                  <td align="right">Subtotal</td>
                   <td>:</td>
                   <td align="right">{{ moneyIDR(invoice.order_subtotal) }}</td>
                 </tr>
