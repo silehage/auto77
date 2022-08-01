@@ -45,7 +45,7 @@
 
       <div class="q-py-sm">
         <q-radio v-model="shipping_method" val="Ekspedisi" label="Pengiriman Via Ekspedisi"></q-radio>
-        <q-radio v-if="codItem" v-model="shipping_method" val="Cod" label="Pengiriman Via Kurir Pribadi ( COD )"></q-radio>
+        <q-radio v-if="codItem" v-model="shipping_method" val="Cod" label="Pengiriman Via Kurir Toko ( COD )"></q-radio>
       </div>
 
       <div v-if="shipping_method == 'Ekspedisi'" class="q-mt-sm">
