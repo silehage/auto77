@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center relative">
-   <q-header class="text-primary bg-white">
+   <q-header class="text-primary bg-white box-shadow">
       <q-toolbar dense>
         <q-btn :to="{ name: 'ForgotPassword'}"
           flat round dense
@@ -18,7 +18,10 @@
     <div class="text-red q-pb-sm text-center" v-if="errors.email">{{ errors.email[0] }}</div>
       <q-card flat class="q-pt-sm" style="background:rgb(255 255 255 / 71%);">
         <q-card-section>
-          <div class="text-grey-7 q-pa-sm">{{ isValidToken ? 'Silahkan ganti kata sandi anda, gunakan kata sandi yang tidak mudah di tebak, tapi mudah di ingat.' : 'Kode token sudah kami kirim ke alamat email anda, silahkan buka email anda dan masukan token kedalam input yang tersedia.' }}</div>
+          <div class="text-grey-7 q-pa-sm" v-if="isValidToken">Silahkan ganti kata sandi anda, gunakan kata sandi yang tidak mudah di tebak, tapi mudah di ingat.</div>
+          <div class="text-grey-7 q-pa-sm" v-else>Kode token sudah kami kirim ke alamat email 
+            <span class="text-weight-bold">{{ hideEmail }}</span>, 
+            Silahkan buka email anda dan masukan token kedalam input yang tersedia.</div>
           <q-form @submit.prevent="submit" class="q-gutter-y-sm q-pa-sm">
              
             <template v-if="isValidToken">
@@ -76,7 +79,7 @@
 
         </div>
         <div class="q-py-md text-center">
-          <q-btn :disabled="isLoading" no-caps flat color="green-7" :to="{name: 'Login'}">Kembali ke halaman login</q-btn>
+          <q-btn :disabled="isLoading" no-caps flat color="primary" :to="{name: 'Login'}">Kembali ke halaman login</q-btn>
         </div>
           </q-form>
         </q-card-section>
@@ -95,6 +98,7 @@ export default {
     return {
       isPwd: true,
       isValidToken: false,
+      theEmail: 'anda',
       form: {
         email: '',
         token: '',
@@ -106,6 +110,9 @@ export default {
   computed: {
     errors() {
       return this.$store.state.errors
+    },
+    hideEmail() {
+      return this.$store.state.forgot_password.hide_email
     },
     isLoading() {
       return this.$store.state.loading
@@ -130,7 +137,7 @@ export default {
         Api().get('validateToken/' +this.form.token)
         .then(response => {
           if(response.status == 200) {
-            if(response.data.OK == true) {
+            if(response.data.success) {
               this.isValidToken = true,
               this.form.token = response.data.data.token
               this.form.email = response.data.data.email

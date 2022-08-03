@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center relative">
-    <q-header class="text-primary bg-white">
+    <q-header class="text-primary bg-white box-shadow">
       <q-toolbar dense>
         <q-btn :to="{ name: 'Login'}"
           flat round dense
@@ -21,15 +21,14 @@
             </div>
             <div class="text-grey-7 q-pa-sm" v-if="isHasRequest">
               Anda sudah membuat permintaan reset password, silahkan buka email anda.
-              <router-link no-caps flat class="text-green-7" :to="{name: 'ResetPassword'}">Klik disini untuk memasukan kode token</router-link>
+              <router-link no-caps flat class="text-primary" :to="{name: 'ResetPassword'}">Klik disini untuk memasukan kode token</router-link>
             </div>
           <q-form @submit.prevent="submit" class="q-gutter-y-md q-pa-sm">
              
           <q-input 
             v-model="form.email" 
-            label="Email*"
+            label="Email / Ponsel"
             color="grey-6"
-            type="email"
             dense
             :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
             >
@@ -45,7 +44,7 @@
           </div>
           </q-form>
           <div class="text-center q-mt-sm"> 
-            <q-btn :disabled="isLoading" no-caps flat color="green-7" :to="{name: 'Login'}">Kembali ke halaman login</q-btn>
+            <q-btn :disabled="isLoading" no-caps flat color="primary" :to="{name: 'Login'}">Kembali ke halaman login</q-btn>
           </div>
         </q-card-section>
       </q-card>
@@ -88,18 +87,18 @@ export default {
   methods: {
     ...mapActions('user', ['requestPasswordToken']),
     submit() {
-      let self = this
       this.$store.commit('SET_LOADING', true)
       this.requestPasswordToken(this.form).then(response => {
         if(response.status == 200) {
-          if(response.data.OK == true) {
+          if(response.data.success) {
             localStorage.setItem('is_reqpwd', true)
             this.form.email = ''
+            this.$store.commit('SET_FORGOT_PASSWORD', { key: 'hide_email', value: response.data.email })
             Notify.create({
               type: 'positive',
-              message: 'Berhasil membuat permintaan request kata sandi, Silahkan buka Email.'
+              message: response.data.message
             })
-            self.$router.push({name: 'ResetPassword'})
+            this.$router.push({name: 'ResetPassword'})
           } else {
             this.$q.notify({
               type: 'negative',

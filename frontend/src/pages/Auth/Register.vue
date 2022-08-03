@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center relative">
-     <q-header class="text-primary bg-white">
+     <q-header class="text-primary bg-white box-shadow">
        <q-toolbar>
          <q-btn :to="{name: 'Home'}"
             flat round dense
@@ -101,7 +101,7 @@
           </q-form>
           <div class="column text-center q-mt-sm">
           <div>
-          Sudah punya akun <q-btn no-caps color="green-7" padding="xs" flat :disabled="isLoading" label="Login Disini" :to="{ name: 'Login'}"></q-btn>
+          Sudah punya akun <q-btn no-caps color="primary" padding="xs" flat :disabled="isLoading" label="Login Disini" :to="{ name: 'Login'}"></q-btn>
           </div>
         </div>
         </q-card-section>

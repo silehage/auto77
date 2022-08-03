@@ -15,24 +15,29 @@ class PasswordResetController extends Controller
 {
     public function requestPasswordToken(Request $request)
     {
+
         $request->validate([
             'email' => ['required']
         ]);
-        $user = User::where('email', $request->email)->first();
+
+        $user = User::where('email', $request->email)
+            ->orWhere('phone', $request->email)
+            ->first();
 
         if(!$user) {
             return response([
-                'OK' => false,
-                'message' => 'Email tidak terdaftar.'
+                'success' => false,
+                'message' => 'Email atau nomor ponsel tidak terdaftar.'
             ], 200);
         }
-        $isReady = PasswordReset::where('email', $request->email)->first();
+
+        $isReady = PasswordReset::where('email', $user->email)->first();
 
         if($isReady) {
 
             if(Carbon::parse($isReady->created_at)->addHour() > now()) {
                 return response([
-                    'OK' => false,
+                    'success' => false,
                     'message' => 'Anda baru saja membuat permintaan request password, Tunggu 60 menit untuk membuat permintaan kembali.'
                 ], 200);
             }
@@ -43,20 +48,23 @@ class PasswordResetController extends Controller
         
         try {
             $token = Str::upper(Str::random(rand(8, 12)));
+
             PasswordReset::create([
-                'email' => $request->email,
+                'email' => $user->email,
                 'token' => $token,
                 'created_at' => now()
             ]);
             
-            $user->notify(new ResetPasswordNotification($token));
+            // $user->notify(new ResetPasswordNotification($token));
 
             DB::commit();
 
+            $theEmail = $this->hideEmail($user->email);
+
             return response([
-                'OK' => true,
-                'token' => $token,
-                'email' => $request->email
+                'success' => true,
+                'email' => $this->hideEmail($user->email),
+                'message' => "Permintaan reset password berhasil, Silahkan buka email $theEmail"
             ], 200);
 
         } catch (\Throwable $th) {
@@ -65,13 +73,13 @@ class PasswordResetController extends Controller
             DB::rollBack();
             
             return response([
-                'OK' => false,
+                'success' => false,
                 'message' => $th->getMessage(),
             ], 200);
         }
 
         return response([
-            'OK' => true,
+            'success' => true,
             'token' => $token,
             'email' => $request->email
         ], 200);
@@ -81,22 +89,20 @@ class PasswordResetController extends Controller
     {
 
         $tkn =  trim(htmlspecialchars(strip_tags($token)));
-        if(!$tkn) {
-            return response([
-                'OK' => false,
-                'message' => 'Token Salah, Buka email anda dan masukkan token yang benar'
-            ], 200);
+
+        if($tkn) {
+
+            if( $data = PasswordReset::where('token', $tkn)->first()) {
+                return response([
+                    'success' => true,
+                    'data' => $data
+                ], 200);
+            }
         }
        
-        if( $data = PasswordReset::where('token', $tkn)->first()) {
-            return response([
-                'OK' => true,
-                'data' => $data
-            ], 200);
-        }
         return response([
-            'OK' => false,
-            'message' => 'Token Salah, Buka email anda dan masukkan token yang benar'
+            'success' => false,
+            'message' => 'Token salah, buka email anda dan masukkan token yang benar'
         ], 200);
 
     }
@@ -107,7 +113,7 @@ class PasswordResetController extends Controller
             'token' => ['required', 'string'],
             'email' => ['required'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
-        ]);
+    ]);
 
         $tkn = filter_var($request->token, FILTER_SANITIZE_SPECIAL_CHARS);
         
@@ -127,8 +133,19 @@ class PasswordResetController extends Controller
         PasswordReset::where('email', $data->email)->delete();
 
         return response([
-            'OK' => true,
+            'success' => true,
             'message' => 'Silahkan Login dengan password baru anda.'
         ], 200);
+    }
+
+    protected function hideEmail($email) 
+    {
+
+        $em   = explode("@",$email);
+        $name = implode('@', array_slice($em, 0, count($em)-1));
+        $len = strlen($name)/2;
+
+        return substr($name,0, floor($len)) . str_repeat('*', ceil($len)) . "@" . end($em);   
+
     }
 }

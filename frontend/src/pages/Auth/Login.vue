@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center relative">
-     <q-header class="text-primary bg-white">
+     <q-header class="text-primary bg-white box-shadow">
        <q-toolbar>
          <q-btn :to="{name: 'Home'}"
             flat round dense
@@ -57,10 +57,10 @@
         </div>
           </q-form>
           <div class="text-center q-mt-sm">
-          Belum punya akun <q-btn no-caps color="green-7" padding="xs" flat :disabled="isLoading" label="Daftar Disini" :to="{ name: 'Register'}"></q-btn>
+          Belum punya akun <q-btn no-caps color="primary" padding="xs" flat :disabled="isLoading" label="Daftar Disini" :to="{ name: 'Register'}"></q-btn>
           </div>
           <div class="text-center q-mt-sm">
-          <q-btn no-caps color="green-7" padding="xs" flat :disabled="isLoading" label="Lupa password?" :to="{ name: 'ForgotPassword'}"></q-btn>
+          <q-btn no-caps color="primary" padding="xs" flat :disabled="isLoading" label="Lupa password?" :to="{ name: 'ForgotPassword'}"></q-btn>
           </div>
         </q-card-section>
       </q-card>

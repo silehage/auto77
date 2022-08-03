@@ -26,7 +26,7 @@ import actions from './actions'
 
 const stateData = createPersistedState({
   key: '__state',
-  paths: ['user', 'cart', 'shop', 'config', 'session_id', 'product.favorites', 'coupon.coupon_discount'],
+  paths: ['user', 'cart', 'shop', 'config', 'session_id', 'product.favorites', 'coupon.coupon_discount', 'forgot_password'],
   storage: {
     getItem: (key) => ls.get(key),
     setItem: (key, value) => ls.set(key, value, { expires: 1 }),
@@ -57,6 +57,11 @@ export default function (/* { ssrContext } */) {
       deferredPrompt: null,
       isMenuCategory: false,
       session_id: null,
+      forgot_password: {
+        token: '',
+        email: '',
+        hide_email: 'anda'
+      },
       meta: {
         title: '',
         description: 'Simple Web Commerce checkout whatsapp'
