@@ -47,15 +47,17 @@ class PasswordResetController extends Controller
         DB::beginTransaction();
         
         try {
-            $token = Str::upper(Str::random(rand(8, 12)));
+            $token = Str::upper(Str::random(4)) . rand(10,99) . Str::upper(Str::random(4));
 
             PasswordReset::create([
                 'email' => $user->email,
                 'token' => $token,
                 'created_at' => now()
             ]);
+
+            $delay = now()->addSeconds(5);
             
-            // $user->notify(new ResetPasswordNotification($token));
+            $user->notify((new ResetPasswordNotification($token))->delay($delay));
 
             DB::commit();
 

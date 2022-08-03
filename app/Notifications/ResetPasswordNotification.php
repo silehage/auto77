@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification
+class ResetPasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -46,7 +46,7 @@ class ResetPasswordNotification extends Notification
         return (new MailMessage)
                     ->line('Anda mengirimkan permintaan reset password, berikut kode token untuk mereset password anda')
                     ->line($this->token)
-                    ->line('Jika Anda tidak melakukan permintaan reset password, abaikan pesan ini. Jangan pernah memberikan kode ini ke siapapun.');
+                    ->line('Abaikan pesan ini jika anda tidak melakukan permintaan tersebut dan jangan pernah memberikan kode ini ke siapapun.');
     }
 
     /**
