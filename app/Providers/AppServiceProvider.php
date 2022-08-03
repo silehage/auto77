@@ -32,7 +32,6 @@ class AppServiceProvider extends ServiceProvider
         $shop = null;
 
         try {
- 
             $shop = Cache::rememberForever('shop', function () {
                 return Store::first();
             });

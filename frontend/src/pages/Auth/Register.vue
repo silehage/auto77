@@ -11,7 +11,7 @@
     <div style="max-width: 450px;width:100%;" class="q-pa-sm">
       <div class="flex justify-center">
         <img v-if="shop && shop.logo_path" :src="shop.logo" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
-        <img v-else src="/icon/logo.png" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
+        <img v-else src="/icon/icon-192x192.png" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
       </div>
       <div class="text-red q-pb-sm text-center" v-if="errors.email">{{ errors.email[0] }}</div>
       <q-card flat class="q-pt-sm" style="background:rgb(255 255 255 / 71%);">

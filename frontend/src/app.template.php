@@ -8,6 +8,7 @@
     <title>{{ $jsapp['shop']['sitename'] }}</title>
     <meta property="og:title" content="{{ $jsapp['shop']['sitename'] }}" data-qmeta="ogTitle">
     @endif
+    
     @if($jsapp['page']['description'])
     <meta name="description" content="{{ $jsapp['page']['description'] }}">
     <meta property="og:description" content="{{ $jsapp['page']['description'] }}" data-qmeta="ogDescription">

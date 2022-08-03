@@ -2,7 +2,7 @@
   <q-page class="romance bg-light" :class="{'flex flex-center' : loading }">
     <q-header reveal :reveal-offset="10" class="bg-white box-shadow">
         <q-toolbar class="q-py-sm">
-          <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
+          <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
           <div class="col q-ml-sm row items-center">
             <div class="col">
               <q-input borderless ref="input" color="grey-4" dense class="input-search text-xs bg-grey-1" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."

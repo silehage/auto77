@@ -187,11 +187,6 @@ module.exports = function (ctx ) {
             'type': 'image/png'
           },
           {
-            'src': 'icon/icon-256x256.png',
-            'sizes': '256x256',
-            'type': 'image/png'
-          },
-          {
             'src': 'icon/icon-384x384.png',
             'sizes': '384x384',
             'type': 'image/png'
@@ -211,7 +206,7 @@ module.exports = function (ctx ) {
         appleTouchIcon152: 'icon/icon-152X152.png',
         appleTouchIcon167: 'icon/icon-167x167.png',
         appleTouchIcon180: 'icon/icon-180x180.png',
-        appleSafariPinnedTab: 'icon/favicon.svg',
+        appleSafariPinnedTab: 'icon/favicon.png',
         msapplicationTileImage: 'icon/icon-144x144.png',
         msapplicationTileColor: '#000000'
       },

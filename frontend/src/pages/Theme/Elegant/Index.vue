@@ -2,7 +2,7 @@
   <q-page class="bg-grey-1 elegant" :class="{'flex flex-center' : loading }">
      <q-header reveal class="bg-primary text-white">
         <q-toolbar class="q-py-md">
-          <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/logo.png'" />
+          <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
           <div class="col q-mx-sm inline-flex">
             <q-input dense ref="input" borderless class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
               >
