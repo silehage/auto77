@@ -25,7 +25,7 @@ class FrontController extends Controller
         $title = $this->shop->name;
 
         if($this->shop->slogan) {
-            $title += ' | ' . $this->shop->slogan;
+            $title = $title . ' | ' . $this->shop->slogan;
         }
         return View::vue([
             'title' => $title,
@@ -91,7 +91,7 @@ class FrontController extends Controller
     {
         $title = $this->shop->name;
         if($this->shop->slogan) {
-            $title += ' | ' . $this->shop->slogan;
+            $title = $title . ' | ' . $this->shop->slogan;
         }
         return View::vue([
             'title' => $title,
