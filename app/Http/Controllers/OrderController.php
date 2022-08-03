@@ -118,8 +118,10 @@ class OrderController extends Controller
         $name = filter_var($request->customer_name, FILTER_SANITIZE_SPECIAL_CHARS);
         $whatsapp = filter_var($request->customer_phone, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $uniqueCode = rand(56, 259);
+        $uniqueCode = $request->payment_type == 'BANK_TRANSFER' ? rand(56, 259) : 0;
         $orderRef = 'INV' . Carbon::now()->format('ymdHis') .  rand(1,99) . Str::upper(Str::random(2));
+
+        $orderTotal = $request->payment_type == 'BANK_TRANSFER' ? $request->total-$uniqueCode : $request->total;
 
         DB::beginTransaction();
 
@@ -133,9 +135,9 @@ class OrderController extends Controller
                 'shipping_address' => $request->customer_address,
                 'order_qty' => $request->quantity,
                 'order_weight' => $request->weight,
-                'order_unique_code' => $request->payment_type == 'DIRECT' ? $uniqueCode : 0,
+                'order_unique_code' => $uniqueCode,
                 'order_subtotal' => $request->subtotal,
-                'order_total' => $request->payment_type == 'DIRECT' ? $request->total-$uniqueCode : $request->total,
+                'order_total' => $orderTotal,
                 'order_status' => 'UNPAID',
                 'shipping_courier_name' => $request->shipping_courier_name,
                 'shipping_courier_service' => $request->shipping_courier_service,
