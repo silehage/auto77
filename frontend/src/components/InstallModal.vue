@@ -4,7 +4,7 @@
       <div class="row no-wrap items-center">
         <div class="q-mr-sm">
           <img v-if="shop && shop.logo_url" :src="shop.logo_url" width="55" height="55"/>
-          <img v-else src="/icon/icon-96x96.png" width="55" height="55"/>
+          <img v-else src="/icon/icon-384x384.png" width="55" height="55"/>
         </div>
         <div>
           <div v-if="shop" class="text-weight-bold text-md text-primary">{{ shop.name }} App</div>

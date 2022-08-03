@@ -7,7 +7,7 @@
         <q-item>
           <q-item-section avatar>
             <img v-if="shop && shop.logo_url" :src="shop.logo_url" width="50" height="50"/>
-            <img v-else src="/icon/icon-96x96.png" width="50" height="50"/>
+            <img v-else src="/icon/icon-384x384.png" width="50" height="50"/>
           </q-item-section>
           <q-item-section top>
             <div class="text-weight-bold text-md text-primary">{{ shop.name }} App</div>
