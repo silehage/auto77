@@ -79,7 +79,6 @@ export default {
   data () {
     return {
       step: 1,
-      isOk: false,
       formLoading: false,
       paymentSelected: null,
       paymentChanels: {

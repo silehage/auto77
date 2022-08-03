@@ -23,8 +23,9 @@ class FrontController extends Controller
     public function homepage()
     {
         $title = $this->shop->name;
-        if($this->shop->description) {
-            $title = $title . ' | ' . $this->shop->description;
+
+        if($this->shop->slogan) {
+            $title += ' | ' . $this->shop->slogan;
         }
         return View::vue([
             'title' => $title,
@@ -88,10 +89,12 @@ class FrontController extends Controller
     }
     public function any()
     {
+        $title = $this->shop->name;
+        if($this->shop->slogan) {
+            $title += ' | ' . $this->shop->slogan;
+        }
         return View::vue([
-            'title' => $this->shop->name,
-            'description' => $this->shop->description,
-            'featured_image' => $this->shop->logo_path? url($this->shop->logo_path) : null,
+            'title' => $title,
             'data' => null
         ]);
     }

@@ -15,10 +15,11 @@
       <div class="q-gutter-y-md">
         <q-input label="Nama Toko" v-model="form.name"></q-input>
         <q-input label="Nomor Whatsapp" v-model="form.phone" placeholder="0812*******"></q-input>
+        <q-input label="Slogan" v-model="form.slogan"></q-input>
         <div class="q-my-xs text-red text-sm" v-if="errors.phone">Nomor Whatsapp harus berupa angka</div>
         <q-input autogrow label="Deskripsi Toko" v-model="form.description"></q-input>
         <div class="q-my-md">
-          <div for="" class="text-grey-8 q-mb-sm">Alamat Tampilan Toko</div>
+          <div for="" class="text-grey-8 q-mb-sm">Alamat Toko</div>
           <q-editor 
             v-model="form.address" 
             :toolbar="[
@@ -71,6 +72,7 @@ export default {
         phone: '',
         address: '',
         description: '',
+        slogan: '',
         logo: '',
         is_remove_logo: false,
       },
@@ -144,6 +146,7 @@ export default {
     setDataToko() {
       this.form.name = this.toko.name ? this.toko.name : ''
       this.form.phone = this.toko.phone ? this.toko.phone : ''
+      this.form.slogan = this.toko.slogan ? this.toko.slogan : ''
       this.form.address = this.toko.address ? this.toko.address : ''
       this.form.description = this.toko.description ? this.toko.description : ''
       this.imagePreview = this.toko.logo ? this.toko.logo : ''

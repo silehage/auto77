@@ -30,20 +30,13 @@
     <meta property="og:type" content="website" data-qmeta="ogType"/>
     @if(isset($jsapp['page']['featured_image']) && $jsapp['page']['featured_image'])
     <meta property="og:image" content="{{ $jsapp['page']['featured_image'] }}" data-qmeta="ogImage">
-    @else 
-    <meta property="og:image" content="icon/icon-384x384.png" data-qmeta="ogImage">
     @endif
   </head>
   <body class="bg-blue-grey-1">
   @if(isset($jsapp['page']['featured_image']) && $jsapp['page']['featured_image'])
       <link itemprop="thumbnailUrl" href="{{ $jsapp['page']['featured_image'] }}" >
       <span itemprop="thumbnail" itemscope itemtype="https://schema.org/ImageObject">
-      <link itemprop="url" href="{{ $jsapp['page']['featured_image'] }}">
-      </span>
-    @else 
-    <link itemprop="thumbnailUrl" href="icon/icon-384x384.png" >
-      <span itemprop="thumbnail" itemscope itemtype="https://schema.org/ImageObject">
-        <link itemprop="url" href="icon/icon-384x384.png" >
+        <link itemprop="url" href="{{ $jsapp['page']['featured_image'] }}">
       </span>
     @endif
     <!-- DO NOT touch the following DIV -->
