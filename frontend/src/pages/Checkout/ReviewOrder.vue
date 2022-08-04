@@ -106,7 +106,7 @@
     <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Pembayaran</legend>
         <div class="row q-gutter-sm">
-          <template v-if="formOrder.payment_method == 'COD'">
+          <template v-if="formOrder.payment_type == 'COD'">
           <div class="box-shadow payment-list is-selected text-primary">
             <div class="text-weight-bold text-lg text-center">COD</div>   
             <div class="text-center text-sm q-pa-xs">Bayar Ditempat</div>   

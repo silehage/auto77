@@ -381,9 +381,11 @@ h1,h2,h3,h4,h5,h6 {
 .box-shadow-top {
   box-shadow: 0px -8px 19px rgb(0 0 0 / 5%);
 }
+.box-shadow1 {
+   box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
+}
 .box-shadow,
 .q-card.shadow {
-  // box-shadow: 0 10px 20px rgb(0 0 0 / 5%);
   box-shadow: 0px 14px 16px -10px rgba(48, 48, 48, 0.04);
 }
 #checkout {
@@ -398,6 +400,9 @@ h1,h2,h3,h4,h5,h6 {
   fieldset {
     border-color: #d1d1d1;
     border-style: dashed;
+    border-left-width: 0;
+    border-bottom-width: 0;
+    border-right-width: 0;
   }
   legend {
     font-weight: 600;
@@ -520,6 +525,7 @@ h1,h2,h3,h4,h5,h6 {
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
+
 table.dense {
   tr {
     th, td {
@@ -569,6 +575,16 @@ table.table td, table.table td * {
   flex-direction: row;
   flex-wrap: wrap;
   padding:12px 8px;
+}
+@media screen and (max-width: 600px) {
+  .payment-container {
+    padding:12px 0px;
+  }
+  #checkout {
+      fieldset {
+      padding: 0.35em 0.3em 0.625em;
+    }
+  }
 }
 .payment-list {
   box-sizing: border-box;

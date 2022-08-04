@@ -10,11 +10,11 @@ export default {
   CLEAR_ERRORS: (state) => {
     state.errors = {}
   },
-  SET_LOADING: (state, payload) => {
-    state.loading = payload
-  },
   SET_FORGOT_PASSWORD: (state, payload) => {
     state.forgot_password[payload.key] = payload.value
+  },
+  SET_LOADING: (state, payload) => {
+    state.loading = payload
   },
   SET_SHOP: (state, shop) => {
     state.shop = shop

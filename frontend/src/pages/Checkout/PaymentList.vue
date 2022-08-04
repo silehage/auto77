@@ -5,13 +5,13 @@
         <legend class="q-px-sm">Direct</legend>
         <div class="row q-gutter-sm payment-container">
           <div v-if="isCod && config.is_cod_payment"
-            class="box-shadow cursor-pointer payment-list column justify-center" 
+            class="box-shadow1 cursor-pointer payment-list column justify-center" 
             :class="{'is-selected text-primary' : isSelectedCod}" @click="selectCodPayment">
               <div class="text-md text-weight-bold" >COD</div>
               <div class="text-center name">Bayar Ditempat</div>
           </div>
           <div 
-            class="box-shadow cursor-pointer payment-list column justify-center" 
+            class="box-shadow1 cursor-pointer payment-list column justify-center" 
             :class="{'is-selected text-primary' : isSelectedBank(item.id)}"
             v-for="(item, index) in payments.localbanks" 
             :key="index" @click="selectPaymentBank(item)">
@@ -31,7 +31,7 @@
         <div class="row q-gutter-sm payment-container">
           <div v-for="(item, index) in virtualAccounts" :key="index">
             <div 
-              class="box-shadow cursor-pointer payment-list" 
+              class="box-shadow1 cursor-pointer payment-list" 
               :class="{'is-selected text-primary' : isSelected(item.code)}"
                @click="selectPayment(item)">
                 <div class="image">
@@ -52,7 +52,7 @@
            <div v-for="(item, index) in convenienceStore" 
             :key="index">
             <div 
-            class="box-shadow cursor-pointer payment-list" 
+            class="box-shadow1 cursor-pointer payment-list" 
             :class="{'is-selected text-primary' : isSelected(item.code)}"
              @click="selectPayment(item)">
               <div class="image">
@@ -72,7 +72,7 @@
          <div class="row q-gutter-sm payment-container">
            <div v-for="(item, index) in ewalet" :key="index">
             <div 
-              class="box-shadow cursor-pointer payment-list" 
+              class="box-shadow1 cursor-pointer payment-list" 
               :class="{'is-selected text-primary' : isSelected(item.code)}"
                @click="selectPayment(item)">
                 <div class="image">
