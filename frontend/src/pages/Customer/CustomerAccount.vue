@@ -6,7 +6,7 @@
            Akun
         </q-toolbar-title> 
         <q-btn to="/"
-        flat
+        flat dense padding="xs"
         label="Beranda" no-caps
         icon-right="navigate_next" />
       </q-toolbar>

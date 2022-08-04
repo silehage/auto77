@@ -14,7 +14,7 @@ export function login ({commit, dispatch}, payload) {
       if(user.role == 'admin') {
         this.$router.push({name: 'Settings'})
       } else {
-        this.$router.push({name: 'CustomerOrder'})
+        this.$router.push({name: 'CustomerAccount'})
       }
     }
   })
@@ -35,7 +35,7 @@ export function register ({commit, dispatch}, payload) {
       if(user.role == 'admin') {
         this.$router.push({name: 'Settings'})
       } else {
-        this.$router.push({name: 'CustomerOrder'})
+        this.$router.push({name: 'CustomerAccount'})
       }
     }
   })
