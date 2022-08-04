@@ -418,6 +418,12 @@ export default {
       }
       return 'PaymentGateway'
     },
+    title() {
+      if(this.invoice) {
+        return `Tagihan ${this.invoice.order_ref}`
+      }
+      return 'Tagihan'
+    }
   },
   created() {
     if(!this.invoice){
@@ -541,6 +547,15 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.timeout)
+  },
+  meta() {
+    return {
+      title: this.title,
+      meta: {
+        ogTitle:  { property: 'og:title', content: this.title },
+      }
+      
+    }
   }
 
 }

@@ -370,6 +370,11 @@ export default {
       this.closeModal()
     }
   },
+  meta() {
+    return {
+      title: 'Order List',
+    }
+  }
   
 }
 </script>

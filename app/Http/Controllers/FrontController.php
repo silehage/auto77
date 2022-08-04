@@ -87,6 +87,14 @@ class FrontController extends Controller
             'data' => null
         ]);
     }
+    public function showInvoice($id)
+    {
+        return View::vue([
+            'title' => "Invoice #$id",
+            'description' => "Detail tagihan dan instruksi pembayaran invoice #$id - " . $this->shop->name,
+            'data' => null
+        ]);
+    }
     public function any()
     {
         $title = $this->shop->name;
