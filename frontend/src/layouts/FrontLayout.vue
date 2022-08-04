@@ -107,7 +107,7 @@ export default {
         if(this.user.role == 'admin') {
           this.$router.push({name: 'Settings'})
         } else {
-          this.$router.push({name: 'CustomerOrder'})
+          this.$router.push({name: 'CustomerAccount'})
         }
       } else {
         this.$router.push({name: 'Login'})

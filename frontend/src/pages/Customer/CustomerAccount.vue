@@ -24,8 +24,15 @@
                   <q-item-label class="text-grey-1">{{ user.phone }}</q-item-label>
                   <q-item-label class="text-grey-4">{{ user.email }}</q-item-label>
                 </q-item-section>
-                <q-item-section side >
-                  <q-btn icon="edit" dense color="grey-4" text-color="dark" rounded :to="{ name: 'CustomerAccountEdit' }"></q-btn>
+                <q-item-section side top >
+                  <div class="column q-gutter-y-sm">
+                    <q-btn icon="edit" round size="11px" color="grey-4" text-color="dark" :to="{ name: 'CustomerAccountEdit' }">
+                      <q-tooltip content-class="bg-indigo" :offset="[10, 10]">Edit Akun</q-tooltip>
+                    </q-btn>
+                    <q-btn icon="logout" round size="11px" color="grey-4" text-color="dark" @click="logout">
+                     <q-tooltip content-class="bg-amber text-black" :offset="[10, 10]">Keluar</q-tooltip>
+                    </q-btn>
+                  </div>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -151,6 +158,9 @@ export default {
     messageButtonLabel(status) {
       if(status == 'UNPAID' || status == 'OVERDUE') return 'Follow Up Order'
       return 'Kirim Pesan'
+    },
+    logout() {
+      this.$store.dispatch('user/logout')
     },
   },
 
