@@ -106,7 +106,7 @@ export default {
     initialName() {
       if(this.user) {
         let named = this.user.name.split(' ').map(el => el.slice(0,1)).join('')
-        return named.slice(0,2)
+        return named.slice(0,2).toUpperCase()
       }
       return 'SW'
     }
