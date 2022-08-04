@@ -49,7 +49,7 @@
           <q-item>
             <q-item-section side>#</q-item-section>
             <q-item-section>Invoice</q-item-section>
-            <q-item-section>Total</q-item-section>
+            <q-item-section class="mobile-hide">Total</q-item-section>
             <q-item-section>Status</q-item-section>
             <q-item-section side>Detail</q-item-section>
           </q-item>
@@ -59,12 +59,13 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>{{ order.order_ref }}</q-item-label>
+              <q-item-label class="desktop-hide">{{ moneyIDR(order.grand_total) }}</q-item-label>
               <q-item-label caption>{{ order.created }}</q-item-label>
             </q-item-section>
-            <q-item-section>{{ moneyIDR(order.grand_total) }}</q-item-section>
+            <q-item-section class="mobile-hide">{{ moneyIDR(order.grand_total) }}</q-item-section>
             <q-item-section>
               <div class="row">
-                 <q-badge class="text-center justify-center" style="min-width:90px;" :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>  
+                 <q-badge class="text-center justify-center" style="min-width:90px;padding:4px;" :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>  
               </div>
             </q-item-section>
             <q-item-section side>
