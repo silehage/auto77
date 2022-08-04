@@ -402,6 +402,7 @@ export default {
       isPrintPacking: false,
       isPrintInvoice: false,
       timeout: null,
+      requestCount: 1,
       whatsappUrl: 'https://api.whatsapp.com'
     }
   },
@@ -536,8 +537,9 @@ export default {
         })
     },
     checkOrderStatus() {
-      if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS') {
+      if(this.invoice.order_status == 'UNPAID' || this.invoice.order_status == 'PROCESS' && this.requestCount < 10) {
         this.timeout = setTimeout(() => {
+          this.requestCount++
           this.getCheckOrder()
         }, 20000)
       } else {

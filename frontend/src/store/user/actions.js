@@ -72,7 +72,11 @@ export function updateUser ({commit}, payload) {
     if(response.status == 200) {
       commit('SET_USER', response.data.results)
       commit('SET_LOADING', false, {root: true})
-      this.$router.push({name: 'Settings'})
+      // this.$router.push({name: 'Settings'})
+      Notify.create({
+        type: 'positive',
+        message: 'Berhasil mengedit data'
+      })
     }
   }).catch((error) => {
       commit('SET_LOADING', false, {root: true})

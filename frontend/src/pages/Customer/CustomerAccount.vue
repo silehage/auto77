@@ -1,54 +1,75 @@
 <template>
   <q-page>
-      <div class="q-pa-md q-gutter-y-md">
-        <q-input  v-model="form.name" label="Nama">
-          <template v-slot:prepend>
-              <q-icon name="person" />
-          </template>
-        </q-input>
-        <q-input  type="email" v-model="form.email" label="Email">
-          <template v-slot:prepend>
-              <q-icon name="email" />
-          </template>
-        </q-input>
-        <q-input  v-model="form.phone" label="No Ponsel / Whatasapp">
-          <template v-slot:prepend>
-              <q-icon name="phone" />
-          </template>
-        </q-input>
-        <template v-if="changePassword">
-        <q-input  
-        :type="isPwd ? 'password' : 'text'" 
-        placeholder="Password Baru"
-        v-model="form.password">
-          <template v-slot:prepend>
-              <q-icon name="lock" />
-          </template>
-          <template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-              
-            />
-          </template>
-        </q-input>
-        <q-input 
-        :type="isPwd ? 'password' : 'text'" 
-        placeholder="Konfirmasi Password"
-        v-model="form.password_confirmation">
-          <template v-slot:prepend>
-              <q-icon name="lock" />
-          </template>
-        </q-input>
-        </template>
-        <q-btn @click="btnChangePassword" class="q-mt-md" dense color="primary" no-caps flat :label="changePassword? 'Batal Ganti Password' : 'Ganti Password'"></q-btn>
+    <q-header class="bg-primary" dark>
+      <q-toolbar>
+        <q-toolbar-title>
+           Akun
+        </q-toolbar-title> 
+        <q-btn to="/"
+        flat
+        label="Beranda" no-caps
+        icon-right="navigate_next" />
+      </q-toolbar>
+    </q-header>
+    <div class="header">
+        <div class="header-inner q-pt-sm q-pb-lg large">
+          <q-card class="bg-primary q-py-lg" flat dark square>
+            <q-list>
+              <q-item>
+                <q-item-section avatar>
+                  <q-avatar color="pink" text-color="white" size="70px">{{ initialName }}</q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-h5 text-weight-bold">{{ user.name }}</q-item-label>
+                  <q-item-label class="text-grey-1">{{ user.phone }}</q-item-label>
+                  <q-item-label class="text-grey-4">{{ user.email }}</q-item-label>
+                </q-item-section>
+                <q-item-section side >
+                  <q-btn icon="edit" dense color="grey-4" text-color="dark" rounded :to="{ name: 'CustomerAccountEdit' }"></q-btn>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card>
+        </div>
       </div>
-      <q-footer>
-        <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data">
-           <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
-        </q-btn>
-      </q-footer>
+      <div class="q-mt-lg q-pa-sm">
+        <div class="flex justify-between q-pa-sm">
+          <div class="text-weight-bold text-md">Transaksi Terbaru</div>
+          <q-btn color="primary" label="Selengkapnya" flat no-caps size="sm" padding="xs" :to="{ name: 'CustomerOrder' }"></q-btn>
+        </div>
+
+        <q-list separator>
+          <q-item>
+            <q-item-section side>#</q-item-section>
+            <q-item-section>Invoice</q-item-section>
+            <q-item-section>Total</q-item-section>
+            <q-item-section>Status</q-item-section>
+            <q-item-section side>Detail</q-item-section>
+          </q-item>
+          <q-item v-for="(order, index) in currentOrder" :key="order.id">
+            <q-item-section side top>
+              {{ index+1 }}
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ order.order_ref }}</q-item-label>
+              <q-item-label caption>{{ order.created }}</q-item-label>
+            </q-item-section>
+            <q-item-section>{{ moneyIDR(order.grand_total) }}</q-item-section>
+            <q-item-section>
+              <div class="row">
+                 <q-badge class="text-center justify-center" style="min-width:90px;" :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>  
+              </div>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn icon="launch" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
+            </q-item-section>
+          </q-item>
+        </q-list>
+
+        <div class="flex justify-center q-py-lg">
+             <q-btn label="Selengkapnya..." color="primary" no-caps  outline :to="{ name: 'CustomerOrder' }"></q-btn>
+        </div>
+      </div>
   </q-page>
 </template>
 
@@ -73,10 +94,27 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user.user,
-      loading: state => state.loading
-    })
+      loading: state => state.loading,
+      orders: state => state.order.customer_order,
+    }),
+    currentOrder() {
+      if(this.orders.data.length) {
+        return this.orders.data.slice(0, 5)
+      }
+      return []
+    },
+    initialName() {
+      if(this.user) {
+        let named = this.user.name.split(' ').map(el => el.slice(0,1)).join('')
+        return named.slice(0,2)
+      }
+      return 'SW'
+    }
   },
   created() {
+    if(!this.orders.data.length) {
+      this.$store.dispatch('order/getCustomerOrders')
+    }
     if(!this.user) {
       Api().get('user').then(response => {
         if(response.status == 200) {
@@ -102,7 +140,18 @@ export default {
       this.changePassword = !this.changePassword
       this.form.password_confirmation = ''
       this.form.password = ''
-    }
+    },
+    changeBadgeColor(type) {
+      if(type == 'PAID' || type == 'SHIPPING') return 'teal'
+      if(type == 'PROCESS') return 'blue'
+      if(type == 'COMPLETE') return 'green'
+      if(type == 'CANCELED') return 'red'
+      return 'grey-7'
+    },
+    messageButtonLabel(status) {
+      if(status == 'UNPAID' || status == 'OVERDUE') return 'Follow Up Order'
+      return 'Kirim Pesan'
+    },
   },
 
 }

@@ -1,71 +1,43 @@
 <template>
   <q-page class="q-pb-xl">
+    <q-header class="bg-primary" dark>
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-btn :to="{ name: 'CustomerAccount' }"
+          flat round
+          icon="arrow_back" />
+        Order
+        </q-toolbar-title> 
+      </q-toolbar>
+    </q-header>
     <template v-if="orders.data.length">
-    <div>
-      <q-list separator>
-        <q-item>
-          <q-item-section side class="xs-hide">
-           #
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Detail</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label>Actions</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item v-for="(order, index) in orders.data" :key="order.id">
-          <q-item-section side top class="xs-hide">
-            {{ index+1 }}
-          </q-item-section>
-          <q-item-section top>
-            <div class="text-sm1">
-              <table class="dense">
-                <tr>
-                  <td>INVOICE</td>
-                  <td>{{ order.order_ref}}</td>
-                </tr>
-                <tr>
-                  <td>Nama</td>
-                  <td>{{ order.customer_name }}</td>
-                </tr>
-                <tr>
-                  <td>WA</td>
-                  <td>{{ order.customer_whatsapp }}</td>
-                </tr>
-                <tr>
-                  <td>Total</td>
-                  <td>{{ moneyIDR(order.grand_total) }}</td>
-                </tr>
-                <tr>
-                  <td>Dibuat</td>
-                  <td>{{ order.created_at }}</td>
-                </tr>
-                <tr>
-                  <td>Pengiriman</td>
-                  <td>{{ order.shipping_courier_name }}</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align:top;">Pembayaran</td>
-                  <td><div v-html="order.transaction? order.transaction.payment_name : ''"></div></td>
-                </tr>
-                <tr>
-                  <td>Status</td>
-                  <td>
-                    <q-badge :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </q-item-section>
-          <q-item-section side>
-            <div class="column q-gutter-y-sm">
-              <q-btn unelevated no-caps size="13px" label="Detail" color="purple-7" :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
-            </div>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
+    <q-list separator>
+      <q-item>
+        <q-item-section side>#</q-item-section>
+        <q-item-section>Invoice</q-item-section>
+        <q-item-section>Total</q-item-section>
+        <q-item-section>Status</q-item-section>
+        <q-item-section side>Detail</q-item-section>
+      </q-item>
+      <q-item v-for="(order, index) in orders.data" :key="order.id">
+        <q-item-section side top>
+          {{ index+1 }}
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ order.order_ref }}</q-item-label>
+          <q-item-label caption>{{ order.created }}</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ moneyIDR(order.grand_total) }}</q-item-section>
+        <q-item-section>
+          <div class="row">
+              <q-badge class="text-center justify-center" style="min-width:90px;" :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>  
+          </div>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn icon="launch" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
+        </q-item-section>
+      </q-item>
+    </q-list>
    <div class="flex justify-center q-py-xl">
      <q-btn outline :loading="orders.isLoadMore" v-if="orders.count > orders.data.length"  label="loadmore..." @click="loadMore" unelevated color="primary"></q-btn>
    </div>
@@ -108,8 +80,11 @@ export default {
       loading: state => state.loading
     }),
   },
-  created() {
-    this.getCustomerOrders()
+  mounted() {
+    console.log(this.orders.data.length, this.orders.limit);
+    if(!this.orders.data.length || this.orders.data.length <= this.orders.limit) {
+      this.getCustomerOrders()
+    }
   },
   methods: {
     ...mapActions('order', ['getCustomerOrders', 'getPaginateCustomerOrder', 'filterOrder']),

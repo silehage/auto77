@@ -118,7 +118,7 @@ class OrderController extends Controller
         $name = filter_var($request->customer_name, FILTER_SANITIZE_SPECIAL_CHARS);
         $whatsapp = filter_var($request->customer_phone, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $uniqueCode = $request->payment_type == 'BANK_TRANSFER' ? rand(56, 259) : 0;
+        $uniqueCode = $request->payment_type == 'BANK_TRANSFER' ? rand(10, 100) : 0;
         $orderRef = 'INV' . Carbon::now()->format('ymdHis') .  rand(1,99) . Str::upper(Str::random(3));
 
         $orderTotal = $request->payment_type == 'BANK_TRANSFER' ? $request->total-$uniqueCode : $request->total;
