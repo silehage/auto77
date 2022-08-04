@@ -172,7 +172,7 @@ class OrderController extends Controller
                 $transaction->payment_name = $request->payment_name;
                 $transaction->amount = $order->order_total;
     
-                $transaction->payment_ref = 'DTR' . Carbon::now()->format('ymd') . rand(100, 999) .Str::upper(Str::random(4)) . $order->id;
+                $transaction->payment_ref = 'DTR' . Carbon::now()->format('ymd') . rand(10, 99) .Str::upper(Str::random(5));
                 $transaction->expired_time = Carbon::now()->addDays(2)->timestamp;;
                 $transaction->total_fee = 0;
                 $transaction->amount_received = 0;
