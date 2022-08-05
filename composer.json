@@ -32,7 +32,10 @@
             "Silehage\\Rajaongkir\\": "packages/silehage/rajaongkir/src",
             "Silehage\\Tripay\\": "packages/silehage/tripay/src",
             "Silehage\\Starsender\\": "packages/silehage/starsender/src"
-        }
+        },
+        "files": [
+            "app/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

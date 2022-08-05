@@ -8,25 +8,19 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function get($sessId)
+    public function get()
     {
-        if(!$sessId) {
-            return response(['status' => false], 500);
-        }
-
+        
         return response()->json([
-            'results' => Cart::where('session_id', $sessId)->get()
+            'results' => Cart::all(),
         ], 200);
     }
-
-    public function store(Request $request, $sessId)
+    
+    public function store(Request $request)
     {
-        if(!$sessId) {
-            return response(['status' => false], 500);
-        }
+        Cart::where('created_at', '<', Carbon::now()->subHours(2))->delete();
 
         $request->validate([
-            'session_id' => 'required',
             'price' => 'required|numeric',
             'name' => 'required',
             'quantity' => 'required|numeric',
@@ -37,7 +31,7 @@ class CartController extends Controller
             'product_stock' => 'required',
         ]);
 
-        $cart = Cart::where('session_id', $sessId)->where('sku', $request->sku)->first();
+        $cart = Cart::where('sku', $request->sku)->first();
 
         if($cart) {
             $cart->quantity += $request->quantity;
@@ -46,7 +40,7 @@ class CartController extends Controller
         } else {
 
             Cart::create([
-                'session_id' => $request->session_id,
+                'session_id' => getSessionUser(),
                 'price' => $request->price,
                 'name' => $request->name,
                 'weight' => $request->weight,
@@ -64,15 +58,10 @@ class CartController extends Controller
         return response(['status' => true], 200);
     }
 
-    public function update(Request $request, $sessId)
+    public function update(Request $request)
     {
-        if(!$sessId) {
-            return response([
-                'status' => false
-            ], 500);
-        }
 
-        $cart = Cart::where('session_id', $sessId)->where('sku', $request->sku)->first();
+        $cart = Cart::where('sku', $request->sku)->first();
 
         if($cart) {
             
@@ -88,15 +77,13 @@ class CartController extends Controller
 
     public function destroy(Request $request)
     {
-        Cart::where('sku', $request->sku)->where('session_id', $request->session_id)->delete();
-
-        Cart::where('created_at', '<', Carbon::now()->subDays(3))->delete();
+        Cart::where('sku', $request->sku)->delete();
 
         return response(['status' => true], 200);
     }
-    public function clear(Request $request)
+    public function clear()
     {
-        Cart::where('session_id', $request->session_id)->delete();
+        Cart::where('session_id', getSessionUser())->delete();
 
         return response(['status' => true], 200);
     }

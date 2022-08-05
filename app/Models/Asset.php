@@ -13,6 +13,11 @@ class Asset extends Model
     protected $guarded = [];
     public $appends = ['src'];
 
+    protected $hidden = [
+        'assetable_id',
+        'assetable_type'
+    ];
+
     public function getSrcAttribute()
     {
         return url('/upload/images/' . $this->filename);

@@ -13,6 +13,10 @@ class Block extends Model
 
     public $appends = ['image_url'];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     public function getImageUrlAttribute()
     {
         return $this->image? url('/upload/images/' . $this->image) : '';

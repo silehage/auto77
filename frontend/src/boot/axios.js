@@ -15,7 +15,12 @@ BaseApi.defaults.headers.common = { 'X-Requested-With': 'XMLHttpRequest' }
 export default ({ app, router, store, Vue }) => {
 
   BaseApi.interceptors.request.use(config => {
-  
+    
+    let session_id = store.state.session_id
+    if(session_id) {
+      config.headers['Session-User'] = session_id ;
+    }
+
     return config
   }, error => {
     // Do something with request error

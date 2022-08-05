@@ -12,11 +12,7 @@ export default {
     }
   },
   mounted() {
-    if(! this.session_id) {
-      this.makeSessionId()
-    } else {
-      this.$store.dispatch('cart/getCarts', this.session_id)
-    }
+    this.$store.dispatch('cart/getCarts')
   },
   created() {
     this.$store.commit('REMOVE_INSTALL_APP')
@@ -27,18 +23,6 @@ export default {
     window.addEventListener('appinstalled', () => {
       this.$store.commit('REMOVE_INSTALL_APP')
     })
-  },
-  methods: {
-    makeSessionId() {
-      var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-      var result = '';
-        for ( var i = 0; i < 60; i++ ) {
-            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
-        }
-
-        this.$store.commit('SET_SESSION_ID', result);
-    },
   },
   meta: {
     meta: {

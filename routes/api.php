@@ -146,9 +146,9 @@ Route::get('shipping/findSubdistrict/{key}', [ShippingController::class, 'findSu
 Route::get('tripay/payment-chanel',[TripayController::class, 'getPaymentChanels']);
 Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');
 
-Route::get('carts/{sessId}', [CartController::class, 'get']);
-Route::post('carts/{sessId}', [CartController::class, 'store']);
-Route::put('carts/{sessId}', [CartController::class, 'update']);
+Route::get('carts', [CartController::class, 'get']);
+Route::post('carts', [CartController::class, 'store']);
+Route::put('carts', [CartController::class, 'update']);
 Route::post('cart/delete', [CartController::class, 'destroy']);
 Route::post('clearCart', [CartController::class, 'clear']);
 

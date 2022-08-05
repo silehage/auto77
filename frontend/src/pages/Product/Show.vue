@@ -619,6 +619,7 @@ export default {
       return 'text-green'
     },
     addToCart() {
+      
       this.formVariantModal = false
 
       let cartItem = {
@@ -635,7 +636,6 @@ export default {
         weight: this.product.weight
       }
 
-     if(! this.session_id) this.makeSessionId()
 
       this.$store.dispatch('cart/addToCart' , cartItem)
 
@@ -903,6 +903,11 @@ export default {
 
     },
 
+  },
+  mounted() {
+    if(!this.session_id) {
+      this.makeSessionId()
+    }
   },
   created() {
     if(!this.product || this.product.slug != this.$route.params.slug) {
