@@ -589,6 +589,10 @@ export default {
     setDataGetCost() {
       this.formGetCost.weight = this.formOrder.weight;
 
+      if(this.formOrder.shipping_destination) {
+        this.formGetCost.destination = this.formOrder.shipping_destination.city_id
+      }
+
       if(this.config && this.config.can_shipping){
 
         this.formGetCost.origin = this.config.warehouse_address.city_id
@@ -597,6 +601,10 @@ export default {
           this.formGetCost.origin = this.config.warehouse_address.subdistrict_id
           this.formGetCost.destinationType = 'subdistrict'
           this.formGetCost.originType = 'subdistrict'
+
+          if(this.formOrder.shipping_destination) {
+            this.formGetCost.destination = this.formOrder.shipping_destination.subdistrict_id
+          }
         }
 
       } 
