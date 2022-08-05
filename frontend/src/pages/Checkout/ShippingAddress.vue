@@ -363,7 +363,9 @@ export default {
       this.customer_phone = this.user.phone ? this.user.phone : ''
     }
     if(localStorage.getItem('user_data')) {
-      this.useDataUserPrompt = true
+      if(!this.customer_name || !this.customer_phone) {
+        this.useDataUserPrompt = true
+      }
     }
   },
   methods: {
@@ -411,7 +413,6 @@ export default {
       this.clearAddress()
       this.formGetCost.courier = ''
       this.formGetCost.destination = ''
-      this.form.address = ''
       this.readyAddressBlock = false
       this.clearSelectedCost()
       setTimeout(() => {
@@ -419,6 +420,7 @@ export default {
       },300)
     },
     closeModalAddress() {
+      this.changeNewAddress()
       this.useDataUserPrompt = false
       this.$emit('closeModal')
     },
