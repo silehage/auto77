@@ -671,6 +671,16 @@ export default {
 
         }
       }
+
+      if(this.currentStock <= 0) {
+        let item = this.isHasVarian ? 'varian' : 'produk'
+        this.$q.dialog({
+          title: 'Stok habis',
+          message: `Maaf, stok untuk ${item} ini habis, silahkan pilih ${item} lainnya.`
+        })
+
+        return
+      }
       this.checkCart().then(res => {
         this.addToCart()
         this.cartModal = true
@@ -736,7 +746,6 @@ export default {
       return true
     },
     incrementQty() {
-      console.log(this.checkVarianIsReady());
       if(!this.checkVarianIsReady()) {
         this.$q.dialog({
           title: 'Pilih Varian!',
