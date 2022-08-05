@@ -175,8 +175,8 @@
         </div>
       <!-- End Product Variants -->
         <!-- <textarea v-model="text" style="white-space:pre-wrap"/> -->
-        <q-footer>
-          <q-btn type="submit" :loading="loading" class="full-width" label="Simpan Data">
+        <q-footer class="bg-white q-pa-md">
+          <q-btn color="primary" type="submit" :loading="loading" class="full-width" label="Simpan Data">
               <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
             </q-btn>
         </q-footer>

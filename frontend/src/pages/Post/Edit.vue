@@ -32,7 +32,7 @@
         </div>
         <q-editor v-model="form.body"></q-editor>
       </div>
-      <q-footer>
+      <q-footer class="bg-white q-pa-md">
         <q-btn label="Update Data" type="submit" color="primary" class="full-width"></q-btn>
       </q-footer>
     </q-form>

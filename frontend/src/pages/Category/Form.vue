@@ -68,8 +68,8 @@
           </q-list>           
         </div>     
     </div>
-    <q-footer>
-       <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data">
+    <q-footer class="bg-white q-pa-md">
+       <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data" color="primary">
            <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
         </q-btn>
     </q-footer>

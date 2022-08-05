@@ -32,7 +32,7 @@
         </div>
         <q-editor v-model="form.body"></q-editor>
       </div>
-      <q-footer>
+     <q-footer class="bg-white q-pa-md">
         <q-btn :loading="loading" label="Simpan Data" type="submit" color="primary" class="full-width"></q-btn>
       </q-footer>
     </q-form>
