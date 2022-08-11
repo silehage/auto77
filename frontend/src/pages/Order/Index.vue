@@ -172,9 +172,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log('yes');
-  },
   computed: {
     ...mapState({
       orders: state => state.order.orders,

@@ -100,7 +100,6 @@ class OrderController extends Controller
             $user = User::find($request->user_id);
         }
 
-
         $request->validate([
             'customer_name' => ['required', 'string'],
             'customer_phone' => ['required', 'string'],

@@ -681,6 +681,7 @@ export default {
 
         return
       }
+      
       this.checkCart().then(res => {
         this.addToCart()
         this.cartModal = true
