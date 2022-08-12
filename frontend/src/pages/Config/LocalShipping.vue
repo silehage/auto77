@@ -70,9 +70,9 @@
                   </q-item-section>
                 </q-item>
                 <q-separator></q-separator>
-                <q-item v-for="(codItem, index) in formdata.cod_list" :key="index">
+                <q-item v-for="(codItem, index) in formdata.cod_list" :key="index" class="q-px-xs">
                   <q-item-section side>
-                    <q-btn @click="removeCodList(index)" icon="close" color="red" round flat padding="5px" size="sm"></q-btn>
+                    <q-btn @click="removeCodList(index)" icon="close" color="red" dense flat round></q-btn>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>{{ codItem.subdistrict_name }} {{ codItem.type }} {{ codItem.city }}</q-item-label>
@@ -128,7 +128,11 @@ export default {
   methods: {
     setConfig(item) { 
       this.formdata.is_cod_payment = item.is_cod_payment
-      this.formdata.cod_list = item.cod_list? item.cod_list : []
+      if(item.cod_list) {
+        item.cod_list.forEach(element => {
+          this.formdata.cod_list.push(element)
+        });
+      }
     },
     updateData() {
       Api().post('config',  this.formdata).then(() => {

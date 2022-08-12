@@ -287,17 +287,26 @@ ul {
   }
 }
 .text {
+  &-12,
   &-xs {
     font-size: 12px;
   }
+  &-13,
   &-sm1 {
 
     font-size: 13px;
   }
+  &-14,
   &-sm {
-
     font-size: 14px;
   }
+  &-15 {
+    font-size: 15px;
+  }
+  &-16 {
+    font-size: 15px;
+  }
+  &-17,
   &-md {
     font-size: 17px;
   }

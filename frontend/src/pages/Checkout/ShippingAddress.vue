@@ -2,7 +2,6 @@
   <div class="">
     <div id="shipping">
       <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
-      <div class="bg-green-1 q-px-sm q-py-xs text-green-8 q-mt-sm" style="font-size:13px;"> Dikirim dari {{ originAddressFormat }}.</div>
       <div class="q-mt-sm">
         <q-list v-if="formOrder.shipping_destination">
           <q-item class="bg-grey-2">
@@ -11,7 +10,7 @@
               <q-btn icon="cancel" round dense flat no-caps color="red" @click="clearAddress">
               </q-btn>
             </q-item-section>
-            </q-item>
+          </q-item>
         </q-list>
         <div v-else>
           <q-input filled square placeholder="Ketik kecamatan tujuan, min 3 karakter" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"
@@ -25,7 +24,7 @@
               leave-active-class="animated fadeOut"
             >
             <div class="relative bg-grey-1" v-show="isSearching || searchReady">
-              <q-list style="min-height:70px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
+              <q-list style="min-height:43px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
                 <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
                   <q-item-section>
                     <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
@@ -38,32 +37,54 @@
           </transition>
         </div>
       </div>
+      <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mt-sm" style="font-size:13px;"> 
+        Dikirim dari {{ originAddressFormat }}.
+        <span v-if="canCod">Pengiriman ke kecamatan {{ codListString }} dapat dikirim menggunakan kurir toko</span>
+      </div>
     </div>
-
     <div id="courier" ref="courier" class="q-mt-lg">
       <div class="text-md text-weight-medium">Pilih Pengiriman</div>
 
       <div class="q-py-sm">
-        <q-radio v-model="shipping_method" val="Ekspedisi" label="Pengiriman Via Ekspedisi"></q-radio>
-        <q-radio v-if="codItem" v-model="shipping_method" val="Cod" label="Pengiriman Via Kurir Toko ( COD )"></q-radio>
+        <q-radio v-model="shipping_method" val="Ekspedisi" label="Via Ekspedisi"></q-radio>
+        <q-radio v-if="canCod" :disable="!codItem" v-model="shipping_method" val="Cod" label="Via Kurir Toko ( COD )">
+           <q-tooltip 
+           v-if="!codItem"
+            content-class="bg-green text-12" 
+            :offset="[10, 10]"
+            >
+            Silahkan pilih kecamatan {{ codListString }} untuk menggunakan fitur ini
+            </q-tooltip>
+        </q-radio>
       </div>
 
       <div v-if="shipping_method == 'Ekspedisi'" class="q-mt-sm">
-        <q-select 
-          :disable="!canSelectCourier"
-          filled
-          square
-          stack-label
-          label="Pilih Kurir"
-          :options="couriers"  
-          v-model="formGetCost.courier" 
-          emit-value
-          map-options
-          :error="errors.shipping_courier_service"
-          @input="courierSelected"
-          >
-          <template v-slot:error>Kurir belum dipilih</template>
-        </q-select>
+        <div class="relative">
+          <q-select 
+            id="inputCourier"
+            :disable="!canSelectCourier"
+            filled
+            square
+            stack-label
+            label="Pilih Kurir"
+            :options="couriers"  
+            v-model="formGetCost.courier" 
+            emit-value
+            map-options
+            :error="errors.shipping_courier_service"
+            @input="courierSelected"
+            >
+            <template v-slot:error>Kurir belum dipilih</template>
+          </q-select>
+          <div class="absolute full-width full-height" v-if="!canSelectCourier" style="top:0;">
+             <q-tooltip 
+              content-class="bg-green text-12" 
+              :offset="[10, 10]"
+              >
+              Silahkan pilih kecamatan terlebih dahulu
+            </q-tooltip>
+          </div>
+        </div>
         <q-list v-if="shippingCost.ready">
           <template v-if="shippingCost.costs.length">
           <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable class="bg-grey-1">
@@ -275,6 +296,27 @@ export default {
       get: function() {
         return this.$store.state.order.formOrder.customer_email
       }
+    },
+    canCod() {
+      if(this.config && this.config.cod_list.length) {
+        return true
+      }
+      return false
+    },
+    codListString() {
+      if(this.canCod) {
+        let list = this.config.cod_list.map(el => {
+          return el.subdistrict_name
+        })
+        if(list.length > 1) {
+          let first = list.slice(0, list.length -1).join(', ')
+
+          return first + ' atau ' + list[list.length-1]
+
+        }
+        return list.join(', ')
+      }
+      return ''
     },
     errors() {
       return this.$store.state.errors
