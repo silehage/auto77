@@ -257,7 +257,7 @@
               <div class="column justify-end items-end q-mt-sm">
                 <table>
                   <tr>
-                    <td align="right">SubTotal</td>
+                    <td align="right">Jumlah</td>
                     <td>:</td>
                     <td align="right">{{ moneyIDR(invoice.order_subtotal) }}</td>
                   </tr>
