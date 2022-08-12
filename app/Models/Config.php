@@ -44,6 +44,7 @@ class Config extends Model
         'courier_available', 
         'is_bank_ready',
         'is_demo_mode',
+        'demo_phone',
         'is_mail_ready'
         ];
 
@@ -108,7 +109,11 @@ class Config extends Model
     }
     public function getIsDemoModeAttribute()
     {
-        return env('IS_DEMO_MODE', false);
+        return config('demo.is_demo');
+    }
+    public function getDemoPhoneAttribute()
+    {
+        return config('demo.phone');
     }
 
 }

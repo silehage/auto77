@@ -131,7 +131,8 @@ export default {
   },
   computed: {
     ...mapState({
-      config: state => state.config
+      config: state => state.config,
+      shop: state => state.shop
     }),
     themes() {
       return this.$store.state.themes
@@ -158,6 +159,7 @@ export default {
       this.is_whatsapp_checkout = this.config.is_whatsapp_checkout
       this.is_guest_checkout = this.config.is_guest_checkout
     }
+    this.$store.dispatch('getConfig')
   },
   methods: {
     changeHomeViewMode(str) {
@@ -179,14 +181,10 @@ export default {
       this.$store.commit('SET_WHATSAPP_CHECKOUT', val)
     },
     buyNow() {
-      let url = `https://api.whatsapp.com/send?phone=6283842587851&text=${location.href}`
+      let url = `https://api.whatsapp.com/send?phone=${this.config.demo_phone}&text=${location.href}`
 
       window.open(url, '_blank')
     }
   }
 }
 </script>
-
-<style>
-
-</style>

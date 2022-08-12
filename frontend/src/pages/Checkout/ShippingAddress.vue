@@ -49,9 +49,9 @@
         <q-radio v-model="shipping_method" val="Ekspedisi" label="Via Ekspedisi"></q-radio>
         <q-radio v-if="canCod" :disable="!codItem" v-model="shipping_method" val="Cod" label="Via Kurir Toko ( COD )">
            <q-tooltip 
-           v-if="!codItem"
-            content-class="bg-green text-12" 
-            :offset="[10, 10]"
+            v-if="!codItem"
+            anchor="bottom middle"
+            content-class="bg-green text-12 max-width" 
             >
             Silahkan pilih kecamatan {{ codListString }} untuk menggunakan fitur ini
             </q-tooltip>
