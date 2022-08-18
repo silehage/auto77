@@ -48,18 +48,33 @@ import { Api } from 'boot/axios'
         secondEl: 0,
         countDownDate: null,
         interval: null,
+        pageWidth: 768
       }
     },
     created() {
-      if(window.innerWidth < 600) {
-        this.glideOptions.peek.after = 40
-      }
-      if(window.innerWidth < 481) {
+      this.pageWidth = window.innerWidth
+
+      window.addEventListener('resize', this.pageResize)
+
+      if(this.pageWidth >= 768) {
+
+        this.glideOptions.perView = 3
+        this.glideOptions.gap = 12
+        this.glideOptions.peek.after = 0
+
+      } else if(this.pageWidth > 600) {
+
+        this.glideOptions.perView = 2
+        this.glideOptions.peek.after = 50
+
+
+      }else if(this.pageWidth > 480) {
+
         this.glideOptions.gap = 5
-        this.glideOptions.peek.after = 10
-      }
-      
-      if(window.innerWidth < 300) {
+        this.glideOptions.peek.after = 20
+
+      }else {
+
         this.glideOptions.perView = 1
         this.glideOptions.gap = 4
         this.glideOptions.peek.after = 100
@@ -72,7 +87,10 @@ import { Api } from 'boot/axios'
       }
     },
     methods: {
-       startCoundown() {
+      pageResize() {
+        this.pageWidth = window.innerWidth
+      },
+      startCoundown() {
 
         clearInterval(this.interval)
 
@@ -119,6 +137,7 @@ import { Api } from 'boot/axios'
     },
     beforeDestroy(){
       clearInterval(this.interval)
+      window.removeEventListener('resize', this.pageResize)
     }
   }
 </script>

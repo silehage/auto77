@@ -1,5 +1,5 @@
 <template>
-  <div class="col-6 q-pa-xs q-mb-md">
+  <div class="q-pa-xs q-mb-md" :class="pageWidth >= 800 ? 'col-4' : 'col-6'">
     <div class="column full-height relative bg-white">
         <q-skeleton :height="imgHeight" square />
       <div class="q-mt-sm relative col column justify-between q-pa-sm">
@@ -19,6 +19,11 @@
 
 export default{
   name: 'Skeleton',
+  data() {
+    return {
+      pageWidth: 800
+    }
+  },
   computed: {
     imgHeight() {
       if(this.$q.screen.width < 480) {
@@ -26,6 +31,19 @@ export default{
       }
       return '200px'
     }
+  },
+  methods: {
+    pageResize() {
+      this.pageWidth = window.innerWidth
+      console.log(this.pageWidth);
+    }
+  },
+  created() {
+    this.pageWidth = window.innerWidth
+    window.addEventListener('resize', this.pageResize)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.pageResize)
   }
 }
 </script>

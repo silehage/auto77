@@ -61,14 +61,13 @@ export default {
     },
     pageResize() {
       this.pageWidth = window.innerWidth
-      console.log(this.pageWidth);
     }
   },
   created() {
+    this.pageWidth = window.innerWidth
     window.addEventListener('resize', this.pageResize)
   },
   beforeDestroy() {
-    console.log('destroyed');
     window.removeEventListener('resize', this.pageResize)
   }
 }

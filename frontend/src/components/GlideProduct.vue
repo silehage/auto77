@@ -26,7 +26,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
     components: { SwiperProductCard },
     data() {
       return {
-        pageWidth: 800,
+        pageWidth: 768,
         glideOptions: {
           rewind: false,
           perView: 2,
@@ -50,11 +50,11 @@ import SwiperProductCard from 'components/SwiperProductCard'
       
       window.addEventListener('resize', this.pageResize)
 
-     if(this.pageWidth > 800) {
+     if(this.pageWidth >= 768) {
 
         this.glideOptions.perView = 3
         this.glideOptions.gap = 12
-        this.glideOptions.peek.after = 20
+        this.glideOptions.peek.after = 0
 
       } else if(this.pageWidth > 600) {
 
@@ -74,8 +74,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
         this.glideOptions.peek.after = 100
       }
     },
-     beforeDestroy() {
-      console.log('destroyed');
+    beforeDestroy() {
       window.removeEventListener('resize', this.pageResize)
     },
   }
