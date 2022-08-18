@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="column q-gutter-y-sm">
+    <div :class="pageWidth >= 768 ? 'row q-px-sm' : 'column q-gutter-y-sm'">
       <template v-if="ready">
         <product-list v-for="(product, index) in products.items" :key="index" :product="product" />
       </template>
@@ -8,9 +8,9 @@
         <product-list-skeleton />
       </template>
     </div>
-    <div class="q-my-lg q-py-lg flex justify-center">
+    <!-- <div class="q-my-lg q-py-lg flex justify-center">
       <q-btn unelevated label="Selengkapnya" icon-right="trending_flat" color="primary" :to="{name: 'ProductCategory', params:{ id: products.category_id }}"></q-btn>
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -34,6 +34,11 @@ export default {
     ready: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    pageWidth() {
+      return window.innerWidth
     }
   },
   methods: {

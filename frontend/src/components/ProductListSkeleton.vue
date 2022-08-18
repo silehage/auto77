@@ -1,6 +1,6 @@
 <template>
   <q-list class="q-gutter-y-sm">
-    <q-item class="q-px-sm q-py-md bg-white" v-for="a in 3" :key="a" >
+    <q-item class="q-px-sm q-py-md bg-white">
       <q-item-section avatar top>
          <q-skeleton width="100px" height="100px" />
       </q-item-section>

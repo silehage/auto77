@@ -12,12 +12,14 @@
         <q-btn @click="changeViewMode('list')" :outline="config.product_view_mode != 'list'" unelevated size="12px" :color="config.product_view_mode == 'list' ? 'secondary' : 'grey-7'" dense icon="view_list"></q-btn>
       </div>
     </div>
-    <div class="column q-gutter-y-sm" v-if="config && config.product_view_mode == 'list'">
+    <div :class="pageWidth >= 768 ? 'row q-px-sm' : 'column q-gutter-y-sm'" v-if="config && config.product_view_mode == 'list'">
       <template v-if="products.ready">
         <product-list v-for="(product, index) in products.data" :key="index" :product="product" />
       </template>
       <template v-else>
-        <product-list-skeleton v-for="a in 4" :key="a" />
+        <div :class="{ 'col-6 q-pa-xs' : pageWidth >= 768 }" v-for="a in 6" :key="a">
+          <product-list-skeleton  />
+        </div>
       </template>
     </div>
      <div class="row items-stretch auto-padding-side q-mt-sm" v-else>
@@ -65,6 +67,9 @@ export default {
   computed: {
     config() {
       return this.$store.state.config
+    },
+    pageWidth() {
+      return window.innerWidth
     },
     isMenuCategory: {
       get() {

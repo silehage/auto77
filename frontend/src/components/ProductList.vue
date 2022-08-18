@@ -1,6 +1,6 @@
 <template>
-  <q-list class="relative bg-white">
-    <q-item class="q-pa-md relative">
+  <q-list class="relative" :class="pageWidth >= 768 ? 'col-6 q-pa-xs' : 'bg-white'">
+    <q-item class="q-pa-md relative bg-white full-height">
       <q-item-section avatar top @click.prevent="$router.push({name: 'ProductShow', params:{ slug: product.slug }})" class="cursor-pointer column items-center q-gutter-y-sm">
         <q-img v-if="product.assets && product.assets.length" :src="product.assets[0].src" ratio="1" class="image-list rounded-borders">
           <template v-slot:error>
@@ -13,7 +13,7 @@
       </q-item-section>
       <q-item-section top>
         <div class="cursor-pointer" @click.prevent="$router.push({name: 'ProductShow', params:{slug: product.slug}})">
-          <q-item-label class="ellipsis-2-lines text-subtitle2 text-weight-medium">{{ product.title }}</q-item-label>
+          <q-item-label class="ellipsis-2-lines text-subtitle2 text-weight-medium" >{{ product.title }}</q-item-label>
           <q-rating 
             readonly
             v-model="rating"
@@ -23,13 +23,13 @@
             icon-half="star_half"
             size="1rem"
           />
-            <q-item-label caption class="ellipsis-2-lines q-mt-xs" v-html="getTeaser(product.description)"></q-item-label>
-            <div class="flex items-center q-gutter-x-md q-mt-sm">
-            <div class="text-subtitle1 text-secondary text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
-            <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-grey-8">{{ moneyIDR(product.pricing.default_price) }}</div>
-            </div>
+            <q-item-label caption class="ellipsis-2-lines q-mt-xs" v-html="getTeaser(product.description)" ></q-item-label>
         </div>
         <div style="margin-top:auto;">
+        <div class="flex items-center q-gutter-x-md q-mt-sm">
+          <div class="text-subtitle1 text-secondary text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
+          <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-grey-8">{{ moneyIDR(product.pricing.default_price) }}</div>
+        </div>
           <div class="flex justify-between items-end">
             <q-chip size="sm" v-if="product.category">
               <q-avatar icon="local_offer" color="primary" text-color="white"></q-avatar>
@@ -53,7 +53,12 @@ export default {
   components: { FavoriteButton },
   data() {
     return {
-      rating: this.product.rating? parseFloat(this.product.rating) : 0.0
+      rating: this.product.rating? parseFloat(this.product.rating) : 0.0,
+    }
+  },
+  computed: {
+    pageWidth() {
+      return window.innerWidth
     }
   },
   methods: {

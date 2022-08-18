@@ -94,6 +94,10 @@
 @media screen and(min-width: 768px) {
   .auto-padding {
     padding:12px 18px;
+
+    &.p-lg {
+      padding:16px 28px;
+    }
   }
   .auto-padding-side {
     padding-left: 18px;
