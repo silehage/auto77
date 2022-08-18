@@ -67,6 +67,11 @@ import SwiperProductCard from 'components/SwiperProductCard'
         this.glideOptions.gap = 5
         this.glideOptions.peek.after = 20
 
+      }else if(this.pageWidth > 301) {
+
+        this.glideOptions.gap = 5
+        this.glideOptions.peek.after = 0
+
       }else {
 
         this.glideOptions.perView = 1

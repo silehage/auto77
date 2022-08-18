@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="row q-px-sm q-pt-md q-pb-sm justify-between items-center" v-if="products.ready && products.available">
+    <div class="row auto-padding-side q-pt-md q-pb-sm justify-between items-center" v-if="products.ready && products.available">
       <div>
         <q-btn @click="handleMenuCategory" outline color="grey-7" padding="3px 10px" no-caps>
           <q-icon name="apps" size="15px"></q-icon>
@@ -20,7 +20,7 @@
         <product-list-skeleton v-for="a in 4" :key="a" />
       </template>
     </div>
-     <div class="row items-stretch q-px-xs" v-else>
+     <div class="row items-stretch auto-padding-side q-mt-sm" v-else>
       <template v-if="products.ready">
         <product-card v-for="(product, index) in products.data" :key="index" :product="product" />
       </template>

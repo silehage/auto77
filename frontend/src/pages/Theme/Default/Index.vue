@@ -1,6 +1,6 @@
 <template>
   <q-page class="bg-grey-1 default" :class="{'flex flex-center' : loading }">
-    <q-header class="bg-white text-dark box-shadow">
+    <q-header class="bg-white text-dark box-shadow auto-padding-side">
       <q-toolbar class="items-center sans">
         <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
         <q-toolbar-title v-if="shop && shop.name" class="text-weight-bold text-primary">{{ shop.name }}</q-toolbar-title>
