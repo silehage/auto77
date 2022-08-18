@@ -1,6 +1,6 @@
 <template>
   <q-page class="romance bg-light" :class="{'flex flex-center' : loading }">
-    <q-header reveal :reveal-offset="10" class="bg-white box-shadow auto-padding-side">
+    <q-header reveal :reveal-offset="10" class="bg-white box-shadow" :class="{ 'auto-padding-side': $q.platform.is.desktop}">
         <q-toolbar class="q-py-sm">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
           <div class="col q-ml-sm row items-center">

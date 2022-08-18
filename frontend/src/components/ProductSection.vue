@@ -27,7 +27,7 @@
         <product-card v-for="(product, index) in products.data" :key="index" :product="product" />
       </template>
       <template v-else>
-        <product-card-skeleton v-for="a in 4" :key="a" />
+        <product-card-skeleton v-for="a in 6" :key="a" />
       </template>
     </div>
      <q-dialog

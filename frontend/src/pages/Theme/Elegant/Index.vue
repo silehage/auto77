@@ -1,6 +1,6 @@
 <template>
   <q-page class="bg-grey-1 elegant" :class="{'flex flex-center' : loading }">
-     <q-header reveal class="bg-primary text-white auto-padding-side">
+     <q-header reveal class="bg-primary text-white" :class="{ 'auto-padding-side': $q.platform.is.desktop}">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
           <div class="col q-mx-sm inline-flex">
