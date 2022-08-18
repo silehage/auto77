@@ -10,12 +10,12 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <div class="q-pt-sm">
+    <div class="box-shadow">
       <q-tabs v-model="filter" active-color="primary" outside-arrows>
         <q-tab v-for="option in options" :key="option.value" :name="option.value" :label="option.label" no-caps></q-tab>
       </q-tabs>
     </div>
-    <div class="q-px-md q-my-sm">
+    <div class="q-py-md auto-padding-side">
       <div class="q-gutter-x-sm q-mt-sm">
           <q-input v-model="search" placeholder="Ketik no invoice atau whatsapp" dense borderless class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder">
             <template v-slot:append>

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-6 q-px-xs q-pb-xs q-mb-sm">
+  <div class="q-px-xs q-pb-xs q-mb-sm" :class="pageWidth >= 800 ? 'col-4' : 'col-6'">
     <div class="column full-height relative bg-white box-shadow">
       <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
          <template v-slot:error>
@@ -51,13 +51,25 @@ export default {
   components: { FavoriteButton },
   data() {
     return {
-      rating: this.product.rating? parseFloat(this.product.rating) : 0.0
+      rating: this.product.rating? parseFloat(this.product.rating) : 0.0,
+      pageWidth: 800
     }
   },
   methods: {
     show(slug) {
       this.$router.push({name: 'ProductShow', params: {slug: slug}})
     },
+    pageResize() {
+      this.pageWidth = window.innerWidth
+      console.log(this.pageWidth);
+    }
+  },
+  created() {
+    window.addEventListener('resize', this.pageResize)
+  },
+  beforeDestroy() {
+    console.log('destroyed');
+    window.removeEventListener('resize', this.pageResize)
   }
 }
 </script>

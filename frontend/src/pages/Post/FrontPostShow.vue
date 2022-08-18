@@ -11,7 +11,7 @@
     <template v-if="ready">
       <template v-if="post">
         <q-img :src="post.image_url" class="bg-grey-2 box-shadow"></q-img>
-      <div class="q-pa-md">
+      <div class="auto-padding">
         <div v-if="post.tags" class="text-weight-bold text-orange-7">{{ post.tags }}</div>
         <h1 class="text-lg text-weight-medium q-mb-sm">{{ post.title }}</h1>
         <div class="text-grey-6 text-caption">{{ post.created_locale }}</div>

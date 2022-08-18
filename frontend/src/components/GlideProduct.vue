@@ -26,6 +26,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
     components: { SwiperProductCard },
     data() {
       return {
+        pageWidth: 800,
         glideOptions: {
           rewind: false,
           perView: 2,
@@ -38,20 +39,44 @@ import SwiperProductCard from 'components/SwiperProductCard'
         }
       }
     },
+    methods: {
+      pageResize() {
+        this.pageWidth = window.innerWidth
+        console.log(this.pageWidth);
+      }
+    },
     created() {
-      if(window.innerWidth < 600) {
-        this.glideOptions.peek.after = 40
-      }
-      if(window.innerWidth < 481) {
-        this.glideOptions.gap = 5
-        this.glideOptions.peek.after = 10
-      }
+      this.pageWidth = window.innerWidth
       
-      if(window.innerWidth < 300) {
+      window.addEventListener('resize', this.pageResize)
+
+     if(this.pageWidth > 800) {
+
+        this.glideOptions.perView = 3
+        this.glideOptions.gap = 12
+        this.glideOptions.peek.after = 20
+
+      } else if(this.pageWidth > 600) {
+
+        this.glideOptions.perView = 2
+        this.glideOptions.peek.after = 50
+
+
+      }else if(this.pageWidth > 480) {
+
+        this.glideOptions.gap = 5
+        this.glideOptions.peek.after = 20
+
+      }else {
+
         this.glideOptions.perView = 1
         this.glideOptions.gap = 4
         this.glideOptions.peek.after = 100
       }
-    }
+    },
+     beforeDestroy() {
+      console.log('destroyed');
+      window.removeEventListener('resize', this.pageResize)
+    },
   }
 </script>

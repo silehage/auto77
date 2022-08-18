@@ -90,3 +90,21 @@
     font-size: 16.3px;;
   }
 }
+
+@media screen and(min-width: 768px) {
+  .auto-padding {
+    padding:16px 24px;
+  }
+  .auto-padding-side {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .footer-tab {
+    .q-tab__label {
+        font-size: 14px;
+    }
+    .q-tab {
+      padding: 0 20px;
+  }
+  } 
+}
