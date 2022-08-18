@@ -68,7 +68,7 @@ class FrontApiController extends Controller
                 'shop' => $shop,
                 'posts' => $posts,
                 'config' => $config,
-                'sess_id' => Str::random(40),
+                'sess_id' => Str::random(49),
                 'product_promo' => $productPromo
             ]
             
