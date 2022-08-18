@@ -12,7 +12,7 @@
     </q-header>
     <div v-if="carts.items.length" class="q-py-sm">
       <q-list class="bg-white" separator padding>
-        <q-item v-for="cart in carts.items" :key="cart.sku" class="q-pa-sm">
+        <q-item v-for="cart in carts.items" :key="cart.sku" :class="{'q-pa-sm' : $q.platform.is.mobile }">
           <q-item-section side class="q-pr-sm">
            <q-img :src="cart.image_url" style="width:90px;height:90px;"></q-img>
           </q-item-section>

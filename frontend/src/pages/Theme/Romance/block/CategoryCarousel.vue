@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      glideOptions: {
+       glideOptions: {
         rewind: false,
         perView: 4,
         gap: 12,
@@ -33,7 +33,12 @@ export default {
   },
   methods: {
     setGlideOptions() {
-      if(this.datas.length <= 3 || window.innerWidth < 360) {
+      if(this.datas.length <= 3) {
+        this.glideOptions.perView = 3
+      }else if(window.innerWidth > 600) {
+        this.glideOptions.perView = 5
+        this.glideOptions.gap = 16
+      }else if(window.innerWidth < 360) {
         this.glideOptions.perView = 3
         this.glideOptions.gap = 8
       }
