@@ -1,6 +1,11 @@
 <template>
   <div class="">
     <div id="shipping">
+       <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mb-md" style="font-size:13.4px;"> 
+        <!-- Dikirim dari {{ originAddressFormat }}. -->
+        <q-icon name="info" size="18px" class="q-mr-xs"></q-icon>
+        <span v-if="canCod">Pengiriman ke {{ codListString }} dapat dikirim via kurir toko</span>
+      </div>
       <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
       <div class="q-mt-sm">
         <q-list v-if="formOrder.shipping_destination">
@@ -37,10 +42,7 @@
           </transition>
         </div>
       </div>
-      <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mt-sm" style="font-size:13px;"> 
-        Dikirim dari {{ originAddressFormat }}.
-        <span v-if="canCod">Pengiriman ke kecamatan {{ codListString }} dapat dikirim menggunakan kurir toko</span>
-      </div>
+     
     </div>
     <div id="courier" ref="courier" class="q-mt-lg">
       <div class="text-md text-weight-medium">Pilih Pengiriman</div>
@@ -51,9 +53,9 @@
            <q-tooltip 
             v-if="!codItem"
             anchor="bottom middle"
-            content-class="bg-green text-12 max-width" 
+            content-class="bg-green text-12" 
             >
-            Silahkan pilih kecamatan {{ codListString }} untuk menggunakan fitur ini
+            Silahkan pilih kecamatan yang didukung COD
             </q-tooltip>
         </q-radio>
       </div>
