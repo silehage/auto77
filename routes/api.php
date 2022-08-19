@@ -99,6 +99,16 @@ Route::middleware('auth:sanctum')->group(function() {
     
 });
 
+Route::middleware(['throttle:auth'])->group(function() {
+    
+    Route::post('user/login', [UserController::class, 'login']);
+    Route::post('user/register', [UserController::class, 'register']);
+    Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
+    Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
+    Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
+
+});
+
 Route::post('orders', [OrderController::class, 'store']);
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
@@ -120,8 +130,8 @@ Route::get('shop', [StoreController::class, 'index']);
 Route::get('category', [CategoryController::class, 'index']);
 Route::get('category/{id}', [CategoryController::class, 'show']);
 
-Route::post('user/login', [UserController::class, 'login']);
-Route::post('user/register', [UserController::class, 'register']);
+
+
 
 Route::get('blocks',[BlockController::class, 'index']);
 Route::get('blocks/{id}',[BlockController::class, 'show']);
@@ -153,10 +163,6 @@ Route::post('cart/delete', [CartController::class, 'destroy']);
 Route::post('clearCart', [CartController::class, 'clear']);
 
 Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
-
-Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
-Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
-Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 
 Route::get('coupons/getByCode/{code}', [CouponController::class, 'getByCode']);
 Route::post('redeemCoupon', [CouponController::class, 'redeemCoupon']);
