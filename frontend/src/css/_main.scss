@@ -625,10 +625,7 @@ table.table td, table.table td * {
   }
 
   &.is-selected {
-    border-color: $primary;
-    .name {
-      color: $primary;
-    }
+    border-color: var(--q-color-primary);
   }
 
   .image {

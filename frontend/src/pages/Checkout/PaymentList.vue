@@ -2,7 +2,7 @@
   <div class="q-gutter-y-lg">
     <div v-if="payments.localbanks.length || isCod">
       <fieldset>
-        <legend class="q-px-sm">{{ isCod && config.is_cod_payment ? 'Bank Transfer / COD' : 'Bank Transfer' }}</legend>
+        <legend class="q-px-sm">{{ isCod && config.is_cod_payment ? 'Bank Transfer / Bayar Ditempat' : 'Bank Transfer' }}</legend>
         <div class="row q-gutter-sm payment-container">
           <div v-if="isCod && config.is_cod_payment"
             class="box-shadow1 cursor-pointer payment-list column justify-center" 
