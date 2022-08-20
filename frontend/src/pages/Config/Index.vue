@@ -14,6 +14,7 @@
         <tampilan />
         <theming />
         <checkout-config  />
+        <service-fee />
         <shipping />
         <LocalShipping />
         <notification />
@@ -34,9 +35,10 @@ import Notification from './Notification.vue'
 import Tripay from './Tripay.vue'
 import SystemUpdate from './SystemUpdate.vue'
 import LocalShipping from './LocalShipping.vue'
+import ServiceFee from './ServiceFee.vue'
  export default {
   name: 'AdminConfig',
-  components: { Shipping, Tampilan, Theming, Notification, Tripay, SystemUpdate, CheckoutConfig, LocalShipping },
+  components: { Shipping, Tampilan, Theming, Notification, Tripay, SystemUpdate, CheckoutConfig, LocalShipping, ServiceFee },
   computed: {
     loading() {
       return this.$store.state.loading

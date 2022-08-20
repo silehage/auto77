@@ -81,14 +81,15 @@
               <td align="right">:</td>
               <td align="right">{{ formOrder.shipping_cost? moneyIDR(formOrder.shipping_cost) : 0 }}</td>
             </tr>
-            <tr style="border-bottom:1px solid">
-              <td align="right">Total</td>
+            <tr v-if="this.formOrder.service_fee > 0">
+              <td align="right">{{ config.service_fee_label }}</td>
               <td align="right">:</td>
-              <td align="right">{{ moneyIDR(formOrder.total) }}</td>
+              <td align="right">{{ formOrder.service_fee? moneyIDR(formOrder.service_fee) : 0 }}</td>
             </tr>
+
           </table>
         </div>
-        <div class="flex justify-end q-mt-sm bg-grey-1 q-py-sm" v-if="formOrder.payment_fee">
+        <div class="flex justify-end q-mt-sm bg-grey-1 q-py-sm">
           <table class="table dense">
             <tr v-if="formOrder.payment_fee">
               <td align="right" class="text-xs">Payment Fee [ {{ formOrder.payment_name }} ]</td>
@@ -96,7 +97,7 @@
               <td align="right">{{ moneyIDR(formOrder.payment_fee) }}</td>
             </tr>
             <tr>
-              <th align="right">Total Tagihan</th>
+              <th align="right">Total Bayar</th>
               <td align="right">:</td>
               <th align="right">{{ moneyIDR(formOrder.total+formOrder.payment_fee) }}</th>
             </tr>
@@ -144,6 +145,9 @@ export default {
   computed: {
     formOrder() {
       return this.$store.getters['order/getFormOrder']
+    },
+    config() {
+      return this.$store.state.config
     }
   },
   methods: {

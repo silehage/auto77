@@ -55,7 +55,7 @@
          </div>
       </q-item-section>
       <q-item-section side top>
-        <q-toggle v-model="form.is_notifypro" :label="form.is_notifypro? 'ON' : 'OFF'" left-label color="green-6"></q-toggle>
+        <q-toggle v-model="form.is_notifypro" :label="form.is_notifypro? 'Active' : 'Disabled'" left-label color="green-6"></q-toggle>
       </q-item-section>
     </q-item>
     <q-item v-if="form.is_notifypro">

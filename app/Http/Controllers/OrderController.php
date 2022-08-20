@@ -143,6 +143,7 @@ class OrderController extends Controller
                 'shipping_cost' => $request->shipping_cost,
                 'discount' => $request->coupon_discount,
                 'payment_fee' => $request->payment_fee,
+                'service_fee' => $request->service_fee,
             ]);
                 
             foreach($request->items as $item) {

@@ -121,15 +121,17 @@
         >
          <template v-slot:error>Tujuan pengiriman belum diisi</template>
           <template v-slot:option="scope">
-            <q-item 
-            v-bind="scope.itemProps"
-            v-on="scope.itemEvents"
-            >
-              <q-item-section>
-                <q-item-label>{{ scope.opt.label }}</q-item-label>
-                <q-item-label class="text-grey-8"> Ongkos Kirim {{ scope.opt.price > 0 ? moneyIDR(scope.opt.price) : 'Gratis' }}</q-item-label>
-              </q-item-section>
-            </q-item>
+            <q-list separator>
+              <q-item 
+              v-bind="scope.itemProps"
+              v-on="scope.itemEvents"
+              >
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.label }}</q-item-label>
+                  <q-item-label class="text-primary text-weight-bold text-sm"> Ongkos Kirim {{ scope.opt.price > 0 ? moneyIDR(scope.opt.price) : 'Gratis' }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
         </template>
         </q-select>
       </div>

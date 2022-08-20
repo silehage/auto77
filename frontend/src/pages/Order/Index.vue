@@ -237,7 +237,7 @@ export default {
     },
     canShip(order) {
       if(order.shipping_courier_name == 'COD') {
-        if(order.order_status == 'PROCESS' || order.order_status == 'UNPAID') {
+        if(order.order_status == 'PROCESS' || order.order_status == 'UNPAID' || order.order_status == 'PAID' ) {
           return true
         } else {
           return false

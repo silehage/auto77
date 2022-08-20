@@ -1,0 +1,78 @@
+<template>
+  <q-card flat>
+    <q-card-section>
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-subtitle1 text-weight-bold">Pengaturan Biaya Layanan</div>
+          <div class="text-caption text-grey-7">
+          Biaya layanan penggunaan aplikasi akan ditambahkan pada pesanan kustomer
+          </div>
+        </div>
+        <div>
+        <q-toggle v-model="form.is_service_fee" :label="form.is_service_fee? 'Active' : 'Disabled'" left-label color="green-7" class="text-grey-8"></q-toggle>
+      </div>
+      </div>
+     <q-form @submit.prevent="updateData" class="q-mt-md q-gutter-y-sm">
+      <q-input
+        filled
+        v-model="form.service_fee_label"
+        label="Label"
+        />
+      <q-input
+        filled
+        v-model="form.service_fee"
+        label="Biaya Layanan"
+        />
+      <div class="flex justify-end q-mt-md">
+        <q-btn unelevated size="12px" type="submit" label="Simpan Pengaturan" color="blue-7"></q-btn>
+      </div>
+    </q-form>
+  </q-card-section>
+  </q-card>
+</template>
+
+<script>
+import { Api } from 'boot/axios'
+export default {
+  data() {
+    return {
+      form: {
+        is_service_fee: false,
+        service_fee: 0,
+        service_fee_label: ''
+      }
+    }
+  },
+  computed: {
+    config: function() {
+      return this.$store.state.config
+    }
+  },
+  mounted() {
+    this.setData()
+  },
+  methods: {
+    updateData() {
+      Api().post('config',  this.form).then(() => {
+        this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil memperbarui data'
+        })
+        this.$store.dispatch('getAdminConfig')
+      }).catch(() => {
+        this.$q.notify({
+          type: 'negative',
+          message: 'Gagal memperbarui data'
+        })  
+      })
+    },
+    setData() {
+      if(this.config) {
+        this.form.is_service_fee = this.config.is_service_fee
+        this.form.service_fee = this.config.service_fee
+        this.form.service_fee_label = this.config.service_fee_label
+      }
+    },
+  }
+}
+</script>

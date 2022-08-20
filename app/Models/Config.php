@@ -34,7 +34,10 @@ class Config extends Model
         'notifypro_interval', 
         'notifypro_timeout', 
         'cod_list', 
-        'is_cod_payment'
+        'is_cod_payment',
+        'service_fee',
+        'service_fee_label',
+        'is_service_fee',
     ];
     public $appends = [
         'is_shippable', 
@@ -46,7 +49,8 @@ class Config extends Model
         'is_demo_mode',
         'demo_phone',
         'is_mail_ready',
-        'can_cod'
+        'can_cod',
+        'tripay_callback'
     ];
 
     protected $hidden = [
@@ -64,6 +68,7 @@ class Config extends Model
         'is_cod_payment' => 'boolean',
         'is_whatsapp_checkout' => 'boolean',
         'is_guest_checkout' => 'boolean',
+        'is_service_fee' => 'boolean',
         'cod_list' => 'array',
         'warehouse_address' => 'object'
     ];
@@ -122,6 +127,11 @@ class Config extends Model
     public function getDemoPhoneAttribute()
     {
         return config('demo.phone');
+    }
+
+    public function getTripayCallbackAttribute()
+    {
+        return route('tripay.callback');
     }
 
 }

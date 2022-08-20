@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between q-mb-xs">
       <div class="text-md text-weight-bold">Tripay Payment Gateway</div>
       <div>
-        <q-toggle v-model="form.is_payment_gateway" :label="form.is_payment_gateway? 'Active' : 'Disabled'" left-label @input="checkIsReady" color="green-7"></q-toggle>
+        <q-toggle class="text-grey-8" v-model="form.is_payment_gateway" :label="form.is_payment_gateway? 'Active' : 'Disabled'" left-label @input="checkIsReady" color="green-7"></q-toggle>
       </div>
     </div>
     <q-form @submit.prevent="updateDate">
@@ -12,6 +12,7 @@
         <div>Silahkan daftar di tripay.co.id untuk mendapatkan Kredensial</div>
       </div>
       <div class="q-gutter-y-sm">
+        
         <q-select label="ENV MODE" filled :options="tripayModes" v-model="form.tripay_mode"></q-select>
         <q-input
         filled
@@ -28,6 +29,15 @@
         v-model="form.tripay_private_key"
         label="Tripay PRIVATE KEY"
         />
+
+        <div v-if="config.is_payment_gateway">
+          <q-input filled :value="config.tripay_callback" readonly>
+          <template v-slot:append>
+            <q-btn icon="content_copy" @click="handleClickTripayCallback" unelevated size="18px" padding="4px" flat></q-btn>
+          </template>
+        </q-input>
+          <div class="text-xs text-grey-8 q-pa-xs">Salin URL callback ke dashboard merchant tripay</div>
+        </div>
       </div>
       <div class="flex justify-end q-mt-md">
         <q-btn unelevated size="12px" type="submit" label="Simpan Pengaturan" color="blue-7"></q-btn>
@@ -38,6 +48,7 @@
 
 <script>
 import { Api } from 'boot/axios'
+import { copyToClipboard } from 'quasar'
 export default {
   data () {
     return {
@@ -70,6 +81,19 @@ export default {
         this.form.tripay_merchant_code = this.config.tripay_merchant_code
         this.form.is_payment_gateway = this.config.is_payment_gateway
       }
+      
+    },
+    handleClickTripayCallback() {
+      copyToClipboard(this.config.tripay_callback)
+        .then(() => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'berhasil menyalin url'
+          })
+        })
+        .catch(() => {
+          // fail
+        })
     },
     updateDate() {
       let data = {...this.config, ...this.form}

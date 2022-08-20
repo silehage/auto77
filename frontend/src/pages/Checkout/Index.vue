@@ -169,9 +169,15 @@ export default {
       this.commitFormOrder('quantity', this.sumQty())
       this.commitFormOrder('weight', this.sumWeight())
 
+      if(this.config.is_service_fee) {
+        this.commitFormOrder('service_fee', this.config.service_fee)
+      }
+
       if(this.coupon_discount) {
         this.commitFormOrder('coupon_discount', this.getDiscountAmount())
       }
+
+      console.log(this.formOrder);
     },
     handleBackButton() {
       if(this.step > 1) {

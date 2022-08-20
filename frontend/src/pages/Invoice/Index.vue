@@ -63,37 +63,50 @@
                 <tr>
                   <td align="right">Subtotal</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.order_subtotal) }}</td>
+                  <td>Rp</td>
+                  <td align="right">{{ $money(invoice.order_subtotal) }}</td>
                 </tr>
                 <tr>
                   <td align="right">Ongkos Kirim</td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.shipping_cost) }}</td>
+                   <td>Rp</td>
+                  <td align="right">{{ $money(invoice.shipping_cost) }}</td>
+                </tr>
+                <tr v-if="invoice.service_fee">
+                  <td align="right">{{ config.service_fee_label }}</td>
+                  <td>:</td>
+                   <td>Rp</td>
+                  <td align="right">{{ $money(invoice.service_fee) }}</td>
                 </tr>
                 <tr v-if="invoice.payment_fee > 0">
-                  <td align="right">Payment Fee</td>
+                  <td align="right">Jasa pembayaran <span class="text-xs">[ {{ invoice.transaction.payment_name }} ]</span> </td>
                   <td>:</td>
-                  <td align="right">{{ moneyIDR(invoice.payment_fee) }}</td>
+                   <td>Rp</td>
+                  <td align="right">{{ $money(invoice.payment_fee) }}</td>
                 </tr>
-              </table>
-            </div>
-            <div class="flex justify-end q-py-sm bg-grey-1">
-              <table class="table dense">
                 <tr v-if="invoice.order_unique_code">
                   <td align="right">Kode Unik (-)</td>
                   <td>:</td>
+                   <td>Rp</td>
                   <td align="right">{{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr v-if="invoice.discount">
                   <td align="right">Diskon (-)</td>
                   <td align="right">:</td>
-                  <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
+                   <td>Rp</td>
+                  <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
                 </tr>
-                <tr>
-                  <th align="right">Total Tagihan</th>
+                <tr class="q-py-md">
+                  <th align="right">Total Bayar</th>
                   <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
+                   <td>Rp</td>
+                  <th align="right">{{ $money(invoice.grand_total) }}</th>
                 </tr>
+              </table>
+            </div>
+            <div class="flex justify-end q-py-sm bg-grey-1">
+              <table class="table dense">
+                
               </table>
             </div>
           </div>
@@ -201,27 +214,25 @@
       <div class="print-invoice">
         <div class="">
           <div class="bg-white">
-            <div class="text-lg text-weight-bold">Invoice</div>
-            <div class="q-mb-md flex justify-between item-start">
+            <div class="q-mb-md flex justify-between item-center">
               <table>
                   <tr>
-                    <th align="left">No</th>
-                    <th align="left">: {{ invoice.order_ref }}</th>
+                    <th align="left" class="text-lg text-weight-bold">Invoice</th>
                   </tr>
                   <tr>
-                    <td align="left">Dibuat</td>
+                    <th align="left"> {{ invoice.order_ref }}</th>
+                  </tr>
+              </table>
+              <table>
+                  <tr>
+                    <td align="right">Dibuat</td>
                     <td>: {{ invoice.created_at }}</td>
                   </tr>
-                  <!-- <tr>
-                    <td align="left">Status</td>
+                  <tr>
+                    <td align="right">Status</td>
                     <td>: {{ invoice.status_label }}</td>
-                  </tr> -->
-                </table>
-              <div>
-                <!-- <div>Metode Pembayaran</div> -->
-                <div class="text-center border q-pa-sm q-mb-sm text-weight-bold" style="border:1px solid #efefef;">{{ invoice.status_label }}</div>
-                <div>{{ invoice.transaction.payment_name }}</div>
-              </div>
+                  </tr>
+              </table>
             </div>
             <div class="flex justify-between">
               <div class="">
@@ -234,7 +245,7 @@
                 <div class="text-weight-medium q-mb-xs">Dibayarkan Kepada:</div>
                 <div class="text-weight-bold q-mb-xs">{{ shop.name }}</div>
                 <div class="">{{ shop.phone }}</div>
-                <div class="">{{ shop.app_url }}</div>
+                <!-- <div class="">{{ shop.app_url }}</div> -->
               </div>
             </div>
             <div class="q-mt-sm">
@@ -251,7 +262,7 @@
                     <div class="text-caption tet-grey-6">{{ item.note }}</div>
                   </td>
                   <td>{{ item.quantity }}</td>
-                  <td align="right">{{ moneyIDR(item.price) }}</td>
+                  <td align="right">{{ $money(item.price) }}</td>
                 </tr>
               </table>
               <div class="column justify-end items-end q-mt-sm">
@@ -259,32 +270,44 @@
                   <tr>
                     <td align="right">Jumlah</td>
                     <td>:</td>
-                    <td align="right">{{ moneyIDR(invoice.order_subtotal) }}</td>
+                     <td>Rp</td>
+                    <td align="right">{{ $money(invoice.order_subtotal) }}</td>
                   </tr>
                   <tr>
                     <td align="right">Ongkos Kirim</td>
                     <td>:</td>
-                    <td align="right">{{ moneyIDR(invoice.shipping_cost) }}</td>
+                     <td>Rp</td>
+                    <td align="right">{{ $money(invoice.shipping_cost) }}</td>
+                  </tr>
+                  <tr v-if="invoice.service_fee">
+                    <td align="right">{{ config.service_fee_label }}</td>
+                    <td>:</td>
+                    <td>Rp</td>
+                    <td align="right">{{ $money(invoice.service_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.payment_fee > 0">
-                    <td align="right">Payment Fee</td>
+                    <td align="right">Jasa pembayaran <span class="text-xs">[ {{ invoice.transaction.payment_name }} ]</span> </td>
                     <td>:</td>
-                    <td align="right">{{ moneyIDR(invoice.payment_fee) }}</td>
+                    <td>Rp</td>
+                    <td align="right">{{ $money(invoice.payment_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.order_unique_code">
                     <td align="right">Kode Unik (-)</td>
                     <td>:</td>
+                     <td>Rp</td>
                     <td align="right">{{ invoice.order_unique_code }}</td>
                   </tr>
                   <tr v-if="invoice.discount">
                     <td align="right">Diskon (-)</td>
                     <td align="right">:</td>
-                    <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
+                     <td>Rp</td>
+                    <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
                   </tr>
                   <tr>
-                    <th align="right">Total Tagihan</th>
+                    <th align="right">Total Bayar</th>
                     <td align="right">:</td>
-                    <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
+                     <td>Rp</td>
+                    <th align="right">{{ $money(invoice.grand_total) }}</th>
                   </tr>
                 </table>
               </div>
@@ -351,13 +374,50 @@
               </tr>
             </table>
             <div class="flex justify-end q-py-sm bg-grey-1">
-              <table class="table dense">
-                <tr>
-                  <th align="right">Total Pesanan</th>
-                  <td align="right">:</td>
-                  <th align="right">{{ moneyIDR(invoice.grand_total) }}</th>
-                </tr>
-              </table>
+              <table>
+                  <tr>
+                    <td align="right">Jumlah</td>
+                    <td>:</td>
+                     <td>Rp</td>
+                    <td align="right">{{ $money(invoice.order_subtotal) }}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">Ongkos Kirim</td>
+                    <td>:</td>
+                     <td>Rp</td>
+                    <td align="right">{{ $money(invoice.shipping_cost) }}</td>
+                  </tr>
+                  <tr v-if="invoice.service_fee">
+                    <td align="right">{{ config.service_fee_label }}</td>
+                    <td>:</td>
+                    <td>Rp</td>
+                    <td align="right">{{ $money(invoice.service_fee) }}</td>
+                  </tr>
+                  <tr v-if="invoice.payment_fee > 0">
+                    <td align="right">Jasa pembayaran <span class="text-xs">[ {{ invoice.transaction.payment_name }} ]</span> </td>
+                    <td>:</td>
+                    <td>Rp</td>
+                    <td align="right">{{ $money(invoice.payment_fee) }}</td>
+                  </tr>
+                  <tr v-if="invoice.order_unique_code">
+                    <td align="right">Kode Unik (-)</td>
+                    <td>:</td>
+                     <td>Rp</td>
+                    <td align="right">{{ invoice.order_unique_code }}</td>
+                  </tr>
+                  <tr v-if="invoice.discount">
+                    <td align="right">Diskon (-)</td>
+                    <td align="right">:</td>
+                     <td>Rp</td>
+                    <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
+                  </tr>
+                  <tr>
+                    <th align="right">Total Bayar</th>
+                    <td align="right">:</td>
+                     <td>Rp</td>
+                    <th align="right">{{ $money(invoice.grand_total) }}</th>
+                  </tr>
+                </table>
             </div>
           </div>
           <div class="">
@@ -411,6 +471,7 @@ export default {
       loading: state => state.loading,
       shop: state => state.shop,
       invoice: state => state.order.invoice,
+      config: state => state.config
     }),
     isPaymentType: function() {
       let paymentType = this.invoice.transaction.payment_type 
