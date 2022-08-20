@@ -26,6 +26,7 @@
         >
           <shipping-address 
             canEmail 
+            @removePayment="removePayment"
           />
 
         </q-step>
@@ -156,6 +157,9 @@ export default {
     commitFormOrder(key, val) {
       this.$store.commit('order/SET_FORM_ORDER', { key: key, value: val})
     },
+    removePayment() {
+      this.paymentSelected = null
+    },
     onSelectPayment(item) {
       this.paymentSelected = item
     },
@@ -206,18 +210,11 @@ export default {
           if(response.status == 200) {
 
             this.$store.commit('order/SET_INVOICE', response.data.results)
-            this.$store.commit('coupon/SET_COUPON_DISCOUNT', null)
             
             setTimeout(() => {
               this.$store.dispatch('cart/clearCart', this.session_id)
             }, 20000)
 
-            // if(this.isCod) {
-  
-            //   this.directChekout(response.data.results)
-              
-            // }
-            
             this.$router.push({ name: 'UserInvoice', params: { order_ref: response.data.results.order_ref }})
 
             this.sendMessageNotification(response.data.results.order_ref)
@@ -288,6 +285,7 @@ export default {
       return location.origin + props.href;
     },
     next() {
+      console.log(this.formOrder);
       this.$store.commit('CLEAR_ERRORS')
         let validationCustomer = ['customer_name', 'customer_phone', 'customer_email', 'customer_address']
         let validationShipping = [ 'shipping_destination', 'shipping_courier_name', 'shipping_courier_service']

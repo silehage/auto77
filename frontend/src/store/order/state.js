@@ -23,6 +23,7 @@ export default function () {
       quantity: 0,
       weight: 0,
       subtotal: 0,
+      shipping_method: 'Expedisi',
       shipping_destination: '',
       shipping_courier_name:'',
       shipping_courier_service: '',

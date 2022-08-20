@@ -168,6 +168,8 @@ export default {
       }
       if(courierTemp.length) {
         this.formdata.rajaongkir_couriers = courierTemp.join(',')
+      }else {
+        this.formdata.rajaongkir_couriers = ''
       }
     },
     updateData() {

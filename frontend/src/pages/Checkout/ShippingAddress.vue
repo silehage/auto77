@@ -1,70 +1,62 @@
 <template>
-  <div class="">
-    <div id="shipping">
-       <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mb-md" style="font-size:13.4px;"> 
-        <!-- Dikirim dari {{ originAddressFormat }}. -->
-        <q-icon name="info" size="18px" class="q-mr-xs"></q-icon>
-        <span v-if="canCod">Pengiriman ke {{ codListString }} dapat dikirim via kurir toko</span>
-      </div>
-      <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
-      <div class="q-mt-sm">
-        <q-list v-if="formOrder.shipping_destination">
-          <q-item class="bg-grey-2">
-            <q-item-section>{{ destinationAddressFormat(formOrder.shipping_destination) }}</q-item-section>
-            <q-item-section side>
-              <q-btn icon="cancel" round dense flat no-caps color="red" @click="clearAddress">
-              </q-btn>
-            </q-item-section>
-          </q-item>
-        </q-list>
-        <div v-else>
-          <q-input filled square placeholder="Ketik kecamatan tujuan, min 3 karakter" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"
-          :error="errors.shipping_destination"
-          >
-          <!-- <template v-slot:error>Tujuan pengiriman belum diisi</template> -->
-          </q-input>
-          <transition
-              appear
-              enter-active-class="animated fadeIn"
-              leave-active-class="animated fadeOut"
-            >
-            <div class="relative bg-grey-1" v-show="isSearching || searchReady">
-              <q-list style="min-height:43px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
-                <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
-                  <q-item-section>
-                    <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-              <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
-              <q-inner-loading :showing="isSearching"></q-inner-loading>
-            </div>
-          </transition>
-        </div>
-      </div>
-     
-    </div>
-    <div id="courier" ref="courier" class="q-mt-lg">
-      <div class="text-md text-weight-medium">Pilih Pengiriman</div>
+  <div class="" id="payment-method">
+     <div id="courier" ref="courier" v-if="config.can_shipping" class="q-mb-lg">
+      <div class="text-md text-weight-medium">Pilih Metode Pengiriman</div>
 
-      <div class="q-py-sm">
+      <div class="q-py-sm q-gutter-x-sm" >
         <q-radio v-model="shipping_method" val="Ekspedisi" label="Via Ekspedisi"></q-radio>
-        <q-radio v-if="canCod" :disable="!codItem" v-model="shipping_method" val="Cod" label="Via Kurir Toko ( COD )">
-           <q-tooltip 
-            v-if="!codItem"
-            anchor="bottom middle"
-            content-class="bg-green text-12" 
-            >
-            Silahkan pilih kecamatan yang didukung COD
-            </q-tooltip>
+        <q-radio v-model="shipping_method" val="Cod" label="Via Kurir Toko ( COD )">
         </q-radio>
       </div>
+      <!-- <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mb-md" style="font-size:13.4px;"> 
+        Dikirim dari {{ originAddressFormat }}.
+      </div> -->
 
-      <div v-if="shipping_method == 'Ekspedisi'" class="q-mt-sm">
-        <div class="relative">
+      <div v-if="shipping_method == 'Ekspedisi'">
+
+        <div id="shipping"  class="q-mt-lg">
+          <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
+          <div class="q-mt-sm">
+            <q-list v-if="formOrder.shipping_destination">
+              <q-item class="bg-grey-2">
+                <q-item-section>{{ destinationAddressFormat(formOrder.shipping_destination) }}</q-item-section>
+                <q-item-section side>
+                  <q-btn icon="cancel" round dense flat no-caps color="red" @click="clearAddress">
+                  </q-btn>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <div v-else>
+              <q-input filled square placeholder="Ketik kecamatan tujuan, min 3 karakter" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"
+              :error="errors.shipping_destination"
+              >
+              <!-- <template v-slot:error>Tujuan pengiriman belum diisi</template> -->
+              </q-input>
+              <transition
+                  appear
+                  enter-active-class="animated fadeIn"
+                  leave-active-class="animated fadeOut"
+                >
+                <div class="relative bg-grey-1" v-show="isSearching || searchReady">
+                  <q-list style="min-height:43px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
+                    <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
+                      <q-item-section>
+                        <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                  <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
+                  <q-inner-loading :showing="isSearching"></q-inner-loading>
+                </div>
+              </transition>
+            </div>
+          </div>
+        
+        </div>
+        <div class="relative q-mt-md">
+          <div class="text-md text-weight-medium q-pb-xs">Pilih Kurir</div>
           <q-select 
             id="inputCourier"
-            :disable="!canSelectCourier"
             filled
             square
             stack-label
@@ -78,20 +70,13 @@
             >
             <template v-slot:error>Kurir belum dipilih</template>
           </q-select>
-          <div class="absolute full-width full-height" v-if="!canSelectCourier" style="top:0;">
-             <q-tooltip 
-              content-class="bg-green text-12" 
-              :offset="[10, 10]"
-              >
-              Silahkan pilih kecamatan terlebih dahulu
-            </q-tooltip>
-          </div>
+
         </div>
         <q-list v-if="shippingCost.ready">
           <template v-if="shippingCost.costs.length">
           <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable class="bg-grey-1">
             <q-item-section avatar>
-              <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'green-6' : 'grey-6'"></q-icon>
+              <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'primary' : 'grey-6'"></q-icon>
             </q-item-section>
             <q-item-section>
               <q-item-label>Servis : {{ item.service }}</q-item-label>
@@ -125,25 +110,34 @@
         </q-list>
         </div>
       </div>
-      <div v-if="shipping_method == 'Cod'">
-        <div id="cod" v-if="codItem" class="q-mt-sm">
-          <q-list>
-            <q-item @click="selectCostCod(codItem)" clickable class="bg-grey-2 q-py-md">
-              <q-item-section side>
-                <q-icon :name="isSelectedCostCod ? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCostCod ? 'green-6' : 'grey-6'"></q-icon>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ destinationAddressFormat(codItem) }}</q-item-label>
-                <q-item-label>Ongkir : {{ (codItem.price && parseInt(codItem.price) > 0) ? moneyIDR(parseInt(codItem.price)) : 'Gratis'}} </q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-          <div class="text-red text-xs q-pa-xs" v-if="errors.shipping_courier_service">Ongkos kirim belum dipilih</div>
-        </div>
-      </div>
     </div>
 
-    <div id="customer" class="q-mt-lg">
+    <div v-if="shipping_method == 'Cod' || !config.can_shipping">
+      
+     <div class="q-mb-lg">
+        <div class="text-md q-pb-xs text-weight-medium">Pilih Tujuan Pengiriman</div>
+        <q-select filled v-model="codSelected" :options="listCodOptions" label="Pilih" 
+        :error="errors.shipping_destination"
+        >
+         <template v-slot:error>Tujuan pengiriman belum diisi</template>
+          <template v-slot:option="scope">
+            <q-item 
+            v-bind="scope.itemProps"
+            v-on="scope.itemEvents"
+            >
+              <q-item-section>
+                <q-item-label>{{ scope.opt.label }}</q-item-label>
+                <q-item-label class="text-grey-8"> Ongkos Kirim {{ scope.opt.price > 0 ? moneyIDR(scope.opt.price) : 'Gratis' }}</q-item-label>
+              </q-item-section>
+            </q-item>
+        </template>
+        </q-select>
+      </div>
+
+    </div>
+   
+
+    <div id="customer" class="">
       <div class="text-md q-pb-xs text-weight-medium">Detail Penerima</div>
         <div class="q-gutter-y-md">
         <q-input
@@ -232,7 +226,6 @@ export default {
       useDataUserPrompt: false,
       isSelectedCost: null,
       isSelectedCostCod: null,
-      shipping_method: 'Ekspedisi',
       formGetCost: {
         origin: '',
         destination: '',
@@ -255,6 +248,7 @@ export default {
       searchAvailable: true,
       searchReady:false,
       subdistrictOptionsData: [],
+      codSelected: ''
     }
   },
   watch: {
@@ -262,7 +256,23 @@ export default {
       if(val) {
         this.clearShipping()
         this.clearPayment()
-        this.isSelectedCostCod = null
+        this.clearAddress()
+        this.codSelected = ''
+        this.isSelectedCostCod = ''
+      }
+    },
+    codSelected: function(val) {
+      console.log(val);
+      if(val) {
+        console.log('yes');
+        this.commitFormOrder('shipping_cost', val.price)
+        this.commitFormOrder('shipping_courier_name', 'COD')
+        this.commitFormOrder('shipping_courier_service', 'Diantar kurir toko')
+          this.commitFormOrder('shipping_destination', val)
+        // this.selectSubdistrict(val)
+        setTimeout(() => {
+          console.log('select', this.formOrder);
+        }, 500)
       }
     }
   },
@@ -298,6 +308,20 @@ export default {
       get: function() {
         return this.$store.state.order.formOrder.customer_email
       }
+    },
+    shipping_method: {
+      set: function(val) {
+        this.commitFormOrder('shipping_method', val)
+      },
+      get: function() {
+        return this.$store.state.order.formOrder.shipping_method
+      }
+    },
+    listCodOptions() {
+      if(this.config && this.config.can_cod) {
+        return this.config.cod_list.map(el => ({ label: `${el.subdistrict_name} ${el.type} ${el.city} ${el.province}`, value: el.id, ...el}))
+      }
+      return []
     },
     canCod() {
       if(this.config && this.config.cod_list.length) {
@@ -356,13 +380,6 @@ export default {
     loading() {
       return this.$store.state.loading
     },
-    canSelectCourier() {
-      if(this.formGetCost.destination && this.formGetCost.weight && this.formGetCost.origin){
-        return true
-      } else {
-        return false
-      }
-    },
     canGetCost() {
       if(this.formGetCost.destination && this.formGetCost.courier && this.formGetCost.weight && this.formGetCost.origin){
         return true
@@ -399,7 +416,7 @@ export default {
     }
   },
   mounted() {
-    this.setDataGetCost()
+    this.setFormGetCost()
     if(this.user) {
       this.commitFormOrder('user_id', this.user.id)
       this.customer_name = this.user.name
@@ -417,6 +434,7 @@ export default {
       this.commitFormOrder('shipping_courier_name', '')
       this.commitFormOrder('shipping_courier_service', '')
       this.commitFormOrder('shipping_cost', 0)
+      // this.commitFormOrder('shipping_destination', '')
     },
     clearPayment() {
       this.commitFormOrder('payment_method', '')
@@ -424,6 +442,7 @@ export default {
       this.commitFormOrder('payment_type', '')
       this.commitFormOrder('payment_code', '')
       this.commitFormOrder('payment_fee', 0)
+      this.$emit('removePayment')
     },
     commitFormOrder(key,val) {
       this.$store.commit('order/SET_FORM_ORDER', { key: key, value: val })
@@ -459,9 +478,9 @@ export default {
       this.formGetCost.destination = ''
       this.readyAddressBlock = false
       this.clearSelectedCost()
-      setTimeout(() => {
-        this.$refs.search.focus()
-      },300)
+      // setTimeout(() => {
+      //   this.$refs.search.focus()
+      // },300)
     },
     closeModalAddress() {
       this.changeNewAddress()
@@ -469,8 +488,6 @@ export default {
       this.$emit('closeModal')
     },
     clearAddress() {
-
-      this.shipping_method = 'Ekspedisi'
 
       this.searchSubdistrictKey = '';
       this.subdistrictOptionsData = []
@@ -480,10 +497,6 @@ export default {
       this.clearSelectedCost()
 
       this.commitFormOrder('shipping_destination', '')
-
-      setTimeout(() => {
-        this.$refs.search.focus()
-      },300)
 
     },
     selectSubdistrict(item) {
@@ -599,13 +612,17 @@ export default {
       this.clearShipping()
     },
     getCost() {
+      this.setFormGetCost()
+
+      if(this.shipping_method == 'COD') return
+
       this.shippingCost.ready = false
       this.costNotFound = false
       this.clearSelectedCost() 
 
       if(this.canGetCost) {
 
-        this.jumpTo('courier')
+        this.jumpTo('shipping')
 
         this.$store.commit('SET_LOADING', true)
         Api().post('shipping/getCost', this.formGetCost).then(response => {
@@ -630,7 +647,7 @@ export default {
         })
       }
     },
-    setDataGetCost() {
+    setFormGetCost() {
       this.formGetCost.weight = this.formOrder.weight;
 
       if(this.formOrder.shipping_destination) {

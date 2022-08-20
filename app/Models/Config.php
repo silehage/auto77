@@ -45,8 +45,9 @@ class Config extends Model
         'is_bank_ready',
         'is_demo_mode',
         'demo_phone',
-        'is_mail_ready'
-        ];
+        'is_mail_ready',
+        'can_cod'
+    ];
 
     protected $hidden = [
         'rajaongkir_apikey',
@@ -72,9 +73,16 @@ class Config extends Model
     {
         return $this->rajaongkir_apikey && $this->rajaongkir_type ? true : false;
     }
+    public function getCanCodAttribute()
+    {
+        return $this->cod_list ? true : false;
+    }
     public function getCanShippingAttribute()
     {
-        return $this->rajaongkir_apikey && $this->rajaongkir_type && $this->warehouse_address && $this->rajaongkir_couriers ? true : false;
+        if($this->rajaongkir_apikey && $this->rajaongkir_type && $this->warehouse_address && $this->rajaongkir_couriers) {
+            return true;
+        }
+        return false;
     }
     public function getIsTripayReadyAttribute()
     {

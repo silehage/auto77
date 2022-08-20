@@ -35,7 +35,7 @@ const routes = [
       { path: 'reset-password', name: 'ResetPassword', component: () => import('src/pages/Auth/ResetPassword.vue')},
       { path: 'cart', name: 'Cart', component: () => import('src/pages/Shop/Cart.vue')},
       { path: 'checkout', name: 'Checkout', component: () => import('src/pages/Checkout/Index.vue')},
-      { path: 'direct-checkout', name: 'CheckoutWithShipping', component: () => import('src/pages/Checkout/DirectWithShipping.vue')},
+      { path: 'direct-checkout', name: 'DirectCheckout', component: () => import('src/pages/Checkout/DirectWithShipping.vue')},
       { path: 'invoice/:order_ref', name: 'UserInvoice', component: () => import('src/pages/Invoice/Index.vue')},
     ]
   },

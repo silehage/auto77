@@ -58,6 +58,7 @@ export function COLLECT_ORDER (state, payload) {
 }
 
 export function SET_FORM_ORDER (state, payload) {
+  console.log(payload);
   state.formOrder[payload.key] = payload.value
 }
 
