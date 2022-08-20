@@ -5,7 +5,7 @@
         <q-card-section>
           <div class="flex items-center justify-between">
             <div class="text-md text-weight-bold">Ekspedisi</div>
-            <div class="q-px-sm rounded-borders text-white" :class="config && config.can_shipping? 'bg-green-7' : 'bg-grey-6'">{{ config && config.can_shipping? 'Active' : 'Disabled' }}</div>
+             <q-toggle v-model="formdata.is_shipping_active" :label="formdata.is_shipping_active? 'Active' : 'Disabled'" left-label color="green-7" class="text-grey-8"></q-toggle>
           </div>
           <div class="text-caption text-grey-7">
             <div>Pengaturan ongkir otomatis by Rajaongkir</div>
@@ -87,6 +87,7 @@ export default {
       searchType: 'cod',
       searchLoading: false,
       formdata: {
+        is_shipping_active: false,
         rajaongkir_type: '',
         rajaongkir_apikey: '',
         warehouse_id: '',
@@ -137,6 +138,7 @@ export default {
       return 'Pilih Gudang Pengiriman'
     },
     setConfig(item) { 
+      this.formdata.is_shipping_active = item.is_shipping_active
       this.formdata.rajaongkir_type = item.rajaongkir_type
       this.formdata.rajaongkir_apikey = item.rajaongkir_apikey
       this.formdata.rajaongkir_couriers = item.rajaongkir_couriers

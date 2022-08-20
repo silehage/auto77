@@ -38,6 +38,7 @@ class Config extends Model
         'service_fee',
         'service_fee_label',
         'is_service_fee',
+        'is_shipping_active'
     ];
     public $appends = [
         'is_shippable', 
@@ -69,6 +70,7 @@ class Config extends Model
         'is_whatsapp_checkout' => 'boolean',
         'is_guest_checkout' => 'boolean',
         'is_service_fee' => 'boolean',
+        'is_shipping_active' => 'boolean',
         'cod_list' => 'array',
         'warehouse_address' => 'object'
     ];

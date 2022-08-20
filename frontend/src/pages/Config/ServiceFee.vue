@@ -16,11 +16,15 @@
       <q-input
         filled
         v-model="form.service_fee_label"
+        required
         label="Label"
         />
       <q-input
         filled
         v-model="form.service_fee"
+        type="number"
+        required
+        min="0"
         label="Biaya Layanan"
         />
       <div class="flex justify-end q-mt-md">
