@@ -46,6 +46,13 @@ export function PAGINATE_ADMIN_PRODUCTS (state, payload)
   state.admin_products.ready = true
   state.admin_products.available = true
 }
+export function UPDATE_PRODUCT (state, payload) 
+{
+  let productIndex = state.admin_products.data.findIndex(e => e.id == payload.id)
+
+  state.admin_products.data[productIndex] = payload
+
+}
 
 export function SET_INITIAL_PRODUCTS (state, payload) 
 {
@@ -53,6 +60,8 @@ export function SET_INITIAL_PRODUCTS (state, payload)
   state.initial_products.ready = true
   state.initial_products.available = payload.length > 0 ? true : false
 }
+
+
 export function SET_PRODUCT_SEARCH (state, payload) 
 {
   state.productSearch.data = payload

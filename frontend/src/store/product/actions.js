@@ -20,7 +20,7 @@ export function productUpdate ({ dispatch, commit }, payload) {
   let self = this;
     Api().post('product/update', payload, {headers: {'content-Type': 'multipart/formData'}})
     .then(response => {
-    dispatch('getAdminProducts')
+    commit('UPDATE_PRODUCT', response.data.results)
     
     self.$router.push({name: 'AdminProductIndex'})
   })

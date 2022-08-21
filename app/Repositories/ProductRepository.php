@@ -368,9 +368,11 @@ class ProductRepository
                 
             }
 
-            $product->fresh();
-
+            
             DB::commit();
+            
+            $product->fresh();
+            $product->load('assets', 'category', 'varians.subvarian');
 
             Cache::forget($product->slug);
 
