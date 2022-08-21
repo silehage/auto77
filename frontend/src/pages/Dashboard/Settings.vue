@@ -38,6 +38,11 @@
         </q-item>
       </q-list>
     </div>
+    <q-footer class="bg-white q-pa-sm">
+      <div class="text-xs text-grey-6 text-center">
+        &copy; Copyright {{ getYear() }} Allrigts Reserved {{ shop.name }} by <span class="cursor-pointer inline-flex" @click="go">Nextshop</span>
+      </div>
+    </q-footer>
   </q-page>
 </template>
 
@@ -62,7 +67,19 @@ export default {
       ]
     }
   },
+  computed: {
+    shop() {
+      return this.$store.state.shop
+    }
+  },
   methods: {
+    getYear() {
+      let date = new Date()
+      return date.getFullYear()
+    },
+    go() {
+      window.open('https://nextshop.my.id', '_blank')
+    },
     logout() {
       this.$store.dispatch('user/logout')
     },

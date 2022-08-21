@@ -31,7 +31,7 @@
         />
 
         <div v-if="config.is_payment_gateway">
-          <q-input filled :value="config.tripay_callback" readonly>
+          <q-input filled :value="config.tripay_callback" readonly label="URL Callback">
           <template v-slot:append>
             <q-btn icon="content_copy" @click="handleClickTripayCallback" unelevated size="18px" padding="4px" flat></q-btn>
           </template>
