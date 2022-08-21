@@ -1,143 +1,144 @@
 <template>
-  <div class="" id="payment-method">
-     <div id="courier" ref="courier" v-if="config.can_shipping" class="q-mb-lg">
+  <div class="">
+     <div id="courier" ref="courier" class="q-mb-lg">
       <div class="text-md text-weight-medium">Pilih Metode Pengiriman</div>
 
-      <div class="q-py-sm q-gutter-x-sm" >
-        <q-radio v-model="shipping_method" val="Ekspedisi" label="Via Ekspedisi"></q-radio>
-        <q-radio v-model="shipping_method" val="Cod" label="Via Kurir Toko ( COD )">
+      <div class="q-py-sm q-gutter-x-sm" v-if="config.can_shipping">
+        <q-radio v-model="shipping_method" val="EKSPEDISI" label="Via Ekspedisi"></q-radio>
+        <q-radio v-model="shipping_method" val="COD" label="Via Kurir Toko ( COD )">
         </q-radio>
       </div>
       <!-- <div class="bg-green-1 q-px-sm q-py-xs text-green-9 q-mb-md" style="font-size:13.4px;"> 
         Dikirim dari {{ originAddressFormat }}.
       </div> -->
 
-      <div v-if="shipping_method == 'Ekspedisi'">
+      <div id="shipping_destination">
+        <div v-if="shipping_method == 'EKSPEDISI' && config.can_shipping">
 
-        <div id="shipping"  class="q-mt-lg">
-          <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
-          <div class="q-mt-sm">
-            <q-list v-if="formOrder.shipping_destination">
-              <q-item class="bg-grey-2">
-                <q-item-section>{{ destinationAddressFormat(formOrder.shipping_destination) }}</q-item-section>
-                <q-item-section side>
-                  <q-btn icon="cancel" round dense flat no-caps color="red" @click="clearAddress">
-                  </q-btn>
-                </q-item-section>
-              </q-item>
-            </q-list>
-            <div v-else>
-              <q-input filled square placeholder="Ketik kecamatan tujuan, min 3 karakter" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"
-              :error="errors.shipping_destination"
-              >
-              <!-- <template v-slot:error>Tujuan pengiriman belum diisi</template> -->
-              </q-input>
-              <transition
-                  appear
-                  enter-active-class="animated fadeIn"
-                  leave-active-class="animated fadeOut"
+          <div id="shipping"  class="q-mt-lg">
+            <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
+            <div class="q-mt-sm">
+              <q-list v-if="formOrder.shipping_destination">
+                <q-item class="bg-grey-2">
+                  <q-item-section>{{ destinationAddressFormat(formOrder.shipping_destination) }}</q-item-section>
+                  <q-item-section side>
+                    <q-btn icon="cancel" round dense flat no-caps color="red" @click="clearAddress">
+                    </q-btn>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <div v-else>
+                <q-input filled square placeholder="Ketik kecamatan tujuan, min 3 karakter" ref="search" v-model="searchSubdistrictKey" debounce="500" @input="findSubdistrict" :loading="isSearching"
+                :error="errors.shipping_destination"
                 >
-                <div class="relative bg-grey-1" v-show="isSearching || searchReady">
-                  <q-list style="min-height:43px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
-                    <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
-                      <q-item-section>
-                        <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                  <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
-                  <q-inner-loading :showing="isSearching"></q-inner-loading>
-                </div>
-              </transition>
-            </div>
-          </div>
-        
-        </div>
-        <div class="relative q-mt-md">
-          <div class="text-md text-weight-medium q-pb-xs">Pilih Kurir</div>
-          <q-select 
-            id="inputCourier"
-            filled
-            square
-            stack-label
-            label="Pilih Kurir"
-            :options="couriers"  
-            v-model="formGetCost.courier" 
-            emit-value
-            map-options
-            :error="errors.shipping_courier_service"
-            @input="courierSelected"
-            >
-            <template v-slot:error>Kurir belum dipilih</template>
-          </q-select>
-
-        </div>
-        <q-list v-if="shippingCost.ready">
-          <template v-if="shippingCost.costs.length">
-          <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable class="bg-grey-1">
-            <q-item-section avatar>
-              <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'primary' : 'grey-6'"></q-icon>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Servis : {{ item.service }}</q-item-label>
-              <q-item-label>Deskripsi : {{ item.description }}</q-item-label>
-              <q-item-label>Ongkir : {{ moneyIDR(item.cost[0].value)}}</q-item-label>
-              <q-item-label>Etd: {{ item.cost[0].etd }} day</q-item-label>
-            </q-item-section>
-          </q-item>
-          </template>
-          <q-item v-else>
-            <q-item-section>
-              <q-item-label class="text-red-5 q-pa-lg">Ongkos kirim tidak ditemukan, silahkan ganti dengan kurir yang lain</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-        <div ref="courier_skeleton">
-        <q-list v-if="loading" >
-          <q-item v-for="i in 3" :key="i">
-            <q-item-section avatar top>
-              <div class="q-pa-sm">
-              <q-skeleton width="20px" height="20px" class="round"></q-skeleton>
+                <!-- <template v-slot:error>Tujuan pengiriman belum diisi</template> -->
+                </q-input>
+                <transition
+                    appear
+                    enter-active-class="animated fadeIn"
+                    leave-active-class="animated fadeOut"
+                  >
+                  <div class="relative bg-grey-1" v-show="isSearching || searchReady">
+                    <q-list style="min-height:43px;max-height:300px;overflow-y:auto;" v-if="searchAvailable">
+                      <q-item v-for="item in subdistrictOptionsData" :key="item.id" clickable @click="selectSubdistrict(item)">
+                        <q-item-section>
+                          <q-item-label>{{ destinationAddressFormat(item) }}</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                    <div v-else class="text-red-7 q-pa-md">kecamatan {{ searchSubdistrictKey }} tidak ditemukan</div>
+                    <q-inner-loading :showing="isSearching"></q-inner-loading>
+                  </div>
+                </transition>
               </div>
-            </q-item-section>
-            <q-item-section>
-              <q-skeleton type="text" width="80px"></q-skeleton>
-              <q-skeleton type="text" width="180px"></q-skeleton>
-              <q-skeleton type="text" width="110px"></q-skeleton>
-              <q-skeleton type="text" width="90px"></q-skeleton>
-            </q-item-section>
-          </q-item>
-        </q-list>
+            </div>
+          
+          </div>
+          <div class="relative q-mt-md">
+            <div class="text-md text-weight-medium q-pb-xs">Pilih Kurir</div>
+            <q-select 
+              id="inputCourier"
+              filled
+              square
+              stack-label
+              label="Pilih Kurir"
+              :options="couriers"  
+              v-model="formGetCost.courier" 
+              emit-value
+              map-options
+              :error="errors.shipping_courier_service"
+              @input="courierSelected"
+              >
+              <template v-slot:error>Kurir belum dipilih</template>
+            </q-select>
+
+          </div>
+          <q-list v-if="shippingCost.ready">
+            <template v-if="shippingCost.costs.length">
+            <q-item v-for="item in shippingCost.costs" :key="item.service" v-ripple @click="selectCost(item)" clickable class="bg-grey-1">
+              <q-item-section avatar>
+                <q-icon :name="isSelectedCost && isSelectedCost.service == item.service? 'radio_button_checked' : 'radio_button_unchecked'" :color="isSelectedCost && isSelectedCost.service == item.service? 'primary' : 'grey-6'"></q-icon>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Servis : {{ item.service }}</q-item-label>
+                <q-item-label>Deskripsi : {{ item.description }}</q-item-label>
+                <q-item-label>Ongkir : {{ moneyIDR(item.cost[0].value)}}</q-item-label>
+                <q-item-label>Etd: {{ item.cost[0].etd }} day</q-item-label>
+              </q-item-section>
+            </q-item>
+            </template>
+            <q-item v-else>
+              <q-item-section>
+                <q-item-label class="text-red-5 q-pa-lg">Ongkos kirim tidak ditemukan, silahkan ganti dengan kurir yang lain</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <div ref="courier_skeleton">
+          <q-list v-if="loading" >
+            <q-item v-for="i in 3" :key="i">
+              <q-item-section avatar top>
+                <div class="q-pa-sm">
+                <q-skeleton width="20px" height="20px" class="round"></q-skeleton>
+                </div>
+              </q-item-section>
+              <q-item-section>
+                <q-skeleton type="text" width="80px"></q-skeleton>
+                <q-skeleton type="text" width="180px"></q-skeleton>
+                <q-skeleton type="text" width="110px"></q-skeleton>
+                <q-skeleton type="text" width="90px"></q-skeleton>
+              </q-item-section>
+            </q-item>
+          </q-list>
+          </div>
+        </div>
+        <div v-if="shipping_method == 'COD' || !config.can_shipping">
+          
+        <div class="q-mb-lg">
+            <div class="text-md q-pb-xs text-weight-medium">Pilih Tujuan Pengiriman</div>
+            <q-select filled v-model="codSelected" :options="listCodOptions" label="Pilih" 
+            :error="errors.shipping_destination"
+            >
+            <template v-slot:error>Tujuan pengiriman belum diisi</template>
+              <template v-slot:option="scope">
+                <q-list separator>
+                  <q-item 
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                  >
+                    <q-item-section>
+                      <q-item-label>{{ scope.opt.label }}</q-item-label>
+                      <q-item-label class="text-primary text-weight-bold text-sm"> Ongkos Kirim {{ scope.opt.price > 0 ? moneyIDR(scope.opt.price) : 'Gratis' }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+            </template>
+            </q-select>
+          </div>
+
         </div>
       </div>
-    </div>
-
-    <div v-if="shipping_method == 'Cod' || !config.can_shipping">
-      
-     <div class="q-mb-lg">
-        <div class="text-md q-pb-xs text-weight-medium">Pilih Tujuan Pengiriman</div>
-        <q-select filled v-model="codSelected" :options="listCodOptions" label="Pilih" 
-        :error="errors.shipping_destination"
-        >
-         <template v-slot:error>Tujuan pengiriman belum diisi</template>
-          <template v-slot:option="scope">
-            <q-list separator>
-              <q-item 
-              v-bind="scope.itemProps"
-              v-on="scope.itemEvents"
-              >
-                <q-item-section>
-                  <q-item-label>{{ scope.opt.label }}</q-item-label>
-                  <q-item-label class="text-primary text-weight-bold text-sm"> Ongkos Kirim {{ scope.opt.price > 0 ? moneyIDR(scope.opt.price) : 'Gratis' }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-        </template>
-        </q-select>
-      </div>
 
     </div>
-   
 
     <div id="customer" class="">
       <div class="text-md q-pb-xs text-weight-medium">Detail Penerima</div>

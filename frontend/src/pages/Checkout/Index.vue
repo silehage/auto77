@@ -8,7 +8,7 @@
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
         </q-toolbar>
     </q-header>
-    <div id="checkout" v-if="carts && carts.length" ref="top" class="q-pb-xl">
+    <div id="checkout" v-if="carts && carts.length" ref="top" class="q-pb-md">
       <q-stepper
         v-model="step"
         keep-alive
@@ -61,7 +61,7 @@
     <q-inner-loading :showing="loading">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
-    <div class="bg-white q-py-md q-gutter-y-sm column" :class="{'sticky-bottom': $q.platform.is.desktop }">
+    <div class="bg-white q-py-md q-gutter-y-sm column" :class="{'sticky-bottom': isStickyBottom }">
       <q-btn v-if="step != 3 " @click="next" no-caps unelevated label="Langkah Selanjutnya" color="primary"></q-btn>
       <q-btn :disabled="loading" v-if="step == 3" @click="submitOrder" no-caps unelevated label="Proses Pesanan" color="primary"></q-btn>
     </div>
@@ -129,6 +129,24 @@ export default {
       if(this.step == 3) return 'Review Order'
 
       return 'Checkout'
+    },
+    isStickyBottom() {
+      if(this.$q.platform.is.desktop) {
+        return true
+
+      }else {
+        if(this.step == 2) {
+          if(this.onSelectPayment) {
+            return true
+          }
+        }
+        if(this.step == 3) {
+          return true
+        }
+
+        return false
+      }
+      
     },
     session_id() {
       return this.$store.state.session_id
@@ -324,7 +342,7 @@ export default {
       if(Object.keys(this.errors).length > 0) {
         for(let i in this.errors) {
           if(i == 'shipping_destination') {
-            this.jumpTo('shipping')
+            this.jumpTo('shipping_destination')
             this.$q.notify({
               type: 'negative',
               message: 'Tujuan pengiriman belum diisi'
