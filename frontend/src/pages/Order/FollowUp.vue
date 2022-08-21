@@ -1,17 +1,17 @@
 <template>
   <q-card style="width:100%;max-width:400px;">
     <q-form @submit.prevent="submitMessage">
-      <div class="q-px-md q-pt-md q-pb-sm">
+      <div class="q-px-md q-pt-md">
         <div class="text-h6">{{ messageButtonLabel }}</div>
         <div class="text-xs text-grey-7">Anda bisa mengedit dengan format pesan anda sendiri.</div>
       </div>
       <q-card-section style="max-height: 80vh" class="scroll">
         <q-input outlined type="textarea" v-model="message" rows="18" class="textarea-input"/>
+        <div class="q-mt-md flex justify-end q-gutter-x-sm">
+            <q-btn outline color="primary" type="button" @click.prevent="$emit('close')" label="Batal" no-caps unelevated />
+            <q-btn unelevated type="submit" label="Kirim Whatsapp" color="primary" no-caps/>
+        </div>
       </q-card-section>
-      <q-card-actions align="right">
-          <q-btn type="button" @click.prevent="$emit('close')" label="Batal" no-caps unelevated />
-          <q-btn unelevated type="submit" label="Kirim Whatsapp" color="primary" no-caps/>
-      </q-card-actions>
     </q-form>
   </q-card>
 </template>

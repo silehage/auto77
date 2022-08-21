@@ -783,3 +783,14 @@ table.table td, table.table td * {
     font-size: .7rem;
   }
 }
+
+.fab-custom {
+  .q-fab {
+    z-index: inherit;
+
+  }
+  .q-fab__actions {
+    z-index: 999;
+    background-color: white;
+  }
+}

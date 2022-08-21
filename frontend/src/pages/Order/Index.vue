@@ -58,6 +58,18 @@
                   <td>{{ moneyIDR(order.grand_total) }}</td>
                 </tr>
                 <tr>
+                  <td>Status</td>
+                  <td>
+                    <q-badge :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </q-item-section>
+          <q-item-section top>
+            <div class="text-sm1">
+              <table class="dense">
+                <tr>
                   <td>Nama</td>
                   <td>{{ order.customer_name }}</td>
                 </tr>
@@ -73,25 +85,38 @@
                   <td>Pembayaran</td>
                   <td>{{ order.transaction? order.transaction.payment_method.split('_').join(' ') : '' }}</td>
                 </tr>
-                <tr>
-                  <td>Status</td>
-                  <td>
-                    <q-badge :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>
-                  </td>
-                </tr>
+               
               </table>
             </div>
           </q-item-section>
           <q-item-section side top>
-            <div class="column q-gutter-y-sm">
-              <q-btn class="btn-order" unelevated @click="handleFollowUp(order)" no-caps size="12px" :label="messageButtonLabel(order.order_status)" color="green-7"></q-btn>
-              <q-btn class="btn-order" unelevated no-caps size="12px" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-btn>
-              <q-btn class="btn-order" unelevated v-if="canInputResi(order)" no-caps size="12px" label="Input Resi" color="blue" outline @click="handleInputResi(order)"></q-btn>
-              <q-btn class="btn-order" unelevated v-if="canShip(order)" no-caps size="12px" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-btn>
-              <q-btn class="btn-order" unelevated v-if="canComplete(order)" no-caps size="12px" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-btn>
-              <q-btn class="btn-order" unelevated v-if="canConfirm(order)" no-caps size="12px" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-btn>
-              <q-btn outline class="btn-order" unelevated v-if="canCancelOrder(order)" no-caps size="12px" label="Batalkan Order" color="red" @click="handleCancelOrder(order)"></q-btn>
-              <q-btn class="btn-order" unelevated no-caps size="12px" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-btn>
+            <div class="fab-custom">
+              <q-fab 
+              color="primary" 
+              icon="keyboard_arrow_down" 
+              direction="down" 
+              padding="sm" 
+              unelevated 
+              vertical-actions-align="right"
+              label-position="top"
+              
+              >
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="send" @click="handleFollowUp(order)" :label="messageButtonLabel(order.order_status)" color="green-7"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="visibility" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="edit_note" v-if="canInputResi(order)" label="Input Resi" color="blue" @click="handleInputResi(order)"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="local_shipping" v-if="canShip(order)" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="check_circle" v-if="canComplete(order)" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="save" v-if="canConfirm(order)" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="remove_circle" v-if="canCancelOrder(order)" label="Batalkan" color="red" @click="handleCancelOrder(order)"></q-fab-action>
+
+                <q-fab-action padding="3px 6px" square  label-position="left" icon="delete" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-fab-action>
+              </q-fab>
             </div>
           </q-item-section>
         </q-item>
@@ -168,6 +193,7 @@ export default {
     'filter': function(newVal, oldVal) {
       if(newVal != oldVal) {
         this.form.status = newVal
+        localStorage.setItem('order_filter', newVal)
         this.filterOrder(newVal)
       }
     }
@@ -179,12 +205,21 @@ export default {
     }),
   },
   created() {
-    if(this.$route.query.filter) {
-      this.filter = this.$route.query.filter
-      this.filterOrder(this.filter)
+    if(this.orders.data.length <= this.orders.limit) {
 
-    } else {
-      this.getOrders()
+      if(this.$route.query.filter) {
+        this.setFilter(this.$route.query.filter)
+        this.filterOrder(this.filter)
+  
+      } else if(localStorage.getItem('order_filter')) {
+
+        this.setFilter(localStorage.getItem('order_filter'))
+        this.filterOrder(this.filter)
+
+      }else {
+        this.getOrders()
+      }
+
     }
   },
   methods: {
@@ -192,10 +227,14 @@ export default {
     loadMore() {
       this.getPaginateOrder({ filter: this.filter, skip: this.orders.data.length })
     },
+    setFilter(val) {
+      this.filter = val
+      localStorage.setItem('order_filter', val)
+    },
     handleSelectMode(evt) {
       this.isFilter = !this.isFilter
       this.search = ''
-      this.filter = ''
+      this.setFilter('ALL')
     },
     changeTab(evt) {
       this.$router.push({ name: 'OrderIndex', query: { filter: evt }})
@@ -216,7 +255,7 @@ export default {
     handleUpdateStatusOrder() {
       this.$store.commit('SET_LOADING', true)
       this.updateStatusOrder(this.form).then(() => {
-        this.filter = this.form.status 
+        this.setFilter(this.form.status)
         this.filterOrder(this.filter)
         
       }).finally(() =>  this.$store.commit('SET_LOADING', false))
@@ -230,7 +269,7 @@ export default {
         this.form.status = 'CANCELED'
         this.form.order_id = order.id
         this.cancelOrder(order.id).then(() => {
-          this.filter = this.form.status 
+          this.setFilter(this.form.status)
           this.filterOrder(this.filter)
         })
       })
@@ -275,8 +314,7 @@ export default {
     resetOrder() {
       this.orderFiltered = []
       this.isFilter = false
-      this.search = ''
-      this.filter = ''
+      this.setFilter('ALL')
     },
     changeBadgeColor(type) {
       if(type == 'PAID' || type == 'SHIPPING') return 'teal'
@@ -337,7 +375,7 @@ export default {
         cancel: {label: 'Batal', flat: true, 'no-caps': true},
         }).onOk(() => {
           this.acceptPayment(id).then(() => {
-            this.filter = 'PROCESS'
+            this.setFilter('PROCESS')
             this.filterOrder(this.filter)
           })
         }).onCancel(() => {
@@ -361,7 +399,7 @@ export default {
     },
     submitResi() {
       this.inputResi(this.form).then(() => {
-        this.filter = 'SHIPPING'
+        this.setFilter('SHIPPING')
         this.filterOrder(this.filter)
       })
       this.closeModal()
@@ -376,9 +414,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .btn-order {
   min-width:114px;
   width:100%;
 }
+
 </style>
