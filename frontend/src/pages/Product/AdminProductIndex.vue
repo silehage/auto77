@@ -20,50 +20,77 @@
         <q-btn unelevated label="Cari" @click="searchProduct" color="primary"></q-btn>
         <q-btn outline label="Reset" @click="getAdminProducts" color="primary"></q-btn>
       </div>
+    <div class="q-px-md q-pb-sm text-md text-weight-bold">Produk</div>
+    <q-separator></q-separator>
     <template v-if="products.available">
      <div class="q-pt-sm q-pb-xl">
       <q-list separator>
-       <q-item v-for="product in products.item.data" :key="product.id" class="q-py-md">
+       <q-item v-for="product in products.data" :key="product.id">
 
-         <q-item-section avatar class="q-pr-sm" top>
-           <q-img v-if="product.assets" :src="product.assets[0].src" class="bg-white img-product-admin" ratio="1"/>
+         <q-item-section avatar class="q-pr-xs" top>
+           <q-img v-if="product.assets" :src="product.assets[0].src" class="bg-white img-product-admin" ratio="1" width="55px"/>
         </q-item-section>
 
-        <q-item-section>
-          <div class="q-gutter-y-sm">
+        <q-item-section top>
+          <div class="">
             <q-item-label lines="2" class="text-md">{{ product.title }}</q-item-label>
-            <q-item-label caption class="ellipsis-2-lines" v-html="product.description"></q-item-label>
-            <q-item-label caption class="">
-              <q-chip v-if="product.is_preorder" class="bg-teal text-white" size="sm">Preorder</q-chip>
-              <q-chip outline color="teal" size="sm">{{ moneyIDR(product.price)}}</q-chip>
-              </q-item-label>
+            
+            <q-item-label caption>Harga Dasar {{ moneyIDR(product.price) }}</q-item-label>
+            <q-item-label caption v-if="!product.varians.length">Stok {{ product.stock }}</q-item-label>
+
+            <div>
+              <q-slide-transition>
+              <div v-show="showListId == product.id">
+                <div class="text-weight-bold q-pa-xs q-mt-sm">Detil Varian</div>
+                <div v-for="varian in product.varians" :key="varian.id" class="q-mb-xs">
+                  <q-list v-if="varian.has_subvarian" dense bordered separator>
+                    <q-item v-for="subvarian in varian.subvarian" :key="subvarian.id">
+                      <q-item-section>{{ varian.label }} {{ varian.value }} </q-item-section>
+                      <q-item-section>{{ subvarian.label }} {{ subvarian.value }}</q-item-section>
+                      <q-item-section>Stok {{ subvarian.stock }}</q-item-section>
+                      <q-item-section>Harga {{ moneyIDR(product.price+subvarian.price) }}</q-item-section>
+                    </q-item>
+                  </q-list>
+                  <q-list v-if="!varian.has_subvarian" dense separator bordered>
+                    <q-item>
+                      <q-item-section>{{ varian.label }} {{ varian.value }} </q-item-section>
+                      <q-item-section>Stok {{ varian.stock }}</q-item-section>
+                      <q-item-section>Harga {{ moneyIDR(product.price+varian.price) }}</q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+            </q-slide-transition>
             </div>
-          <div class="q-mt-sm text-xs">
-           <q-chip v-if="product.subcategory" dense size="12px" outline color="green-6">
-            <q-avatar icon="sell" color="primary" text-color="white"/>
-           {{ product.subcategory.title }}
-          </q-chip>
-          </div>
+            </div>
         </q-item-section>
 
-        <q-item-section side>
-          <div class="text-grey-8 q-gutter-xs column">
-            <q-btn unelevated @click="remove(product.id)" size="sm" round icon="delete" glossy color="red"/>
-            <q-btn unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" size="sm" round glossy color="info" icon="edit" />
-            <q-btn unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" size="sm" round glossy color="teal" icon="visibility" />
+        <q-item-section side top>
+          <div>
+            <q-fab color="primary" icon="keyboard_arrow_left" direction="left" glossy padding="sm" unelevated>
+              <q-fab-action unelevated @click="remove(product.id)" round icon="delete" glossy color="red">
+                <q-tooltip content-class="bg-red">Hapus</q-tooltip>
+              </q-fab-action>
+              <q-fab-action unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" round glossy color="info" icon="edit">
+                <q-tooltip content-class="bg-info">Edit</q-tooltip>
+              </q-fab-action>
+              <q-fab-action unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" round glossy color="teal" icon="launch">
+                <q-tooltip content-class="bg-teal">Lihat</q-tooltip>
+              </q-fab-action>
+
+              <q-fab-action v-if="product.varians.length" unelevated @click="showList(product.id)" round icon="category" glossy color="accent">
+                <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
+              </q-fab-action>
+            </q-fab>
           </div>
         </q-item-section>
       </q-item>
     </q-list>
-    <div class="q-my-md q-gutter-sm text-center" v-if="products.item.total > products.item.per_page">
-      <div>{{ products.item.current_page }} of {{ products.item.last_page }} page</div>
-      <q-btn no-caps size="12px" unelevated color="primary" @click="paginate(products.item.prev_page_url)" :disable="!products.item.prev_page_url">
-        <span>Sebelumnya</span>
+    <div class="q-my-md q-gutter-sm text-center" v-if="products.next_page_url">
+      <q-btn :loading="isLoadmore" no-caps size="12px" unelevated color="primary" @click="paginate(products.next_page_url)">
+        <span>Loadmore...</span>
       </q-btn>
     
-      <q-btn no-caps size="12px" unelevated color="primary" @click="paginate(products.item.next_page_url)" :disable="!products.item.next_page_url">
-        <span>Selanjutnya</span>
-      </q-btn>
     </div>
     </div>
     </template>
@@ -85,7 +112,9 @@ export default {
     return {
       pageNumber: 1,
       search: '',
-      productSearch: []
+      productSearch: [],
+      showListId: null,
+      isLoadmore: false
     }
   },
   computed: {
@@ -101,11 +130,19 @@ export default {
       this.$refs.input.blur()
       this.searchAdminProducts(this.search).then(response => {
         if(response.status == 200) {
+          console.log(response.data.results);
           this.$store.commit('product/SET_ADMIN_PRODUCTS', response.data.results)
         }
       }).finally(() => {
         this.$store.commit('SET_LOADING', false)
       })
+    },
+    showList(id) {
+      if(this.showListId == id) {
+        this.showListId = null
+      }else {
+        this.showListId = id
+      }
     },
     remove(id) {
       this.$q.dialog({
@@ -128,15 +165,18 @@ export default {
       }
     },
     paginate(url) {
+      this.isLoadmore = true
       Api().get(url).then(response => {
         if(response.status == 200) {
-          this.$store.commit('product/SET_ADMIN_PRODUCTS', response.data.results)
+          this.$store.commit('product/PAGINATE_ADMIN_PRODUCTS', response.data.results)
         }
-      })
+      }).finally(() => this.isLoadmore = false)
     }
   },
   created() {
-    if(!this.products.item.data.length) this.getAdminProducts()
+    if(this.products.data.length <= this.products.per_page) {
+      this.getAdminProducts()
+    } 
   }
 }
 </script>

@@ -27,11 +27,26 @@ export function SET_PRODUCT_PROMO (state, payload)
 }
 export function SET_ADMIN_PRODUCTS (state, payload) 
 {
-  state.admin_products.item = payload
+  state.admin_products.data = payload.data
+  state.admin_products.links = payload.links
+  state.admin_products.total = payload.total
+  state.admin_products.next_page_url = payload.next_page_url
+  state.admin_products.last_page_url = payload.last_page_url
+  state.admin_products.per_page = payload.per_page
   state.admin_products.ready = true
-
-  state.admin_products.available = payload.data.length > 0 ? true : false
+  state.admin_products.available = payload.total > 0
 }
+export function PAGINATE_ADMIN_PRODUCTS (state, payload) 
+{
+  state.admin_products.data = [...state.admin_products.data, ...payload.data]
+  state.admin_products.links = payload.links
+  state.admin_products.total = payload.total
+  state.admin_products.next_page_url = payload.next_page_url
+  state.admin_products.last_page_url = payload.last_page_url
+  state.admin_products.ready = true
+  state.admin_products.available = true
+}
+
 export function SET_INITIAL_PRODUCTS (state, payload) 
 {
   state.initial_products.data = payload

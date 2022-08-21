@@ -8,11 +8,13 @@ export default function () {
       meta: null
     },
     admin_products: {
-      item: {
-        data: [],
-      },
+      data: [],
+      links: null,
+      last_page_url: null,
+      last_page_url: null,
       ready: false,
-      available: true
+      available: true,
+      per_page: 0
     },
     initial_products: {
       data: [],

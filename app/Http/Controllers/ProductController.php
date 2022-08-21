@@ -15,7 +15,7 @@ use App\Http\Resources\ProductListCollection;
 
 class ProductController extends Controller
 {
-    public $limit = 6;
+    public $limit = 1;
     private $productRepository;
 
     protected $result = ['status' => 200, 'success' => true];
@@ -49,7 +49,7 @@ class ProductController extends Controller
     {
         try {
 
-            $this->result['results'] = Product::with(['assets', 'category'])
+            $this->result['results'] = Product::with(['assets', 'category', 'varians.subvarian'])
                     ->latest()
                     ->paginate($this->limit);
 
@@ -69,7 +69,7 @@ class ProductController extends Controller
         try {
 
             $this->result['results'] = Product::where('title', 'like', '%'.$key.'%')
-                ->with(['assets', 'category'])
+                ->with(['assets', 'category','varians.subvarian'])
                 ->paginate($this->limit);
 
         } catch (Exception $e) {
