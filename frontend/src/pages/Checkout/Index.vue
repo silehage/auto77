@@ -136,7 +136,7 @@ export default {
 
       }else {
         if(this.step == 2) {
-          if(this.onSelectPayment) {
+          if(this.paymentSelected) {
             return true
           }
         }
