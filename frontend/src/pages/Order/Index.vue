@@ -28,7 +28,7 @@
     <div>
       <q-list separator>
         <q-item>
-          <q-item-section side class="xs-hide">
+          <q-item-section side>
            #
           </q-item-section>
           <q-item-section>
@@ -39,11 +39,11 @@
           </q-item-section>
         </q-item>
         <q-item v-for="(order, index) in orders.data" :key="index">
-          <q-item-section side top class="xs-hide">
+          <q-item-section side top>
             {{ index+1 }}
           </q-item-section>
           <q-item-section top>
-            <div class="text-sm1">
+            <div class="text-sm">
               <table class="dense">
                 <tr>
                   <td>INVOICE</td>
@@ -63,11 +63,29 @@
                     <q-badge :color="changeBadgeColor(order.order_status)">{{ order.status_label }}</q-badge>
                   </td>
                 </tr>
+                <template v-if="isMobile">
+                  <tr>
+                  <td>Nama</td>
+                  <td>{{ order.customer_name }}</td>
+                </tr>
+                <tr>
+                  <td>Ponsel</td>
+                  <td>{{ order.customer_whatsapp }}</td>
+                </tr>
+                <tr>
+                  <td>Pengiriman</td>
+                  <td>{{ order.shipping_courier_name }}</td>
+                </tr>
+                <tr>
+                  <td>Pembayaran</td>
+                  <td>{{ order.transaction? order.transaction.payment_method.split('_').join(' ') : '' }}</td>
+                </tr>
+                </template>
               </table>
             </div>
           </q-item-section>
-          <q-item-section top>
-            <div class="text-sm1">
+          <q-item-section top v-if="!isMobile">
+            <div class="text-sm">
               <table class="dense">
                 <tr>
                   <td>Nama</td>
@@ -203,6 +221,9 @@ export default {
       orders: state => state.order.orders,
       loading: state => state.loading
     }),
+    isMobile() {
+      return window.innerWidth <= 500
+    }
   },
   created() {
     if(this.orders.data.length <= this.orders.limit) {
