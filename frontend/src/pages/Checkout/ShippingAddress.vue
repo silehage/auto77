@@ -267,15 +267,10 @@ export default {
     codSelected: function(val) {
       console.log(val);
       if(val) {
-        console.log('yes');
         this.commitFormOrder('shipping_cost', val.price)
         this.commitFormOrder('shipping_courier_name', 'COD')
         this.commitFormOrder('shipping_courier_service', 'Diantar kurir toko')
-          this.commitFormOrder('shipping_destination', val)
-        // this.selectSubdistrict(val)
-        setTimeout(() => {
-          console.log('select', this.formOrder);
-        }, 500)
+        this.commitFormOrder('shipping_destination', val)
       }
     }
   },
