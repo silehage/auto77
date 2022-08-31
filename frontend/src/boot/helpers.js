@@ -1,6 +1,8 @@
 import Vue from 'vue'
+import MoneyFormatter from 'components/MoneyFormatter'
 
 Vue.mixin({
+  components: { MoneyFormatter },
   methods: {
     moneyIDR(numb) {
       return 'Rp '+ numb.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

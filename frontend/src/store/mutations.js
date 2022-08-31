@@ -28,9 +28,17 @@ export default {
   SET_CONFIG: (state, payload) => {
 
     state.config = payload
-    document.body.style.setProperty('--q-color-primary', payload.theme_color)
 
-    AddressbarColor.set(state.theme_color)
+    if(!localStorage.getItem('__clr')) {
+      state.config.theme_color = payload.theme_color
+      localStorage.setItem('__clr', state.config.theme_color)
+      
+    }else {
+      state.config.theme_color = localStorage.getItem('__clr')
+    }
+    
+    document.body.style.setProperty('--q-color-primary', state.config.theme_color)
+    AddressbarColor.set(state.config.theme_color)
   },
   SET_HOME_VIEW_MODE: (state, payload) => {
     state.config.home_view_mode = payload
@@ -45,9 +53,12 @@ export default {
     state.isDemoMode = payload
   },
   SET_THEME_COLOR: (state, clr) => {
-    state.config.theme_color = clr
+
+    state.config.theme_color = clr 
     document.body.style.setProperty('--q-color-primary', clr)
-    AddressbarColor.set(state.theme_color)
+    AddressbarColor.set(clr)
+    localStorage.setItem('__clr', clr)
+
   },
   SET_INSTALL_APP: (state, payload) => {
     state.deferredPrompt = payload

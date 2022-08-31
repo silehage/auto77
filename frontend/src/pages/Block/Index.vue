@@ -44,7 +44,7 @@
      <q-inner-loading :showing="!blocks.ready">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
-    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
       <q-btn fab icon="add" color="primary" @click="handleAddBlock" glossy/>
     </q-page-sticky>
     <q-dialog v-model="blockModal">

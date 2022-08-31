@@ -46,7 +46,7 @@
     <q-inner-loading :showing="!sliders.ready">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>
-    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
       <q-btn fab icon="add" color="primary" glossy @click="handleBtnUpload"/>
     </q-page-sticky>
   </q-page>

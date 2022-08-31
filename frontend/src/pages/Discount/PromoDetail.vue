@@ -6,7 +6,7 @@
           flat round dense
           icon="arrow_back" />
         <q-toolbar-title>
-         Produk Promo
+         {{ promoted.label }} 
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

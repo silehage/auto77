@@ -80,7 +80,7 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
 
     Route::post('submitProductPromo', [ProductController::class, 'submitProductPromo']);
     Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
-    Route::get('findProductWithoutPromo', [ProductController::class, 'findProductWithoutPromo']);
+    Route::get('findProductWithoutPromo/{key}', [ProductController::class, 'findProductWithoutPromo']);
     
 });
 
@@ -103,7 +103,7 @@ Route::middleware(['throttle:auth'])->group(function() {
     
     Route::post('user/login', [UserController::class, 'login']);
     Route::post('user/register', [UserController::class, 'register']);
-    Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
+    Route::get('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
     Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
     Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 

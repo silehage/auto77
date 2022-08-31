@@ -297,11 +297,11 @@ class ProductController extends Controller
 
         return response()->json($this->result, $this->result['status']);
     }
-    public function findProductWithoutPromo()
+    public function findProductWithoutPromo($key)
     {
         try {
             
-            $this->result['results'] = Product::doesntHave('promo')->get();
+            $this->result['results'] = Product::doesntHave('promo')->where('title', 'like', '%'. $key . '%')->get();
 
         } catch (Exception $e) {
 
@@ -345,8 +345,14 @@ class ProductController extends Controller
         ]);
 
         try {
+
+            $product = ProductPromo::updateOrCreate([
+                'product_id' => $request->product_id
+            ], $data);
             
-            ProductPromo::create($data);
+            // ProductPromo::create($data);
+
+            $this->result['data'] = $product;
 
             Cache::forget('products');
             Cache::forget('initial_products');

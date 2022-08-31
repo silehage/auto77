@@ -40,7 +40,7 @@
     </div>
     <q-footer class="bg-white q-pa-sm">
       <div class="text-xs text-grey-6 text-center">
-        &copy; Copyright {{ getYear() }} Allrigts Reserved {{ shop.name }} by <span class="cursor-pointer inline-flex" @click="go">Nextshop</span>
+        &copy; Copyright {{ getYear() }} Allrigts Reserved {{ shop.name }}
       </div>
     </q-footer>
   </q-page>
@@ -56,7 +56,7 @@ export default {
         { label: 'Toko', caption: 'Pengaturan Tampilan toko', path: 'Shop', icon: 'store', color: 'blue'},
         { label: 'Produk', caption: 'Tambah, edit dan hapus produk', path: 'AdminProductIndex', icon: 'inventory_2', color: 'deep-orange'},
         { label: 'Kategori', caption: 'Kelola kategori produk', path: 'CategoryIndex', icon: 'category', color: 'amber-7'},
-        { label: 'Promo Produk', caption: 'Kelola produk promo', path: 'PromoIndex', icon: 'local_offer', color: 'blue-7'},
+        { label: 'Promo', caption: 'Kelola produk promo', path: 'PromoIndex', icon: 'local_offer', color: 'blue-7'},
         { label: 'Order', caption: 'Kelola pesanan', path: 'OrderIndex', icon: 'receipt', color: 'green'},
         { label: 'Akun Bank', caption: 'Kelola Akun Bank', path: 'BankIndex', icon: 'account_balance', color: 'purple'},
         { label: 'Slider', caption: 'Kelola slideshow', path: 'Slider', icon: 'view_carousel', color: 'teal'},

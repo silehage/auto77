@@ -122,11 +122,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      theme: '',
-      theme_color: '',
       OpenThemeSetting: false,
-      is_whatsapp_checkout: false,
-      is_guest_checkout: true,
     }
   },
   computed: {
@@ -136,30 +132,42 @@ export default {
     }),
     themes() {
       return this.$store.state.themes
-    }
-  },
-  watch: {
-    theme_color: function(val) {
-      this.setColor(val)
     },
-    theme: function(val) {
-      this.setTheme(val)
+    theme_color: {
+      get() {
+        return localStorage.getItem('__clr') ? localStorage.getItem('__clr') : this.config.theme_color
+      },
+      set(val) {
+          this.$store.commit('SET_THEME_COLOR', val)
+      }
     },
-    is_whatsapp_checkout: function(val) {
-      this.changeChatsappCheckout(val)
+    theme: {
+      get() {
+        return localStorage.getItem('__theme') ? localStorage.getItem('__theme') : this.config.theme
+      },
+      set(val) {
+        localStorage.setItem('__theme', val)
+        this.$store.commit('SET_THEME', val)
+      }
     },
-    is_guest_checkout: function(val) {
-      this.changeWithLogin(val)
+    is_whatsapp_checkout: {
+      get() {
+        return localStorage.getItem('__wck') ? localStorage.getItem('__wck') : this.config.is_whatsapp_checkout
+      },
+      set(val) {
+        localStorage.setItem('__wck', val)
+        this.$store.commit('SET_WHATSAPP_CHECKOUT', val)
+      }
+    },
+    is_guest_checkout: {
+      get() {
+        return localStorage.getItem('__guest') ? localStorage.getItem('__guest') : this.config.is_guest_checkout
+      },
+      set(val) {
+        localStorage.setItem('__guest', val)
+         this.$store.commit('SET_GUEST_CHECKOUT', val)
+      }
     }
-  },
-  mounted(){
-    if(this.config) {
-      this.theme_color = this.config.theme_color
-      this.theme = this.config.theme
-      this.is_whatsapp_checkout = this.config.is_whatsapp_checkout
-      this.is_guest_checkout = this.config.is_guest_checkout
-    }
-    this.$store.dispatch('getConfig')
   },
   methods: {
     changeHomeViewMode(str) {
@@ -168,18 +176,7 @@ export default {
     changeProductViewMode(str) {
       this.$store.commit('SET_PRODUCT_VIEW_MODE', str)
     },
-    setTheme(theme) {
-      this.$store.commit('SET_THEME', theme)
-    },
-    setColor(clr) {
-     this.$store.commit('SET_THEME_COLOR', clr)
-    },
-    changeWithLogin(val) {
-      this.$store.commit('SET_GUEST_CHECKOUT', val)
-    },
-    changeChatsappCheckout(val) {
-      this.$store.commit('SET_WHATSAPP_CHECKOUT', val)
-    },
+
     buyNow() {
       let url = `https://api.whatsapp.com/send?phone=${this.config.demo_phone}&text=${location.href}`
 

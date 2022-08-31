@@ -24,38 +24,14 @@
 
             <div class="row items-center q-gutter-x-sm">
               <div class="col">
-                <q-input  
-                filled 
-                mask="#########" 
-                v-model="form.price" 
-                label="Harga"
-                :rules="requiredRules"
-                ></q-input>
+                <money-formatter v-model="form.price" prefix="Rp"/>
               </div>
               <div class="col">
-
-                <q-input 
-                  filled 
-                  mask="#####" 
-                  v-model="form.stock" 
-                  label="Stok"
-                  :rules="requiredRules"
-                />
+                <money-formatter v-model="form.stock" label="Stok"/>
               </div>
-
               <div class="col">
-
-              <q-input 
-                filled 
-                mask="#####" 
-                v-model="form.weight" 
-                label="Berat"
-                suffix="gram"
-                :rules="[val => val && val > 49 || 'Berat harus diisi min 50 gram']"
-              />
+                <money-formatter v-model="form.weight" label="Berat" suffix="GRAM"/>
               </div>
-
-
             </div>
               <q-select
               filled 

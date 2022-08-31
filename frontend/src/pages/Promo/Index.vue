@@ -6,30 +6,31 @@
           flat round dense
           icon="arrow_back" />
         <q-toolbar-title>
-         Promo
+         Produk Promo
         </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
-    <div class="q-pa-sm">
-      <div class="row items-center justify-between q-px-sm">
-        <div class="text-h6">Promo Diskon</div>
-        <div class="row items-center q-gutter-x-sm">
-          <q-btn @click="handleAdd" unelevated color="primary">
+        <q-btn class="gt-xs" @click="handleAdd" unelevated color="accent">
             <q-icon name="add"></q-icon>
             <span>Promo</span>
           </q-btn>
-        </div>
-      </div>
-    </div>
-     <div class="q-py-md">
-        <q-list separator>
+      </q-toolbar>
+      <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
+        <q-btn fab icon="add" color="primary" @click="handleAdd" glossy/>
+      </q-page-sticky>
+      <div class="bg-white text-dark box-shadow">
+        <q-list>
           <q-item>
-            <q-item-section side>#</q-item-section>
-            <q-item-section>Label / Produk Total</q-item-section>
-            <q-item-section>Status</q-item-section>
-            <q-item-section side>Action</q-item-section>
-          </q-item>
-
+              <q-item-section side>#</q-item-section>
+              <q-item-section>Label / Produk Total</q-item-section>
+              <q-item-section>Status</q-item-section>
+              <q-item-section side>Action</q-item-section>
+            </q-item>
+        </q-list>
+      </div>
+    </q-header>
+    <div>
+    </div>
+     <div class="q-py-sm">
+        <q-list separator>
           <q-item v-for="(item, index) in promos" :key="index">
             <q-item-section side>{{ index+1 }}</q-item-section>
             <q-item-section>
@@ -43,9 +44,9 @@
             </q-item-section>
             <q-item-section side>
               <div class="q-gutter-sm">
-                <q-btn size="sm" @click="handleDelete(item.id)" unelevated color="red" icon="delete" round></q-btn>
-                <q-btn size="sm" @click="handleEdit(item)" unelevated color="teal" icon="edit_calendar" round></q-btn>
-                <q-btn size="sm" @click="$router.push({name: 'PromoDetail', params: { id: item.id }})" unelevated color="blue" icon="edit_note" round></q-btn>
+                <q-btn size="11px" @click="handleDelete(item.id)" unelevated color="red" icon="delete" round></q-btn>
+                <q-btn size="11px" @click="handleEdit(item)" unelevated color="teal" icon="edit_calendar" round></q-btn>
+                <q-btn size="11px" @click="$router.push({name: 'PromoDetail', params: { id: item.id }})" unelevated color="blue" icon="edit_note" round></q-btn>
               </div>
             </q-item-section>
           </q-item>

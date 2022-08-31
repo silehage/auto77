@@ -190,7 +190,7 @@ class ProductRepository
 
             $product->title = $request->title;
             $product->slug = $slug;
-            $product->price = $request->price;
+            $product->price = str_replace(".", "", $request->price);
             $product->stock = $request->stock;
             $product->weight = $request->weight;
             $product->sku = 'PF-'. $request->sku;
@@ -273,7 +273,7 @@ class ProductRepository
         DB::beginTransaction();
 
         $product->title = $request->title;
-        $product->price = $request->price;
+        $product->price = str_replace(".", "", $request->price);
         $product->stock = $request->stock;
         $product->weight = $request->weight;
         $product->description = $request->description;

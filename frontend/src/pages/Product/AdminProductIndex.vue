@@ -97,7 +97,7 @@
     <template v-else >
       <div class="text-center q-pt-xl">Tdak ada data</div>
     </template>
-    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
       <q-btn fab icon="add" color="primary" :to="{name: 'ProductCreate'}" glossy/>
     </q-page-sticky>
   </q-page>
