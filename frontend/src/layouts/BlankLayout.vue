@@ -25,7 +25,7 @@ export default {
     if(! this.config) {
       this.$store.dispatch('getConfig')
     } else {
-      document.body.style.setProperty('--q-color-primary', this.config.theme_color)
+      this.$store.commit('SET_THEME_COLOR', this.config.theme_color)
     }
     if(Cookies.get('__token')) {
       if(!this.user) {
