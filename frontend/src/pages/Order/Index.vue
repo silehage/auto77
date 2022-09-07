@@ -17,7 +17,7 @@
     </div>
     <div class="q-py-md auto-padding-side">
       <div class="q-gutter-x-sm q-mt-sm">
-          <q-input v-model="search" placeholder="Ketik no invoice atau whatsapp" dense borderless class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder">
+          <q-input v-model="search" placeholder="Ketik no invoice atau ponsel" dense borderless clearable class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder" @clear="clearSearch">
             <template v-slot:append>
               <q-icon name="eva-search" class="cursor-pointer" @click="handleSearchOrder"></q-icon>
             </template>
@@ -112,25 +112,25 @@
             <div class="fab-custom">
               <q-fab 
               color="primary" 
-              icon="keyboard_arrow_down" 
+              icon="eva-chevron-down" 
               direction="down" 
               padding="5px" 
               unelevated 
               vertical-actions-align="right"  
               >
-                <q-fab-action padding="5px" label-position="left" external-label icon="send" @click="handleFollowUp(order)" :label="messageButtonLabel(order.order_status)" color="green-7"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-paper-plane" @click="handleFollowUp(order)" :label="messageButtonLabel(order.order_status)" color="green-7"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="visibility" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-eye" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="edit_note" v-if="canInputResi(order)" label="Input Resi" color="blue" @click="handleInputResi(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-file-text" v-if="canInputResi(order)" label="Input Resi" color="blue" @click="handleInputResi(order)"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="local_shipping" v-if="canShip(order)" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-car" v-if="canShip(order)" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="eva-checkmark-circle" v-if="canComplete(order)" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-checkmark-circle-2" v-if="canComplete(order)" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="save" v-if="canConfirm(order)" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-save" v-if="canConfirm(order)" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-fab-action>
 
-                <q-fab-action padding="5px" label-position="left" external-label icon="eva-minus-circle" v-if="canCancelOrder(order)" label="Batalkan" color="red" @click="handleCancelOrder(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-close" v-if="canCancelOrder(order)" label="Batalkan" color="red" @click="handleCancelOrder(order)"></q-fab-action>
 
                 <q-fab-action padding="5px" label-position="left" external-label icon="eva-trash-2" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-fab-action>
               </q-fab>
@@ -246,6 +246,10 @@ export default {
     ...mapActions('order', ['getOrders', 'getPaginateOrder', 'getPaginateFilterOrder', 'destroyOrder', 'acceptPayment', 'inputResi', 'updateStatusOrder', 'searchOrder', 'filterOrder', 'cancelOrder']),
     loadMore() {
       this.getPaginateOrder({ filter: this.filter, skip: this.orders.data.length })
+    },
+    clearSearch() {
+      this.setFilter('ALL')
+      this.filterOrder(this.filter)
     },
     setFilter(val) {
       this.filter = val

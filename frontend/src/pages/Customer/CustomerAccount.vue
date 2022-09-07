@@ -8,7 +8,7 @@
         <q-btn to="/"
         flat dense padding="xs"
         label="Beranda" no-caps
-        icon-right="navigate_next" />
+        icon-right="eva-arrow-forward" />
       </q-toolbar>
     </q-header>
     <div class="header">
@@ -29,7 +29,7 @@
                     <q-btn icon="eva-edit-2" round size="11px" color="grey-4" text-color="dark" :to="{ name: 'CustomerAccountEdit' }">
                       <q-tooltip content-class="bg-indigo" :offset="[10, 10]">Edit Akun</q-tooltip>
                     </q-btn>
-                    <q-btn icon="logout" round size="11px" color="grey-4" text-color="dark" @click="logout">
+                    <q-btn icon="eva-logout" round size="11px" color="grey-4" text-color="dark" @click="logout">
                      <q-tooltip content-class="bg-amber text-black" :offset="[10, 10]">Keluar</q-tooltip>
                     </q-btn>
                   </div>
@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="q-mt-lg q-pa-sm">
-        <div class="flex justify-between q-pa-sm">
+        <div class="flex justify-between q-pa-sm items-center">
           <div class="text-weight-bold text-md">Transaksi Terbaru</div>
-          <q-btn color="primary" label="Selengkapnya" flat no-caps icon-right="navigate_next" :to="{ name: 'CustomerOrder' }"></q-btn>
+          <q-btn color="primary" label="Selengkapnya" flat no-caps icon-right="eva-arrow-forward" :to="{ name: 'CustomerOrder' }"></q-btn>
         </div>
 
         <q-list separator>

@@ -5,8 +5,10 @@
         <q-btn :to="{name: 'CustomerOrder'}"
           flat round dense
           icon="eva-arrow-back" />
-        <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
-      <q-btn icon="print" @click="printInvoice" flat round class="no-print"></q-btn>
+        <q-toolbar-title class="text-weight-bold brand">
+          <span v-if="invoice">Invoice {{ invoice.order_ref }}</span>
+          </q-toolbar-title>
+        <q-btn icon="eva-printer-outline" @click="printInvoice" flat round class="no-print"></q-btn>
       </q-toolbar>
     </q-header>
     <div v-if="invoice" class="no-print q-pt-md">
@@ -29,7 +31,7 @@
                   <td>: {{ invoice.transaction.payment_ref }}</td>
                 </tr>
                 <tr>
-                  <td>Dibuat</td>
+                  <td>Tanggal</td>
                   <td>: {{ invoice.created_at }}</td>
                 </tr>
                 <tr>
@@ -98,8 +100,8 @@
                 </tr>
                 <tr class="q-py-md">
                   <th align="right">Total Bayar</th>
-                  <td align="right">:</td>
-                   <td>Rp</td>
+                  <th align="right">:</th>
+                  <th>Rp</th>
                   <th align="right">{{ $money(invoice.grand_total) }}</th>
                 </tr>
               </table>
@@ -150,10 +152,10 @@
                   <td>:</td>
                   <td>{{ invoice.shipping_courier_service ? invoice.shipping_courier_service : '-' }}</td>
                 </tr>
-                <tr>
+                <tr v-if="invoice.shipping_courier_code">
                   <td>No Resi</td>
                   <td>:</td>
-                  <td>{{ invoice.shipping_courier_code? invoice.shipping_courier_code : '-'  }}</td>
+                  <td>{{ invoice.shipping_courier_code }}</td>
                 </tr>
               </table>
             </div>
@@ -193,7 +195,7 @@
         <q-card flat square class="max-width bg-grey-2">
             <q-toolbar class="bg-white sticky-top border-b">
               <q-toolbar-title><span class="text-weight-bold card-heading">Pembayaran</span></q-toolbar-title>
-              <q-btn flat round dense icon="close" v-close-popup />
+              <q-btn flat round dense icon="eva-close" v-close-popup />
             </q-toolbar>
             <keep-alive>
             <component v-bind:is="isPaymentType" v-bind:transaction="invoice.transaction" @kirimBukti="kirimBuktiTransfer"></component>
@@ -214,41 +216,49 @@
       <div class="print-invoice">
         <div class="">
           <div class="bg-white">
-            <div class="q-mb-md flex justify-between item-center">
-              <table>
-                  <tr>
-                    <th align="left" class="text-lg text-weight-bold">Invoice</th>
-                  </tr>
-                  <tr>
-                    <th align="left"> {{ invoice.order_ref }}</th>
-                  </tr>
-              </table>
-              <table>
-                  <tr>
-                    <td align="right">Dibuat</td>
-                    <td>: {{ invoice.created_at }}</td>
-                  </tr>
-                  <tr>
-                    <td align="right">Status</td>
-                    <td>: {{ invoice.status_label }}</td>
-                  </tr>
-              </table>
+            <div class="text-lg text-weight-bold">Invoice</div>
+            <div class="q-mb-xs flex justify-between item-start">
+                <table class="">
+                    <tr>
+                      <td align="left">No</td>
+                      <td>:</td>
+                      <td align="left">{{ invoice.order_ref }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left">Dibuat</td>
+                      <td>:</td>
+                      <td>{{ invoice.created_at }}</td>
+                    </tr>
+                    <tr>
+                      <td>Referensi</td>
+                      <td>:</td>
+                      <td>{{ invoice.transaction.payment_ref }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left">Pembayaran</td>
+                      <td>:</td>
+                      <td>{{ invoice.transaction.payment_name }}</td>
+                    </tr>
+                </table>
+                <div v-if="qrData" class="">
+                  <img :src="qrData" width="92" height="92"/>
+                </div>
             </div>
-            <div class="flex justify-between">
-              <div class="">
+            <div class="flex justify-between items-start">
+              <div class="" style="max-width:45%;">
                 <div class="text-weight-medium q-mb-xs">Ditagihkan Kepada:</div>
-                <div class="text-weight-bold">{{ invoice.customer_name }}</div>
+                <div class="text-weight-bold text-md">{{ invoice.customer_name }}</div>
                 <div>{{ invoice.customer_whatsapp }}</div>
                 <div v-html="invoice.shipping_address"></div> 
               </div>
-              <div class="">
+              <div class="text-right" style="max-width:45%;">
                 <div class="text-weight-medium q-mb-xs">Dibayarkan Kepada:</div>
-                <div class="text-weight-bold q-mb-xs">{{ shop.name }}</div>
+                <div class="text-weight-bold q-mb-xs text-md">{{ shop.name }}</div>
                 <div class="">{{ shop.phone }}</div>
-                <!-- <div class="">{{ shop.app_url }}</div> -->
+                <div class="" v-html="shop.address"></div>
               </div>
             </div>
-            <div class="q-mt-sm">
+            <div class="">
               <div class="text-weight-bold q-mb-xs">Detil Pesanan:</div>
               <table class="table-order-item" v-if="invoice.items">
                 <tr>
@@ -266,17 +276,17 @@
                 </tr>
               </table>
               <div class="column justify-end items-end q-mt-sm">
-                <table>
+                <table class="dense">
                   <tr>
                     <td align="right">Jumlah</td>
                     <td>:</td>
-                     <td>Rp</td>
+                    <td>Rp</td>
                     <td align="right">{{ $money(invoice.order_subtotal) }}</td>
                   </tr>
                   <tr>
                     <td align="right">Ongkos Kirim</td>
                     <td>:</td>
-                     <td>Rp</td>
+                    <td>Rp</td>
                     <td align="right">{{ $money(invoice.shipping_cost) }}</td>
                   </tr>
                   <tr v-if="invoice.service_fee">
@@ -286,27 +296,27 @@
                     <td align="right">{{ $money(invoice.service_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.payment_fee > 0">
-                    <td align="right">Jasa pembayaran <span class="text-xs">[ {{ invoice.transaction.payment_name }} ]</span> </td>
+                    <td align="right">Jasa Pembayaran <span class="text-xs text-grey-7"> [ {{ invoice.transaction.payment_name }} ] </span></td>
                     <td>:</td>
                     <td>Rp</td>
                     <td align="right">{{ $money(invoice.payment_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.order_unique_code">
-                    <td align="right">Kode Unik (-)</td>
-                    <td>:</td>
-                     <td>Rp</td>
-                    <td align="right">{{ invoice.order_unique_code }}</td>
+                    <td align="right">Kode Unik</td>
+                    <td align="right">:</td>
+                    <td></td>
+                    <td align="right">-{{ invoice.order_unique_code }}</td>
                   </tr>
                   <tr v-if="invoice.discount">
                     <td align="right">Diskon (-)</td>
                     <td align="right">:</td>
-                     <td>Rp</td>
-                    <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
+                    <td>Rp</td>
+                    <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
                   </tr>
                   <tr>
                     <th align="right">Total Bayar</th>
-                    <td align="right">:</td>
-                     <td>Rp</td>
+                    <th align="right">:</th>
+                    <th>Rp</th>
                     <th align="right">{{ $money(invoice.grand_total) }}</th>
                   </tr>
                 </table>
@@ -449,6 +459,7 @@
 <script>
 import { copyToClipboard } from 'quasar'
 import { mapActions, mapState } from 'vuex'
+import QRCode from 'qrcode'
 import PaymentGateway from './PaymentGateway.vue'
 import DirectPayment from './DirectPayment.vue'
 export default {
@@ -463,7 +474,8 @@ export default {
       isPrintInvoice: false,
       timeout: null,
       requestCount: 1,
-      whatsappUrl: 'https://api.whatsapp.com'
+      whatsappUrl: 'https://api.whatsapp.com',
+      qrData: ''
     }
   },
   computed: {
@@ -512,7 +524,34 @@ export default {
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'
     },
+    generateQr() {
+      let opts = {
+          errorCorrectionLevel: 'H',
+          type: 'image/jpeg',
+          quality: 0.3,
+          margin: 1,
+        }
+        QRCode.toDataURL(this.getRoutePath(), opts, (err, url) => {
+        if (err) throw err
+
+        console.log(url);
+
+          this.qrData = url
+          console.log(this.qrData);
+        })
+    },
+    getRoutePath() {
+      let props = this.$router.resolve({ 
+        name: 'UserInvoice',
+        params: { order_ref: this.invoice.order_ref },
+      });
+
+      return location.origin + props.href;
+    },
     printInvoice() {
+      if(!this.qrData) {
+        this.generateQr()
+      }
       const today = new Date().toDateString()
       document.title = `INVOICE #${this.invoice.order_ref} ${today}`
       this.isPrintPacking = false
@@ -539,6 +578,10 @@ export default {
           }
           this.$store.commit('SET_LOADING', false)
           this.checkOrderStatus()
+
+          setTimeout(() => {
+            this.generateQr()
+          }, 1000)
         }).catch(() => {
           this.$router.push({name: 'Cart'})
         })

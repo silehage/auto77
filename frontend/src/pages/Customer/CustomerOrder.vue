@@ -12,7 +12,7 @@
     </q-header>
     <template v-if="orders.data.length">
     <q-list separator>
-      <q-item>
+      <q-item class="bg-grey-2">
         <q-item-section side>#</q-item-section>
         <q-item-section>Invoice</q-item-section>
         <q-item-section class="mobile-hide">Total</q-item-section>

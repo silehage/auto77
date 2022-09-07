@@ -540,8 +540,14 @@ h1,h2,h3,h4,h5,h6 {
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
-table.table {
-  width: 100%;
+.q-dialog__title {
+  padding-bottom: 8px;
+}
+table {
+  border-spacing: 0px;
+  &.table {
+    width: 100%;
+  }
 }
 table.dense {
   tr {

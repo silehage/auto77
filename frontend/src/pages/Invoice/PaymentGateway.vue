@@ -99,7 +99,7 @@
       <q-card flat class="max-width">
         <div class="row justify-between items-center box-shadow q-pa-md">
           <div class="text-weight-medium text-md">Scan atau download Qr Code</div>
-          <q-btn icon="close" flat round v-close-popup></q-btn>
+          <q-btn icon="eva-close" flat round v-close-popup></q-btn>
         </div>
         <q-card-section class="flex justify-center items-center q-pt-lg">
           <img :src="transaction.qr_url"  style="max-width:380px;width:100%;height:auto;"/>

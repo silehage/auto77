@@ -26,8 +26,8 @@
             <div v-html="post.body"></div>
           </q-item-label>
           <div class="q-mt-xs">
-            <q-chip dense v-if="post.is_listing" label="Listing" size="sm" color="accent" text-color="white" icon="eva-checkmark-circle"></q-chip>
-            <q-chip dense v-if="post.is_promote" label="Promote" size="sm" color="teal" text-color="white" icon="eva-checkmark-circle"></q-chip>
+            <q-chip dense v-if="post.is_listing" label="Listing" size="sm" color="accent" text-color="white" icon="eva-checkmark-circle-2"></q-chip>
+            <q-chip dense v-if="post.is_promote" label="Promote" size="sm" color="teal" text-color="white" icon="eva-checkmark-circle-2"></q-chip>
           </div>
           <div class="q-mt-sm text-xs" v-if="post.category">
            <q-chip dense size="sm">

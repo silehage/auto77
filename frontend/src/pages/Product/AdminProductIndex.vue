@@ -33,7 +33,7 @@
 
         <q-item-section top>
           <div class="">
-            <q-item-label lines="2" class="text-md">{{ product.title }}</q-item-label>
+            <q-item-label lines="2" class="text-subtitle2">{{ product.title }}</q-item-label>
             
             <q-item-label caption>Harga Dasar {{ moneyIDR(product.price) }}</q-item-label>
             <q-item-label caption v-if="!product.varians.length">Stok {{ product.stock }}</q-item-label>
@@ -67,7 +67,7 @@
 
         <q-item-section side top>
           <div v-if="!isDesktop">
-            <q-fab color="primary" icon="keyboard_arrow_left" direction="left" glossy padding="sm" unelevated>
+            <q-fab color="primary" icon="eva-chevron-left" direction="left" glossy padding="sm" unelevated>
               <q-fab-action unelevated @click="remove(product.id)" round icon="eva-trash-2" glossy color="red">
                 <q-tooltip content-class="bg-red">Hapus</q-tooltip>
               </q-fab-action>
@@ -78,13 +78,13 @@
                 <q-tooltip content-class="bg-teal">Lihat</q-tooltip>
               </q-fab-action>
 
-              <q-fab-action v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pie-chart-2" glossy color="accent">
+              <q-fab-action v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pantone" glossy color="accent">
                 <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
               </q-fab-action>
             </q-fab>
           </div>
           <div class="row q-gutter-xs" v-if="isDesktop">
-            <q-btn size="11px" v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pie-chart-2" glossy color="accent">
+            <q-btn size="11px" v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pantone" glossy color="accent">
               <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
             </q-btn>
             <q-btn size="11px" unelevated @click="remove(product.id)" round icon="eva-trash-2" glossy color="red">

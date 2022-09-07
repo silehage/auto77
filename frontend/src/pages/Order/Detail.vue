@@ -1,22 +1,24 @@
 <template>
   <q-page class="q-pb-lg bg-grey-2">
-    <q-header class="text-primary bg-white no-print">
+    <q-header class="no-print box-shadow">
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
           icon="eva-arrow-back" />
-        <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
-        <q-btn-dropdown flat icon="print" color="teal">
+        <q-toolbar-title class="text-weight-bold brand">
+          <span v-if="invoice" >Invoice {{ invoice.order_ref }}</span>
+        </q-toolbar-title>
+        <q-btn-dropdown flat icon="eva-printer-outline">
           <q-list flat class="no-print">
             <q-item clickable @click="printPacking">
               <q-item-section side>
-                <q-icon name="print"></q-icon>
+                <q-icon name="eva-printer-outline"></q-icon>
               </q-item-section>
               <q-item-section>Print Label Pengiriman</q-item-section>
             </q-item>
             <q-item clickable @click="printInvoice">
               <q-item-section side>
-                <q-icon name="print"></q-icon>
+                <q-icon name="eva-printer-outline"></q-icon>
               </q-item-section>
               <q-item-section>Print Tagihan</q-item-section>
             </q-item>
@@ -29,7 +31,7 @@
         <div class="q-mt-md q-pb-lg bg-white q-pa-md">
           <div class="flex justify-between text-grey-8">
             <div class="q-mb-sm">
-              <div class="text-weight-bold">{{ shop.name }}</div>
+              <div class="text-weight-bold text-lg">{{ shop.name }}</div>
               <div class="text-weight-regular">Phone: {{ shop.phone }}</div>
               <div class="text-weight-regular" v-html="shop.address"></div>
             </div>
@@ -37,15 +39,15 @@
               <table>
                 <tr>
                   <td>Invoice</td>
-                  <td>: {{ invoice.order_ref }}</td>
+                  <td>{{ invoice.order_ref }}</td>
                 </tr>
                 <tr>
                   <td>Referensi</td>
-                  <td>: {{ invoice.transaction.payment_ref }}</td>
+                  <td>{{ invoice.transaction.payment_ref }}</td>
                 </tr>
                 <tr>
                   <td>Dibuat</td>
-                  <td>: {{ invoice.created_at }}</td>
+                  <td>{{ invoice.created_at }}</td>
                 </tr>
                 <tr>
                   <td colspan="2">
@@ -88,16 +90,16 @@
                   <td align="right">{{ $money(invoice.shipping_cost) }}</td>
                 </tr>
                 <tr v-if="invoice.order_unique_code">
-                  <td align="right">Kode Unik ( - )</td>
+                  <td align="right">Kode Unik</td>
                   <td>:</td>
-                  <td>Rp</td>
-                  <td align="right">{{ invoice.order_unique_code }}</td>
+                  <td></td>
+                  <td align="right">-{{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr v-if="invoice.discount">
-                  <td align="right">Diskon ( - )</td>
+                  <td align="right">Diskon</td>
                   <td align="right">:</td>
                   <td>Rp</td>
-                  <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
+                  <td align="right">-{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
                 </tr>
 
                 <tr v-if="invoice.service_fee">
@@ -114,8 +116,8 @@
                 </tr>
                 <tr>
                   <th align="right">Total Bayar</th>
-                  <td align="right">:</td>
-                   <td>Rp</td>
+                  <th align="right">:</th>
+                  <th>Rp</th>
                   <th align="right">{{ $money(invoice.grand_total) }}</th>
                 </tr>
               </table>
@@ -161,10 +163,10 @@
                   <td>:</td>
                   <td>{{ invoice.shipping_courier_service ? invoice.shipping_courier_service : '-' }}</td>
                 </tr>
-                <tr>
+                <tr v-if="invoice.shipping_courier_code">
                   <td>No Resi</td>
                   <td>:</td>
-                  <td>{{ invoice.shipping_courier_code? invoice.shipping_courier_code : '-'  }}</td>
+                  <td>{{ invoice.shipping_courier_code }}</td>
                 </tr>
               </table>
             </div>
@@ -203,41 +205,47 @@
           <div class="bg-white">
             <div class="text-lg text-weight-bold">Invoice</div>
             <div class="q-mb-md flex justify-between item-start">
-              <table>
-                  <tr>
-                    <th align="left">No</th>
-                    <th align="left">: {{ invoice.order_ref }}</th>
-                  </tr>
-                  <tr>
-                    <td align="left">Dibuat</td>
-                    <td>: {{ invoice.created_at }}</td>
-                  </tr>
-                  <tr>
-                    <td align="left">Status</td>
-                    <td>: {{ invoice.status_label }}</td>
-                  </tr>
+                <table class="">
+                    <tr>
+                      <td align="left">No</td>
+                      <td>:</td>
+                      <td align="left">{{ invoice.order_ref }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left">Tanggal</td>
+                      <td>:</td>
+                      <td>{{ invoice.created_at }}</td>
+                    </tr>
+                    <tr>
+                      <td>Referensi</td>
+                      <td>:</td>
+                      <td>{{ invoice.transaction.payment_ref }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left">Pembayaran</td>
+                      <td>:</td>
+                      <td>{{ invoice.transaction.payment_name }}</td>
+                    </tr>
                 </table>
-              <div class="text-center">
-                <!-- <div>Metode Pembayaran</div> -->
-                <div class="text-center border q-pa-sm q-mb-sm text-weight-bold" style="border:1px solid #efefef;">{{ invoice.status_label }}</div>
-                <div>{{ invoice.transaction.payment_name }}</div>
-              </div>
+                <div v-if="qrData" class="">
+                  <img :src="qrData" width="92" height="92"/>
+                </div>
             </div>
-            <div class="flex justify-between">
-              <div class="">
+            <div class="flex justify-between items-start">
+              <div class="" style="max-width:45%;">
                 <div class="text-weight-medium q-mb-xs">Ditagihkan Kepada:</div>
-                <div class="text-weight-bold">{{ invoice.customer_name }}</div>
+                <div class="text-weight-bold text-md">{{ invoice.customer_name }}</div>
                 <div>{{ invoice.customer_whatsapp }}</div>
                 <div v-html="invoice.shipping_address"></div> 
               </div>
-              <div class="">
+              <div class="text-right" style="max-width:45%;">
                 <div class="text-weight-medium q-mb-xs">Dibayarkan Kepada:</div>
-                <div class="text-weight-bold q-mb-xs">{{ shop.name }}</div>
+                <div class="text-weight-bold q-mb-xs text-md">{{ shop.name }}</div>
                 <div class="">{{ shop.phone }}</div>
-                <div class="">{{ shop.app_url }}</div>
+                <div class="" v-html="shop.address"></div>
               </div>
             </div>
-            <div class="q-mt-sm">
+            <div class="">
               <div class="text-weight-bold q-mb-xs">Detil Pesanan:</div>
               <table class="table-order-item" v-if="invoice.items">
                 <tr>
@@ -281,19 +289,21 @@
                     <td align="right">{{ $money(invoice.payment_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.order_unique_code">
-                    <td align="right">Kode Unik (-)</td>
+                    <td align="right">Kode Unik</td>
                     <td>:</td>
-                    <td align="right">{{ invoice.order_unique_code }}</td>
+                    <td></td>
+                    <td align="right">-{{ invoice.order_unique_code }}</td>
                   </tr>
                   <tr v-if="invoice.discount">
                     <td align="right">Diskon (-)</td>
                     <td align="right">:</td>
+                    <td>Rp</td>
                     <td align="right">{{ invoice.discount? moneyIDR(invoice.discount) : 0 }}</td>
                   </tr>
                   <tr>
                     <th align="right">Total Bayar</th>
-                    <td align="right">:</td>
-                    <td>Rp</td>
+                    <th align="right">:</th>
+                    <th>Rp</th>
                     <th align="right">{{ $money(invoice.grand_total) }}</th>
                   </tr>
                 </table>
@@ -307,46 +317,23 @@
       <div class="print-packing">
         <div class="bg-white">
           <div class="flex justify-between">
-            <div class="">
+            <div class="" style="width:45%">
               <div class="text-weight-medium q-mb-xs text-weight-bold">Penerima:</div>
-              <table>
-                <tr>
-                  <td align="left">Nama</td>
-                  <td align="left">:</td>
-                  <td align="left">{{ invoice.customer_name }}</td>
-                </tr>
-                <tr>
-                  <td align="left">No Ponsel</td>
-                  <td align="left">:</td>
-                  <td align="left">{{ invoice.customer_whatsapp }}</td>
-                </tr>
-              </table>
-              <div class="q-mt-sm text-weight-bold">Alamat:</div>
-              <div v-html="invoice.shipping_address"></div> 
+              <div class="text-md">{{ invoice.customer_name }}</div>
+              <div>{{ invoice.customer_whatsapp }}</div>
+               <div v-html="invoice.shipping_address"></div> 
             </div>
-            <div class="">
+            <div class="text-right" style="width:45%">
               <div class="text-weight-medium q-mb-xs text-weight-bold">Pengirim:</div>
-              <table>
-                <tr>
-                  <td align="left">Toko</td>
-                  <td align="left">:</td>
-                  <th align="left">{{ shop.name }}</th>
-                </tr>
-                <tr>
-                  <td align="left">No Ponsel</td>
-                  <td align="left">:</td>
-                  <td align="left">{{ shop.phone }}</td>
-                </tr>
-              </table>
-              <div class="q-pl-xs">{{ shop.app_url }}</div>
+              <div class="text-md">{{ shop.name  }}</div>
+              <div>{{ shop.phone  }}</div>
               <div v-if="shop.address">
-                <div class="q-mt-sm text-weight-bold">Alamat Toko:</div>
                 <div v-html="shop.address"></div>
               </div>
             </div>
           </div>
-          <div class="q-mt-sm">
-            <div class="q-mb-xs text-weight-bold">Detil Pesanan:</div>
+          <div class="">
+            <div class="q-mb-xs text-weight-bold">Detil Pesanan</div>
             <table class="table-order-item" v-if="invoice.items">
               <tr>
                 <th align="left">Item</th>
@@ -387,10 +374,10 @@
                     <td align="right">{{ $money(invoice.payment_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.order_unique_code">
-                    <td align="right">Kode Unik (-)</td>
+                    <td align="right">Kode Unik</td>
                     <td>:</td>
-                    <td>Rp</td>
-                    <td align="right">{{ invoice.order_unique_code }}</td>
+                    <td></td>
+                    <td align="right">-{{ invoice.order_unique_code }}</td>
                   </tr>
                   <tr v-if="invoice.discount">
                     <td align="right">Diskon (-)</td>
@@ -400,8 +387,8 @@
                   </tr>
                   <tr>
                     <th align="right">Total Bayar</th>
-                    <td align="right">:</td>
-                    <td>Rp</td>
+                    <th align="right">:</th>
+                    <th>Rp</th>
                     <th align="right">{{ $money(invoice.grand_total) }}</th>
                   </tr>
                 </table>
@@ -436,7 +423,7 @@
 <script>
 import { copyToClipboard } from 'quasar'
 import { mapActions, mapState } from 'vuex'
-
+import QRCode from 'qrcode'
 export default {
   name: 'InvoiceIndex',
   data () {
@@ -445,7 +432,8 @@ export default {
       throtle: 1,
       isPrintPacking: false,
       isPrintInvoice: false,
-      timeout: null
+      timeout: null,
+      qrData: ''
     }
   },
   computed: {
@@ -474,13 +462,40 @@ export default {
       if(status == 'COMPLETE') return 'bg-green-6'
       return 'bg-blue-7'
     },
-    
+    generateQr() {
+      let opts = {
+          errorCorrectionLevel: 'H',
+          type: 'image/jpeg',
+          quality: 0.3,
+          margin: 1,
+        }
+        QRCode.toDataURL(this.getRoutePath(), opts, (err, url) => {
+        if (err) throw err
+
+        console.log(url);
+
+          this.qrData = url
+          console.log(this.qrData);
+        })
+    },
+    getRoutePath() {
+      let props = this.$router.resolve({ 
+        name: 'UserInvoice',
+        params: { order_ref: this.invoice.order_ref },
+      });
+
+      return location.origin + props.href;
+    },
     getOrder() {
       this.$store.commit('SET_LOADING', true)
       if(this.$route.params.order_ref) {
         this.getOrderById(this.$route.params.order_ref).then(response => {
           if(response.status == 200) {
             this.$store.commit('order/SET_INVOICE', response.data.results)
+
+            setTimeout(() => {
+              this.generateQr()
+            }, 1000)
           }
           this.$store.commit('SET_LOADING', false)
            this.checkOrderStatus()
@@ -552,6 +567,9 @@ export default {
       }
     },
     printInvoice() {
+      if(!this.qrData) {
+        this.generateQr()
+      }
       const today = new Date().toDateString()
       document.title = `INVOICE #${this.invoice.order_ref} ${today}`
       this.isPrintPacking = false

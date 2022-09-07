@@ -44,7 +44,7 @@
           </q-item-section>
           <q-item-section>
             <div>
-             <q-chip size="sm" :color="cat.is_front? 'positive' : 'grey'" text-color="white" icon="eva-checkmark-circle">
+             <q-chip size="sm" :color="cat.is_front? 'positive' : 'grey'" text-color="white" icon="eva-checkmark-circle-2">
               {{ cat.is_front? 'Yes' : 'No'}}
             </q-chip>
             </div>
