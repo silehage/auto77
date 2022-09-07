@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <keep-alive>
     <component :is="isActiveComponent" />
     <ThemeSetting />
-  </div>
+  </keep-alive>
 </template>
 
 <script>

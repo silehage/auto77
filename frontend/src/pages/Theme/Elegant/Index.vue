@@ -81,6 +81,9 @@ import { mapActions, mapState } from 'vuex'
 import ShoppingCart from 'components/ShoppingCart.vue'
 import Slider from './block/Slider.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
+import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
+import categoryCarousel from './block/CategoryCarousel.vue'
+import productPromo from './../shared-components/ProductPromo.vue'
 
 export default {
   name: 'PageIndex',
@@ -88,10 +91,10 @@ export default {
     ShoppingCart,
     Slider, 
     ProductBlock, 
-    'category-carousel': () => import('./block/CategoryCarousel.vue'),
-    'product-promo': () => import('./../shared-components/ProductPromo.vue'),
+    featuredCarousel,
+    categoryCarousel,
+    productPromo,
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
-    'featured-carousel': () => import('./../shared-components/FeaturedCarousel.vue'),
     'partner-carousel': () => import('components/PartnerCarousel.vue'),
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'footer-block': () => import('./../shared-components/FooterBlock.vue'),

@@ -198,7 +198,7 @@
     </div>
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
-        <q-btn unelevated rounded outline @click="chat" icon="eva-message-circle" label="Chat" color="primary" class="col"></q-btn>
+        <q-btn unelevated rounded outline @click="chat" icon="eva-message-circle-outline" label="Chat" color="primary" class="col"></q-btn>
         <q-btn unelevated rounded @click="addNewItem" icon="eva-shopping-cart-outline" label="Beli" color="primary" class="col"></q-btn>
     </q-footer>
     </template>
@@ -259,7 +259,7 @@
           <div class="q-mb-sm text-subtitle2" v-if="this.product"># {{ product.title }}</div>
           <q-input outlined autogrow autofocus v-model="chatText" placeholder="contoh: Halo Admin, Apakah ini masih ada?"></q-input>
           <div class="q-pt-sm">
-            <div class="q-pa-xs text-xs cursor-pointer" v-for="chat in defaultChat" :key="chat" @click="changeChatText(chat)">
+            <div class="q-pa-xs cursor-pointer" v-for="chat in defaultChat" :key="chat" @click="changeChatText(chat)">
               <span>{{ chat }}</span>
             </div>
           </div>
