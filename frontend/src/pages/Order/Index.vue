@@ -19,7 +19,7 @@
       <div class="q-gutter-x-sm q-mt-sm">
           <q-input v-model="search" placeholder="Ketik no invoice atau whatsapp" dense borderless class="bg-grey-3 q-px-sm" @keypress.enter="handleSearchOrder">
             <template v-slot:append>
-              <q-icon name="search" class="cursor-pointer" @click="handleSearchOrder"></q-icon>
+              <q-icon name="eva-search" class="cursor-pointer" @click="handleSearchOrder"></q-icon>
             </template>
           </q-input>
       </div>

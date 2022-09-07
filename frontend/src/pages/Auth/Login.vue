@@ -26,7 +26,7 @@
               :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
             >
             <template v-slot:prepend>
-              <q-icon name="account_circle" />
+              <q-icon name="eva-person-outline" />
             </template>
               </q-input>
             
@@ -39,11 +39,11 @@
             :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
             >
             <template v-slot:prepend>
-              <q-icon name="lock" />
+              <q-icon name="eva-lock-outline" />
             </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility' : 'visibility_off'"
+              :name="isPwd ? 'eva-eye' : 'eva-eye-off-2'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
             />

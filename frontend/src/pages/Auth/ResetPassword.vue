@@ -33,7 +33,7 @@
                   dense
                   >
                   <template v-slot:prepend>
-                    <q-icon name="lock" />
+                    <q-icon name="eva-lock-outline" />
                   </template>
                   <template v-slot:append>
                     <q-icon
@@ -51,7 +51,7 @@
                 dense
                 >
                 <template v-slot:prepend>
-                  <q-icon name="lock" />
+                  <q-icon name="eva-lock-outline" />
                 </template>
                 <template v-slot:append>
                   <q-icon

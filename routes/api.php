@@ -103,7 +103,7 @@ Route::middleware(['throttle:auth'])->group(function() {
     
     Route::post('user/login', [UserController::class, 'login']);
     Route::post('user/register', [UserController::class, 'register']);
-    Route::get('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
+    Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
     Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
     Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 

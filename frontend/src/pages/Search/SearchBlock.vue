@@ -14,7 +14,7 @@
       >
       <template v-slot:append>
         <q-icon
-          name="search"
+          name="eva-search"
           class="cursor-pointer"
           @click="searchNow"
         />

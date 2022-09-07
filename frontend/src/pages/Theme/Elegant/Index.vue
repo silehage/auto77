@@ -8,7 +8,7 @@
               >
               <template v-slot:prepend>
                 <q-icon
-                  name="search"
+                  name="eva-search"
                   class="cursor-pointer"
                   @click="searchNow"
                 />

@@ -18,12 +18,12 @@
         </q-input>
         <q-input  type="email" v-model="form.email" label="Email">
           <template v-slot:prepend>
-              <q-icon name="email" />
+              <q-icon name="eva-email-outline" />
           </template>
         </q-input>
         <q-input  v-model="form.phone" label="No Ponsel / Whatasapp">
           <template v-slot:prepend>
-              <q-icon name="phone" />
+              <q-icon name="eva-phone-outline" />
           </template>
         </q-input>
         <template v-if="changePassword">
@@ -32,7 +32,7 @@
         placeholder="Password Baru"
         v-model="form.password">
           <template v-slot:prepend>
-              <q-icon name="lock" />
+              <q-icon name="eva-lock-outline" />
           </template>
           <template v-slot:append>
             <q-icon
@@ -48,7 +48,7 @@
         placeholder="Konfirmasi Password"
         v-model="form.password_confirmation">
           <template v-slot:prepend>
-              <q-icon name="lock" />
+              <q-icon name="eva-lock-outline" />
           </template>
           <template v-slot:append>
             <q-icon

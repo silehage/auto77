@@ -33,7 +33,7 @@
             :rules="[ val => val && val.length > 0 || 'Wajib diisi']"
             >
             <template v-slot:prepend>
-              <q-icon name="email" />
+              <q-icon name="eva-email-outline" />
             </template>
           </q-input>
 
