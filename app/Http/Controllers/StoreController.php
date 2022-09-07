@@ -71,11 +71,13 @@ class StoreController extends Controller
                     File::delete(
                         'icon/icon-512x512.png',
                         'icon/icon-384x384.png',
+                        'icon/icon-266x256.png',
                         'icon/icon-192x192.png',
                         'icon/icon-180x180.png',
                         'icon/icon-167x167.png',
                         'icon/icon-152x152.png',
                         'icon/icon-144x144.png',
+                        'icon/icon-128x128.png',
                         'icon/icon-120x120.png',
                         'icon/icon-96x96.png',
                         'icon/favicon.png',
@@ -93,11 +95,13 @@ class StoreController extends Controller
         
                 $rawFile->resize(512,512)->encode('png')->save('icon/icon-512x512.png');
                 $rawFile->resize(384,384)->encode('png')->save('icon/icon-384x384.png');
+                $rawFile->resize(256,256)->encode('png')->save('icon/icon-256x256.png');
                 $rawFile->resize(192,192)->encode('png')->save('icon/icon-192x192.png');
                 $rawFile->resize(180,180)->encode('png')->save('icon/icon-180x180.png');
                 $rawFile->resize(167,167)->encode('png')->save('icon/icon-167x167.png');
                 $rawFile->resize(152,152)->encode('png')->save('icon/icon-152x152.png');
                 $rawFile->resize(144,144)->encode('png')->save('icon/icon-144x144.png');
+                $rawFile->resize(128,128)->encode('png')->save('icon/icon-128x128.png');
                 $rawFile->resize(120,120)->encode('png')->save('icon/icon-120x120.png');
                 $rawFile->resize(120,120)->encode('png')->save('icon/icon-96x96.png');
                 $rawFile->resize(64,64)->encode('png')->save('icon/favicon.png'); 
