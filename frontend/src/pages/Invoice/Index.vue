@@ -14,7 +14,7 @@
         <div class="q-pb-lg bg-white q-px-md q-pt-md">
           <div class="flex justify-between text-grey-8 q-py-md">
             <div class="q-mb-sm">
-              <div class="text-weight-bold q-mb-xs">{{ shop.name }}</div>
+              <div class="text-weight-bold q-mb-xs text-lg">{{ shop.name }}</div>
               <div class="">{{ shop.phone }}</div>
               <div class="" v-html="shop.address"></div>
             </div>
