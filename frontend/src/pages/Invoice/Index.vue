@@ -87,16 +87,16 @@
                   <td align="right">{{ $money(invoice.payment_fee) }}</td>
                 </tr>
                 <tr v-if="invoice.order_unique_code">
-                  <td align="right">Kode Unik (-)</td>
+                  <td align="right">Kode Unik</td>
                   <td>:</td>
-                   <td>Rp</td>
-                  <td align="right">{{ invoice.order_unique_code }}</td>
+                  <td></td>
+                  <td align="right">-{{ invoice.order_unique_code }}</td>
                 </tr>
                 <tr v-if="invoice.discount">
-                  <td align="right">Diskon (-)</td>
+                  <td align="right">Diskon</td>
                   <td align="right">:</td>
-                   <td>Rp</td>
-                  <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
+                  <td>Rp</td>
+                  <td align="right">-{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
                 </tr>
                 <tr class="q-py-md">
                   <th align="right">Total Bayar</th>
@@ -241,7 +241,7 @@
                     </tr>
                 </table>
                 <div v-if="qrData" class="">
-                  <img :src="qrData" width="92" height="92"/>
+                  <img :src="qrData" width="80" height="80"/>
                 </div>
             </div>
             <div class="flex justify-between items-start">
@@ -410,16 +410,16 @@
                     <td align="right">{{ $money(invoice.payment_fee) }}</td>
                   </tr>
                   <tr v-if="invoice.order_unique_code">
-                    <td align="right">Kode Unik (-)</td>
+                    <td align="right">Kode Unik</td>
                     <td>:</td>
-                     <td>Rp</td>
-                    <td align="right">{{ invoice.order_unique_code }}</td>
+                    <td></td>
+                    <td align="right">-{{ invoice.order_unique_code }}</td>
                   </tr>
                   <tr v-if="invoice.discount">
-                    <td align="right">Diskon (-)</td>
+                    <td align="right">Diskon</td>
                     <td align="right">:</td>
-                     <td>Rp</td>
-                    <td align="right">{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
+                    <td>Rp</td>
+                    <td align="right">-{{ invoice.discount? $money(invoice.discount) : 0 }}</td>
                   </tr>
                   <tr>
                     <th align="right">Total Bayar</th>

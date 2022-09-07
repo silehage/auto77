@@ -39,72 +39,6 @@
         </table>
     </fieldset>
     <fieldset class="q-mt-lg">
-      <legend class="q-pa-sm">Ringkasan Order</legend>
-        <div v-if="formOrder.items.length" class="q-mb-md">
-       <q-separator></q-separator>
-          <q-list separator>
-            <q-item class="bg-grey-1" dense>
-              <q-item-section>
-                <q-item-label>Produk</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label>Subtotal</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item v-for="cart in formOrder.items" :key="cart.id">
-              <q-item-section avatar top>
-              <q-img :src="cart.image_url" style="width:50px;height:50px;"></q-img>
-              </q-item-section>
-              <q-item-section>
-                <div class="col">
-                  <div class="text-weight-medium">{{ cart.name }}</div>
-                  <div class="text-caption text-grey-7">{{ cart.note }}</div>
-                  <div class="text-grey-7">{{ cart.quantity + 'X ' + moneyIDR(cart.price) }}</div>
-                </div>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label>{{ moneyIDR(cart.price*cart.quantity) }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-        <q-separator></q-separator>
-        <div class="flex justify-end q-py-sm">
-          <table class="table dense">
-            <tr>
-              <td align="right">Jumlah</td>
-              <td align="right">:</td>
-              <td align="right">{{ moneyIDR(formOrder.subtotal) }}</td>
-            </tr>
-            <tr>
-              <td align="right">Ongkos Kirim</td>
-              <td align="right">:</td>
-              <td align="right">{{ formOrder.shipping_cost? moneyIDR(formOrder.shipping_cost) : 0 }}</td>
-            </tr>
-            <tr v-if="this.formOrder.service_fee > 0">
-              <td align="right">{{ config.service_fee_label }}</td>
-              <td align="right">:</td>
-              <td align="right">{{ formOrder.service_fee? moneyIDR(formOrder.service_fee) : 0 }}</td>
-            </tr>
-
-          </table>
-        </div>
-        <div class="flex justify-end q-mt-sm bg-grey-1 q-py-sm">
-          <table class="table dense">
-            <tr v-if="formOrder.payment_fee">
-              <td align="right" class="text-xs">Payment Fee [ {{ formOrder.payment_name }} ]</td>
-              <td align="right">:</td>
-              <td align="right">{{ moneyIDR(formOrder.payment_fee) }}</td>
-            </tr>
-            <tr>
-              <th align="right">Total Bayar</th>
-              <td align="right">:</td>
-              <th align="right">{{ moneyIDR(formOrder.total+formOrder.payment_fee) }}</th>
-            </tr>
-          </table>
-        </div>
-    </fieldset>
-    <fieldset class="q-mt-lg">
       <legend class="q-pa-sm">Pembayaran</legend>
         <div class="row q-gutter-sm">
           <template v-if="formOrder.payment_type == 'COD'">
@@ -132,6 +66,73 @@
           </template>
         </div>
     </fieldset>
+    <fieldset class="q-mt-lg">
+      <legend class="q-pa-sm">Ringkasan Order</legend>
+        <div v-if="formOrder.items.length" class="q-mb-md">
+       <q-separator></q-separator>
+          <q-list separator>
+            <q-item class="bg-grey-1" dense>
+              <q-item-section>
+                <q-item-label>Produk</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-item-label>Subtotal</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item v-for="cart in formOrder.items" :key="cart.id">
+              <q-item-section avatar top>
+              <q-img :src="cart.image_url" style="width:50px;height:50px;"></q-img>
+              </q-item-section>
+              <q-item-section>
+                <div class="col">
+                  <div class="text-weight-medium">{{ cart.name }}</div>
+                  <div class="text-caption text-grey-7">{{ cart.note }}</div>
+                  <div class="text-grey-7">{{ cart.quantity + 'X ' + moneyIDR(cart.price) }}</div>
+                </div>
+              </q-item-section>
+              <q-item-section side top>
+                <q-item-label>{{ moneyIDR(cart.price*cart.quantity) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+        <q-separator></q-separator>
+        <div class="flex justify-end q-py-sm">
+          <table class="dense">
+            <tr>
+              <td align="right">Jumlah</td>
+              <td align="right">:</td>
+              <td>Rp</td>
+              <td align="right">{{ $money(formOrder.subtotal) }}</td>
+            </tr>
+            <tr>
+              <td align="right">Ongkos Kirim</td>
+              <td align="right">:</td>
+              <td>Rp</td>
+              <td align="right">{{ formOrder.shipping_cost? $money(formOrder.shipping_cost) : 0 }}</td>
+            </tr>
+            <tr v-if="this.formOrder.service_fee > 0">
+              <td align="right">{{ config.service_fee_label }}</td>
+              <td align="right">:</td>
+              <td>Rp</td>
+              <td align="right">{{ formOrder.service_fee? $money(formOrder.service_fee) : 0 }}</td>
+            </tr>
+            <tr v-if="formOrder.payment_fee">
+              <td align="right" class="text-xs">Payment Fee [ {{ formOrder.payment_name }} ]</td>
+              <td align="right">:</td>
+              <td>Rp</td>
+              <td align="right">{{ $money(formOrder.payment_fee) }}</td>
+            </tr>
+            <tr>
+              <th align="right">Total Bayar</th>
+              <th align="right">:</th>
+              <td>Rp</td>
+              <th align="right">{{ $money(formOrder.total+formOrder.payment_fee) }}</th>
+            </tr>
+          </table>
+        </div>
+    </fieldset>
+    
   </div>
 </template>
 

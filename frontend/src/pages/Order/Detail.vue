@@ -228,7 +228,7 @@
                     </tr>
                 </table>
                 <div v-if="qrData" class="">
-                  <img :src="qrData" width="92" height="92"/>
+                  <img :src="qrData" width="80" height="80"/>
                 </div>
             </div>
             <div class="flex justify-between items-start">
