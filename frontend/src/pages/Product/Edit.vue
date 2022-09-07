@@ -222,7 +222,7 @@ export default {
         price: '',
         weight: '',
         stock: '',
-        category_id: null,
+        category_id: '',
         description: '',
         varians: [],
         images: [],

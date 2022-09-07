@@ -19,7 +19,7 @@ class Product extends Model
 
     protected $casts = [
         'status' > 'boolean',
-        'category_id' => 'numeric'
+        'category_id' => 'integer'
     ];
 
     public function category()
