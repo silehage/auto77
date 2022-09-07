@@ -1,8 +1,6 @@
 <template>
   <div>
-    <keep-alive>
-      <component :is="isActiveComponent" />
-    </keep-alive>
+    <component :is="isActiveComponent" />
     <ThemeSetting />
   </div>
 </template>
