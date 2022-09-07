@@ -8,7 +8,7 @@
         <q-toolbar-title>
          List Post
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps flat icon="eva-plus-circle" :to="{name: 'PostCreate'}" label="Tambah Post"/>
+        <q-btn class="gt-xs" no-caps outline icon="eva-plus-circle" :to="{name: 'PostCreate'}" label="Tambah Post"/>
       </q-toolbar>
     </q-header>
     <template  v-if="posts.available">
@@ -40,7 +40,7 @@
         <q-item-section side top>
           <div class="text-grey-8 column q-gutter-y-sm">
             <q-btn @click="remove(post.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-            <q-btn :to="{ name: 'PostEdit', params: {id: post.id }}" size="sm" round glossy color="info" icon="edit" />
+            <q-btn :to="{ name: 'PostEdit', params: {id: post.id }}" size="sm" round glossy color="info" icon="eva-edit-2" />
           </div>
         </q-item-section>
       </q-item>

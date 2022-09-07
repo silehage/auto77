@@ -8,10 +8,7 @@
         <q-toolbar-title>
          Produk Promo
         </q-toolbar-title>
-        <q-btn class="gt-xs" @click="handleAdd" unelevated color="accent">
-            <q-icon name="add"></q-icon>
-            <span>Promo</span>
-          </q-btn>
+        <q-btn class="gt-xs" @click="handleAdd" outline icon="eva-plus-circle" label="Promo"></q-btn>
       </q-toolbar>
       <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
         <q-btn fab icon="add" color="primary" @click="handleAdd" glossy/>
@@ -108,11 +105,11 @@
                   </q-icon>
                 </template>
               </q-input>
-              <div class="flex items-center justify-end q-mt-md q-gutter-x-sm">
-                <q-btn outline color="primary" label="Batal" v-close-popup></q-btn>
-                <q-btn unelevated color="primary" type="submit" label="Simpan"></q-btn>
-              </div>
             </q-card-section>
+            <q-card-actions class="justify-end q-pa-md sticky-bottom bg-grey-2">
+              <q-btn v-close-popup type="button" color="secondary" label="Batal"></q-btn>
+              <q-btn :loading="loading" type="submit" color="primary" label="Simpan Data"></q-btn>
+            </q-card-actions>
           </q-form>
       </q-card>
     </q-dialog>

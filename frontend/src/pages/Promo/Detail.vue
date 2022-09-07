@@ -56,7 +56,7 @@
             <q-item-section side>
               <div class="q-gutter-sm flex">
                 <q-btn 
-                icon="edit" 
+                icon="eva-edit-2" 
                 unelevated 
                 round
                 size="11px"

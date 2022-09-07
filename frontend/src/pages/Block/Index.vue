@@ -8,7 +8,7 @@
         <q-toolbar-title>
          List Block
         </q-toolbar-title>
-        <q-btn @click="handleAddBlock" no-caps flat icon="eva-plus-circle" label="Tambah Block" class="gt-xs"/>
+        <q-btn @click="handleAddBlock" no-caps outline icon="eva-plus-circle" label="Tambah Block" class="gt-xs"/>
       </q-toolbar>
     </q-header>
     <template v-if="blocks.available">
@@ -32,7 +32,7 @@
         <q-item-section side top>
           <div class="text-grey-8 column q-gutter-y-sm">
             <q-btn @click="handleRemoveBlock(block.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-            <q-btn @click="handleEditBlock(block)" size="sm" round glossy color="info" icon="edit" />
+            <q-btn @click="handleEditBlock(block)" size="sm" round glossy color="info" icon="eva-edit-2" />
           </div>
         </q-item-section>
       </q-item>

@@ -29,7 +29,7 @@
          <q-item-section side>
            <div class="q-gutter-sm">
             <q-btn size="sm" @click="handleDeleteDiscount(item.id)" unelevated color="red" icon="eva-trash-2" round></q-btn>
-            <q-btn size="sm" @click="handleEditDiscount(item)" unelevated color="blue" icon="edit" round></q-btn>
+            <q-btn size="sm" @click="handleEditDiscount(item)" unelevated color="blue" icon="eva-edit-2" round></q-btn>
            </div>
          </q-item-section>
        </q-item>

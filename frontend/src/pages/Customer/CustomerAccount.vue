@@ -26,7 +26,7 @@
                 </q-item-section>
                 <q-item-section side top >
                   <div class="column q-gutter-y-sm">
-                    <q-btn icon="edit" round size="11px" color="grey-4" text-color="dark" :to="{ name: 'CustomerAccountEdit' }">
+                    <q-btn icon="eva-edit-2" round size="11px" color="grey-4" text-color="dark" :to="{ name: 'CustomerAccountEdit' }">
                       <q-tooltip content-class="bg-indigo" :offset="[10, 10]">Edit Akun</q-tooltip>
                     </q-btn>
                     <q-btn icon="logout" round size="11px" color="grey-4" text-color="dark" @click="logout">
@@ -69,7 +69,7 @@
               </div>
             </q-item-section>
             <q-item-section side>
-              <q-btn icon="launch" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
+              <q-btn icon="eva-external-link-outline" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
             </q-item-section>
           </q-item>
         </q-list>

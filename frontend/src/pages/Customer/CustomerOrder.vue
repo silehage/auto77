@@ -35,7 +35,7 @@
           </div>
         </q-item-section>
         <q-item-section side>
-          <q-btn icon="launch" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
+          <q-btn icon="eva-external-link-outline" round flat :to="{name: 'UserInvoice', params: {order_ref: order.order_ref}}"></q-btn>
         </q-item-section>
       </q-item>
     </q-list>

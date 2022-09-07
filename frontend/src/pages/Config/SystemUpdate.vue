@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     needUpdate() {
-      return this.siteData == 0 ? false : true
+      return this.siteData > 0 ? true : false
     }
   },
   created() {
@@ -50,7 +50,7 @@ export default {
     getUpdate() {
       Api().get('update').then(response => {
         if(response.status == 200) {
-          this.siteData = response.data.results
+          this.siteData = response.data.results > 0 ? response.data.results : 0
         }
       })
     },

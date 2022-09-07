@@ -13,7 +13,7 @@
       <div class="q-pa-md q-gutter-y-md">
         <q-input  v-model="form.name" label="Nama">
           <template v-slot:prepend>
-              <q-icon name="person" />
+              <q-icon name="eva-person-outline" />
           </template>
         </q-input>
         <q-input  v-model="form.phone" label="No Ponsel / Whatasapp">
@@ -36,7 +36,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              :name="isPwd ? 'eva-eye' : 'eva-eye-off-2'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
               

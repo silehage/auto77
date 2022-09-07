@@ -8,7 +8,7 @@
         <q-toolbar-title>
          Bank Account
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps flat icon="eva-plus-circle" @click="handleAdd" label="Tambah Akun"/>
+        <q-btn class="gt-xs" no-caps outline icon="eva-plus-circle" @click="handleAdd" label="Tambah Akun"/>
       </q-toolbar>
     </q-header>
     <template v-if="banks.available">
@@ -36,7 +36,7 @@
              <td align="right">
                  <div class="text-grey-8 column q-gutter-y-sm items-center">
                   <q-btn @click="remove(bank.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-                  <q-btn @click="edit(bank)" size="sm" round glossy color="info" icon="edit" />
+                  <q-btn @click="edit(bank)" size="sm" round glossy color="info" icon="eva-edit-2" />
                 </div>
              </td>
            </tr>
@@ -82,10 +82,11 @@
               placeholder="6985XXXXXXXXXXXX"
              />
           </q-card-section>
-          <q-card-actions class="justify-end">
-            <q-btn :disabled="loading" flat label="Batal" type="button" color="primary" @click.prevent="closeModal"></q-btn>
-            <q-btn :loading="loading" unelevated label="Simpan" type="submit" color="primary"></q-btn>
+          <q-card-actions class="justify-end q-pa-md sticky-bottom bg-grey-2">
+            <q-btn :disabled="loading" label="Batal" type="button" color="secondary" @click.prevent="closeModal"></q-btn>
+            <q-btn :loading="loading" unelevated label="Simpan Data" type="submit" color="primary"></q-btn>
           </q-card-actions>
+          
         </q-form>
       </q-card>
     </q-dialog>

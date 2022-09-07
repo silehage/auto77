@@ -25,7 +25,7 @@
               <favorite-button :product_id="product.id" />
           </div>
           <div class="full-width q-mt-xs">
-            <div class="text-subtitle ellipsis-2-lines">{{ product.title }}</div>
+            <div class="text-subtitle2 ellipsis-2-lines">{{ product.title }}</div>
           </div>
         </div>
        <div class="card-price-container">

@@ -8,7 +8,7 @@
         <q-toolbar-title>
          Slider Banner
         </q-toolbar-title>
-        <q-btn class="gt-xs" flat icon="eva-plus-circle" label="Tambah Slider" no-caps @click="handleBtnUpload"/>
+        <q-btn class="gt-xs" outline icon="eva-plus-circle" label="Tambah Slider" no-caps @click="handleBtnUpload"/>
       </q-toolbar>
     </q-header>
     <div class="q-pa-sm text-xs text-grey-8 bg-yellow-2" :class="sliders.data.length? 'relative' : 'absolute-top'">

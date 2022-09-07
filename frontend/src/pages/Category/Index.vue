@@ -8,7 +8,7 @@
         <q-toolbar-title>
          List Kategori
         </q-toolbar-title>
-      <q-btn class="gt-xs" flat label="Tambah Kategori" no-caps icon="eva-plus-circle" :to="{name: 'CategoryForm'}"/>
+      <q-btn class="gt-xs" outline label="Tambah Kategori" no-caps icon="eva-plus-circle" :to="{name: 'CategoryForm'}"/>
       </q-toolbar>
     </q-header>
     <template v-if="categories.available">
@@ -53,7 +53,7 @@
           <q-item-section side>
             <div class="text-grey-8 q-gutter-xs column">
               <q-btn @click="remove(cat.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-              <q-btn :to="{ name: 'CategoryForm', query: {edit: cat.id }}" size="sm" round icon="edit" glossy color="info"/>
+              <q-btn :to="{ name: 'CategoryForm', query: {edit: cat.id }}" size="sm" round icon="eva-edit-2" glossy color="info"/>
             </div>
           </q-item-section>
         </q-item>
