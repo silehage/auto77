@@ -36,7 +36,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'eva-eye-off-2' : 'eva-eye'"
+              :name="isPwd ? 'eva-eye' : 'eva-eye-off-2'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
               
@@ -52,7 +52,7 @@
           </template>
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'eva-eye-off-2' : 'eva-eye'"
+             :name="isPwd ? 'eva-eye' : 'eva-eye-off-2'"
               class="cursor-pointer"
               @click="isPwd = !isPwd"
               

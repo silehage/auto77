@@ -15,6 +15,7 @@ export default {
       isCheckLogin: state => state.user.isCheckLogin,
       shop: state => state.shop,
       user: state => state.user.user,
+      config: state => state.config
     })
   },
   created() {
@@ -25,6 +26,9 @@ export default {
       if(!this.user) {
         this.$store.dispatch('user/getUser')
       }
+    }
+    if(this.config) {
+      this.$store.commit('SET_THEME_COLOR', this.config.theme_color)
     }
   },
   methods: {
