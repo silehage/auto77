@@ -143,7 +143,7 @@ export default {
     },
     theme: {
       get() {
-        return localStorage.getItem('__theme') ? localStorage.getItem('__theme') : this.config.theme
+        return this.config.theme
       },
       set(val) {
         localStorage.setItem('__theme', val)
