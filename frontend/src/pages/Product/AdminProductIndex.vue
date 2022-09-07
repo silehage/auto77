@@ -38,7 +38,7 @@
             <q-item-label caption>Harga Dasar {{ moneyIDR(product.price) }}</q-item-label>
             <q-item-label caption v-if="!product.varians.length">Stok {{ product.stock }}</q-item-label>
 
-            <div>
+            <q-item-label>
               <q-slide-transition>
               <div v-show="showListId == product.id">
                 <div class="text-weight-bold q-pa-xs q-mt-sm">Detil Varian</div>
@@ -61,7 +61,7 @@
                 </div>
               </div>
             </q-slide-transition>
-            </div>
+            </q-item-label>
             </div>
         </q-item-section>
 
@@ -78,13 +78,13 @@
                 <q-tooltip content-class="bg-teal">Lihat</q-tooltip>
               </q-fab-action>
 
-              <q-fab-action v-if="product.varians.length" unelevated @click="showList(product.id)" round icon="eva-pie-chart-2" glossy color="accent">
+              <q-fab-action v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pie-chart-2" glossy color="accent">
                 <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
               </q-fab-action>
             </q-fab>
           </div>
           <div class="row q-gutter-xs" v-if="isDesktop">
-            <q-btn size="11px" v-if="product.varians.length" unelevated @click="showList(product.id)" round icon="eva-pie-chart-2" glossy color="accent">
+            <q-btn size="11px" v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pie-chart-2" glossy color="accent">
               <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
             </q-btn>
             <q-btn size="11px" unelevated @click="remove(product.id)" round icon="eva-trash-2" glossy color="red">
@@ -115,6 +115,39 @@
     <q-page-sticky class="lt-sm" position="bottom-left" :offset="[12, 12]">
       <q-btn fab icon="add" color="primary" :to="{name: 'ProductCreate'}" glossy/>
     </q-page-sticky>
+    <q-dialog v-model="varianViewModal" persistent position="bottom">
+      <q-card v-if="productSelected" class="max-width" style="min-height:300px;">
+        <q-list>
+          <q-item>
+            <q-item-section>
+              <q-item-label lines="1" class="text-weight-medium">
+                <div>{{ productSelected.title }}</div>
+              </q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn icon="eva-close" flat padding="xs" round v-close-popup></q-btn>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <q-separator></q-separator>
+        <div v-for="varian in productSelected.varians" :key="varian.id">
+          <q-list v-if="varian.has_subvarian" dense>
+            <q-item v-for="subvarian in varian.subvarian" :key="subvarian.id">
+              <q-item-section>{{ varian.label }} {{ varian.value }} - {{ subvarian.label }} {{ subvarian.value }}</q-item-section>
+              <q-item-section>Stok : {{ subvarian.stock }}</q-item-section>
+              <q-item-section>Harga : {{ moneyIDR(productSelected.price+subvarian.price) }}</q-item-section>
+            </q-item>
+          </q-list>
+          <q-list v-if="!varian.has_subvarian" dense>
+            <q-item>
+              <q-item-section>{{ varian.label }} {{ varian.value }} </q-item-section>
+              <q-item-section>Stok : {{ varian.stock }}</q-item-section>
+              <q-item-section>Harga : {{ moneyIDR(productSelected.price+varian.price) }}</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -125,6 +158,8 @@ export default {
   name: 'AdminProductList',
   data() {
     return {
+      productSelected: null,
+      varianViewModal: false,
       pageNumber: 1,
       search: '',
       productSearch: [],
@@ -143,6 +178,10 @@ export default {
   },
   methods: {
     ...mapActions('product', ['getAdminProducts', 'productDelete', 'searchAdminProducts']),
+    selectVarian(product) {
+      this.varianViewModal = true
+      this.productSelected = product
+    },
     searchProduct() {
       this.$store.commit('SET_LOADING', true)
       this.$refs.input.blur()
