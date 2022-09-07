@@ -222,7 +222,7 @@ export default {
         price: '',
         weight: '',
         stock: '',
-        category_id: '',
+        category_id: null,
         description: '',
         varians: [],
         images: [],
@@ -460,7 +460,7 @@ export default {
       this.product = response.data.results
       this.setData() 
     })
-      this.getCategories()
+    this.getCategories()
   },
 }
 </script>

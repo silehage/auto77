@@ -18,7 +18,8 @@ class Product extends Model
     // public $appends = ['rating'];
 
     protected $casts = [
-        'status' > 'boolean'
+        'status' > 'boolean',
+        'category_id' => 'numeric'
     ];
 
     public function category()
