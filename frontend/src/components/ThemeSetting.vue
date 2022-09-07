@@ -1,5 +1,5 @@
 <template>
-  <div v-if="config && config.is_demo_mode" class="no-print">
+  <div v-if="config && config.is_demo_mode" >
     <div class="fixed-right-middle z-50" v-if="!OpenThemeSetting">
       <div class="theme-setting bg-white" @click="OpenThemeSetting = !OpenThemeSetting">
         <q-spinner-gears

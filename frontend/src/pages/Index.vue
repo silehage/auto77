@@ -1,8 +1,10 @@
 <template>
-  <keep-alive>
-    <component :is="isActiveComponent" />
+  <div>
+    <keep-alive>
+      <component :is="isActiveComponent" />
+    </keep-alive>
     <ThemeSetting />
-  </keep-alive>
+  </div>
 </template>
 
 <script>
@@ -32,6 +34,9 @@ export default {
     },
     shop() {
       return this.$store.state.shop
+    },
+    config() {
+      return this.$store.state.config
     },
     title() {
       if(this.shop) {

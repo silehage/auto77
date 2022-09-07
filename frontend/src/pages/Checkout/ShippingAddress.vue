@@ -1,7 +1,7 @@
 <template>
   <div class="">
      <div id="courier" ref="courier" class="q-mb-lg">
-      <div class="text-md text-weight-medium">Pilih Metode Pengiriman</div>
+      <div class="text-md text-weight-medium ">Pilih Metode Pengiriman</div>
 
       <div class="q-py-sm q-gutter-x-sm" v-if="config.can_shipping">
         <q-radio v-model="shipping_method" val="EKSPEDISI" label="Via Ekspedisi"></q-radio>
@@ -12,11 +12,11 @@
         Dikirim dari {{ originAddressFormat }}.
       </div> -->
 
-      <div id="shipping_destination">
+      <div id="shipping_destination" class="q-mt-md">
         <div v-if="shipping_method == 'EKSPEDISI' && config.can_shipping">
 
-          <div id="shipping"  class="q-mt-lg">
-            <div class="text-md text-weight-medium">Pilih Kecamatan Tujuan</div>
+          <div id="shipping">
+            <div class="text-md text-weight-medium ">Pilih Kecamatan Tujuan</div>
             <div class="q-mt-sm">
               <q-list v-if="formOrder.shipping_destination">
                 <q-item class="bg-grey-2">
@@ -114,7 +114,7 @@
         <div v-if="shipping_method == 'COD' || !config.can_shipping">
           
         <div class="q-mb-lg">
-            <div class="text-md q-pb-xs text-weight-medium">Pilih Tujuan Pengiriman</div>
+            <div class="text-md q-pb-xs text-weight-medium q-mb-xs">Pilih Tujuan Pengiriman</div>
             <q-select filled v-model="codSelected" :options="listCodOptions" label="Pilih" 
             :error="errors.shipping_destination"
             >
