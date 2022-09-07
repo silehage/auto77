@@ -3,13 +3,13 @@
     <q-list separator>
       <q-item>
         <q-item-section side>
-          <q-icon name="apps"></q-icon>
+          <q-icon name="eva-keypad"></q-icon>
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-md">Kategori</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn flat icon="close" dense @click="closeCategory"></q-btn>
+          <q-btn flat icon="eva-close" dense @click="closeCategory"></q-btn>
         </q-item-section>
       </q-item>
       <q-item v-for="category in categories.data" :key="category.id" clickable @click="handleShowCategory(category.id)">

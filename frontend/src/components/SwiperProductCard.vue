@@ -17,9 +17,9 @@
               readonly
               v-model="rating"
               color="accent"
-              icon="star_border"
-              icon-selected="star"
-              icon-half="star_half"
+              icon="eva-star-outline"
+              icon-selected="eva-star"
+              icon-half="eva-star"
               :size="ratingSize"
             />
               <favorite-button :product_id="product.id" />

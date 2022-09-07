@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Tambah Produk
         </q-toolbar-title>
@@ -51,7 +51,7 @@
             </div>
             <section id="image-section" class="q-my-lg q-gutter-y-sm">
               <div>
-                <q-btn label="Upload Gambar Produk" size="sm" color="primary" icon="upload" class="mt-2 mr-2" type="button" @click.prevent="selectNewImage">
+                <q-btn label="Upload Gambar Produk" size="sm" color="primary" icon="eva-upload" class="mt-2 mr-2" type="button" @click.prevent="selectNewImage">
                 </q-btn>
               </div>
                   
@@ -73,7 +73,7 @@
                     </q-item-section>
 
                     <q-item-section side>
-                        <q-btn @click.prevent="removeImage(index)" size="sm" round icon="delete" glossy color="red"/>
+                        <q-btn @click.prevent="removeImage(index)" size="sm" round icon="eva-trash-2" glossy color="red"/>
                     </q-item-section>
                   </q-item>
                 </q-list>

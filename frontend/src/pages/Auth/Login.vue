@@ -4,7 +4,7 @@
        <q-toolbar>
          <q-btn :to="{name: 'Home'}"
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-medium">Login</q-toolbar-title>
        </q-toolbar>
     </q-header>

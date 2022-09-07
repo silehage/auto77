@@ -4,7 +4,7 @@
        <q-toolbar>
          <q-btn v-go-back.single
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
             <q-toolbar-title class="text-weight-bold brand">Tracking Order</q-toolbar-title>
             <q-btn flat label="Cari Produk" :to="{ name: 'ProductSearch'}"></q-btn>
        </q-toolbar>

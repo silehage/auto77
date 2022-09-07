@@ -1,6 +1,6 @@
 <template>
 <div class="favorite-button">
-  <q-btn :outline="outline" class="btn-favorite" :padding="lg? '6px' : '4px'" @click="btnFavorite" icon="favorite" :size="lg? '15px' : '11px'" unelevated round :text-color="getFavoriteStyle()"></q-btn>
+  <q-btn :outline="outline" class="btn-favorite" :padding="lg? '6px' : '4px'" @click="btnFavorite" icon="eva-heart" :size="lg? '15px' : '11px'" unelevated round :text-color="getFavoriteStyle()"></q-btn>
 </div>
 </template>
 

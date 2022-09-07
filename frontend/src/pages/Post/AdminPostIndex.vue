@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List Post
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps flat icon="add_circle" :to="{name: 'PostCreate'}" label="Tambah Post"/>
+        <q-btn class="gt-xs" no-caps flat icon="eva-plus-circle" :to="{name: 'PostCreate'}" label="Tambah Post"/>
       </q-toolbar>
     </q-header>
     <template  v-if="posts.available">
@@ -26,8 +26,8 @@
             <div v-html="post.body"></div>
           </q-item-label>
           <div class="q-mt-xs">
-            <q-chip dense v-if="post.is_listing" label="Listing" size="sm" color="accent" text-color="white" icon="check_circle"></q-chip>
-            <q-chip dense v-if="post.is_promote" label="Promote" size="sm" color="teal" text-color="white" icon="check_circle"></q-chip>
+            <q-chip dense v-if="post.is_listing" label="Listing" size="sm" color="accent" text-color="white" icon="eva-checkmark-circle"></q-chip>
+            <q-chip dense v-if="post.is_promote" label="Promote" size="sm" color="teal" text-color="white" icon="eva-checkmark-circle"></q-chip>
           </div>
           <div class="q-mt-sm text-xs" v-if="post.category">
            <q-chip dense size="sm">
@@ -39,7 +39,7 @@
 
         <q-item-section side top>
           <div class="text-grey-8 column q-gutter-y-sm">
-            <q-btn @click="remove(post.id)" size="sm" round icon="delete" glossy color="red"/>
+            <q-btn @click="remove(post.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
             <q-btn :to="{ name: 'PostEdit', params: {id: post.id }}" size="sm" round glossy color="info" icon="edit" />
           </div>
         </q-item-section>

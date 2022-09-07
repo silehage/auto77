@@ -30,7 +30,7 @@
       <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div>
-      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding-side block-container">
+      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding block-container">
         <div class="block-heading">
           <div class="block-title"><h2>Kategori</h2></div>
         </div>

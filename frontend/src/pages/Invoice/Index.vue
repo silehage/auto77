@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'CustomerOrder'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title v-if="invoice" class="text-weight-bold brand">Invoice {{ invoice.order_ref }}</q-toolbar-title>
       <q-btn icon="print" @click="printInvoice" flat round class="no-print"></q-btn>
       </q-toolbar>
@@ -203,7 +203,7 @@
       <q-footer class="bg-grey-2 q-pa-md" v-if="invoice.order_status == 'UNPAID'">
         <div class="text-center text-grey-7 column q-gutter-y-sm">
             <q-btn v-if="invoice && invoice.transaction.payment_method != 'COD'" label="Instruksi Pembayaran" no-caps icon="payments" @click.prevent="handlePaymentModal" color="green-7"></q-btn>
-            <q-btn ref="chatAdmin" label="Chat admin" icon="chat" no-caps  @click="chatToAdmin" color="blue-7"></q-btn>
+            <q-btn ref="chatAdmin" label="Chat admin" name="eva-message-circle" no-caps  @click="chatToAdmin" color="blue-7"></q-btn>
         </div>
       </q-footer>
     </div>

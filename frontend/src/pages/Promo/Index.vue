@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Produk Promo
         </q-toolbar-title>
@@ -44,7 +44,7 @@
             </q-item-section>
             <q-item-section side>
               <div class="q-gutter-sm">
-                <q-btn size="11px" @click="handleDelete(item.id)" unelevated color="red" icon="delete" round></q-btn>
+                <q-btn size="11px" @click="handleDelete(item.id)" unelevated color="red" icon="eva-trash-2" round></q-btn>
                 <q-btn size="11px" @click="handleEdit(item)" unelevated color="teal" icon="edit_calendar" round></q-btn>
                 <q-btn size="11px" @click="$router.push({name: 'PromoDetail', params: { id: item.id }})" unelevated color="blue" icon="edit_note" round></q-btn>
               </div>

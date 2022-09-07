@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Edit Produk
         </q-toolbar-title>
@@ -49,7 +49,7 @@
         </div>
         <section id="image-section" class="q-my-md q-gutter-y-sm">
           <div>
-            <q-btn label="Upload Gambar Produk" size="sm" color="primary" icon="upload" class="mt-2 mr-2" type="button" @click.prevent="selectNewImage">
+            <q-btn label="Upload Gambar Produk" size="sm" color="primary" icon="eva-upload" class="mt-2 mr-2" type="button" @click.prevent="selectNewImage">
             </q-btn>
           <input type="file" class="hidden"
                               ref="image"
@@ -65,7 +65,7 @@
               </q-item-section>
 
               <q-item-section side>
-                  <q-btn @click.prevent="removeLocalImage(index)" size="sm" round icon="delete" glossy color="red"/>
+                  <q-btn @click.prevent="removeLocalImage(index)" size="sm" round icon="eva-trash-2" glossy color="red"/>
               </q-item-section>
             </q-item>
             <q-item v-for="image in oldImages" :key="image.id">
@@ -75,7 +75,7 @@
               </q-item-section>
 
               <q-item-section side>
-                  <q-btn @click.prevent="removeImage(image)" size="sm" round icon="delete" glossy color="red"/>
+                  <q-btn @click.prevent="removeImage(image)" size="sm" round icon="eva-trash-2" glossy color="red"/>
               </q-item-section>
             </q-item>
           </q-list>

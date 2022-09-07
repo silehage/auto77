@@ -39,7 +39,7 @@
          </q-item-section>
          <q-item-section side>
            <div class="q-gutter-sm">
-            <q-btn size="sm" @click="handleDelete(item.id)" unelevated color="red" icon="delete" round></q-btn>
+            <q-btn size="sm" @click="handleDelete(item.id)" unelevated color="red" icon="eva-trash-2" round></q-btn>
             <q-btn size="sm" @click="handleEdit(item)" unelevated color="blue" icon="edit" round></q-btn>
             <q-btn size="sm" @click="$router.push({name: 'PromoDetail', params: { id: item.id }})" unelevated color="teal" icon="settings" round></q-btn>
            </div>

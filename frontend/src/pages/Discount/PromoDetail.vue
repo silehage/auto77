@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'DiscountIndex', query: { q: 'promo'}}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          {{ promoted.label }} 
         </q-toolbar-title>
@@ -54,7 +54,7 @@
         <q-item-section>{{ product.variant_items_sum_item_stock? product.variant_items_sum_item_stock : product.stock }}</q-item-section>
         <q-item-section side>
             <q-btn 
-            icon="delete" 
+            icon="eva-trash-2" 
             padding="4px"
             size="sm"
             unelevated 

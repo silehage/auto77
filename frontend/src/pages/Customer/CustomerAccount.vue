@@ -42,7 +42,7 @@
       <div class="q-mt-lg q-pa-sm">
         <div class="flex justify-between q-pa-sm">
           <div class="text-weight-bold text-md">Transaksi Terbaru</div>
-          <q-btn color="primary" label="Selengkapnya" flat no-caps size="sm" padding="xs" :to="{ name: 'CustomerOrder' }"></q-btn>
+          <q-btn color="primary" label="Selengkapnya" flat no-caps icon-right="navigate_next" :to="{ name: 'CustomerOrder' }"></q-btn>
         </div>
 
         <q-list separator>
@@ -73,10 +73,6 @@
             </q-item-section>
           </q-item>
         </q-list>
-
-        <div class="flex justify-center q-py-lg">
-             <q-btn label="Selengkapnya..." color="primary" no-caps  outline :to="{ name: 'CustomerOrder' }"></q-btn>
-        </div>
       </div>
   </q-page>
 </template>

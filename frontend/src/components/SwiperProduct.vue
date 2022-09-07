@@ -6,7 +6,7 @@
       </swiper-slide>
        <swiper-slide class="swiper-more">
          <div class="q-gutter-y-md text-center">
-          <q-btn icon="navigate_next" round size="17px" color="primary" :to="{name: 'ProductCategory', params:{ id: products.category_id }}"></q-btn>
+          <q-btn icon="eva-arrow-forward" round size="17px" color="primary" :to="{name: 'ProductCategory', params:{ id: products.category_id }}"></q-btn>
           <div class="text-weight-medium">Selengkapnya <br>di {{ products.title }}</div>
          </div>
       </swiper-slide>

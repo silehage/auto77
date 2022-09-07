@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List Produk
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps flat icon="add_circle" :to="{name: 'ProductCreate'}" label="Tambah Produk"/>
+        <q-btn class="gt-xs" no-caps flat icon="eva-plus-circle" :to="{name: 'ProductCreate'}" label="Tambah Produk"/>
       </q-toolbar>
     </q-header>
     <div class="border q-pa-md row item-center q-gutter-x-sm">
@@ -66,9 +66,9 @@
         </q-item-section>
 
         <q-item-section side top>
-          <div>
+          <div v-if="!isDesktop">
             <q-fab color="primary" icon="keyboard_arrow_left" direction="left" glossy padding="sm" unelevated>
-              <q-fab-action unelevated @click="remove(product.id)" round icon="delete" glossy color="red">
+              <q-fab-action unelevated @click="remove(product.id)" round icon="eva-trash-2" glossy color="red">
                 <q-tooltip content-class="bg-red">Hapus</q-tooltip>
               </q-fab-action>
               <q-fab-action unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" round glossy color="info" icon="edit">
@@ -83,11 +83,26 @@
               </q-fab-action>
             </q-fab>
           </div>
+          <div class="row q-gutter-xs" v-if="isDesktop">
+            <q-btn size="11px" v-if="product.varians.length" unelevated @click="showList(product.id)" round icon="category" glossy color="accent">
+              <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
+            </q-btn>
+            <q-btn size="11px" unelevated @click="remove(product.id)" round icon="eva-trash-2" glossy color="red">
+              <q-tooltip content-class="bg-red">Hapus</q-tooltip>
+            </q-btn>
+            <q-btn size="11px" unelevated :to="{ name: 'ProductEdit', params: {id: product.id }}" round glossy color="info" icon="edit">
+              <q-tooltip content-class="bg-info">Edit</q-tooltip>
+            </q-btn>
+            <q-btn size="11px" unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" round glossy color="teal" icon="launch">
+              <q-tooltip content-class="bg-teal">Lihat</q-tooltip>
+            </q-btn>
+
+          </div>
         </q-item-section>
       </q-item>
     </q-list>
     <div class="q-my-md q-gutter-sm text-center" v-if="products.next_page_url">
-      <q-btn :loading="isLoadmore" no-caps size="12px" unelevated color="primary" @click="paginate(products.next_page_url)">
+      <q-btn :loading="isLoadmore" no-caps outline color="primary" @click="paginate(products.next_page_url)">
         <span>Loadmore...</span>
       </q-btn>
     
@@ -97,7 +112,7 @@
     <template v-else >
       <div class="text-center q-pt-xl">Tdak ada data</div>
     </template>
-    <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
+    <q-page-sticky class="lt-sm" position="bottom-left" :offset="[12, 12]">
       <q-btn fab icon="add" color="primary" :to="{name: 'ProductCreate'}" glossy/>
     </q-page-sticky>
   </q-page>
@@ -122,6 +137,9 @@ export default {
       products: state => state.product.admin_products,
       loading: state => state.loading
     }),
+    isDesktop() {
+      return window.innerWidth > 600
+    }
   },
   methods: {
     ...mapActions('product', ['getAdminProducts', 'productDelete', 'searchAdminProducts']),

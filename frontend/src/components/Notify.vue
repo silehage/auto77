@@ -13,7 +13,7 @@
             <div class="text-green-7 q-pa-xs text-xs">{{ orderItem.created }}</div>
         </q-item-section>
         <q-item-section side top>
-          <q-btn icon="close" size="10px" color="primary" flat round @click="closeNotify"></q-btn>
+          <q-btn icon="eva-close" size="10px" color="primary" flat round @click="closeNotify"></q-btn>
         </q-item-section>
       </q-item>
     </q-list>

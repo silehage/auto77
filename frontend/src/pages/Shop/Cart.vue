@@ -6,7 +6,7 @@
         <q-toolbar>
           <q-btn :to="{ name: 'ProductIndex'}"
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">Keranjang Belanja</q-toolbar-title>
         </q-toolbar>
     </q-header>
@@ -18,16 +18,16 @@
           </q-item-section>
           <q-item-section>
             <div class="col overflow-hidden full-width">
-              <div class="text-weight-medium ellipsis">{{ cart.name }}</div>
+              <div class="text-weight-medium text-md ellipsis">{{ cart.name }}</div>
               <div class="text-grey-7 q-mb-xs text-caption" v-if="cart.note">{{ cart.note }}</div>
-              <div>Harga {{  moneyIDR(cart.price) }}</div>
+              <div class="text-grey-7">Harga {{  moneyIDR(cart.price) }}</div>
               <div class="flex items-center justify-between q-mt-sm">
                 <div class="q-gutter-x-sm items-center">
-                  <q-btn flat padding="3px" round icon="remove_circle_outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
+                  <q-btn flat padding="3px" round icon="eva-minus-circle-outline" size="13px" @click="decrementQty(cart)" style="cursor:pointer;"></q-btn>
                   <span class="text-weight-medium text-md">{{ cart.quantity }}</span>
-                  <q-btn flat padding="3px" round icon="add_circle_outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
+                  <q-btn flat padding="3px" round icon="eva-plus-circle-outline" size="13px" @click="incrementQty(cart)" style="cursor:pointer;"></q-btn>
                 </div>
-                <q-btn @click="removeCart(cart)" outline size="10px" color="red" no-caps padding="2px 4px">hapus</q-btn>
+                <q-btn @click="removeCart(cart)" outline size="10px" color="red" no-caps padding="2px 6px">hapus</q-btn>
               </div>
             </div>
           </q-item-section>
@@ -56,7 +56,7 @@
     <div v-if="!carts.items.length" class="column items-center">
       <p class="text-grey-8 text-weight-bold text-center">Keranjang belanja anda masih kosong!</p>
       <q-btn unelevated :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary"
-        icon="keyboard_backspace" label="kembali berbelanja" no-caps/>
+        icon="eva-arrow-back" label="kembali berbelanja" no-caps/>
     </div>
     <q-dialog v-model="directCheckoutModal" persistent>
       <div style="width:100%;max-width:430px;">

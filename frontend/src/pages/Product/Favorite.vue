@@ -4,7 +4,7 @@
        <q-toolbar>
          <q-btn @click="backButton"
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">Produk Favorite</q-toolbar-title>
           <shopping-cart  />
        </q-toolbar>
@@ -16,7 +16,7 @@
       <div class="column items-center">
         <p class="text-grey-8 text-weight-bold text-center">Tidak ada produk favorit</p>
         <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary" unelevated
-            icon="keyboard_backspace" label="Kehalaman produk" no-caps/>
+            icon="eva-arrow-back" label="Kehalaman produk" no-caps/>
       </div>
     </template>
   </q-page>

@@ -191,8 +191,8 @@ class ProductRepository
             $product->title = $request->title;
             $product->slug = $slug;
             $product->price = str_replace(".", "", $request->price);
-            $product->stock = $request->stock;
-            $product->weight = $request->weight;
+            $product->stock = str_replace(".", "", $request->stock);
+            $product->weight = str_replace(".", "", $request->weight);
             $product->sku = 'PF-'. $request->sku;
             
             $product->category_id =  $request->category_id;
@@ -274,8 +274,8 @@ class ProductRepository
 
         $product->title = $request->title;
         $product->price = str_replace(".", "", $request->price);
-        $product->stock = $request->stock;
-        $product->weight = $request->weight;
+        $product->stock = str_replace(".", "", $request->stock);
+        $product->weight = str_replace(".", "", $request->weight);
         $product->description = $request->description;
         $product->category_id = $request->category_id;
 

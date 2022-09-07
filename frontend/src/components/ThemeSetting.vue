@@ -14,7 +14,7 @@
         <q-card-section class="q-pa-sm">
           <div class="q-pb-sm row items-center justify-between">
             <div class="text-weight-bold text-md text-primary">Setting</div>
-            <q-btn flat padding="xs" v-close-popup no-caps icon="close" round color="primary"></q-btn>
+            <q-btn flat padding="xs" v-close-popup no-caps icon="eva-close" round color="primary"></q-btn>
           </div>
           <div class="q-gutter-y-md">
             <div>
@@ -28,12 +28,12 @@
                   </q-item-section>
                   <q-item-section side v-if="config">
                     <div class="q-gutter-x-sm">
-                      <q-btn @click="changeHomeViewMode('grid')" label="Grid" size="sm" unelevated :color="config.home_view_mode == 'grid' ? 'green-7' : 'grey-6'" dense icon="grid_view">
+                      <q-btn @click="changeHomeViewMode('grid')" label="Grid" size="sm" unelevated :color="config.home_view_mode == 'grid' ? 'green-7' : 'grey-6'" dense icon="eva-grid">
                         <q-tooltip>
                           Grid Mode
                         </q-tooltip>
                       </q-btn>
-                      <q-btn @click="changeHomeViewMode('list')" label="List" size="sm" unelevated :color="config.home_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="view_list">
+                      <q-btn @click="changeHomeViewMode('list')" label="List" size="sm" unelevated :color="config.home_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="eva-list">
                         <q-tooltip>
                           List Mode
                         </q-tooltip>
@@ -49,12 +49,12 @@
                   </q-item-section>
                   <q-item-section side>
                     <div class="q-gutter-x-sm">
-                      <q-btn @click="changeProductViewMode('grid')" label="Grid" size="sm" unelevated :color="config.product_view_mode == 'grid' ? 'green-7' : 'grey-6'" dense icon="grid_view">
+                      <q-btn @click="changeProductViewMode('grid')" label="Grid" size="sm" unelevated :color="config.product_view_mode == 'grid' ? 'green-7' : 'grey-6'" dense icon="eva-grid">
                         <q-tooltip>
                           Grid Mode
                         </q-tooltip>
                       </q-btn>
-                      <q-btn @click="changeProductViewMode('list')" label="List" size="sm" unelevated :color="config.product_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="view_list">
+                      <q-btn @click="changeProductViewMode('list')" label="List" size="sm" unelevated :color="config.product_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="eva-list">
                         <q-tooltip>
                           List Mode
                         </q-tooltip>

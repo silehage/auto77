@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List Pesanan
         </q-toolbar-title>
@@ -26,8 +26,9 @@
     </div>
     <template v-if="orders.count > 0">
     <div>
+      <q-separator></q-separator>
       <q-list separator>
-        <q-item>
+        <q-item class="bg-grey-2">
           <q-item-section side>
            #
           </q-item-section>
@@ -113,27 +114,25 @@
               color="primary" 
               icon="keyboard_arrow_down" 
               direction="down" 
-              padding="sm" 
+              padding="5px" 
               unelevated 
-              vertical-actions-align="right"
-              label-position="top"
-              
+              vertical-actions-align="right"  
               >
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="send" @click="handleFollowUp(order)" :label="messageButtonLabel(order.order_status)" color="green-7"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="send" @click="handleFollowUp(order)" :label="messageButtonLabel(order.order_status)" color="green-7"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="visibility" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="visibility" label="Detail" color="purple-7" :to="{name: 'AdminOrderShow', params: {order_ref: order.order_ref}}"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="edit_note" v-if="canInputResi(order)" label="Input Resi" color="blue" @click="handleInputResi(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="edit_note" v-if="canInputResi(order)" label="Input Resi" color="blue" @click="handleInputResi(order)"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="local_shipping" v-if="canShip(order)" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="local_shipping" v-if="canShip(order)" label="Kirim COD" color="teal" @click="handleKirimCod(order)"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="check_circle" v-if="canComplete(order)" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-checkmark-circle" v-if="canComplete(order)" label="Order Selesai" color="blue-6" @click="handleCompletionOrder(order)"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="save" v-if="canConfirm(order)" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="save" v-if="canConfirm(order)" label="Konfirmasi" color="blue-7" @click="handleConfirmationOrder(order.id)"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="remove_circle" v-if="canCancelOrder(order)" label="Batalkan" color="red" @click="handleCancelOrder(order)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-minus-circle" v-if="canCancelOrder(order)" label="Batalkan" color="red" @click="handleCancelOrder(order)"></q-fab-action>
 
-                <q-fab-action padding="3px 6px" square  label-position="left" icon="delete" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-fab-action>
+                <q-fab-action padding="5px" label-position="left" external-label icon="eva-trash-2" label="Hapus" color="red-7" @click="handleDeleteOrder(order.id)"></q-fab-action>
               </q-fab>
             </div>
           </q-item-section>

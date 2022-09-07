@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List User
         </q-toolbar-title>
@@ -37,7 +37,7 @@
               <div>{{ user.phone }}</div>
             </q-item-section>
             <q-item-section side class="q-gutter-sm">
-              <q-btn size="sm" color="red-6" round unelevated icon="delete" @click="handleDeleteUser(user.id)">
+              <q-btn size="sm" color="red-6" round unelevated icon="eva-trash-2" @click="handleDeleteUser(user.id)">
                 <q-tooltip>
                   Hapus User
                 </q-tooltip>

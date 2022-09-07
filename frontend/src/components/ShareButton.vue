@@ -1,5 +1,5 @@
 <template>
-   <q-btn v-if="webShareApiSupported" @click="shareTheWeb" color="white" unelevated dense round size="md" icon="share" text-color="grey-9" >
+   <q-btn v-if="webShareApiSupported" @click="shareTheWeb" color="white" unelevated dense round size="md" icon="eva-share" text-color="grey-9" >
     </q-btn>
 </template>
 

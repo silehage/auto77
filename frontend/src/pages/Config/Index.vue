@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn v-go-back.single
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Konfigurasi Aplikasi
         </q-toolbar-title>

@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Diskon / Kupon
         </q-toolbar-title>

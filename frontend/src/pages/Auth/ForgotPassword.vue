@@ -4,7 +4,7 @@
       <q-toolbar dense>
         <q-btn :to="{ name: 'Login'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
        <q-toolbar-title class="text-weight-medium">Lupa Password</q-toolbar-title>
       </q-toolbar>
     </q-header>

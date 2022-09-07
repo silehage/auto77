@@ -7,7 +7,7 @@
             <div class="block-title"><h2>{{ item.title }}</h2></div>
             <q-btn flat no-caps color="primary" padding="4px" :to="{name: 'ProductCategory', params:{ id: item.category_id }}">
               <span>Lihat Semua</span>
-              <q-icon name="arrow_forward" size="16px"></q-icon>
+              <q-icon name="eva-arrow-forward" size="16px"></q-icon>
             </q-btn>
           </div> 
           <div v-if="item.description" class="block-subtitle">{{ item.description }}</div>

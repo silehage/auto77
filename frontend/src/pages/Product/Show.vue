@@ -5,7 +5,7 @@
       <div class="flex justify-between">
         <q-btn 
         @click="backButton"
-        flat dense icon="keyboard_backspace" icon-size="27px" style="cursor:pointer;opacity:.9;">
+        flat dense icon="eva-arrow-back" icon-size="27px" style="cursor:pointer;opacity:.9;">
         </q-btn>
         <shopping-cart />
       </div>
@@ -33,7 +33,7 @@
           >
             <q-btn
               push round dense color="white" text-color="primary"
-              :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              :icon="fullscreen ? 'eva-minimize-outline' : 'eva-maximize-outline'"
               @click="fullscreen = !fullscreen"
             />
           </q-carousel-control>
@@ -59,9 +59,9 @@
               </div>
             </div>
             <div class="row q-gutter-md text-h6 items-center">
-              <q-btn flat round icon="remove_circle_outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
+              <q-btn flat round icon="eva-minus-circle-outline" size="24" @click="decrementQty" style="cursor:pointer;"></q-btn>
               <div>{{ quantity }}</div>
-              <q-btn flat round icon="add_circle_outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
+              <q-btn flat round icon="eva-plus-circle-outline" size="24" @click="incrementQty" style="cursor:pointer;"></q-btn>
             </div>
           </div>
 
@@ -70,9 +70,9 @@
               v-model="productRating"
               readonly
               color="accent"
-              icon="star_border"
-              icon-selected="star"
-              icon-half="star_half"
+              icon="eva-star-outline"
+              icon-selected="eva-star"
+              icon-half="eva-star"
               size="1.3rem" 
             />
             <div class="text-weight-medium text-sm"> {{ product.reviews_count > 0 ? product.reviews_count +' ulasan' : ''}}</div>
@@ -147,9 +147,9 @@
                     readonly
                     v-model="productRating"
                     color="accent"
-                    icon="star_border"
-                    icon-selected="star"
-                    icon-half="star_half"
+                    icon="eva-star-outline"
+                    icon-selected="eva-star"
+                    icon-half="eva-star"
                     size="30px"
                   />
                 </div>
@@ -169,9 +169,9 @@
                             readonly
                             v-model="review.rating"
                             color="accent"
-                            icon="star_border"
-                            icon-selected="star"
-                            icon-half="star_half"
+                            icon="eva-star-outline"
+                            icon-selected="eva-star"
+                            icon-half="eva-star"
                             size="1.1rem"
                           />
                         </q-item-section>
@@ -198,8 +198,8 @@
     </div>
     <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
         <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
-        <q-btn unelevated rounded outline @click="chat" icon="chat" label="Chat" color="primary" class="col"></q-btn>
-        <q-btn unelevated rounded @click="addNewItem" icon="shopping_basket" label="Beli" color="primary" class="col"></q-btn>
+        <q-btn unelevated rounded outline @click="chat" icon="eva-message-circle" label="Chat" color="primary" class="col"></q-btn>
+        <q-btn unelevated rounded @click="addNewItem" icon="eva-shopping-cart-outline" label="Beli" color="primary" class="col"></q-btn>
     </q-footer>
     </template>
       <q-inner-loading :showing="!ready">
@@ -214,9 +214,9 @@
               <q-rating 
                 v-model="form.rating"
                 color="amber"
-                icon="star_border"
-                icon-selected="star"
-                icon-half="star_half"
+                icon="eva-star-outline"
+                icon-selected="eva-star"
+                icon-half="eva-star"
                 size="sm" 
               />
             <div class="q-my-md q-gutter-y-xs">
@@ -347,7 +347,7 @@
             </div>
         </q-card-section>
         <q-card-section>
-        <q-btn unelevated rounded @click="addNewItem" icon="shopping_basket" label="Beli Sekarang" color="green" class="full-width"></q-btn>
+        <q-btn unelevated rounded @click="addNewItem" name="eva-shopping-cart-outline" label="Beli Sekarang" color="green" class="full-width"></q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>

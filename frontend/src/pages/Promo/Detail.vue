@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'PromoIndex', query: { q: 'promo'}}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title v-if="promo">
          {{ promo.label }}
         </q-toolbar-title>
@@ -64,7 +64,7 @@
                 :disabled="syncLoading"
                 @click="handleEdit(product)"></q-btn>
                 <q-btn 
-                icon="delete" 
+                icon="eva-trash-2" 
                 size="11px"
                 round
                 unelevated 

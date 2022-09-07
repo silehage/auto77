@@ -5,7 +5,7 @@
         <q-toolbar-title>
           <q-btn :to="{ name: 'CustomerAccount' }"
           flat round
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
           Edit Akun
         </q-toolbar-title> 
       </q-toolbar>

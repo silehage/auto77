@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Bank Account
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps flat icon="add_circle" @click="handleAdd" label="Tambah Akun"/>
+        <q-btn class="gt-xs" no-caps flat icon="eva-plus-circle" @click="handleAdd" label="Tambah Akun"/>
       </q-toolbar>
     </q-header>
     <template v-if="banks.available">
@@ -35,7 +35,7 @@
              </td>
              <td align="right">
                  <div class="text-grey-8 column q-gutter-y-sm items-center">
-                  <q-btn @click="remove(bank.id)" size="sm" round icon="delete" glossy color="red"/>
+                  <q-btn @click="remove(bank.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
                   <q-btn @click="edit(bank)" size="sm" round glossy color="info" icon="edit" />
                 </div>
              </td>

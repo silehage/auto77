@@ -4,7 +4,7 @@
         <q-toolbar>
           <q-btn @click="handleBackButton"
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
         </q-toolbar>
     </q-header>
@@ -22,6 +22,8 @@
           title="Pengiriman"
           :done="step > 1"
           icon="local_shipping"
+          active-icon="local_shipping"
+          done-icon="local_shipping"
           class="q-pa-none"
         >
           <shipping-address 
@@ -36,6 +38,8 @@
           title="Pembayaran"
           :done="step > 2"
           icon="payments"
+          active-icon="payments"
+          done-icon="payments"
           >
          
           <payment-list 
@@ -52,6 +56,8 @@
           title="Review"
           :done="step > 3"
           icon="playlist_add_check"
+          active-icon="playlist_add_check"
+          done-icon="playlist_add_check"
           >
          <review-order :payment="paymentSelected" :noPayment="isCantPaymentStep"/>
           </q-step>

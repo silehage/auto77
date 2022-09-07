@@ -3,7 +3,7 @@
     <q-list dense v-if="shop">
       <q-item  v-if="shop.name">
           <q-item-section side>
-            <q-icon color="white" text-color="primary" name="home" />
+            <q-icon color="white" text-color="primary" name="eva-home" />
         </q-item-section>
         <q-item-section >
           <q-item-section>
@@ -13,7 +13,7 @@
       </q-item>
       <q-item v-if="shop.phone">
         <q-item-section side >
-          <q-icon color="white" text-color="primary" name="support_agent"/>
+          <q-icon color="white" text-color="primary" name="eva-phone-call"/>
         </q-item-section>
         <q-item-section >
           <q-item-label class="text-weight-medium">{{ shop.phone }}</q-item-label>
@@ -21,7 +21,7 @@
       </q-item>
       <q-item v-if="shop.address">
         <q-item-section side top>
-          <q-icon color="white" text-color="primary" name="place"/>
+          <q-icon color="white" text-color="primary" name="eva-pin"/>
         </q-item-section >
         <q-item-section>
           <q-item-section>

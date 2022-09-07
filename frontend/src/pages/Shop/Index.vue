@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Pengaturan Toko
         </q-toolbar-title>
@@ -31,7 +31,7 @@
      
       <div>
         <input type="file" class="hidden" ref="image" @change="updateImagePreview">
-        <q-btn label="Upload Logo" size="sm" color="primary" icon="upload" class="mt-2 mr-2" type="button" @click.prevent="handleBtnUpload"></q-btn>
+        <q-btn label="Upload Logo" size="sm" color="primary" icon="eva-upload" class="mt-2 mr-2" type="button" @click.prevent="handleBtnUpload"></q-btn>
        <div class="text-xs text-red q-my-md" v-if="errors.logo"> {{ errors.logo[0]}}</div>
       </div>
       <q-list v-if="imagePreview">
@@ -42,7 +42,7 @@
         <q-space />
         <q-item-section side>
           <div class="text-grey-8 q-gutter-xs">
-            <q-btn @click="removeLogo" size="sm" round icon="delete" glossy color="red"/>
+            <q-btn @click="removeLogo" size="sm" round icon="eva-trash-2" glossy color="red"/>
           </div>
           </q-item-section>
         </q-item>

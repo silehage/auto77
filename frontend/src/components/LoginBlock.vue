@@ -2,7 +2,7 @@
     <q-card flat class="bg-white" style="max-width:420px;width:100%;">
       <div class="q-py-sm q-px-md row justify-between items-center">
       <div class="text-md text-weight-bold text-grey-8">{{ isRegister? 'Register' : 'Login'}}</div>
-        <q-btn @click.prevent="onClose" icon="close" round flat padding="xs"></q-btn>
+        <q-btn @click.prevent="onClose" icon="eva-close" round flat padding="xs"></q-btn>
       </div>
       <q-separator />
       <q-card-section style="max-height:70vh;" class="scroll">

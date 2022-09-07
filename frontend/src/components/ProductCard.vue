@@ -16,9 +16,9 @@
             readonly
             v-model="rating"
             color="accent"
-            icon="star_border"
-            icon-selected="star"
-            icon-half="star_half"
+            icon="eva-star"
+            icon-selected="eva-star"
+            icon-half="eva-star"
             size="1.1rem"
           />
           </div>

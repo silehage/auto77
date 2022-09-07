@@ -37,7 +37,7 @@ module.exports = function (ctx ) {
       // 'ionicons-v4',
       // 'mdi-v5',
       // 'fontawesome-v5',
-      // 'eva-icons',
+      'eva-icons',
       // 'themify',
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
@@ -93,7 +93,7 @@ module.exports = function (ctx ) {
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: 'material-icons', // Quasar icon set
+      iconSet: 'eva-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
       config: {
         notify: {

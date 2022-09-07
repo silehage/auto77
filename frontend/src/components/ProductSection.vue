@@ -3,13 +3,13 @@
     <div class="row auto-padding-side q-pt-md q-pb-sm justify-between items-center" v-if="products.ready && products.available">
       <div>
         <q-btn @click="handleMenuCategory" outline color="grey-7" padding="3px 10px" no-caps>
-          <q-icon name="apps" size="15px"></q-icon>
-          <span>Kategori</span>
+          <q-icon name="eva-keypad" size="15px"></q-icon>
+          <span class="q-pl-xs">Kategori</span>
         </q-btn>
       </div>
       <div class="q-gutter-x-xs" v-if="config">
-        <q-btn @click="changeViewMode('grid')" :outline="config.product_view_mode != 'grid'" unelevated size="12px" :color="config.product_view_mode == 'grid' ? 'secondary' : 'grey-7'" dense icon="grid_view"></q-btn>
-        <q-btn @click="changeViewMode('list')" :outline="config.product_view_mode != 'list'" unelevated size="12px" :color="config.product_view_mode == 'list' ? 'secondary' : 'grey-7'" dense icon="view_list"></q-btn>
+        <q-btn @click="changeViewMode('grid')" :outline="config.product_view_mode != 'grid'" unelevated size="12px" :color="config.product_view_mode == 'grid' ? 'secondary' : 'grey-7'" dense icon="eva-grid"></q-btn>
+        <q-btn @click="changeViewMode('list')" :outline="config.product_view_mode != 'list'" unelevated size="12px" :color="config.product_view_mode == 'list' ? 'secondary' : 'grey-7'" dense icon="eva-list"></q-btn>
       </div>
     </div>
     <div :class="pageWidth >= 768 ? 'row q-px-sm' : 'column q-gutter-y-sm'" v-if="config && config.product_view_mode == 'list'">

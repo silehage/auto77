@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List Block
         </q-toolbar-title>
-        <q-btn @click="handleAddBlock" no-caps flat icon="add_circle" label="Tambah Block" class="gt-xs"/>
+        <q-btn @click="handleAddBlock" no-caps flat icon="eva-plus-circle" label="Tambah Block" class="gt-xs"/>
       </q-toolbar>
     </q-header>
     <template v-if="blocks.available">
@@ -24,14 +24,14 @@
           <div class="q-mt-xs">
             <q-chip size="sm" outline color="pink" text-color="white">Urutan {{ block.weight }}</q-chip>
             <q-chip size="sm" icon="bookmark" outline color="blue-7" text-color="white">{{ block.position }}</q-chip>
-            <q-chip v-if="block.post_id" size="sm" icon="check_circle" outline color="teal" text-color="white">Linked</q-chip>
+            <q-chip v-if="block.post_id" size="sm" icon="eva-checkmark-circle" outline color="teal" text-color="white">Linked</q-chip>
           </div>
         </q-item-section>
 
 
         <q-item-section side top>
           <div class="text-grey-8 column q-gutter-y-sm">
-            <q-btn @click="handleRemoveBlock(block.id)" size="sm" round icon="delete" glossy color="red"/>
+            <q-btn @click="handleRemoveBlock(block.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
             <q-btn @click="handleEditBlock(block)" size="sm" round glossy color="info" icon="edit" />
           </div>
         </q-item-section>

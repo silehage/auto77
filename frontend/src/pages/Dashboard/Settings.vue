@@ -21,7 +21,7 @@
             <q-item-label caption lines="1">{{ item.caption }}</q-item-label>
             </q-item-section>
           <q-item-section side>
-            <q-icon name="navigate_next" />
+            <q-icon name="eva-arrow-forward" />
           </q-item-section>
         </q-item>
         <q-item clickable v-ripple @click.prevent="logout">
@@ -33,7 +33,7 @@
             <q-item-label caption lines="1">Keluar Sesi</q-item-label>
             </q-item-section>
           <q-item-section side>
-            <q-icon name="navigate_next" />
+            <q-icon name="eva-arrow-forward" />
           </q-item-section>
         </q-item>
       </q-list>

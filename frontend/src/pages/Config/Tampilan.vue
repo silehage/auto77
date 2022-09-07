@@ -18,7 +18,7 @@
               Grid Mode
             </q-tooltip>
           </q-btn>
-          <q-btn @click="changeHomeViewMode('list')" label="List Mode" size="sm" unelevated :color="form.home_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="view_list">
+          <q-btn @click="changeHomeViewMode('list')" label="List Mode" size="sm" unelevated :color="form.home_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="eva-list">
             <q-tooltip>
               List Mode
             </q-tooltip>
@@ -39,7 +39,7 @@
               Grid Mode
             </q-tooltip>
           </q-btn>
-          <q-btn @click="changeProductViewMode('list')" label="List Mode" size="sm" unelevated :color="form.product_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="view_list">
+          <q-btn @click="changeProductViewMode('list')" label="List Mode" size="sm" unelevated :color="form.product_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="eva-list">
             <q-tooltip>
               List Mode
             </q-tooltip>

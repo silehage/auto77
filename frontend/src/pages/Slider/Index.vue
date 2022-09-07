@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          Slider Banner
         </q-toolbar-title>
-        <q-btn class="gt-xs" flat icon="add_circle" label="Tambah Slider" no-caps @click="handleBtnUpload"/>
+        <q-btn class="gt-xs" flat icon="eva-plus-circle" label="Tambah Slider" no-caps @click="handleBtnUpload"/>
       </q-toolbar>
     </q-header>
     <div class="q-pa-sm text-xs text-grey-8 bg-yellow-2" :class="sliders.data.length? 'relative' : 'absolute-top'">
@@ -34,7 +34,7 @@
             </div>
           </q-item-section>
           <q-item-section center side>
-            <q-btn @click="remove(slider.id)" size="sm" round icon="delete" glossy color="red"/>
+            <q-btn @click="remove(slider.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
           </q-item-section>
         </q-item>
       </q-list>

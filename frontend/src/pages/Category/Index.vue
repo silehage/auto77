@@ -4,17 +4,17 @@
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title>
          List Kategori
         </q-toolbar-title>
-      <q-btn class="gt-xs" flat label="Tambah Kategori" no-caps icon="add_circle" :to="{name: 'CategoryForm'}"/>
+      <q-btn class="gt-xs" flat label="Tambah Kategori" no-caps icon="eva-plus-circle" :to="{name: 'CategoryForm'}"/>
       </q-toolbar>
     </q-header>
     <template v-if="categories.available">
-    <div class="q-py-md">
+    <div class="">
       <q-list separator>
-        <q-item>
+        <q-item class="bg-grey-2">
           <q-item-section avatar>
            Ikon
           </q-item-section>
@@ -44,7 +44,7 @@
           </q-item-section>
           <q-item-section>
             <div>
-             <q-chip size="sm" :color="cat.is_front? 'positive' : 'grey'" text-color="white" icon="check_circle">
+             <q-chip size="sm" :color="cat.is_front? 'positive' : 'grey'" text-color="white" icon="eva-checkmark-circle">
               {{ cat.is_front? 'Yes' : 'No'}}
             </q-chip>
             </div>
@@ -52,7 +52,7 @@
          
           <q-item-section side>
             <div class="text-grey-8 q-gutter-xs column">
-              <q-btn @click="remove(cat.id)" size="sm" round icon="delete" glossy color="red"/>
+              <q-btn @click="remove(cat.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
               <q-btn :to="{ name: 'CategoryForm', query: {edit: cat.id }}" size="sm" round icon="edit" glossy color="info"/>
             </div>
           </q-item-section>

@@ -18,9 +18,9 @@
             readonly
             v-model="rating"
             color="accent"
-            icon="star_border"
-            icon-selected="star"
-            icon-half="star_half"
+            icon="eva-star-outline"
+            icon-selected="eva-star"
+            icon-half="eva-star"
             size="1rem"
           />
             <q-item-label caption class="ellipsis-2-lines q-mt-xs" v-html="getTeaser(product.description)" ></q-item-label>
@@ -32,7 +32,7 @@
         </div>
           <div class="flex justify-between items-end">
             <q-chip size="sm" v-if="product.category">
-              <q-avatar icon="local_offer" color="primary" text-color="white"></q-avatar>
+              <q-avatar icon="eva-pricetags" color="primary" text-color="white"></q-avatar>
               {{ product.category.title }}
             </q-chip>
             <div>

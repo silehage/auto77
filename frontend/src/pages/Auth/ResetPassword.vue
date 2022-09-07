@@ -4,7 +4,7 @@
       <q-toolbar dense>
         <q-btn :to="{ name: 'ForgotPassword'}"
           flat round dense
-          icon="arrow_back" />
+          icon="eva-arrow-back" />
         <q-toolbar-title class="text-weight-medium">
           Reset Password
         </q-toolbar-title>

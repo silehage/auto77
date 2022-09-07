@@ -15,7 +15,7 @@
           </q-item-section>
           <q-item-section side v-if="!isMini">
             <div>
-              <q-btn icon="download" unelevated rounded @click="installNow" no-caps unzelevated color="primary">
+              <q-btn icon="eva-cloud-download" unelevated rounded @click="installNow" no-caps unzelevated color="primary">
                 <span>Install</span>
               </q-btn>
             </div>

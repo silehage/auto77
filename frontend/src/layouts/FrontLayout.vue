@@ -14,14 +14,14 @@
           indicator-color="primary"
         >
           <q-route-tab
-            icon="home"
+            icon="eva-home"
             label="Beranda"
             :to="{ name: 'Home'}"
             exact
           />
 
             <q-route-tab 
-            icon="search"
+            icon="eva-search"
             :to="{name: 'ProductSearch'}"
             label="Cari"
             exact
@@ -29,14 +29,14 @@
 
           <q-route-tab 
            v-if="config && config.theme == 'default'"
-            icon="store"
+            icon="eva-shopping-bag"
             :to="{name: 'ProductIndex'}"
             label="Katalog"
             exact
           />
           <q-route-tab 
            v-if="config && config.theme == 'romance'"
-            icon="store"
+            icon="eva-shopping-bag"
             :to="{name: 'ProductIndex'}"
             class="bg-primary text-white"
             label="Katalog"
@@ -45,7 +45,7 @@
           <q-btn
           v-if="config && config.theme == 'elegant'"
           :to="{name: 'ProductIndex'}"
-           icon="store"
+           icon="eva-shopping-bag"
            class="text-md"
            color="primary"
            round
@@ -54,14 +54,14 @@
          
           <q-route-tab 
             :to="{name: 'Cart'}" 
-            icon="shopping_cart" 
+            icon="eva-shopping-cart-outline" 
             exact
             label="Keranjang" >
             <q-badge v-if="cartCount > 0" color="pink" floating>{{ cartCount }}</q-badge>
           </q-route-tab>
 
            <q-tab 
-           icon="account_circle" 
+           icon="eva-person-outline" 
            @click="toDashboard"
            exact
            label="Akun" />

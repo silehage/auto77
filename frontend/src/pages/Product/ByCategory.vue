@@ -4,7 +4,7 @@
        <q-toolbar>
          <q-btn @click="backButton"
             flat round dense
-            icon="arrow_back" />
+            icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
           <shopping-cart  />
        </q-toolbar>
@@ -77,7 +77,7 @@ export default {
       this.isLoadmore = true
       Api().get(url).then(response => {
         if(response.status == 200) {
-          this.$store.commit('product/SET_PRODUCT_CATEGORY_PAGINATE', response.data)
+          this.$store.commit('product/PAGINATE_PRODUCT_CATEGORY', response.data)
         }
       }).finally(() =>  this.isLoadmore = false)
     }

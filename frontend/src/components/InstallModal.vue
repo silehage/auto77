@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="column q-mt-md q-gutter-y-xs">
-        <q-btn @click="installNow" no-caps unelevated icon="download" color="primary">Install Sekarang</q-btn>
+        <q-btn @click="installNow" no-caps unelevated icon="eva-cloud-download" color="primary">Install Sekarang</q-btn>
         <q-btn @click="installLater" label="Nanti Saja" no-caps color="primary" flat></q-btn>
       </div>
     </q-card-section>
