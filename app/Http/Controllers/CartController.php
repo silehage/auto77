@@ -26,8 +26,6 @@ class CartController extends Controller
             'quantity' => 'required|numeric',
             'weight' => 'required|numeric',
             'sku' => 'required',
-            'image_url' => 'required',
-            'product_url' => 'required',
             'product_stock' => 'required',
         ]);
 
