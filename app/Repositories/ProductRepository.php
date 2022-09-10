@@ -140,7 +140,7 @@ class ProductRepository
                 $categoryItem->category_slug = $cat->slug;
                 $categoryItem->id = Str::random(16);
                 $categoryItem->description = $cat->description ?? '';
-                $categoryItem->banner = $cat->banner ? url('upload/images/' . $cat->banner) : '';
+                $categoryItem->banner_src = $cat->banner ? url('upload/images/' . $cat->banner) : '';
 
                 $categoryItem->items = $cat->products->map(function($product) use($cat) {
 
