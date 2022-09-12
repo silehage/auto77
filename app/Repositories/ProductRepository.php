@@ -130,7 +130,6 @@ class ProductRepository
                 });
                 $query->with('varians.subvarian');
                 $query->withAvg('reviews', 'rating');
-                $query->take(10);
                 $query->inRandomOrder();
             }])
             ->where('is_front', 1)

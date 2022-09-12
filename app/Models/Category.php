@@ -31,7 +31,7 @@ class Category extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class)->limit(10);
     }
     public function productItems()
     {
