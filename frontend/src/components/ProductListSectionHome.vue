@@ -5,7 +5,7 @@
         <product-list v-for="(product, index) in products" :key="index" :product="product" />
       </template>
       <template v-else>
-        <product-list-skeleton />
+        <product-list-skeleton v-for="i in 6" :key="i"/>
       </template>
     </div>
     <!-- <div class="q-my-lg q-py-lg flex justify-center">

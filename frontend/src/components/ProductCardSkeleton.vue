@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-xs q-mb-md" :class="pageWidth >= 800 ? 'col-4' : 'col-6'">
-    <div class="column full-height relative bg-white">
+    <div class="column full-height relative">
         <q-skeleton :height="imgHeight" square />
       <div class="q-mt-sm relative col column justify-between q-pa-sm">
         <q-skeleton type="text" width="40%"/>

@@ -1,21 +1,31 @@
 <template>
-  <div class="overflow-hidden glide-product">
-    <vue-glide :options="glideOptions">
-      <vue-glide-slide v-for="product in products" :key="product.id" class="relative box-shadow">
-        <swiper-product-card :product="product" />
-      </vue-glide-slide>
-    </vue-glide>  
+  <div>
+    <div class="overflow-hidden glide-product" v-if="ready">
+      <vue-glide :options="glideOptions">
+        <vue-glide-slide v-for="product in products" :key="product.id" class="relative box-shadow">
+          <swiper-product-card :product="product" />
+        </vue-glide-slide>
+      </vue-glide>  
+    </div>
+    <div class="row" v-else>
+      <ProductCardSkeleton v-for="a in glideOptions.perView" :key="a"/>
+    </div>
   </div>
 </template>
 
 <script>
 import SwiperProductCard from 'components/SwiperProductCard'
+import ProductCardSkeleton from 'components/ProductCardSkeleton.vue'
   export default {
     name: 'GlideProduct',
     props: {
-      products: Array
+      products: Array,
+      ready: Boolean
     },
-    components: { SwiperProductCard },
+    components: { 
+      SwiperProductCard,
+      ProductCardSkeleton
+     },
     data() {
       return {
         pageWidth: 768,

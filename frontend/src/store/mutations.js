@@ -38,7 +38,8 @@ export default {
     }
     
     document.body.style.setProperty('--q-color-primary', state.config.theme_color)
-    AddressbarColor.set(state.config.theme_color)
+    AddressbarColor.set('#2e2e2e')
+    // AddressbarColor.set(state.config.theme_color)
   },
   SET_HOME_VIEW_MODE: (state, payload) => {
     state.config.home_view_mode = payload
@@ -56,7 +57,8 @@ export default {
 
     state.config.theme_color = clr 
     document.body.style.setProperty('--q-color-primary', clr)
-    AddressbarColor.set(clr)
+    // AddressbarColor.set(clr)
+    AddressbarColor.set('#2e2e2e')
     localStorage.setItem('__clr', clr)
 
   },

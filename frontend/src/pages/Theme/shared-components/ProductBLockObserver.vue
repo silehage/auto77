@@ -1,8 +1,8 @@
 <template>
   <div :id="'block-' + category.id" style="min-height:200px;">
-    <template  v-if="products.length">
+    <template v-if="success">
       <div class="block-container bg-linear">
-        <div class="auto-padding">
+        <div class="auto-padding" v-if="ready">
           <div class="row items-end justify-between">
             <div class="block-title"><h2>{{ category.title }}</h2></div>
             <q-btn flat no-caps padding="4px" :to="{name: 'ProductCategory', params:{ id: category.id }}">
@@ -17,13 +17,17 @@
               </router-link>
             </div>
           </div>
+          <div v-if="!ready">
+            <q-skeleton type="text" width="60%" height="50px" class="text-subtitle1" />
+            <q-skeleton type="text" width="80%" class="text-subtitle1" />
+          </div>
           <div class="block-content">
-            <div v-if="config && config.home_view_mode == 'list'">
-              <product-list-section :products="products" :ready="ready" :title="category.title"/>
+              <!-- <product-list-section-home :products="products" :ready="ready" :title="category.title"/> -->
+            <!-- <div v-if="config && config.home_view_mode == 'list'">
             </div>
             <div v-else class="auto-padding-side">
-              <swiper-product :products="products" />
-            </div>
+            </div> -->
+              <swiper-product :products="products" :ready="ready"/>
           </div>
       </div>
     </template>
@@ -33,16 +37,20 @@
 <script>
 import { mapState } from 'vuex'
 import SwiperProduct from 'components/GlideProduct.vue'
-import ProductListSection from 'components/ProductListSectionHome.vue'
+import ProductListSectionHome from 'components/ProductListSectionHome.vue'
 import { Api } from 'boot/axios'
 export default {
   props: ['category'],
-  components: { ProductListSection, SwiperProduct },
+  components: { 
+    // ProductListSectionHome,
+    SwiperProduct
+   },
   data() {
     return {
       loading: false,
       ready: false,
-      products: []
+      products: [],
+      success: true
     }
   },
   computed: {
@@ -56,6 +64,7 @@ export default {
   },
   methods: {
     intersecObserve() {
+      this.loading = true
 
       let el = document.getElementById('block-' + this.category.id)
 
@@ -94,7 +103,11 @@ export default {
      if(response.status == 200) {
       this.products = response.data.data
       this.ready = true
+      this.success = true
+     }else {
+       this.success = false
      }
+      this.loading = true
     }
   }
 }
