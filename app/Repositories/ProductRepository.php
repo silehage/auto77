@@ -43,6 +43,7 @@ class ProductRepository
             return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
             }])
+            ->inRandomOrder()
             ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
         
@@ -76,9 +77,10 @@ class ProductRepository
         return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
             $query->whereHas('promoActive');
         }])
-            ->where('category_id', $id)
-            ->withAvg('reviews', 'rating')
-            ->simplePaginate($this->limit);
+        ->where('category_id', $id)
+        ->withAvg('reviews', 'rating')
+        ->inRandomOrder()
+        ->simplePaginate($this->limit);
 
         }
 
@@ -128,6 +130,8 @@ class ProductRepository
                 });
                 $query->with('varians.subvarian');
                 $query->withAvg('reviews', 'rating');
+                $query->take(10);
+                $query->inRandomOrder();
             }])
             ->where('is_front', 1)
             ->orderBy('weight')
