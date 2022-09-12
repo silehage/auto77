@@ -97,8 +97,8 @@ Route::post('addProductReview', [ProductController::class, 'addProductReview']);
 Route::get('loadProductReview/{id}', [ProductController::class, 'loadProductReview']);
 Route::get('products', [ProductController::class, 'index']);
 Route::post('getProductsFavorites', [ProductController::class, 'getProductsFavorites']);
-Route::get('getProductsByCategory/{id}', [ProductController::class, 'getProductsByCategory']);
 Route::get('search/{key}', [ProductController::class, 'search']);
+Route::get('getProductsByCategory/{id}', [ProductController::class, 'getProductsByCategory']);
 
 Route::get('sliders', [SliderController::class, 'index']);
 Route::get('shop', [StoreController::class, 'index']);

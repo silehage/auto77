@@ -102,12 +102,12 @@ class ProductController extends Controller
         return response()->json($this->result, $this->result['status']);
        
     }
-    public function getProductsByCategory($id)
+    public function getProductsByCategory(Request $request, $id)
     {     
 
         try {
             
-            return new ProductListCollection($this->productRepository->getProductsByCategory($id));
+            return new ProductListCollection($this->productRepository->getProductsByCategory($request, $id));
 
 
         } catch (Exception $e) {

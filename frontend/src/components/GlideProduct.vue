@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden glide-product">
     <vue-glide :options="glideOptions">
-      <vue-glide-slide v-for="product in products.items" :key="product.id" class="relative box-shadow">
+      <vue-glide-slide v-for="product in products" :key="product.id" class="relative box-shadow">
         <swiper-product-card :product="product" />
       </vue-glide-slide>
     </vue-glide>  
@@ -13,7 +13,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
   export default {
     name: 'GlideProduct',
     props: {
-      products: Object
+      products: Array
     },
     components: { SwiperProductCard },
     data() {

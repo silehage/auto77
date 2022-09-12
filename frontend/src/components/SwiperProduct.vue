@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden">
     <swiper ref="mySwiper" :options="swiperOptions">
-      <swiper-slide v-for="product in products.items" :key="product.id">
+      <swiper-slide v-for="product in products" :key="product.id">
         <swiper-product-card :product="product" />
       </swiper-slide>
        <swiper-slide class="swiper-more">
@@ -19,7 +19,7 @@ import SwiperProductCard from 'components/SwiperProductCard'
   export default {
     name: 'SwipperProduct',
     props: {
-      products: Object
+      products: Array
     },
     components: { SwiperProductCard },
     data() {

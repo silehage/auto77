@@ -37,9 +37,12 @@ class FrontApiController extends Controller
         $shop = Cache::rememberForever('shop', function () {
             return Store::first();
         });
-        $categories = Cache::rememberForever('categories', function () {
-            return Category::orderBy('weight', 'asc')->get();
-        });
+
+        $categories = Category::orderBy('weight', 'asc')->withCount('products')->get();
+
+        // $categories = Cache::rememberForever('categories', function () {
+        //     return Category::orderBy('weight', 'asc')->withCount('products')->get();
+        // });
         $posts = Cache::rememberForever('promote_post', function () {
             return Post::promote()->latest()->take(4)->get();
         });

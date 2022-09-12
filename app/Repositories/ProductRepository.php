@@ -72,8 +72,11 @@ class ProductRepository
 
     }
 
-    public function getProductsByCategory($id)
+    public function getProductsByCategory($req, $id)
     {
+        if($req->limit) {
+            $this->limit = $req->limit;
+        }
         return Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
             $query->whereHas('promoActive');
         }])

@@ -34,7 +34,7 @@
           <img :src="banner1.image_url" @click="goToPost(banner1)">
         </div>
         
-        <product-block :products="products" />
+        <ProductSectionObserver />
 
         <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
           <div class="block-heading">
@@ -70,7 +70,7 @@
 import { mapActions, mapState } from 'vuex'
 import MenuRight from 'components/MenuRight.vue'
 import Slider from './block/Slider.vue'
-import ProductBlock from './../shared-components/ProductBLock.vue'
+import ProductSectionObserver from './../shared-components/ProductSectionObserver.vue'
 import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
 import categoryCarousel from './block/CategoryCarousel.vue'
 import productPromo from './../shared-components/ProductPromo.vue'
@@ -80,7 +80,7 @@ export default {
   components: {
     MenuRight,
     Slider, 
-    ProductBlock, 
+    ProductSectionObserver, 
     featuredCarousel,
     categoryCarousel,
     productPromo,
