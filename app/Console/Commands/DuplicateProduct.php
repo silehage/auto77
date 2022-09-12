@@ -41,18 +41,19 @@ class DuplicateProduct extends Command
      */
     public function handle()
     {
-        $product = Product::first();
-        $assets = $product->assets;
+        $products = Product::oldest()->take(5)->get();;
         $length = Product::count();
         $asset = Asset::first();
-
-        $productArr = $product->toArray();
 
         $categories = Category::all();
 
         foreach($categories as $category) {
 
-            for($i = 0; $i < 5; $i++) {
+            foreach($products as $product) {
+
+                $assets = $product->assets;
+                $productArr = $product->toArray();
+                
                 $length ++;
                 $title = 'Produk #' . $length;
                 
@@ -63,7 +64,7 @@ class DuplicateProduct extends Command
                 $p = Product::create($productArr);
     
                 $p->assets()->create([
-                    'filename' => $asset->filename
+                    'filename' => $assets[0]->filename
                 ]);
             }
         }
