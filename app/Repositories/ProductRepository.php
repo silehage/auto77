@@ -399,9 +399,9 @@ class ProductRepository
         try {
             if($product->assets) {
 
-                foreach($product->assets as $asset){
-                    File::delete('upload/images/'. $asset->filename);
-                }
+                // foreach($product->assets as $asset){
+                //     File::delete('upload/images/'. $asset->filename);
+                // }
                 $product->assets()->delete();
             }
             $product->delete();
