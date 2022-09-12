@@ -1,6 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-2 front overflow-x-hidden">
-      <notify v-if="config && config.is_notifypro"/>
+  <q-layout view="hHh lpR fFf" class="front overflow-x-hidden">
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -53,11 +52,10 @@
 
          
           <q-route-tab 
-            :to="{name: 'Cart'}" 
-            icon="eva-shopping-cart-outline" 
+            :to="{name: 'FrontPostIndex'}" 
+            icon="eva-browser-outline" 
             exact
-            label="Keranjang" >
-            <q-badge v-if="cartCount > 0" color="pink" floating>{{ cartCount }}</q-badge>
+            label="Artikel" >
           </q-route-tab>
 
            <q-tab 
@@ -71,11 +69,9 @@
 </template>
 
 <script>
-import Notify from 'components/Notify.vue'
 import { mapGetters, mapState } from 'vuex'
 import Cookies from 'js-cookie';
 export default {
-	components: { Notify },
   name: 'FrontLayout',
   data () {
     return {
@@ -132,6 +128,7 @@ export default {
     if(this.config) {
       this.$store.commit('SET_THEME_COLOR', this.config.theme_color)
     }
+    this.$q.dark.set(true)
   },
   meta() {
     return {

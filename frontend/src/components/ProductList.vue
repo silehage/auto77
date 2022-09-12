@@ -1,10 +1,10 @@
 <template>
-  <q-list class="relative" :class="pageWidth >= 768 ? 'col-6 q-pa-xs' : 'bg-white'">
-    <q-item class="q-pa-md relative bg-white full-height">
+  <q-list class="relative" :class="pageWidth >= 768 ? 'col-6 q-pa-xs' : ''">
+    <q-item class="q-pa-md relative full-height">
       <q-item-section avatar top @click.prevent="$router.push({name: 'ProductShow', params:{ slug: product.slug }})" class="cursor-pointer column items-center q-gutter-y-sm">
         <q-img v-if="product.assets && product.assets.length" :src="product.assets[0].src" ratio="1" class="image-list rounded-borders" width="105px">
           <template v-slot:error>
-          <div class="absolute-full flex flex-center bg-grey-6 text-white text-center">
+          <div class="absolute-full flex flex-center text-center">
             Cannot load image
           </div>
         </template>

@@ -4,7 +4,7 @@
       <q-toolbar class="items-center sans">
         <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
         <q-toolbar-title v-if="shop && shop.name" class="text-weight-bold text-primary">{{ shop.name }}</q-toolbar-title>
-        <shopping-cart  />
+        <MenuRight  />
       </q-toolbar>
     </q-header>
     <template v-if="!loading">
@@ -65,7 +65,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import ShoppingCart from 'components/ShoppingCart.vue'
+import MenuRight from 'components/MenuRight.vue'
 import Slider from './block/Slider.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
 import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
@@ -75,7 +75,7 @@ import productPromo from './../shared-components/ProductPromo.vue'
 export default {
   name: 'PageIndex',
   components: {
-    ShoppingCart,
+    MenuRight,
     Slider, 
     ProductBlock, 
     featuredCarousel,

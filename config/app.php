@@ -165,9 +165,6 @@ return [
         /*
         * Package Service Providers...
         */
-        Silehage\Rajaongkir\RajaongkirServiceProvider::class,
-        Silehage\Tripay\TripayServiceProvider::class,
-        Silehage\Starsender\StarsenderServiceProvider::class,
         
         /*
         * Application Service Providers...
@@ -178,7 +175,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        App\Providers\ConfigApiProvider::class,
 
     ],
 
@@ -233,9 +229,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Tripay' => Silehage\Tripay\Facades\Tripay::class,
-        'Rajaongkir' => Silehage\Rajaongkir\Facades\Rajaongkir::class,
-        'Starsender' => \Silehage\Starsender\Facades\Starsender::class,
 
     ],
 

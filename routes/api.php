@@ -16,9 +16,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\PromoteController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\FrontApiController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
@@ -46,28 +44,11 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::apiResource('posts', PostController::class)->only('store', 'update', 'destroy');
 
     Route::apiResource('blocks', BlockController::class)->only('store', 'update', 'destroy');
-
-    Route::apiResource('banks', BankController::class)->only('store', 'update', 'destroy');
-
-    Route::delete('orders/{id}', [OrderController::class, 'destroy']);
-    Route::get('orders', [OrderController::class, 'index']);
-    Route::post('searchAdminOrder', [OrderController::class, 'searchAdminOrder']);
-    Route::put('orders', [OrderController::class, 'update']);
-    Route::post('updateStatusOrder', [OrderController::class, 'updateStatusOrder']);
-    Route::post('paymentAccepted/{id}', [OrderController::class, 'paymentAccepted']);
-    Route::post('inputResi', [OrderController::class, 'inputResi']);
-    Route::post('cancelOrder/{id}', [OrderController::class, 'cancelOrder']);
     // Update
     Route::get('update', [UpdateController::class, 'overview']);
     Route::post('update', [UpdateController::class, 'update']);  
     Route::post('clearCache', [UpdateController::class, 'clearCache']);  
     
-    Route::apiResource('discount', DiscountController::class);
-
-    Route::apiResource('coupon', CouponController::class);
-
-    Route::apiResource('promote', PromoteController::class);
-    Route::get('getPromoDetail/{id}', [PromoteController::class, 'getPromoDetail']);
 
     Route::post('toggleProductPromo', [ProductController::class, 'toggleProductPromo']);
     Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
@@ -92,9 +73,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('user', [UserController::class, 'index']);
     Route::post('user/logout', [UserController::class, 'logout']);
     Route::post('user/update', [UserController::class, 'update']);
-    
-    Route::post('filterOrder', [OrderController::class, 'filterOrder']);
-    Route::get('getCustomerOrders', [OrderController::class, 'getCustomerOrders']);
     Route::post('refreshToken', [UserController::class, 'refreshToken']);
     
 });
@@ -108,8 +86,6 @@ Route::middleware(['throttle:auth'])->group(function() {
     Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
 
 });
-
-Route::post('orders', [OrderController::class, 'store']);
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
 Route::get('post/{slug}', [PostController::class, 'getPostBySlug']);
@@ -130,41 +106,11 @@ Route::get('shop', [StoreController::class, 'index']);
 Route::get('category', [CategoryController::class, 'index']);
 Route::get('category/{id}', [CategoryController::class, 'show']);
 
-
-
-
 Route::get('blocks',[BlockController::class, 'index']);
 Route::get('blocks/{id}',[BlockController::class, 'show']);
 
 Route::get('config',[ConfigController::class, 'show']);
 
-Route::get('orders/{orderRef}', [OrderController::class, 'show']);
-Route::get('transaction/detail',[TransactionController::class, 'show']);
-
-Route::get('banks', [BankController::class, 'index']);
-
-Route::post('searchOrder', [OrderController::class, 'searchOrder']);
-Route::get('getRandomOrder', [OrderController::class, 'getRandomOrder']);
-
-Route::get('shipping/getProvince', [ShippingController::class, 'getProvince']);
-Route::get('shipping/getCity/{province_id}', [ShippingController::class, 'getCity']);
-Route::get('shipping/getSubdistict/{city_id}', [ShippingController::class, 'getSubdistrict']);
-Route::post('shipping/getCost', [ShippingController::class, 'getCost']);
-Route::post('shipping/waybill', [ShippingController::class, 'waybill']);
-Route::get('shipping/findSubdistrict/{key}', [ShippingController::class, 'findSubdistrict']);
-
-Route::get('tripay/payment-chanel',[TripayController::class, 'getPaymentChanels']);
-Route::post('tripay/callback',[TripayController::class, 'callback'])->name('tripay.callback');
-
-Route::get('carts', [CartController::class, 'get']);
-Route::post('carts', [CartController::class, 'store']);
-Route::put('carts', [CartController::class, 'update']);
-Route::post('cart/delete', [CartController::class, 'destroy']);
-Route::post('clearCart', [CartController::class, 'clear']);
-
 Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
-
-Route::get('coupons/getByCode/{code}', [CouponController::class, 'getByCode']);
-Route::post('redeemCoupon', [CouponController::class, 'redeemCoupon']);
 
 Route::get('getInitialData', [FrontApiController::class, 'home']);

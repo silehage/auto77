@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="admin-layout">
     <q-page-container>
         <router-view />
     </q-page-container>
@@ -18,6 +18,7 @@ export default {
     })
   },
   created() {
+    this.$q.dark.set(false)
     this.$store.dispatch('getAdminConfig')
     if(!this.shop) {
       

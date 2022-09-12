@@ -84,7 +84,7 @@
       </div>
     <!-- Start Product Variants -->
        <div id="variants">
-          <div class="row items-center justify-between q-mt-xl q-pa-md bg-green-1">
+          <div class="row items-center justify-between q-mt-xl q-pa-md">
             <div class="text-md2 text-weight-medium">Produk Variasi</div>
             <q-btn v-if="canAddVarian" label="Tambah Variasi" @click="varianModal = true" color="accent" size="12px"></q-btn>
           </div>
@@ -92,7 +92,7 @@
             <div v-if="form.varians[0].has_subvarian">
 
               <div v-for="(varian, varIndex) in form.varians" :key="varIndex">
-                <div class="row items-start justify-between bg-grey-2 q-pa-md q-pt-lg">
+                <div class="row items-start justify-between q-pa-md q-pt-lg">
                     <div  class="text-weight-bold text-md">{{ form.varians[varIndex].label}} {{ form.varians[varIndex].value }}</div>
                   <div class="q-gutter-x-sm">
                     <q-btn unelevated size="10px" color="red" @click="deleteVarian(varIndex, varian)">Hapus {{ form.varians[varIndex].value }}</q-btn>
@@ -123,14 +123,14 @@
 
             </div>
             <div v-else>
-              <div class="row items-start justify-between bg-grey-2 q-pa-md q-pt-lg">
+              <div class="row items-start justify-between q-pa-md q-pt-lg">
                     <div  class="text-weight-bold text-md">{{ form.varians[0].label}} </div>
                   <div class="q-gutter-x-sm">
                     <q-btn unelevated size="10px" color="teal" @click="pushVarian">Tambah Item</q-btn>
                   </div>
                 </div>
               <q-list>
-                <q-list class="bg-white q-pa-sm q-mt-xs">
+                <q-list class="q-pa-sm q-mt-xs">
                   <q-item  v-for="(varian, vIndex) in form.varians" :key="vIndex">
                     <q-item-section side>
                       <q-btn round unelevated padding="2px" icon="remove" size="9px" color="red" @click="deleteVarian(vIndex, varian)"></q-btn>

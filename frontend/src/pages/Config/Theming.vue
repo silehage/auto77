@@ -2,7 +2,7 @@
   <q-card flat>
      <q-card-section>
       <div class="text-md text-weight-bold">Penaturan Tema</div>
-      <div class="text-caption text-grey-7">Pengaturan tema dan warna dasar situs</div>
+      <div class="text-caption text-caption">Pengaturan tema dan warna dasar situs</div>
     </q-card-section>
     <q-form @submit.prevent="updateData">
       <q-list>

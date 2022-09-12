@@ -1,5 +1,5 @@
 <template>
-  <div class="footer q-px-sm q-py-lg bg-primary text-white">
+  <div class="footer q-px-sm q-py-lg bg-dark text-white">
     <q-list dense v-if="shop">
       <q-item  v-if="shop.name">
           <q-item-section side>

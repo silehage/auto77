@@ -1,13 +1,13 @@
 <template>
- <q-page :class="{'flex flex-center':!products.available}" class="q-pb-xl bg-grey-1">
-   <q-header class="text-primary bg-white box-shadow">
-       <q-toolbar>
-         <q-btn @click="backButton"
+  <q-page :class="{'flex flex-center':!products.available, 'bg-grey-9': $q.dark.isActive}" class="q-pb-xl">
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+        <q-toolbar class="header__padding">
+          <q-btn @click="backButton"
             flat round dense
             icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">Produk Favorite</q-toolbar-title>
-          <shopping-cart  />
-       </q-toolbar>
+          <MenuRight />
+        </q-toolbar>
     </q-header>
     <template v-if="products.available">
       <product-section title="Produk Favorit" :products="products"></product-section>
@@ -25,10 +25,10 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import ProductSection from 'components/ProductSection.vue'
-import ShoppingCart from 'components/ShoppingCart.vue'
+import MenuRight from 'components/MenuRight.vue'
 export default {
   name: 'ProductFavorite',
-  components: {ProductSection, ShoppingCart },
+  components: {ProductSection, MenuRight },
   computed: {
     ...mapState({
       favorites: state => state.product.favorites,

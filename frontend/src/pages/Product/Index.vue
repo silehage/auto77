@@ -1,12 +1,12 @@
 <template>
-  <q-page class="q-pb-xl bg-grey-1">
-    <q-header class="text-primary bg-white box-shadow">
-       <q-toolbar>
+  <q-page class="q-pb-xl" :class="{'bg-grey-9': $q.dark.isActive }">
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+       <q-toolbar class="header__padding">
          <q-btn :to="{name: 'Home'}"
             flat round dense
             icon="eva-arrow-back" />
           <q-toolbar-title class="text-weight-bold brand">{{ title }}</q-toolbar-title>
-          <shopping-cart  />
+          <MenuRight  />
        </q-toolbar>
     </q-header>
    <product-section :title="title" :products="products"></product-section>
@@ -19,12 +19,12 @@
 <script>
 import { mapActions } from 'vuex'
 import ProductSection from 'components/ProductSection.vue'
-import ShoppingCart from 'components/ShoppingCart.vue'
+import MenuRight from 'components/MenuRight.vue'
 
 import { Api } from 'boot/axios'
 export default {
   name: 'ProductIndex',
-  components: { ProductSection, ShoppingCart },
+  components: { ProductSection, MenuRight },
   data() {
     return {
       title: 'Katalog Produk',

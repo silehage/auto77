@@ -2,7 +2,7 @@
   <q-card flat>
   <q-card-section>
     <div class="text-md text-weight-bold">System Update / Clear Cache</div>
-    <div class="text-caption text-grey-7">Pengaturan sistem update dan cache situs, Pastikan anda mengerti apa yang anda lakukan</div>
+    <div class="text-caption text-caption">Pengaturan sistem update dan cache situs, Pastikan anda mengerti apa yang anda lakukan</div>
   </q-card-section>
   <q-list class="q-pb-md">
     <q-item>

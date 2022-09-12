@@ -1,29 +1,32 @@
 <template>
-  <div class="bg-white max-width">
-    <q-list separator>
-      <q-item>
-        <q-item-section side>
-          <q-icon name="eva-keypad"></q-icon>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label class="text-md">Kategori</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-btn flat icon="eva-close" dense @click="closeCategory"></q-btn>
-        </q-item-section>
-      </q-item>
-      <q-item v-for="category in categories.data" :key="category.id" clickable @click="handleShowCategory(category.id)">
-        <q-item-section avatar>
-          <q-avatar>
-            <q-img :src="category.src"></q-img>
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ category.title }}</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
-    </div>
+  <q-card class="max-width">
+    <q-card-section class="q-px-none">
+      <q-list separator>
+        <q-item>
+          <q-item-section side>
+            <q-icon name="eva-keypad"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-md">Kategori</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-btn flat icon="eva-close" dense @click="closeCategory"></q-btn>
+          </q-item-section>
+        </q-item>
+        <q-item v-for="category in categories.data" :key="category.id" clickable @click="handleShowCategory(category.id)">
+          <q-item-section avatar>
+            <q-avatar>
+              <q-img :src="category.src"></q-img>
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ category.title }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+
+      </q-card-section>
+    </q-card>
 </template>
 
 <script>

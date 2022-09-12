@@ -1,7 +1,7 @@
 <template>
-  <q-page class="q-pb-lg bg-grey-1">
-    <q-header class="text-primary bg-white box-shadow">
-       <q-toolbar>
+  <q-page class="q-pb-xl" :class="{'bg-grey-9': $q.dark.isActive }">
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+       <q-toolbar class="header__padding">
          <q-btn v-go-back.single
             flat round dense
             icon="eva-arrow-back" />
@@ -9,7 +9,7 @@
             <q-btn flat label="Cari Produk" :to="{ name: 'ProductSearch'}"></q-btn>
        </q-toolbar>
     </q-header>
-    <div class="col bg-white border q-ma-md">
+    <div class="q-px-md q-pt-md">
       <q-input ref="input" outlined dense color="grey-2" v-model="search" autofocus @keyup.enter="searchOrder" placeholder="ketik Invoice ID atau Nomor Whatsapp"
       >
       <template v-slot:append>

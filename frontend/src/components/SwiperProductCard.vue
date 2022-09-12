@@ -1,22 +1,22 @@
 <template>
-  <div class="full-height">
-    <div class="column full-height relative bg-white box-shadow">
-      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
-        <template v-slot:error>
-          <div class="absolute-full flex flex-center bg-grey-6 text-white">
-            Cannot load image
-          </div>
-        </template>
-      </q-img>
-      <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.slug)" class="cursor-pointer">
-      </q-img>
-      <div class="relative col column q-gutter-y-xs justify-between q-pb-md q-px-sm q-pt-sm overflow-hidden full-width">
+  <q-card class="box-shadow">
+    <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
+      <template v-slot:error>
+        <div class="absolute-full flex flex-center">
+          Cannot load image
+        </div>
+      </template>
+    </q-img>
+    <q-img v-else src="/static/no_image.png" ratio="1" @click="show(product.slug)" class="cursor-pointer">
+    </q-img>
+    <q-card-section class="relative product-card">
+      <div class="relative col column q-gutter-y-xs justify-between overflow-hidden full-width">
         <div>
           <div class="flex justify-between items-center">
             <q-rating 
               readonly
               v-model="rating"
-              color="accent"
+              :color="$q.dark.isActive ? 'orange-5' : 'accent'"
               icon="eva-star-outline"
               icon-selected="eva-star"
               icon-half="eva-star"
@@ -29,19 +29,19 @@
           </div>
         </div>
        <div class="card-price-container">
-          <div class="card-price text-secondary">
+          <div class="card-price">
             <span class="prefix">Rp</span>
             <span class="amount">{{ $money(product.pricing.current_price) }}</span>
           </div>
-          <div v-if="product.pricing.is_discount" class="card-discount text-strike text-grey-8">
+          <div v-if="product.pricing.is_discount" class="card-discount text-strike text-red">
             <span class="prefix">Rp</span>
             <span class="amount">{{ $money(product.pricing.default_price) }}</span>
             </div>
         </div>
       </div>
          <div v-if="product.pricing.is_discount" class="absolute top-0 z-50 bg-red-6 text-white" style="padding:2px;font-size:13px;">{{ product.pricing.discount_percent }}%</div>
-    </div>
-  </div>
+    </q-card-section>
+  </q-card>
 </template>
 <script>
 import FavoriteButton from 'components/FavoriteButton.vue'

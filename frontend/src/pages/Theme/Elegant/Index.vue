@@ -1,12 +1,12 @@
 <template>
-  <q-page class="bg-grey-1 elegant" :class="{'flex flex-center' : loading }">
-     <q-header reveal class="bg-primary text-white" :class="{ 'auto-padding-side': $q.platform.is.desktop}">
+  <q-page class="elegant" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive }">
+     <q-header reveal :class="{ 'bg-grey-9': $q.dark.isActive }">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
           <div class="col q-mx-sm inline-flex">
-            <q-input dense ref="input" borderless class="input-search text-xs" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
+            <q-input ref="input" borderless dense class="text-xs" :color="$q.dark.isActive ? 'primary' : 'dark'" v-model="search" @keyup.enter="searchNow" placeholder="cari produk..."
               >
-              <template v-slot:prepend>
+              <template v-slot:append>
                 <q-icon
                   name="eva-search"
                   class="cursor-pointer"
@@ -15,56 +15,60 @@
               </template>
               </q-input>
             </div>
-           <shopping-cart noFavorite />
+           <MenuRight noFavorite />
         </q-toolbar>
       </q-header>
     <template v-if="!loading">
-      <div class="header">
+      <div class="header bg-primary text-white" :class="{ 'bg-grey-9': $q.dark.isActive }">
         <div class="header-inner q-pt-sm q-pb-md" v-if="sliders.data.length">
           <slider :datas="sliders.data" />
         </div>
       </div>
-
-      <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
+      <div id="featured" class="block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div>
-      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding block-container">
-        <div class="block-heading">
-          <div class="block-title"><h2>Kategori</h2></div>
+      <div id="categories" v-if="categories && categories.data.length > 1" class="block-container q-py-lg">
+        <div class="block-heading text-center">
+          <div class="category-title">
+              <h2>Kategori</h2>
+            </div>
         </div>
-        <div class="block-content q-pb-sm">
+        <div class="block-content q-py-lg">
           <category-carousel :datas="categories.data" />
         </div>
       </div>
+      <div class="page__padding">
 
-      <div id="product-promo" v-if="productPromo.length" >
-        <product-promo :product_promo="productPromo" />
-      </div>
-
-      <div v-if="banner1" class="banner auto-padding-side block-container">
-        <img :src="banner1.image_url" @click="goToPost(banner1)">
-      </div>
-      
-      <product-block :products="products" />
-
-      <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
-        <div class="block-heading">
-          <div class="block-title"><h2>Partners</h2></div>
+        <div id="product-promo" v-if="productPromo.length" >
+          <product-promo :product_promo="productPromo" />
         </div>
-        <div class="block-content">
-          <partner-carousel :datas="blocks.partner" />
+
+        <div v-if="banner1" class="banner block-container">
+          <img :src="banner1.image_url" @click="goToPost(banner1)">
+        </div>
+        
+        <product-block :products="products" />
+
+        <div v-if="blocks.partner.length" class="partner block-container">
+          <div class="block-heading">
+            <div class="block-title"><h2>Partners</h2></div>
+          </div>
+          <div class="block-content">
+            <partner-carousel :datas="blocks.partner" />
+          </div>
+        </div>
+        
+        <div v-if="banner2" class="banner block-container">
+          <img :src="banner2.image_url" @click="goToPost(banner2)">
+        </div>
+
+        <post-block :posts="posts" />
+
+        <div v-if="banner3" class="banner block-container">
+          <img :src="banner3.image_url" @click="goToPost(banner3)">
         </div>
       </div>
-      
-      <div v-if="banner2" class="banner auto-padding-side block-container">
-        <img :src="banner2.image_url" @click="goToPost(banner2)">
-      </div>
 
-      <post-block :posts="posts" />
-
-      <div v-if="banner3" class="banner auto-padding block-container">
-        <img :src="banner3.image_url" @click="goToPost(banner3)">
-      </div>
 
       <install-app />
 
@@ -78,7 +82,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import ShoppingCart from 'components/ShoppingCart.vue'
+import MenuRight from 'components/MenuRight.vue'
 import Slider from './block/Slider.vue'
 import ProductBlock from './../shared-components/ProductBLock.vue'
 import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
@@ -88,7 +92,7 @@ import productPromo from './../shared-components/ProductPromo.vue'
 export default {
   name: 'PageIndex',
   components: {
-    ShoppingCart,
+    MenuRight,
     Slider, 
     ProductBlock, 
     featuredCarousel,

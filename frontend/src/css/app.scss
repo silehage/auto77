@@ -6,11 +6,39 @@
 // .sans {
 //   font-family: 'roboto', sans-serif;
 // }
+
 $default   : #0598c0;
 :root {
   --page-width: 768px;
   --blue-light: #c0eec6;
   --default-theme: $default;
+  --default-dark: rgba(70, 70, 70, 0.911);
 }
+* {
+  outline: none;
+}
+body.body--dark {
+  .mobile-view {
+    background: var(--q-color-dark);
+    color: #e0e0e0;
+  }
+  .q-card__section.product-card{
+    background-color: #5e5e5e;
+  }
+}
+body.body--light {
+  background: #e4e4e4;
+  .admin-layout {
+    background-color: #ffffff;
+  }
+  .mobile-view {
+    .q-card__section.product-card{
+      background-color: #ffffff;
+    }
+    background: #f7f7f7;
+    color: rgb(87, 87, 87);
+  }
+}
+
 @import 'main';
 @import 'responsive';

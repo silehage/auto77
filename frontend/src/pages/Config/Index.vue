@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-grey-2 q-pb-lg">
+  <q-page class="q-pb-lg">
     <q-header>
       <q-toolbar>
         <q-btn v-go-back.single
@@ -13,12 +13,6 @@
       <div class="q-gutter-y-lg q-pt-md" v-if="config">
         <tampilan />
         <theming />
-        <checkout-config  />
-        <service-fee />
-        <shipping />
-        <LocalShipping />
-        <notification />
-        <tripay />
         <system-update />
       </div>
       <q-inner-loading :showing="loading">
@@ -38,7 +32,7 @@ import LocalShipping from './LocalShipping.vue'
 import ServiceFee from './ServiceFee.vue'
  export default {
   name: 'AdminConfig',
-  components: { Shipping, Tampilan, Theming, Notification, Tripay, SystemUpdate, CheckoutConfig, LocalShipping, ServiceFee },
+  components: { Tampilan, Theming, SystemUpdate},
   computed: {
     loading() {
       return this.$store.state.loading

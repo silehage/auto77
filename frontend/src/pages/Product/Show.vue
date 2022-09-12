@@ -1,5 +1,5 @@
 <template>
-  <q-page style="background:white;" class="q-pb-xl relative" :class="{'flex flex-center' : !ready }">
+  <q-page  class="q-pb-xl relative" :class="{'flex flex-center' : !ready }">
     <template v-if="ready && product">
     <div class="q-pa-md header-top">
       <div class="flex justify-between">
@@ -7,7 +7,7 @@
         @click="backButton"
         flat dense icon="eva-arrow-back" icon-size="27px" style="cursor:pointer;opacity:.9;">
         </q-btn>
-        <shopping-cart />
+        <MenuRight />
       </div>
     </div>
     <div class="col relative overflow-x-hidden">
@@ -45,13 +45,13 @@
           <h1 class="text-h6 text-weight-semibold q-mb-md" v-if="product">{{ product.title }}</h1>
           <div class="row items-center justify-between">
             <div class="flex items-center">
-              <div class="flex items-center text-secondary">
+              <div class="flex items-center">
                   <span class="text-md">Rp</span>
                   <span class="text-lg text-weight-medium">
                   {{ $money(parseInt(totalPrice)) }} 
                   </span>
                 </div>
-                <div class="flex items-center text-strike text-xs q-ml-xs" v-if="product.pricing.is_discount">
+                <div class="flex items-center text-strike text-xs q-ml-xs text-red" v-if="product.pricing.is_discount">
                   <span class="text-sm">Rp</span>
                   <span class="text-md">{{ $money(product.pricing.default_price * quantity) }} </span>
                 </div>
@@ -80,7 +80,7 @@
         </q-card-section>
       </q-card>
 
-     <div class="box-shadow bg-white q-pa-md q-mt-md" v-if="product.varians.length">
+     <div class="box-shadow q-pa-md q-mt-md" v-if="product.varians.length">
         <div>
           <div class="text-md">Pilih Varian <span class="text-sm text-weight-normal text-grey-7"></span></div>
           <div class="q-mt-sm">
@@ -196,17 +196,21 @@
         </q-tab-panels>
       </q-card>
     </div>
-    <q-footer class="q-gutter-x-sm flex q-pa-md bg-white">
-        <!-- <q-btn @click="btnFavorite" icon="favorite" outline round :color="isLike? 'pink' : 'dark'"></q-btn> -->
-        <q-btn unelevated rounded outline @click="chat" icon="eva-message-circle-outline" label="Chat" color="primary" class="col"></q-btn>
-        <q-btn unelevated rounded @click="addNewItem" icon="eva-shopping-cart-outline" label="Beli" color="primary" class="col"></q-btn>
+    <q-footer class="q-gutter-x-sm flex q-pa-md bg-transparent">
+        <q-btn unelevated rounded @click="chat" 
+        icon="eva-message-circle-outline" 
+        label="Hubungi Kami" 
+        color="green"
+        class="col">
+        </q-btn>
+        <!-- <q-btn unelevated rounded @click="addNewItem" icon="eva-MenuRight-outline" label="Beli" color="primary" class="col"></q-btn> -->
     </q-footer>
     </template>
       <q-inner-loading :showing="!ready">
         <q-spinner-facebook size="50px" color="primary"/>
       </q-inner-loading>
       <q-dialog v-model="reviewModal">
-        <div class="q-card" style="width:100%;max-width:360px;">
+        <q-card style="width:100%;max-width:360px;">
           <q-card-section>
           <q-form @submit.prevent="submitReview">
             <div>
@@ -250,11 +254,11 @@
           </div>
           </q-form>
           </q-card-section>
-        </div>
+        </q-card>
       </q-dialog>
       <q-dialog v-model="chatModal">
-      <q-card style="max-width:450px;width:100%;" class="text-grey-9">
-        <div class="text-weight-bold q-py-sm q-px-md bg-primary text-white">Kirim pesan / tanya ke penjual</div>
+      <q-card style="max-width:450px;width:100%;">
+        <div class="text-weight-bold q-py-sm q-px-md">Kirim pesan / tanya ke penjual</div>
         <q-card-section class="transition-height">
           <div class="q-mb-sm text-subtitle2" v-if="this.product"># {{ product.title }}</div>
           <q-input outlined autogrow autofocus v-model="chatText" placeholder="contoh: Halo Admin, Apakah ini masih ada?"></q-input>
@@ -264,7 +268,7 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions class="justify-end">
+        <q-card-actions class="justify-end q-pa-md">
           <q-btn @click="closeChatModal" flat label="Batal"></q-btn>
           <q-btn @click="submitChat" :disabled="!chatText" flat color="primary" label="Kirim"></q-btn>
         </q-card-actions>
@@ -276,7 +280,7 @@
     transition-show="slide-up"
     transition-hide="slide-down"
     >
-      <q-card flat class="max-width bg-white" v-if="product">
+      <q-card flat class="max-width" v-if="product">
         <q-linear-progress size="10px" :value="100" />
           <q-card-section>
             <!-- <q-item-label class="text-weight-medium">{{ product.title }}</q-item-label> -->
@@ -318,7 +322,7 @@
       >
       <q-card class="max-width" flat v-if="product && product.varians.length">
         <q-card-section>
-          <div class="text-weight-medium text-lg q-mb-sm text-secondary">{{ moneyIDR(parseInt(totalPrice)) }}</div>
+          <div class="text-weight-medium text-lg q-mb-sm">{{ moneyIDR(parseInt(totalPrice)) }}</div>
             <div>
               <div class="text-md">Pilih Varian <span class="text-sm text-weight-normal text-grey-7"></span></div>
               <div class="q-mt-sm">
@@ -347,7 +351,7 @@
             </div>
         </q-card-section>
         <q-card-section>
-        <q-btn unelevated rounded @click="addNewItem" name="eva-shopping-cart-outline" label="Beli Sekarang" color="green" class="full-width"></q-btn>
+        <q-btn unelevated rounded @click="addNewItem" name="eva-MenuRight-outline" label="Beli Sekarang" color="green" class="full-width"></q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -356,11 +360,11 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-import ShoppingCart from 'components/ShoppingCart.vue'
+import MenuRight from 'components/MenuRight.vue'
 import BadgeTick from 'components/BadgeTick.vue'
 export default {
   name: 'ProductShow',
-  components: { ShoppingCart, BadgeTick },
+  components: { MenuRight, BadgeTick },
   data () {
     return {
       tab: 'Description',
@@ -933,36 +937,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.header-top {
-  z-index:50;
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  background: transparent;
-  background: linear-gradient(0deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 5, 0.678) 100%); 
-  color:#fff;
-}
-.q-body--fullscreen-mixin .img-carousel::after {
-  height: 0;
-}
-.product-detail::before {
-position: absolute;
-  width: 100%;
-  background-color:white;
-  content: "";
-  height: 20px;
-  border-radius: 80px 80px 0 0;
-  top: -20px;
-  left: 0;
-  .q-carousel__control.absolute.absolute-bottom-right {
-    transform: translateY(-20px)
-  }
-  .q-carousel__navigation--bottom{
-    transform: translateY(-20px)
-  }
-}
-</style>

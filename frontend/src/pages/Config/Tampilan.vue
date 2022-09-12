@@ -2,7 +2,7 @@
 <q-card flat>
   <q-card-section>
     <div class="text-subtitle1 text-weight-bold">Pengaturan Basic</div>
-    <div class="text-caption text-grey-7">Pengaturan tampilan produk dan social proof</div>
+    <div class="text-caption">Pengaturan tampilan produk dan social proof</div>
   </q-card-section>
   <q-list>
     <q-item>
@@ -47,25 +47,7 @@
         </div>
       </q-item-section>
     </q-item>
-     <q-item class="q-mt-md">
-      <q-item-section>
-        <q-item-label class="text-weight-medium">Social Proof Popup</q-item-label>
-         <div class="q-mb-sm text-caption text-grey-7 q-mt-sm">
-           Pengaturan social proof notifikasi.
-         </div>
-      </q-item-section>
-      <q-item-section side top>
-        <q-toggle v-model="form.is_notifypro" :label="form.is_notifypro? 'Active' : 'Disabled'" left-label color="green-6"></q-toggle>
-      </q-item-section>
-    </q-item>
-    <q-item v-if="form.is_notifypro">
-      <q-item-section>
-        <q-input outlined dense label="Jeda Waktu Tayang" mask="###" :hint="'Popup akan tayang setiap ' + form.notifypro_interval +' Detik'" v-model="form.notifypro_interval"></q-input>
-      </q-item-section>
-      <q-item-section>
-        <q-input outlined dense label="Durasi Penayangan" mask="###" :hint="'Popup akan tayang selama ' + form.notifypro_timeout +' Detik'" v-model="form.notifypro_timeout"></q-input>
-      </q-item-section>
-    </q-item>
+
   </q-list>
   <q-card-section class="flex justify-end">
     <q-btn unelevated size="12px" label="Simpan Pengaturan" color="blue-7" @click="saveTampilan"></q-btn>

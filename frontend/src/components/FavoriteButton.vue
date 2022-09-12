@@ -26,7 +26,7 @@ export default {
     getFavoriteStyle() {
        let m = this.favorites.find(e => e == this.product_id)
        if(m) return 'pink'
-       return 'grey'
+       return ''
     },
     btnFavorite() {
       this.$store.commit('product/ADD_REMOVE_TO_FAVORITE', this.product_id)
