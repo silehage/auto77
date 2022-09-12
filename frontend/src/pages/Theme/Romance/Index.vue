@@ -16,7 +16,7 @@
         <featured-carousel :datas="blocks.featured" />
       </div>
 
-      <div class="page__padding q-pb-lg">
+      <div class="page__padding q-pb-xl">
         <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding block-container">
           <div class="block-heading">
             <div class="block-title"><h2>Kategori</h2></div>

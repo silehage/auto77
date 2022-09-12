@@ -3,14 +3,18 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-      <q-footer class="bg-white text-primary footer-tab box-shadow-top">
+      <q-footer 
+      class="footer-tab box-shadow-top"
+      :class="{ 'text-white bg-dark' : $q.dark.isActive , 'bg-white text-primary' : !$q.dark.isActive}"
+      >
         <q-tabs
-          active-color="primary"
-          class="text-grey-8 text-xs"
+          :active-color="$q.dark.isActive ? 'white' : 'primary'"
+          class="text-xs"
+          :class="$q.dark.isActive ? 'text-grey-4' : 'text-grey-8'"
           no-caps
           dense
           switch-indicator
-          indicator-color="primary"
+          :indicator-color="$q.dark.isActive ? 'text-grey-1' : 'primary'"
         >
           <q-route-tab
             icon="eva-home"

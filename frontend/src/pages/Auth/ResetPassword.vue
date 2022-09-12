@@ -1,7 +1,7 @@
 <template>
-  <q-page class="flex flex-center relative">
-   <q-header class="text-primary bg-white box-shadow">
-      <q-toolbar dense>
+   <q-page class="flex flex-center relative" :class="{'bg-grey-10': $q.dark.isActive }">
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+       <q-toolbar class="header__padding">
         <q-btn :to="{ name: 'ForgotPassword'}"
           flat round dense
           icon="eva-arrow-back" />
@@ -12,11 +12,11 @@
     </q-header>
     <div style="max-width: 420px;width:100%;" class="q-pa-sm">
       <div class="flex justify-center">
-        <img v-if="shop && shop.logo_path" :src="shop.logo" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
+        <img v-if="shop && shop.logo_path" :src="shop.logo" style="width:auto;height:85px;object-fit:contain;max-width:150px;" />
         <img v-else src="/icon/icon-192x192.png" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
       </div>
     <div class="text-red q-pb-sm text-center" v-if="errors.email">{{ errors.email[0] }}</div>
-      <q-card flat class="q-pt-sm" style="background:rgb(255 255 255 / 71%);">
+      <q-card flat class="q-pt-sm">
         <q-card-section>
           <div class="text-grey-7 q-pa-sm" v-if="isValidToken">Silahkan ganti kata sandi anda, gunakan kata sandi yang tidak mudah di tebak, tapi mudah di ingat.</div>
           <div class="text-grey-7 q-pa-sm" v-else>Kode token sudah kami kirim ke alamat email 
