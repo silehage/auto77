@@ -109,7 +109,7 @@
       <q-card style="max-width:450px;width:100%;">
         <div class="text-weight-bold q-py-sm q-px-md text-md">Hubungi Cs Kami</div>
         <q-card-section class="q-px-md q-pb-lg column q-gutter-y-md">
-          <q-btn v-for="(cs, index) in customer_services" :key="index" color="green" class="full-width" icon="eva-message-circle-outline" :label="cs.name"  @click="CheckoutByCs(cs)">
+          <q-btn v-for="(cs, index) in customer_services" :key="index" color="green" class="full-width" icon="eva-message-circle-outline" :label="cs.name"  @click="checkoutByCs(cs)">
           </q-btn>
         </q-card-section>
       </q-card>
@@ -309,10 +309,12 @@ export default {
       this.subvarianSelected = null
       this.quantity = 1
     },
-    CheckoutByCs(cs) {
+    checkoutByCs(cs) {
       this.$q.loading.show()
       let str = `Halo apakah ${this.product.title} masih ada?`
-      let link = 'https://api.whatsapp.com/send?phone=' + this.formatPhoneNumber(cs.phone) + '&text=' + encodeURI(str +'\n')
+      str = encodeURI(str)
+      let link = 'https://api.whatsapp.com/send?phone=' + this.formatPhoneNumber(cs.phone) + '&text=' + str
+
       window.open(link, '_blank');
 
       setTimeout(() => {
