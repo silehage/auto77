@@ -45,7 +45,6 @@ class DuplicateProduct extends Command
     {
         $products = Product::oldest()->take(5)->get();;
         $length = Product::count();
-        $asset = Asset::first();
 
         $categories = Category::all();
 
@@ -61,9 +60,9 @@ class DuplicateProduct extends Command
                     $productArr = $product->toArray();
                     
                     $length ++;
-                    $title = 'Produk #' . $length;
+                    $title = 'Produk ' . $length;
                     
-                    $productArr['title'] = 'Produk #' . $length;
+                    $productArr['title'] = $title;
                     $productArr['slug'] = Str::slug($title);
                     $productArr['category_id'] = $category->id;
         
