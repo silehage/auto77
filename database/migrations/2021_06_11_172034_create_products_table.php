@@ -18,7 +18,6 @@ class CreateProductsTable extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description');
-            $table->boolean('is_available')->default(true);
             $table->bigInteger('price');
             $table->foreignId('category_id')->nullable();
             $table->timestamps();

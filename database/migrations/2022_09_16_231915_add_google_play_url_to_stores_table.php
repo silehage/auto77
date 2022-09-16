@@ -15,6 +15,7 @@ class AddGooglePlayUrlToStoresTable extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->string('google_play_url')->nullable();
+            $table->boolean('is_available')->default(true);
         });
     }
 
@@ -27,6 +28,7 @@ class AddGooglePlayUrlToStoresTable extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->dropColumn('google_play_url');
+            $table->dropColumn('is_available');
         });
     }
 }
