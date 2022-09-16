@@ -19,18 +19,8 @@
           label="Nama Produk"
           :rules="[val => val && val != '' || 'Nama produk harus diisi']"
         />
-        <div class="row items-start q-gutter-x-sm">
-          <div class="col">
-            <money-formatter v-model="form.price" prefix="Rp"/>
-          </div>
-          <div class="col">
-            <money-formatter v-model="form.stock" label="Stok"/>
-          </div>
-          <div class="col">
-            <money-formatter v-model="form.weight" label="Berat" suffix="GRAM"/>
-          </div>
-        </div>
-
+          <money-formatter v-model="form.price" prefix="Rp"/>
+          <q-checkbox v-model="form.is_available" label="Produk Tersedia?"></q-checkbox>
           <q-select
           filled 
             v-model="form.category_id"
@@ -229,7 +219,8 @@ export default {
         del_images: [],
         has_subvarian: false,
         remove_varian:[],
-        remove_subvarian:[]
+        remove_subvarian:[],
+        is_available: false
 
       },
       imagePreview: [],
@@ -366,9 +357,8 @@ export default {
       formData.append('id', this.form.id)
       formData.append('title', this.form.title)
       formData.append('price', this.form.price)
-      formData.append('weight', this.form.weight)
+      formData.append('is_available', this.form.is_available)
       formData.append('has_subvarian', this.form.has_subvarian)
-      formData.append('stock', this.form.stock)
       formData.append('description', this.form.description)
 
       if(this.form.category_id) {
@@ -444,12 +434,11 @@ export default {
       this.form.id = this.product.id
       this.form.title = this.product.title
       this.form.price = this.product.price
-      this.form.weight = this.product.weight
-      this.form.stock = this.product.stock
       this.form.category_id = this.product.category_id
       this.form.description = this.product.description
-      this.form.varians = this.product.varians
-      this.form.has_subvarian = this.product.varians.length ? this.product.varians[0].has_subvarian : false
+      this.form.is_available = this.product.is_available
+      // this.form.varians = this.product.varians
+      // this.form.has_subvarian = this.product.varians.length ? this.product.varians[0].has_subvarian : false
       
       this.oldImages = this.product.assets
 

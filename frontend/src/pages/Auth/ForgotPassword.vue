@@ -14,7 +14,7 @@
         <img v-else src="/icon/icon-192x192.png" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
       </div>
     <div class="text-red q-pb-sm text-center" v-if="errors.email">{{ errors.email[0] }}</div>
-      <q-card flat class="q-pt-sm">
+     <q-card flat class="q-pt-sm q-mt-lg" >
         <q-card-section>
           <div class="text-grey-7 q-pa-sm" v-if="!isHasRequest">
            Lupa kata sandi? Silahkan masukan email yang terdaftar di situs ini, sistem akan mengirimkan kode token ke alamat email anda. 
