@@ -17,5 +17,5 @@ del('public/fonts')
 del('public/img')
  mix
  .copy('frontend/dist/pwa/index.php', 'resources/views/app.blade.php')
- .copyDirectory('frontend/dist/pwa', 'public')
+ .copyDirectory('frontend/dist/spa', 'public')
  .copy('frontend/src/index.template.php', 'public/index.php');
