@@ -82,6 +82,10 @@ export default {
   },
   SET_MENU_CATEGORY: (state, status) => {
     state.isMenuCategory = status
+  },
+  SET_CS: (state, payload) => {
+    console.log('payload ', payload);
+    state.customer_services = payload
   }
 
 }

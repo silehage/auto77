@@ -92,6 +92,7 @@ export default {
       shop: state =>  state.shop,
       config: state => state.config,
       user: state => state.user.user,
+      customer_services: state => state.customer_services
     }),
     logoWidth() {
       if(this.shop && this.shop.name) {
@@ -126,6 +127,27 @@ export default {
       if(!this.user) {
         this.$store.dispatch('user/getUser')
       }
+    }
+
+    if(!this.customer_services.length || this.$route.query.load) {
+
+      setTimeout(() => {
+         this.$store.dispatch('getCustomerService').then(response => {
+           if(response.status == 200) {
+            let cs = []
+            cs = response.data.results
+
+            if(!cs.length) {
+              cs = [{
+                name: 'Admin',
+                phone: this.shop.phone
+              }]
+            }
+            this.$store.commit('SET_CS', cs)
+          }
+          })
+        }, 5000)
+      
     }
   },
   created() {

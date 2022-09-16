@@ -57,6 +57,7 @@ export default function (/* { ssrContext } */) {
       deferredPrompt: null,
       isMenuCategory: false,
       session_id: null,
+      customer_services: [],
       forgot_password: {
         token: '',
         email: '',

@@ -15,6 +15,7 @@
     </div>
     <q-dialog v-model="shareModal" position="bottom">
       <q-card class="card-medium">
+         <q-linear-progress :value="1" color="pink" />
         <q-card-section>
           <div class="flex justify-between items-center q-mb-lg">
             <div class="text-lg">Bagikan</div>
@@ -95,7 +96,7 @@ export default {
       }
 
       window.open(url, '_blank')
-
+      this.shareModal = false
     }
   }
 }

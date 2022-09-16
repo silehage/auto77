@@ -91,7 +91,6 @@
           </div>
         </div>
       </div>
-     
       <q-card class="box-shadow q-mt-md">
         <q-card-section class="" style="min-height:150px;">
           <div class="text-md q-mb-md">Deskripsi Produk</div>
@@ -110,7 +109,7 @@
       <q-card style="max-width:450px;width:100%;">
         <div class="text-weight-bold q-py-sm q-px-md text-md">Hubungi Cs Kami</div>
         <q-card-section class="q-px-md q-pb-lg column q-gutter-y-md">
-          <q-btn v-for="(cs, index) in customer_service" :key="index" color="green" class="full-width" icon="eva-message-circle-outline" :label="cs.name"  @click="CheckoutByCs(cs)">
+          <q-btn v-for="(cs, index) in customer_services" :key="index" color="green" class="full-width" icon="eva-message-circle-outline" :label="cs.name"  @click="CheckoutByCs(cs)">
           </q-btn>
         </q-card-section>
       </q-card>
@@ -158,10 +157,12 @@ export default {
       formVariantModal: false,
       product: null,
       productReviews: [],
-      customer_service: []
     }
   },
   computed: {
+    customer_services() {
+      return this.$store.state.customer_services
+    },
     session_id() {
       return this.$store.state.session_id
     },
@@ -546,16 +547,18 @@ export default {
       })
     },
     getCustomerService() {
-      Api().get('getCustomerService').then(response => {
+      this.$store.dispatch('getCustomerService').then(response => {
         if(response.status == 200) {
-          this.customer_service = response.data.results
-          if(!this.customer_service.length) {
-            let cs = {
+          let cs = []
+          cs = response.data.results
+
+          if(!cs.length) {
+            cs = [{
               name: 'Admin',
               phone: this.shop.phone
-            }
-            this.customer_service.push(cs)
+            }]
           }
+          this.$store.commit('SET_CS', cs)
         }
       })
     },
@@ -602,7 +605,9 @@ export default {
     if(!this.session_id) {
       this.makeSessionId()
     }
-    this.getCustomerService()
+    if(!this.customer_services.length) {
+      this.getCustomerService()
+    }
   },
   created() {
     if(!this.product || this.product.slug != this.$route.params.slug) {

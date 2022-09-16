@@ -791,50 +791,24 @@ table.table td, table.table td * {
   width:100%;
 }
 
+.card-discount,
 .card-price {
-  // order: 2;
   white-space: nowrap;
   .prefix{
     font-size: .8rem;
     @media (max-width: 340px) {
-      // order: 1;
       font-size: .7rem;
     }
   }
   .amount {
-    font-size: .87rem;
+    font-size: .9rem;
     font-weight: 500;
     @media (min-width: 360px) {
-      // order: 1;
       font-size: .9rem;
     }
     @media (min-width: 576px) {
       font-size: 1rem;
     }
-  }
-}
-
-.card-discount {
-  margin-left:2px;
-  display: inline;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  .amount {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: .8rem;
-
-    @media (min-width: 360px) {
-      font-size: .84rem;
-    }
-    @media (min-width: 576px) {
-      font-size: .9rem;
-    }
-  }
-  .prefix {
-    font-size: .7rem;
   }
 }
 

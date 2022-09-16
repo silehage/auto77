@@ -35,6 +35,9 @@ export default {
       }
     })
   },
+  getCustomerService: ({}) => {
+    return Api().get('getCustomerService')
+  },
   getInitialData: ({commit}) => {
     commit('SET_LOADING', true)
     Api().get('getInitialData').then(response => {
