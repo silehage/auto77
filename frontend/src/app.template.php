@@ -32,7 +32,7 @@
     <meta property="og:image" content="{{ $jsapp['page']['featured_image'] }}" data-qmeta="ogImage">
     @endif
   </head>
-  <body class="bg-blue-grey-1">
+  <body class="">
   @if(isset($jsapp['page']['featured_image']) && $jsapp['page']['featured_image'])
       <link itemprop="thumbnailUrl" href="{{ $jsapp['page']['featured_image'] }}" >
       <span itemprop="thumbnail" itemscope itemtype="https://schema.org/ImageObject">
