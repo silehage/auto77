@@ -86,11 +86,11 @@ export default {
         url += `?u=${this.shop.app_url}&t=${encodeURI(this.shop.name)}`
       }
       if(type == 'twitter') {
-        text = encodeURI(this.shop.name) + '\n' + this.shop.app_url
+        text = encodeURI(this.shop.name + '\n') + this.shop.app_url
         url = `https://twitter.com/home?status=${text}`
       }
       if(type == 'whatsapp') {
-        text = encodeURI(this.shop.name) + '\n' + this.shop.app_url
+        text = encodeURI(this.shop.name + '\n') + this.shop.app_url
         url = `https://api.whatsapp.com/send?text=${text}`
       }
 
