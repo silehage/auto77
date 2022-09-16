@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddGooglePlayUrlToStoresTable extends Migration
+class AddIsAvailableToProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddGooglePlayUrlToStoresTable extends Migration
      */
     public function up()
     {
-        Schema::table('stores', function (Blueprint $table) {
-            $table->string('google_play_url')->nullable();
+        Schema::table('products', function (Blueprint $table) {
+            $table->boolean('is_available')->default(true);
         });
     }
 
@@ -25,8 +25,8 @@ class AddGooglePlayUrlToStoresTable extends Migration
      */
     public function down()
     {
-        Schema::table('stores', function (Blueprint $table) {
-            $table->dropColumn('google_play_url');
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('is_available');
         });
     }
 }
