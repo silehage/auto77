@@ -35,8 +35,8 @@
           <div class="">
             <q-item-label lines="2" class="text-subtitle2">{{ product.title }}</q-item-label>
             
-            <q-item-label caption>Harga Dasar {{ moneyIDR(product.price) }}</q-item-label>
-            <q-item-label caption v-if="!product.varians.length">Stok {{ product.stock }}</q-item-label>
+            <q-item-label caption>Harga Jual {{ moneyIDR(product.price) }}</q-item-label>
+            <q-item-label caption>Tersedia {{ product.is_available ? 'Tersedia' : 'Habis' }}</q-item-label>
 
             <q-item-label>
               <q-slide-transition>

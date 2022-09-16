@@ -202,8 +202,6 @@ class ProductController extends Controller
             'id' => 'required',
             'title' => 'required',
             'price' => 'required|numeric',
-            'weight' => 'required|numeric',
-            'stock' => 'required|numeric',
             'description' => 'required',
             'images' => $request->del_images && count($product->assets) == count($request->del_images) && !$request->images?'required' : 'nullable'
         ]);

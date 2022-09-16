@@ -21,13 +21,11 @@ class ProductListResource extends JsonResource
             'slug'    => $this->slug,
             'sku'    => $this->sku,
             'description' =>  $this->description,
-            'status'  =>  $this->status,
-            'rating'  =>  $this->reviews_avg_rating ? (float) number_format($this->reviews_avg_rating, 1) : 0,
+            'is_available'  =>  $this->is_available,
             'pricing' =>  $this->setPricing($this),
             'category' => $this->category,
             'assets'  =>  $this->assets,
             'category_id' => $this->category_id,
-            'category_type' => $this->category_type,
           ];
     }
     protected function setPricing($product)

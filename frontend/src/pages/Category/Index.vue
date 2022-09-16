@@ -14,7 +14,7 @@
     <template v-if="categories.available">
     <div class="">
       <q-list separator>
-        <q-item class="bg-grey-2">
+        <q-item :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-2'">
           <q-item-section avatar>
            Ikon
           </q-item-section>

@@ -1,5 +1,5 @@
 <template>
-  <q-list class="relative bg-white border-b">
+  <q-list class="relative" separator>
     <q-item class="q-pa-md" clickable :to="{name: 'FrontPostShow', params:{slug: slug}}">
       <q-item-section avatar top>
           <q-img v-if="image_url" :src="image_url" ratio="1" class="image-list cursor-pointer rounded-borders"/>

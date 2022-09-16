@@ -12,7 +12,7 @@
       <div id="slider" class="header-romance" v-if="sliders.data.length">
         <slider :datas="sliders.data" />
       </div>
-      <div id="featured" class="auto-padding-side block-container q-pt-md" v-if="blocks.featured.length">
+      <div id="featured" class="block-container q-pt-md" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div>
 
@@ -30,13 +30,13 @@
           <product-promo :product_promo="productPromo" />
         </div>
 
-        <div v-if="banner1" class="banner auto-padding-side block-container">
+        <div v-if="banner1" class="banner block-container">
           <img :src="banner1.image_url" @click="goToPost(banner1)">
         </div>
         
         <ProductSectionObserver />
 
-        <div v-if="blocks.partner.length" class="partner auto-padding-side block-container">
+        <div v-if="blocks.partner.length" class="partner block-container">
           <div class="block-heading">
             <div class="block-title"><h2>Partners</h2></div>
           </div>

@@ -1,10 +1,14 @@
 <template>
-  <q-page class="bg-white">
+  <q-page>
     <q-header>
       <q-toolbar>
         <q-toolbar-title>
           Dashboard
         </q-toolbar-title>
+          <q-btn @click="darkMode" dense unelevated
+        :icon="$q.dark.isActive? 'eva-sun-outline' : 'eva-moon-outline'" 
+        >
+        </q-btn>
          <q-btn :to="{ name: 'Home', query: { load: 'true'}}"
           flat icon-right="arrow_forward" label="Lihat Toko" no-caps/>
       </q-toolbar>
@@ -14,7 +18,7 @@
       <q-list separator>
         <q-item clickable v-ripple v-for="item in menus" :key="item.label" :to="{name: item.path}">
           <q-item-section avatar>
-            <q-avatar :color="item.color" text-color="white" :icon="item.icon" size="md"/>
+            <q-avatar :color="item.color" :icon="item.icon" size="md" text-color="white"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ item.label }}</q-item-label>
@@ -26,7 +30,7 @@
         </q-item>
         <q-item clickable v-ripple @click.prevent="logout">
           <q-item-section avatar>
-            <q-avatar color="grey" text-color="white" icon="logout" size="md"/>
+            <q-avatar color="grey" icon="logout" size="md"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>Logout</q-item-label>
@@ -38,11 +42,6 @@
         </q-item>
       </q-list>
     </div>
-    <q-footer class="bg-white q-pa-sm">
-      <div class="text-xs text-grey-6 text-center">
-        &copy; Copyright {{ getYear() }} Allrigts Reserved {{ shop.name }}
-      </div>
-    </q-footer>
   </q-page>
 </template>
 
@@ -71,6 +70,9 @@ export default {
     }
   },
   methods: {
+    darkMode() {
+      this.$q.dark.toggle()
+    },
     getYear() {
       let date = new Date()
       return date.getFullYear()

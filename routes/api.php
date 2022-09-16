@@ -81,6 +81,8 @@ Route::middleware(['throttle:auth'])->group(function() {
     
     Route::post('user/login', [UserController::class, 'login']);
     Route::post('user/register', [UserController::class, 'register']);
+    Route::post('user/addNewUser', [UserController::class, 'addNewUser']);
+    Route::post('user/update', [UserController::class, 'update']);
     Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
     Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
     Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
@@ -114,3 +116,5 @@ Route::get('config',[ConfigController::class, 'show']);
 Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
 
 Route::get('getInitialData', [FrontApiController::class, 'home']);
+
+Route::get('getCustomerService', [UserController::class, 'getCustomerService']);

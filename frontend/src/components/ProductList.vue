@@ -18,23 +18,10 @@
             <q-item-label caption class="ellipsis-2-lines q-mt-xs" v-html="getTeaser(product.description)" ></q-item-label>
         </div>
         <div style="margin-top:auto;" class="q-pt-xs">
-        <div class="flex items-center q-gutter-x-md">
-          <div class="text-subtitle1 text-secondary text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
           <div v-if="product.pricing.is_discount" class="text-subtitle2 text-weight-medium text-strike text-grey-8">{{ moneyIDR(product.pricing.default_price) }}</div>
-        </div>
-          <div class="flex justify-between items-center">
-             <q-rating 
-              readonly
-              v-model="rating"
-              color="accent"
-              icon="eva-star-outline"
-              icon-selected="eva-star"
-              icon-half="eva-star"
-              size="1rem"
-            />
-            <div>
-              <favorite-button :product_id="product.id" />
-            </div>
+          <div class="flex items-center justify-between">
+            <div class="text-subtitle text-weight-bold">{{ moneyIDR(product.pricing.current_price) }}</div>
+            <favorite-button :product_id="product.id" />
           </div>
         </div>
       </q-item-section>

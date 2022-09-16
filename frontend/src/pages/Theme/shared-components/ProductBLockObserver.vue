@@ -2,7 +2,7 @@
   <div :id="'block-' + category.id" style="min-height:200px;">
     <template v-if="success">
       <div class="block-container bg-linear">
-        <div class="auto-padding" v-if="ready">
+        <div class="q-mb-md" v-if="ready">
           <div class="row items-end justify-between">
             <div class="block-title"><h2>{{ category.title }}</h2></div>
             <q-btn flat no-caps padding="4px" :to="{name: 'ProductCategory', params:{ id: category.id }}">

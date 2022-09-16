@@ -18,18 +18,15 @@ class Product extends Model
         'title',
         'slug',
         'description',
-        'stock',
         'price',
-        'sold',
-        'status',
         'category_id',
-        'weight',
-        'sku'
+        'sku',
+        'is_available'
     ];
     // public $appends = ['rating'];
 
     protected $casts = [
-        'status' > 'boolean',
+        'is_available' > 'boolean',
         'category_id' => 'integer'
     ];
 
@@ -40,50 +37,6 @@ class Product extends Model
     public function assets()
     {
         return $this->morphMany(Asset::class, 'assetable');
-    }
-    public function reviews()
-    {
-        return $this->hasMany(Review::class)->latest();
-    }
-    public function reviewsLimit()
-    {
-        return $this->hasMany(Review::class)->take(4);
-    }
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
-    public function getRatingAttribute()
-    {
-        return $this->productRating();
-    }
-    public function productRating()
-    {
-        return $this->hasMany(Review::class)->avg('rating');
-    }
-    public function getRealStockAttribute()
-    {
-
-        if($this->variantItems()) {
-            return $this->variantItems()->sum('item_stock');
-            
-        } else {
-
-            return $this->stock;
-        }
-
-    }
-    public function variantItems()
-    {
-        return $this->hasMany(ProductVariantValue::class);
-    }
-    public function discount()
-    {
-        return $this->belongsTo(Discount::class, 'discount_id', 'id');
-    }
-    public function promote()
-    {
-        return $this->belongsTo(Promote::class, 'promote_id', 'id')->where('start_date', '<', now())->where('end_date', '>', now());
     }
     public function promo()
     {

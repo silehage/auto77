@@ -44,6 +44,14 @@ export function register ({commit, dispatch}, payload) {
   })
 
 }
+export function update ({commit}, payload) {
+  return Api().post('user/update', payload)
+}
+export function addNewUser ({}, payload) {
+
+  return Api().post('user/addNewUser', payload)
+
+}
 export function logout({ commit }) {
   commit('LOGOUT')
   Cookies.remove('__token')

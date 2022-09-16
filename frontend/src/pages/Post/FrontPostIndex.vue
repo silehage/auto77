@@ -1,11 +1,12 @@
 <template>
   <q-page class="q-pt-md q-pb-xl" :class="{'flex flex-center' : !posts.available}">
-    <q-header class="text-primary bg-white">
-       <q-toolbar>
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+       <q-toolbar class="header__padding">
          <q-btn :to="{name: 'Home'}"
             flat round dense
             icon="eva-arrow-back" />
-          <q-toolbar-title class="text-weight-bold brand">Posts</q-toolbar-title>
+          <q-toolbar-title class="text-weight-bold brand">Artikel</q-toolbar-title>
+          <MenuRight  />
        </q-toolbar>
     </q-header>
     <template v-if="posts.ready">
@@ -25,9 +26,10 @@
 <script>
 import PostList from 'components/PostList.vue'
 import PostListSkeleton from 'components/PostListSkeleton.vue'
+import MenuRight from 'components/MenuRight.vue'
 import { mapState } from 'vuex'
 export default {
-  components: { PostList, PostListSkeleton },
+  components: { PostList, PostListSkeleton, MenuRight },
   computed: {
     ...mapState({
       posts: state => state.post.listing_posts

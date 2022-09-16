@@ -13,7 +13,7 @@
       <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
         <q-btn fab icon="add" color="primary" @click="handleAdd" glossy/>
       </q-page-sticky>
-      <div class="bg-white text-dark box-shadow">
+      <div class="text-dark box-shadow" :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
         <q-list>
           <q-item>
               <q-item-section side>#</q-item-section>
@@ -25,6 +25,7 @@
       </div>
     </q-header>
     <div>
+      <q-separator></q-separator>
     </div>
      <div class="q-py-sm">
         <q-list separator>

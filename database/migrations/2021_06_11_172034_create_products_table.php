@@ -18,12 +18,9 @@ class CreateProductsTable extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description');
-            $table->integer('stock');
+            $table->boolean('is_available')->default(true);
             $table->bigInteger('price');
-            $table->integer('sold')->nullable();
-            $table->boolean('status')->default(true);
             $table->foreignId('category_id')->nullable();
-            $table->integer('weight')->default(1000);
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
         });

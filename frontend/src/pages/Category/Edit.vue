@@ -46,7 +46,7 @@
     </q-list>           
       </div>
     </div>
-     <q-footer class="bg-white q-pa-md">
+     <q-footer class="bg-transparent q-pa-md">
        <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data" color="primary">
         </q-btn>
     </q-footer>

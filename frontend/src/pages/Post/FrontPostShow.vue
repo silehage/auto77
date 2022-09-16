@@ -1,11 +1,12 @@
 <template>
-  <q-page class="bg-white" :class="{'flex flex-center' : !ready}">
-    <q-header class="text-primary bg-white box-shadow">
-       <q-toolbar>
-         <q-btn v-go-back.single
+  <q-page :class="{'flex flex-center' : !ready}">
+    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+       <q-toolbar class="header__padding">
+         <q-btn :to="{ name: 'FrontPostIndex' }"
             flat round dense
             icon="eva-arrow-back" />
-          <q-toolbar-title class="text-weight-bold brand">Post</q-toolbar-title>
+          <q-toolbar-title class="text-weight-bold brand">Artikel</q-toolbar-title>
+          <MenuRight  />
        </q-toolbar>
     </q-header>
     <template v-if="ready">
@@ -30,7 +31,9 @@
 
 <script>
 import { mapActions } from 'vuex'
+import MenuRight from 'components/MenuRight.vue'
 export default {
+  components: { MenuRight },
   data() {
     return {
       ready: false,

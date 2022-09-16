@@ -36,6 +36,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'role' => $request->role?? 'customer'
         ]);
 
         $token = $user->createToken($request->device_name)->plainTextToken;
@@ -46,6 +47,35 @@ class UserController extends Controller
             'results' => $user
         ], 201);
     }
+    public function addNewUser(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:60'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:80', 'unique:users'],
+            'password' => ['required', 'confirmed'],
+        ],[
+            'name.required' => 'Nama wajib diisi.',
+            'phone.required' => 'Nomor ponsel wajib diisi.',
+            'phone.unique' => 'Nomor ponsel sudah terdaftar.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.confirmed' => 'Password konfirmasi tidak sama.',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'role' => $request->role?? 'customer'
+        ]);
+
+        return response([
+            'success' => true,
+            'results' => $user
+        ], 201);
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -76,7 +106,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $user = $request->user();
+        $user = User::find($request->user_id);
 
         $request->validate([
             'name' => 'required',
@@ -96,6 +126,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
+        $user->role = $request->role;
 
         if($request->password) {
             $user->password = Hash::make($request->password);
@@ -146,6 +177,14 @@ class UserController extends Controller
 
         return response([ 'success' => true ]);
 
+    }
+
+    public function getCustomerService () 
+    {
+        return response()->json([
+            'success' => true,
+            'results' => User::where('role', 'cs')->get()
+        ]);
     }
     
 }

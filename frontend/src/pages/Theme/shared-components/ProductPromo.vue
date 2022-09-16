@@ -3,7 +3,7 @@
     <template v-for="promo in product_promo">
       <div :key="promo.id" v-if="promo" class="block-container bg-linear">
         <div class="block-content">
-          <div class="auto-padding-side">
+          <div class="">
             <glide-product-promo :promo="promo" />
           </div>
         </div>

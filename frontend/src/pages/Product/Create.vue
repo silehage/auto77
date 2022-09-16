@@ -22,17 +22,10 @@
             ></q-input>
             <div class="text-xs text-red" v-if="errors.title"> {{ errors.title[0]}}</div>
 
-            <div class="row items-center q-gutter-x-sm">
-              <div class="col">
-                <money-formatter v-model="form.price" prefix="Rp"/>
-              </div>
-              <div class="col">
-                <money-formatter v-model="form.stock" label="Stok"/>
-              </div>
-              <div class="col">
-                <money-formatter v-model="form.weight" label="Berat" suffix="GRAM"/>
-              </div>
-            </div>
+
+            <money-formatter v-model="form.price" prefix="Rp"/>
+            <q-checkbox v-model="form.is_available" label="Produk Tersedia?"></q-checkbox>
+
               <q-select
               filled 
                 v-model="form.category_id"
@@ -81,10 +74,10 @@
         </div>
            <!-- Start Product Variants -->
         <div id="variants">
-          <div class="row items-center justify-between q-mt-xl q-pa-md bg-green-1">
+          <!-- <div class="row items-center justify-between q-mt-xl q-pa-md bg-green-1">
             <div class="text-md2 text-weight-medium">Produk Variasi</div>
             <q-btn v-if="canAddVarian" label="Tambah Variasi" @click="varianModal = true" color="accent" size="12px"></q-btn>
-          </div>
+          </div> -->
           <div v-if="form.varians.length">
             <div v-if="form.varians[0].has_subvarian">
 
@@ -108,9 +101,6 @@
                     </q-item-section>
                     <q-item-section>
                       <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].price" dense label="Tambahan Harga" mask="###########"></q-input>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-input stack-label filled square required v-model="form.varians[varIndex].subvarian[subIndex].stock" dense label="Stok"  mask="#######"></q-input>
                     </q-item-section>
 
                   </q-item>
@@ -139,9 +129,6 @@
                     <q-item-section>
                       <q-input stack-label filled square required v-model="form.varians[vIndex].price" dense label="Tambahan Harga"  mask="###########"></q-input>
                     </q-item-section>
-                    <q-item-section>
-                      <q-input stack-label filled square required v-model="form.varians[vIndex].stock" dense label="Stok"  mask="######"></q-input>
-                    </q-item-section>
 
                   </q-item>
                 </q-list>
@@ -151,7 +138,7 @@
         </div>
       <!-- End Product Variants -->
         <!-- <textarea v-model="text" style="white-space:pre-wrap"/> -->
-        <q-footer class="bg-white q-pa-md">
+        <q-footer class="q-pa-sm bg-transparent">
           <q-btn color="primary" type="submit" :loading="loading" class="full-width" label="Simpan Data">
               <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
             </q-btn>
@@ -205,7 +192,6 @@ export default {
       tempSubvarian: {
         label: '',
         value: '',
-        stock: '',
         price: '',
         items: '',
         sku: ''
@@ -216,8 +202,7 @@ export default {
       form: {
         title: '',
         price: '',
-        weight: '',
-        stock: '',
+        is_available: true,
         description: '',
         category_id:'',
         varians: [],
@@ -300,12 +285,12 @@ export default {
     pushSubVarian(varIndex) {
       let varian = this.form.varians[varIndex]
 
-      let tpl = { label: varian.subvarian[0].label, value: '', stock: 0, price: 0 }
+      let tpl = { label: varian.subvarian[0].label, value: '', price: 0 }
 
       this.form.varians[varIndex].subvarian.push(tpl)
     },
     pushVarian() {
-      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', stock: 0, price: 0 })
+      this.form.varians.push({ has_subvarian: false,  label: this.form.varians[0].label, value: '', price: 0 })
 
     },
     handleAddVarian() {
@@ -324,7 +309,7 @@ export default {
           let subArr = this.tempSubvarian.value.split(',')
   
             subArr.forEach(el => {
-              let sub = { label: this.tempSubvarian.label, value: el, stock: 0, price: 0  }
+              let sub = { label: this.tempSubvarian.label, value: el, price: 0  }
               varian.subvarian.push(sub)
             })
   
@@ -336,7 +321,7 @@ export default {
          varianArr.forEach(v => {
          
          let varian = null
-           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, stock: 0, price: 0  }
+           varian = { has_subvarian: false,  label: this.tempVarian.label, value: v, price: 0  }
  
           this.form.varians.push(varian)
   
@@ -353,9 +338,8 @@ export default {
 
       formData.append('title', this.form.title)
       formData.append('price', this.form.price)
-      formData.append('weight', this.form.weight)
+      formData.append('is_available', this.form.is_available)
       formData.append('has_subvarian', this.form.has_subvarian)
-      formData.append('stock', this.form.stock)
       formData.append('description', this.form.description)
       
       if(this.form.category_id) {

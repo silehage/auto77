@@ -84,10 +84,10 @@
       </div>
     <!-- Start Product Variants -->
        <div id="variants">
-          <div class="row items-center justify-between q-mt-xl q-pa-md">
+          <!-- <div class="row items-center justify-between q-mt-xl q-pa-md">
             <div class="text-md2 text-weight-medium">Produk Variasi</div>
             <q-btn v-if="canAddVarian" label="Tambah Variasi" @click="varianModal = true" color="accent" size="12px"></q-btn>
-          </div>
+          </div> -->
           <div v-if="form.varians.length">
             <div v-if="form.varians[0].has_subvarian">
 
@@ -152,7 +152,7 @@
           </div>
         </div>
       <!-- End Product Variants -->
-    <q-footer class="bg-white q-pa-md">
+    <q-footer class="bg-transparent q-pa-md">
        <q-btn color="primary" type="submit" :loading="loading" class="full-width" label="Simpan Data">
            <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
         </q-btn>

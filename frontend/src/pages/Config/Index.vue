@@ -13,7 +13,6 @@
       <div class="q-gutter-y-lg q-pt-md" v-if="config">
         <tampilan />
         <theming />
-        <system-update />
       </div>
       <q-inner-loading :showing="loading">
       </q-inner-loading>
@@ -21,18 +20,10 @@
 </template>
 
 <script>
-import Shipping from './Shipping.vue'
 import Tampilan from './Tampilan.vue'
-import Theming from './Theming.vue'
-import CheckoutConfig from './CheckoutConfig.vue'
-import Notification from './Notification.vue'
-import Tripay from './Tripay.vue'
-import SystemUpdate from './SystemUpdate.vue'
-import LocalShipping from './LocalShipping.vue'
-import ServiceFee from './ServiceFee.vue'
  export default {
   name: 'AdminConfig',
-  components: { Tampilan, Theming, SystemUpdate},
+  components: { Tampilan},
   computed: {
     loading() {
       return this.$store.state.loading

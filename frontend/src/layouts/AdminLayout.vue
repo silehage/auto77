@@ -18,7 +18,7 @@ export default {
     })
   },
   created() {
-    this.$q.dark.set(false)
+    // this.$q.dark.set(false)
     this.$store.dispatch('getAdminConfig')
     if(!this.shop) {
       

@@ -27,8 +27,6 @@ class ProductRepository
             return new ProductResource(Product::with(['assets', 'category:id,title,slug', 'varians.subvarian', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
             }])
-                ->withCount('reviews')
-                ->withAvg('reviews', 'rating')
                 ->where('slug', $slug) 
                 ->orWhere('id', $slug)
                 ->first());
@@ -44,7 +42,6 @@ class ProductRepository
                 $query->whereHas('promoActive');
             }])
             ->inRandomOrder()
-            ->withAvg('reviews', 'rating')
             ->simplePaginate($this->limit);
         
     }
@@ -55,7 +52,6 @@ class ProductRepository
             $query->whereHas('promoActive');
         }])
             ->whereIn('id', $pids)
-            ->withAvg('reviews', 'rating')
             ->get();
 
     }
@@ -67,7 +63,6 @@ class ProductRepository
             $query->whereHas('promoActive');
         }])
             ->where('title', 'like', '%'.$key.'%')
-            ->withAvg('reviews', 'rating')
             ->get();
 
     }
@@ -81,7 +76,6 @@ class ProductRepository
             $query->whereHas('promoActive');
         }])
         ->where('category_id', $id)
-        ->withAvg('reviews', 'rating')
         ->inRandomOrder()
         ->simplePaginate($this->limit);
 
@@ -94,7 +88,6 @@ class ProductRepository
             $query->with('productPromo', function($q) {
                 $q->whereHas('promoActive');
             });
-            $query->withAvg('reviews', 'rating');
         }])->get()->map(function($item) {
 
             $promo = new stdClass();
@@ -109,7 +102,7 @@ class ProductRepository
                     'id'      => $product->id,
                     'title'   => $product->title,
                     'slug'    => $product->slug,
-                    'status'  =>  $product->status,
+                    'is_available'  =>  $product->is_available,
                     'rating'  =>  $product->reviews_avg_rating ? (float) number_format($product->reviews_avg_rating, 1) : 0,
                     'pricing' =>  $this->setPricing($product),
                     'assets'  =>  $product->assets,
@@ -132,7 +125,6 @@ class ProductRepository
                     $q->whereHas('promoActive');
                 });
                 $query->with('varians.subvarian');
-                $query->withAvg('reviews', 'rating');
                 $query->inRandomOrder();
             }])
             ->where('is_front', 1)
@@ -163,7 +155,7 @@ class ProductRepository
                         'title'   => $product->title,
                         'sku'   => $product->sku,
                         'slug'    => $product->slug,
-                        'status'  =>  $product->status,
+                        'is_available'  =>  $product->is_available,
                         'rating'  =>  $product->reviews_avg_rating ? (float) number_format($product->reviews_avg_rating, 1) : 0,
                         'pricing' =>  $this->setPricing($product),
                         'category' => $newCat,
@@ -197,13 +189,10 @@ class ProductRepository
             $product->title = $request->title;
             $product->slug = $slug;
             $product->price = str_replace(".", "", $request->price);
-            $product->stock = str_replace(".", "", $request->stock);
-            $product->weight = str_replace(".", "", $request->weight);
-            $product->sku = 'PF-'. $request->sku;
             
             $product->category_id =  $request->category_id;
-
             $product->description = $request->description;
+            $product->is_available =  $request->boolean('is_available');
 
             $product->save();
 
@@ -280,10 +269,9 @@ class ProductRepository
 
         $product->title = $request->title;
         $product->price = str_replace(".", "", $request->price);
-        $product->stock = str_replace(".", "", $request->stock);
-        $product->weight = str_replace(".", "", $request->weight);
         $product->description = $request->description;
         $product->category_id = $request->category_id;
+        $product->is_available =  $request->boolean('is_available');
 
         try {
 

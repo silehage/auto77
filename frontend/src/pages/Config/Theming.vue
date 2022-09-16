@@ -1,22 +1,14 @@
 <template>
   <q-card flat>
      <q-card-section>
-      <div class="text-md text-weight-bold">Penaturan Tema</div>
+      <div class="text-md text-weight-bold">Pengaturan Tema</div>
       <div class="text-caption text-caption">Pengaturan tema dan warna dasar situs</div>
     </q-card-section>
     <q-form @submit.prevent="updateData">
       <q-list>
         <q-item>
           <q-item-section>
-            <q-item-label>Tema</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-              <q-select outlined dense v-model="form.theme" :options="themes"></q-select>
-          </q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Warna</q-item-label>
+            <q-item-label>Base Color</q-item-label>
           </q-item-section>
           <q-item-section side>
               <input ref="color" type="color" v-model="form.theme_color" style="width:110px;height:20px;"/>

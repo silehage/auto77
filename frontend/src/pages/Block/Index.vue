@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pb-xl" :class="{'flex flex-center' : !blocks.available}">
+  <q-page class="q-pb-xl" :class="{'flex flex-center' : !blocks.available}">
      <q-header>
       <q-toolbar>
         <q-btn :to="{name: 'Settings'}"
@@ -48,76 +48,78 @@
       <q-btn fab icon="add" color="primary" @click="handleAddBlock" glossy/>
     </q-page-sticky>
     <q-dialog v-model="blockModal">
-      <q-card style="width:100%;max-width:450px;" class="bg-white">
-        <q-form @submit.prevent="submitBlock" class="full-width">
-          <q-card-section>
-            <q-input 
-            dense
-            label="Label" 
-            v-model="form.label" 
-            :rules="[
-            val => val && val != '' || 'Tidak boleh kosong'
-            ]"
-            />
-            <q-select
-            dense
-            v-model="form.position"
-            :options="positionOptions"
-            label="Pilih Tipe"
+      <q-card style="width:100%;max-width:450px;">
+        <q-card-section>
+          <q-form @submit.prevent="submitBlock" class="full-width">
+            <q-card-section>
+              <q-input 
+              dense
+              label="Label" 
+              v-model="form.label" 
               :rules="[
-            val => val && val != ''|| 'Tidak boleh kosong'
-            ]"
-          />
-           <q-input 
-            v-if="form.position == 'Featured'"
-            dense
-            label="Deskripsi" 
-            v-model="form.description" 
-            autogrow
-            class="q-mb-sm"
+              val => val && val != '' || 'Tidak boleh kosong'
+              ]"
+              />
+              <q-select
+              dense
+              v-model="form.position"
+              :options="positionOptions"
+              label="Pilih Tipe"
+                :rules="[
+              val => val && val != ''|| 'Tidak boleh kosong'
+              ]"
             />
             <q-input 
-            dense
-            label="Urutan" 
-            v-model="form.weight" 
-            mask="####"
-            :hint="form.position == 'Banner' ? 'Posisi banner: 1 , 2 atau 3' : ''"
-            :rules="[
-            val => val && val > 0 || 'Tidak boleh kosong'
-            ]"
-            />
-            <div class="q-mt-md">
-             <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
-            </div>
-            <template v-if="linkToPost">
-              <div class="text-grey-7 q-my-sm">Pilih Post</div>
-              <div class="">
-                <q-list separator bordered style="max-height:150px;overflow-y:auto">
-                    <q-item v-for="post in posts.data" :key="post.id" clickable @click="selectPostData(post)">
-                      <q-item-section avatar>
-                      <q-icon :color="form.post_id == post.id ? 'green-7' : 'grey-7'" text-color="white" 
-                      :name="form.post_id == post.id  ? 'task_alt' : 'remove_circle_outline'" />
-                      </q-item-section>
-                      <q-item-section>{{ post.title }}</q-item-section>
-                    </q-item>
-                  </q-list>
+              v-if="form.position == 'Featured'"
+              dense
+              label="Deskripsi" 
+              v-model="form.description" 
+              autogrow
+              class="q-mb-sm"
+              />
+              <q-input 
+              dense
+              label="Urutan" 
+              v-model="form.weight" 
+              mask="####"
+              :hint="form.position == 'Banner' ? 'Posisi banner: 1 , 2 atau 3' : ''"
+              :rules="[
+              val => val && val > 0 || 'Tidak boleh kosong'
+              ]"
+              />
+              <div class="q-mt-md">
+              <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
               </div>
-            </template>
-          </q-card-section>
-          <q-card-section>
-            <q-btn @click.prevent="handleUploadImage" color="primary" size="sm" label="Upload Gambar"></q-btn>
-            <input type="file" class="hidden" ref="image" @change="handleImagePreview">
-          </q-card-section>
-          <q-card-section v-if="imagePreview">
-            <div class="row items-center justify-between q-gutter-x-sm">
-                <img :src="imagePreview" style="max-height:80px;width:auto;object-fit:contain"/>
-            </div>
-          </q-card-section>
-          <q-card-actions class="justify-end q-pa-md sticky-bottom bg-grey-2">
-            <q-btn @click.prevent="closeModal" type="button" color="secondary" label="Batal"></q-btn>
-            <q-btn :loading="loading" type="submit" color="primary" label="Simpan Data"></q-btn>
-          </q-card-actions>
-        </q-form>
+              <template v-if="linkToPost">
+                <div class="text-grey-7 q-my-sm">Pilih Post</div>
+                <div class="">
+                  <q-list separator bordered style="max-height:150px;overflow-y:auto">
+                      <q-item v-for="post in posts.data" :key="post.id" clickable @click="selectPostData(post)">
+                        <q-item-section avatar>
+                        <q-icon :color="form.post_id == post.id ? 'green-7' : 'grey-7'" text-color="white" 
+                        :name="form.post_id == post.id  ? 'task_alt' : 'remove_circle_outline'" />
+                        </q-item-section>
+                        <q-item-section>{{ post.title }}</q-item-section>
+                      </q-item>
+                    </q-list>
+                </div>
+              </template>
+            </q-card-section>
+            <q-card-section>
+              <q-btn @click.prevent="handleUploadImage" color="primary" size="sm" label="Upload Gambar"></q-btn>
+              <input type="file" class="hidden" ref="image" @change="handleImagePreview">
+            </q-card-section>
+            <q-card-section v-if="imagePreview">
+              <div class="row items-center justify-between q-gutter-x-sm">
+                  <img :src="imagePreview" style="max-height:80px;width:auto;object-fit:contain"/>
+              </div>
+            </q-card-section>
+            <q-card-actions class="justify-end q-pa-md sticky-bottom">
+              <q-btn @click.prevent="closeModal" type="button" color="secondary" label="Batal"></q-btn>
+              <q-btn :loading="loading" type="submit" color="primary" label="Simpan Data"></q-btn>
+            </q-card-actions>
+          </q-form>
+        </q-card-section>
       </q-card>
     </q-dialog>
   </q-page>

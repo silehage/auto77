@@ -54,7 +54,7 @@
         </template>
         <q-btn @click="btnChangePassword" class="q-mt-md" dense color="primary" no-caps flat :label="changePassword? 'Batal Ganti Password' : 'Ganti Password'"></q-btn>
       </div>
-      <q-footer class="q-pa-sm bg-white">
+      <q-footer class="q-pa-sm bg-transparent">
         <q-btn :loading="loading" class="full-width" @click="submit" label="Simpan Data" color="primary">
            <q-tooltip class="bg-accent">Simpan Data</q-tooltip>
         </q-btn>
@@ -72,11 +72,13 @@ export default {
       isPwd1: true,
       changePassword: false,
       form: {
+        user_id: '',
         name:'',
         email:'',
         phone: '',
         password: '',
         password_confirmation: '',
+        role: 'admin'
       }
     }
   },
@@ -93,13 +95,16 @@ export default {
           this.form.name = response.data.results.name
           this.form.email = response.data.results.email
           this.form.phone = response.data.results.phone
+          this.form.role = response.data.results.role
           this.$store.commit('user/SET_USER', response.data.results)
         }
       })
     } else {
+      this.form.user_id = this.user.id
       this.form.name = this.user.name
       this.form.email = this.user.email
       this.form.phone = this.user.phone
+      this.form.role = this.user.role
     }
   },
   methods: {

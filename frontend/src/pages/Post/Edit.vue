@@ -14,13 +14,13 @@
     <q-form @submit.prevent="submitPost">
       <q-input v-model="form.title" label="Title" :rules="[ val => val && val.length > 0 || 'Required']"></q-input>
       <q-input v-model="form.tags" label="Kategori"></q-input>
-      <div class="row justify-between items-center text-grey-8 q-py-sm q-my-xs border-b">
+      <div class="row justify-between items-center q-py-sm q-my-xs border-b">
         <div>Tampil di Beranda</div>
         <div>
            <q-toggle v-model="form.is_promote" :label="form.is_promote? 'ya' : 'tidak'" left-label></q-toggle>
         </div>
       </div>
-      <div class="row justify-between items-center text-grey-8 q-py-sm q-my-xs border-b">
+      <div class="row justify-between items-center q-py-sm q-my-xs border-b">
         <div>Tampil di Halaman</div>
         <div>
            <q-toggle v-model="form.is_listing" :label="form.is_listing? 'ya' : 'tidak'" left-label></q-toggle>
@@ -32,7 +32,7 @@
         </div>
         <q-editor v-model="form.body"></q-editor>
       </div>
-      <q-footer class="bg-white q-pa-md">
+      <q-footer class="bg-transparent q-pa-md">
         <q-btn label="Update Data" type="submit" color="primary" class="full-width"></q-btn>
       </q-footer>
     </q-form>

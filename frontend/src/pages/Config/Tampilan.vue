@@ -47,7 +47,14 @@
         </div>
       </q-item-section>
     </q-item>
-
+    <q-item>
+    <q-item-section>
+      <q-item-label>Base Color</q-item-label>
+    </q-item-section>
+    <q-item-section side>
+        <input ref="color" type="color" v-model="form.theme_color" style="width:110px;height:20px;"/>
+    </q-item-section>
+  </q-item>
   </q-list>
   <q-card-section class="flex justify-end">
     <q-btn unelevated size="12px" label="Simpan Pengaturan" color="blue-7" @click="saveTampilan"></q-btn>
@@ -63,9 +70,7 @@ export default {
       form: {
         home_view_mode:'',
         product_view_mode: '',
-        is_notifypro: false,
-        notifypro_interval: 20,
-        notifypro_timeout: 4,
+        theme_color: ''
       }
     }
   },
@@ -77,9 +82,7 @@ export default {
   mounted() {
     this.form.product_view_mode = this.config.product_view_mode
     this.form.home_view_mode = this.config.home_view_mode
-    this.form.is_notifypro = this.config.is_notifypro
-    this.form.notifypro_interval = this.config.notifypro_interval
-    this.form.notifypro_timeout = this.config.notifypro_timeout
+    this.form.theme_color = this.config.theme_color
   },
   methods: {
     changeHomeViewMode(str) {
@@ -89,7 +92,6 @@ export default {
       this.form.product_view_mode = str
     },
     saveTampilan() {
-      let data = {...this.config, ...this.form}
       Api().post('config', this.form).then(response => {
         if(response.status == 200) {
           this.$store.dispatch('getAdminConfig')
