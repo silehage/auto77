@@ -12,7 +12,6 @@
       </q-header>
       <div class="q-gutter-y-lg q-pt-md" v-if="config">
         <tampilan />
-        <theming />
       </div>
       <q-inner-loading :showing="loading">
       </q-inner-loading>

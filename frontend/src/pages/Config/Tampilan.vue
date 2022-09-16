@@ -79,6 +79,11 @@ export default {
       return this.$store.state.config
     }
   },
+  watch: {
+    'form.theme_color': function(val) {
+      this.setColor(val)
+    }
+  },
   mounted() {
     this.form.product_view_mode = this.config.product_view_mode
     this.form.home_view_mode = this.config.home_view_mode
@@ -90,6 +95,9 @@ export default {
     },
     changeProductViewMode(str) {
       this.form.product_view_mode = str
+    },
+    setColor(clr) {
+      this.$store.commit('SET_THEME_COLOR', clr)
     },
     saveTampilan() {
       Api().post('config', this.form).then(response => {

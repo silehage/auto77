@@ -16,6 +16,7 @@
         <q-input label="Nama Toko" v-model="form.name"></q-input>
         <q-input label="Nomor Whatsapp" v-model="form.phone" placeholder="0812*******"></q-input>
         <q-input label="Slogan" v-model="form.slogan"></q-input>
+        <q-input label="Google Play Url" v-model="form.google_play_url"></q-input>
         <div class="q-my-xs text-red text-sm" v-if="errors.phone">Nomor Whatsapp harus berupa angka</div>
         <q-input autogrow label="Deskripsi Toko" v-model="form.description"></q-input>
         <div class="q-my-md">
@@ -75,6 +76,7 @@ export default {
         slogan: '',
         logo: '',
         is_remove_logo: false,
+        google_play_url: ''
       },
       imagePreview: ''
     }
@@ -103,18 +105,16 @@ export default {
       }
       
       Api().post('shop',formData,{headers: {'Content-Type': 'multipart/form-data' }}).then(response => {
-        self.isLoading = false
         if(response.status == 200) {
-          self.$store.commit('SET_SHOP', response.data.results)
-          // localStorage.setItem('_washop', JSON.stringify(response.data.results))
+          this.$store.commit('SET_SHOP', response.data.results)
           this.$q.notify({
             type: 'positive',
             message: 'Berhasil menyimpan data'
           })
-          self.$router.push({ name: 'Settings'})
+          this.$router.push({ name: 'Settings'})
         }
       }).catch(err => {
-        self.isLoading = false
+        this.isLoading = false
          this.$q.notify({
            type: 'negative',
             message: 'Gagal menyimpan data, Coba refresh halaman'
@@ -147,6 +147,7 @@ export default {
       this.form.name = this.toko.name ? this.toko.name : ''
       this.form.phone = this.toko.phone ? this.toko.phone : ''
       this.form.slogan = this.toko.slogan ? this.toko.slogan : ''
+      this.form.google_play_url = this.toko.google_play_url ? this.toko.google_play_url : ''
       this.form.address = this.toko.address ? this.toko.address : ''
       this.form.description = this.toko.description ? this.toko.description : ''
       this.imagePreview = this.toko.logo ? this.toko.logo : ''

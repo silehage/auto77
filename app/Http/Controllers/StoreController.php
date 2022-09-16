@@ -64,6 +64,7 @@ class StoreController extends Controller
             $shop->address = $request->address;
             $shop->description = $request->description;
             $shop->slogan = $request->slogan;
+            $shop->google_play_url = $request->google_play_url;
 
             if($request->boolean('is_remove_logo') || $request->file('logo')) {
                 if($shop->logo_path){

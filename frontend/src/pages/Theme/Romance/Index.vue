@@ -1,9 +1,18 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
     <q-header reveal :reveal-offset="10" class="box-shadow" :class="{'bg-grey-9': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
+        <div v-if="showApp" class="row justify-between items-center q-py-xs bg-white text-grey-8 q-px-md">
+            <q-btn @click="closeApp" round icon="close" flat dense padding="0px"></q-btn>
+            <div class="row q-gutter-x-md items-center">
+            <div class="text-md text-weight-bold">Buka di Aplikasi</div>
+              <q-btn unelevated no-caps unzelevated color="primary" flat dense padding="0px" @click="openInApp">
+              <img width="110px" src="/static/app.svg" alt="">
+              </q-btn>
+            </div>
+        </div>
         <q-toolbar class="header__padding flex justify-between items-center">
           <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
-          <div class="row items-center q-ml-md">
+          <div class="row items-center q-ml-sm">
             <MenuRight  />
           </div>
         </q-toolbar>
@@ -55,9 +64,6 @@
           <img :src="banner3.image_url" @click="goToPost(banner3)">
         </div>
       </div>
-
-      <install-app />
-
       <footer-block />
     </template>
 
@@ -74,7 +80,7 @@ import ProductSectionObserver from './../shared-components/ProductSectionObserve
 import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
 import categoryCarousel from './block/CategoryCarousel.vue'
 import productPromo from './../shared-components/ProductPromo.vue'
-
+import Cookies from 'js-cookie';
 export default {
   name: 'PageIndex',
   components: {
@@ -87,13 +93,13 @@ export default {
     'partner-carousel': () => import('components/PartnerCarousel.vue'),
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'footer-block': () => import('./../shared-components/FooterBlock.vue'),
-    'install-app': () => import('components/InstallApp.vue')
   },
   data() {
     return {
       viewMode: 'grid',
       search: '',
       slide: 0,
+      showApp: false
     }
   },
   computed: {
@@ -157,12 +163,27 @@ export default {
       if(block.post) {
         this.$router.push({name: 'FrontPostShow', params: { slug: block.post.slug }})
       }
+    },
+    closeApp() {
+      this.showApp = false
+      Cookies.set('hideApp', true, { expires: 3 })
+    },
+    openInApp() {
+      window.open(this.shop.google_play_url)
     }
   },
   mounted() {
     if(this.config) {
       this.viewMode = this.config.home_view_mode
     }
+    setTimeout(() => {
+      if(this.shop && this.shop.google_play_url) {
+
+        if(!Cookies.get('hideApp')) {
+            this.showApp = true
+        }
+      }
+    }, 5000)
   },
 created() {
   if(!this.shop || !this.products.data.length || this.$route.query.load) {
