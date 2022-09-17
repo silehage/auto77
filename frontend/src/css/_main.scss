@@ -328,6 +328,12 @@ ul {
   padding:.7rem 1rem;
   border-bottom: 1px solid rgb(240, 240, 240);
 }
+.body--dark {
+ .card-heading {
+  border-bottom: 1px solid rgb(88, 88, 88);
+ }
+
+}
 .q-filled {
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px 4px 0 0;

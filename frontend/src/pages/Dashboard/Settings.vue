@@ -60,7 +60,7 @@ export default {
         { label: 'Block', caption: 'Kelola banner, partner dan featured', path: 'AdminBlockIndex', icon: 'space_dashboard', color: 'amber-7'},
         { label: 'Artikel', caption: 'Kelola Artikel / blog', path: 'AdminPostIndex', icon: 'article', color: 'deep-orange'},
         { label: 'Manage Customer Service', caption: 'kelola Customer Service', path: 'UserList', icon: 'group', color: 'teal'},
-        { label: 'Pengaturan', caption: 'Pengaturan Website dan pengiriman', path: 'Config', icon: 'settings', color: 'accent'},
+        { label: 'Pengaturan', caption: 'Pengaturan Tampilan Website', path: 'Config', icon: 'settings', color: 'accent'},
       ]
     }
   },

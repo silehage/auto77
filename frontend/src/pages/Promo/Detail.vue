@@ -38,7 +38,7 @@
       <q-separator></q-separator>
     </div>
      <div v-if="promo">
-      <div class="row items-center justify-between q-pa-md bg-grey-5">
+      <div class="row items-center justify-between q-pa-md" :class="$q.dark.isActive? 'bg-grey-7 text-white' : 'bg-grey-2'">
          <div class="text-md text-weight-bold">Total Produk {{ products.length }}</div>
       </div>
       <div class="">
@@ -80,12 +80,12 @@
     </div>
     <q-dialog v-model="searchModal" persistent position="bottom">
       <q-card class="max-width">
-        <div class="sticky-top bg-white">
+        <div class="sticky-top">
           <div class="flex justify-between items-center card-heading">
-            <div class=""> Produk Promo</div>
+            <div class="">Produk Promo</div>
             <q-btn icon="close" v-close-popup round padding="0px" flat></q-btn>
           </div>
-          <div class="q-px-md q-py-sm box-shadow">
+          <div class="q-px-md q-py-md box-shadow">
             <q-input outlined placeholder="Cari" dense v-model="search" :debounce="700" @input="findProduct" @keyup.enter="findProduct" type="search" clearable></q-input>
           </div>
         </div>

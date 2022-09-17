@@ -2,30 +2,8 @@
 <q-card flat>
   <q-card-section>
     <div class="text-subtitle1 text-weight-bold">Pengaturan Basic</div>
-    <div class="text-caption">Pengaturan tampilan produk dan social proof</div>
   </q-card-section>
   <q-list>
-    <q-item>
-      <q-item-section>
-        <q-item-label>
-          Tampilan produk beranda
-        </q-item-label>
-      </q-item-section>
-      <q-item-section side>
-        <div class="q-gutter-x-sm">
-          <q-btn @click="changeHomeViewMode('grid')" label="Grid Mode" size="sm" unelevated :color="form.home_view_mode == 'grid' ? 'green-7' : 'grey-6'" dense icon="grid_view">
-            <q-tooltip>
-              Grid Mode
-            </q-tooltip>
-          </q-btn>
-          <q-btn @click="changeHomeViewMode('list')" label="List Mode" size="sm" unelevated :color="form.home_view_mode == 'list' ? 'green-7' : 'grey-6'" dense icon="eva-list">
-            <q-tooltip>
-              List Mode
-            </q-tooltip>
-          </q-btn>
-        </div>
-      </q-item-section>
-    </q-item>
     <q-item>
       <q-item-section>
         <q-item-label>
@@ -68,7 +46,7 @@ export default {
   data () {
     return {
       form: {
-        home_view_mode:'',
+        home_view_mode:'grid',
         product_view_mode: '',
         theme_color: ''
       }
