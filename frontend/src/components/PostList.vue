@@ -6,7 +6,7 @@
       </q-item-section>
       <q-item-section top>
         <div class="ellipsis-2-lines text-weight-medium q-mb-xs" style="font-size:16px;">{{ title }}</div>
-        <div class="text-grey-7 text-sm ellipsis-2-lines" v-html="getTeaser(body)"></div>
+        <div class="text-sm ellipsis-2-lines" v-html="getTeaser(body)"></div>
         <div class="q-pt-sm flex justify-between" style="margin-top:auto;">
           <div class="text-orange-7 text-weight-medium">{{ created_locale }}</div>
         </div>

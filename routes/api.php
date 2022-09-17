@@ -17,6 +17,7 @@ use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerServiceController;
 use App\Http\Controllers\FrontApiController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\TransactionController;
@@ -62,6 +63,8 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('submitProductPromo', [ProductController::class, 'submitProductPromo']);
     Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
     Route::get('findProductWithoutPromo/{key}', [ProductController::class, 'findProductWithoutPromo']);
+
+    Route::apiResource('customer_service', CustomerServiceController::class);
     
 });
 
@@ -117,4 +120,4 @@ Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
 
 Route::get('getInitialData', [FrontApiController::class, 'home']);
 
-Route::get('getCustomerService', [UserController::class, 'getCustomerService']);
+Route::get('getCustomerService', [CustomerServiceController::class, 'getCustomerService']);

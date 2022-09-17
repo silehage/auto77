@@ -39,21 +39,16 @@
           <product-promo :product_promo="productPromo" />
         </div>
 
+        </div>
+
         <div v-if="banner1" class="banner block-container">
           <img :src="banner1.image_url" @click="goToPost(banner1)">
         </div>
         
-        <ProductSectionObserver />
-
-        <div v-if="blocks.partner.length" class="partner block-container">
-          <div class="block-heading">
-            <div class="block-title"><h2>Partners</h2></div>
-          </div>
-          <div class="block-content">
-            <partner-carousel :datas="blocks.partner" />
-          </div>
+        <div class="page__padding">
+          <ProductSectionObserver />
         </div>
-        
+
         <div v-if="banner2" class="banner auto-padding-side block-container">
           <img :src="banner2.image_url" @click="goToPost(banner2)">
         </div>
@@ -63,7 +58,6 @@
         <div v-if="banner3" class="banner auto-padding block-container">
           <img :src="banner3.image_url" @click="goToPost(banner3)">
         </div>
-      </div>
       <footer-block />
     </template>
 
@@ -90,7 +84,6 @@ export default {
     featuredCarousel,
     categoryCarousel,
     productPromo,
-    'partner-carousel': () => import('components/PartnerCarousel.vue'),
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'footer-block': () => import('./../shared-components/FooterBlock.vue'),
   },

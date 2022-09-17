@@ -14,7 +14,7 @@
     </template>
      <template v-if="!products.available">
       <div class="column items-center">
-        <p class="text-grey-8 text-weight-bold text-center">Tidak ada produk favorit</p>
+        <p class="text-grey-5 text-weight-medium text-center">Tidak ada produk favorit</p>
         <q-btn :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary" unelevated
             icon="eva-arrow-back" label="Kehalaman produk" no-caps/>
       </div>

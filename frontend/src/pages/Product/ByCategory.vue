@@ -18,7 +18,7 @@
     <template v-if="!products.available">
       <div class="column items-center">
         <q-icon name="eva-alert-triangle-outline" size="lg" color="orange"></q-icon>
-        <p class="text-grey-6 text-center">Tidak ada produk ditemukan</p>
+        <p class="text-grey-5 text-weight-medium text-center">Tidak ada produk ditemukan</p>
         <q-btn unelevated :to="{name: 'ProductIndex'}" rounded text-color="white" color="primary"
             icon="keyboard_backspace" label="Kehalaman Produk" no-caps/>
       </div>

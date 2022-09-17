@@ -179,12 +179,6 @@ class UserController extends Controller
 
     }
 
-    public function getCustomerService () 
-    {
-        return response()->json([
-            'success' => true,
-            'results' => User::where('role', 'cs')->get()
-        ]);
-    }
+   
     
 }

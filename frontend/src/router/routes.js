@@ -9,7 +9,7 @@ const routes = [
       { path: 'products', name: 'ProductIndex', component: () => import('pages/Product/Index.vue') },
       { path: 'products/category/:id', name: 'ProductCategory', component: () => import('pages/Product/ByCategory.vue') },
       { path: 'search-product', name: 'ProductSearch', component: () => import('src/pages/Search/SearchProduct.vue') },
-      { path: 'search-order', name: 'OrderSearch', component: () => import('src/pages/Search/SearchOrder.vue') },
+      // { path: 'search-order', name: 'OrderSearch', component: () => import('src/pages/Search/SearchOrder.vue') },
       { path: 'posts', name: 'FrontPostIndex', component: () => import('src/pages/Post/FrontPostIndex.vue') },
       { path: 'post/:slug', name: 'FrontPostShow', component: () => import('src/pages/Post/FrontPostShow.vue') },
     ]
@@ -87,10 +87,10 @@ const routes = [
   },
   // Always leave this as last one,
   // but you can also remove it
-  // {
-  //   path: '*',
-  //   component: () => import('pages/Error404.vue')
-  // }
+  {
+    path: '*',
+    component: () => import('pages/Error404.vue')
+  }
 ]
 
 export default routes

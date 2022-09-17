@@ -38,7 +38,7 @@
       <q-separator></q-separator>
     </div>
      <div v-if="promo">
-      <div class="row items-center justify-between q-pa-md bg-grey-2">
+      <div class="row items-center justify-between q-pa-md bg-grey-5">
          <div class="text-md text-weight-bold">Total Produk {{ products.length }}</div>
       </div>
       <div class="">

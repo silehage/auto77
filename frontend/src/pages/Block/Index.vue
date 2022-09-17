@@ -141,13 +141,13 @@ export default {
         label: '',
         description: '',
         weight: '',
-        position: '',
+        position: 'Featured',
         image: '',
         del_image: false,
         post_id:''
       },
       imagePreview: '',
-      positionOptions: ['Featured', 'Banner', 'Partner'],
+      positionOptions: ['Featured', 'Banner'],
     }
   },
   computed: {

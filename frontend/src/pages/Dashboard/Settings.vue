@@ -30,7 +30,7 @@
         </q-item>
         <q-item clickable v-ripple @click.prevent="logout">
           <q-item-section avatar>
-            <q-avatar color="grey" icon="logout" size="md"/>
+            <q-avatar color="grey" icon="logout" size="md" text-color="white"/>
           </q-item-section>
           <q-item-section>
             <q-item-label>Logout</q-item-label>
@@ -59,7 +59,7 @@ export default {
         { label: 'Slider', caption: 'Kelola slideshow', path: 'Slider', icon: 'view_carousel', color: 'teal'},
         { label: 'Block', caption: 'Kelola banner, partner dan featured', path: 'AdminBlockIndex', icon: 'space_dashboard', color: 'amber-7'},
         { label: 'Artikel', caption: 'Kelola Artikel / blog', path: 'AdminPostIndex', icon: 'article', color: 'deep-orange'},
-        { label: 'Manage User', caption: 'kelola user', path: 'UserList', icon: 'group', color: 'teal'},
+        { label: 'Manage Customer Service', caption: 'kelola Customer Service', path: 'UserList', icon: 'group', color: 'teal'},
         { label: 'Pengaturan', caption: 'Pengaturan Website dan pengiriman', path: 'Config', icon: 'settings', color: 'accent'},
       ]
     }

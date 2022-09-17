@@ -17,6 +17,6 @@ class Store extends Model
     }
     public function getAppUrlAttribute()
     {
-        return config('app.url');
+        return rtrim(config('app.url'), '/');
     }
 }
