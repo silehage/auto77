@@ -121,11 +121,11 @@ export default {
       return true
     },
     linkPath() {
-       if(this.$route.name == 'ProductShow' && this.shop) {
+       if(this.shop) {
         return this.shop.app_url + this.$route.fullPath
        }
 
-      return this.shop ? this.shop.app_url : ''
+      return ''
     }
 
   },
