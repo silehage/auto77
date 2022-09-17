@@ -163,7 +163,6 @@ export default {
       quantity: 1,
       discount: 0,
       fullscreen: false,
-      shop: this.$store.state.shop,
       ready: false, 
       loadMoreLoading: false,
       checkoutModal: false,
@@ -185,6 +184,9 @@ export default {
   computed: {
     customer_services() {
       return this.$store.state.customer_services
+    },
+    shop() {
+      return this.$store.state.shop
     },
     session_id() {
       return this.$store.state.session_id
@@ -334,8 +336,9 @@ export default {
     },
     checkoutByCs(cs) {
       this.$q.loading.show()
-      let str = `Halo apakah ${this.product.title} masih ada?`
+      let str = `Halo apakah ${this.product.title} masih ada?\n\n`
       str = encodeURI(str)
+      str += this.shop.app_url + this.$route.fullPath
       let link = 'https://api.whatsapp.com/send?phone=' + this.formatPhoneNumber(cs.phone) + '&text=' + str
 
       window.open(link, '_blank');
