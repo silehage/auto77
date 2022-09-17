@@ -32,14 +32,30 @@
       </div>
      
       <div>
+        <input type="file" class="hidden" ref="favicon" @change="updateFaviconPreview">
         <input type="file" class="hidden" ref="image" @change="updateImagePreview">
-        <q-btn label="Upload Logo" size="sm" color="primary" icon="eva-upload" class="mt-2 mr-2" type="button" @click.prevent="handleBtnUpload"></q-btn>
+        <q-btn label="Upload Logo" size="sm" color="blue" icon="eva-upload" class="mt-2" type="button" @click.prevent="handleBtnUpload"></q-btn>
+        <q-btn label="Upload Favicon" size="sm" color="pink" icon="eva-upload" class="mt-2 q-ml-md" type="button" @click.prevent="handleUploadFavicon"></q-btn>
        <div class="text-xs text-red q-my-md" v-if="errors.logo"> {{ errors.logo[0]}}</div>
       </div>
+      <q-list v-if="faviconPreview">
+       <q-item>
+        <q-item-section top>
+          <img :src="faviconPreview" class="shadow-4 q-pa-xs bg-grey" style="width:90px;height:90px;object-fit:contain;"/>
+        </q-item-section>
+        <q-space />
+        <q-item-section side>
+          <div class="text-grey-8 q-gutter-xs">
+            <q-btn @click="removeFavicon" size="sm" round icon="eva-trash-2" glossy color="red"/>
+          </div>
+          </q-item-section>
+        </q-item>
+      </q-list>       
+      
       <q-list v-if="imagePreview">
        <q-item>
         <q-item-section top>
-          <img :src="imagePreview" class="shadow-4 q-pa-xs bg-grey" style="width:100px;height:100px;object-fit:contain;"/>
+          <img :src="imagePreview" class="shadow-4 q-pa-xs bg-grey" style="width:160px;;height:auto;"/>
         </q-item-section>
         <q-space />
         <q-item-section side>
@@ -76,11 +92,14 @@ export default {
         description: '',
         slogan: '',
         logo: '',
+        favicon: '',
+        is_remove_favicon: false,
         is_remove_logo: false,
         google_play_url: '',
         facebook_app_id: ''
       },
-      imagePreview: ''
+      imagePreview: '',
+      faviconPreview: ''
     }
   },
   computed: {
@@ -127,6 +146,9 @@ export default {
     handleBtnUpload() {
       this.$refs.image.click()
     },
+    handleUploadFavicon() {
+      this.$refs.favicon.click()
+    },
     updateImagePreview() {
         this.form.logo = this.$refs.image.files[0]
 
@@ -137,6 +159,24 @@ export default {
         };
 
         reader.readAsDataURL(this.$refs.image.files[0]);
+    },
+    updateFaviconPreview() {
+        this.form.favicon = this.$refs.favicon.files[0]
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            this.faviconPreview = e.target.result;
+        };
+
+        reader.readAsDataURL(this.$refs.favicon.files[0]);
+    },
+    removeFavicon() {
+      if(this.toko.favicon) {
+        this.form.is_remove_favicon = true
+      }
+      this.form.favicon = ''
+      this.faviconPreview = ''
     },
     removeLogo() {
       if(this.toko.logo_path) {
@@ -150,27 +190,27 @@ export default {
       this.form.phone = this.toko.phone ? this.toko.phone : ''
       this.form.slogan = this.toko.slogan ? this.toko.slogan : ''
       this.form.google_play_url = this.toko.google_play_url ? this.toko.google_play_url : ''
+      this.form.facebook_app_id = this.toko.facebook_app_id ? this.toko.facebook_app_id : ''
       this.form.address = this.toko.address ? this.toko.address : ''
       this.form.description = this.toko.description ? this.toko.description : ''
-      this.imagePreview = this.toko.logo ? this.toko.logo : ''
+      this.imagePreview = this.toko.logo_path ? this.toko.logo_url : ''
+      this.faviconPreview = this.toko.favicon ? this.toko.favicon_url : ''
     },
 
-  },
-  mounted() {
-    if(this.dataToko) {
-      this.toko = this.dataToko
-      this.setDataToko()
-    } else {
-      let self = this
-      Api().get('shop').then(response => {
+    getShop() {
+       Api().get('shop').then(response => {
         if(response.status == 200) {
-          // localStorage.setItem('_washop', JSON.stringify(response.data.results))
-          self.toko = response.data.results
-          self.setDataToko()
-          self.$store.commit('SET_SHOP', response.data.results)
+          this.toko = response.data.results.shop
+          this.setDataToko()
+          this.$store.commit('SET_SHOP', response.data.results.shop)
+          this.$store.commit('SET_CONFIG', response.data.results.config)
         }
       })
     }
+
+  },
+  mounted() {
+    this.getShop()
   }
 }
 </script>

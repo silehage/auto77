@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center relative" :class="{'bg-grey-10': $q.dark.isActive }">
+  <q-page class="flex flex-center relative" :class="{'bg-dark': $q.dark.isActive }">
     <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn :to="{name: 'Home'}"
@@ -10,11 +10,11 @@
     </q-header>
     <div style="max-width: 420px;width:100%;" class="q-pa-sm">
       <div class="flex justify-center">
-        <img v-if="shop && shop.logo_path" :src="shop.logo" style="width:auto;height:85px;object-fit:contain;max-width:150px;" />
+        <img v-if="shop && shop.logo_path" :src="shop.logo_url" style="width:auto;height:95px;object-fit:contain;max-width:250px;" />
         <img v-else src="/icon/icon-192x192.png" style="width:auto;height:75px;object-fit:contain;max-width:150px;" />
       </div>
       <div class="text-red q-pb-sm text-center" v-if="errors.email">{{ errors.email[0] }}</div>
-      <q-card flat class="q-pt-sm q-mt-lg" >
+      <q-card flat class="q-pt-sm q-mt-sm" >
         <q-card-section>
           <q-form @submit.prevent="submit" class="q-gutter-y-sm q-pa-md">
               <q-input

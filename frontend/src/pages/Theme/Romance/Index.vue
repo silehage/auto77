@@ -1,22 +1,26 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
-    <q-header reveal :reveal-offset="10" class="box-shadow" :class="{'bg-grey-9': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
-        <div v-if="showApp" class="row justify-between items-center q-py-xs bg-white text-grey-8 q-px-md">
-            <q-btn @click="closeApp" round icon="close" flat dense padding="0px"></q-btn>
-            <div class="row q-gutter-x-md items-center">
-            <div class="text-md text-weight-bold">Buka di Aplikasi</div>
-              <q-btn unelevated no-caps unzelevated color="primary" flat dense padding="0px" @click="openInApp">
-              <img width="110px" src="/static/app.svg" alt="">
-              </q-btn>
-            </div>
-        </div>
-        <q-toolbar class="header__padding flex justify-between items-center">
-          <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
-          <div class="row items-center q-ml-sm">
-            <MenuRight  />
+    <q-header reveal :reveal-offset="10" class="box-shadow" 
+    :class="{'bg-dark': $q.dark.isActive, 
+    'bg-white text-dark': !$q.dark.isActive 
+    }"
+    >
+      <div v-if="showApp" class="row justify-between items-center q-py-xs bg-white text-grey-8 q-px-md">
+          <q-btn @click="closeApp" round icon="close" flat dense padding="0px"></q-btn>
+          <div class="row q-gutter-x-md items-center">
+          <div class="text-md text-weight-bold">Buka di Aplikasi</div>
+            <q-btn unelevated no-caps unzelevated color="primary" flat dense padding="0px" @click="openInApp">
+            <img width="110px" src="/static/app.svg" alt="">
+            </q-btn>
           </div>
-        </q-toolbar>
-      </q-header>
+      </div>
+      <q-toolbar class="header__padding flex justify-between items-center">
+        <img v-if="shop" height="50px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
+        <div class="row items-center q-ml-sm">
+          <MenuRight  />
+        </div>
+      </q-toolbar>
+    </q-header>
     <template v-if="!loading">
       <div id="slider" class="header-romance" v-if="sliders.data.length">
         <slider :datas="sliders.data" />

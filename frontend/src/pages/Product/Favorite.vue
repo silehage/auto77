@@ -59,7 +59,7 @@ export default {
       meta: {
         ogTitle:  { name: 'og:title', content: 'Produk Favorit' },
         ogUrl:  { name: 'og:url', content: location.href },
-        ogImage:  { name: 'og:image', content: this.shop?.logo ? this.shop.logo : '' },
+        ogImage:  { name: 'og:image', content: this.shop?.logo ? this.shop.logo_url : '' },
       }
       
     }

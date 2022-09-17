@@ -107,6 +107,7 @@
       </q-inner-loading>
       <q-dialog v-model="checkoutModal">
       <q-card class="" style="max-width:450px;width:100%;">
+         <q-linear-progress :value="1" color="pink" />
         <div class="q-px-lg q-pb-xl q-pt-md column q-gutter-y-md">
           <div class="text-weight-bold q-mb-sm text-lg">Hubungi Cs Kami</div>
           <q-list separator>

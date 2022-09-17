@@ -120,7 +120,7 @@ export default {
         ogDescription: { name: 'og:description', content: this.description },
         ogTitle:  { name: 'og:title', content: this.title },
         ogUrl:  { name: 'og:url', content: location.href },
-        ogImage:  { name: 'og:image', content: this.shop?.logo ? this.shop.logo: ''},
+        ogImage:  { name: 'og:image', content: this.shop?.logo ? this.shop.logo_url: ''},
       }
     }
   }

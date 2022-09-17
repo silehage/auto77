@@ -2,7 +2,7 @@
   <q-page class="bg-grey-1 default" :class="{'flex flex-center' : loading }">
     <q-header class="bg-white text-dark box-shadow" :class="{ 'auto-padding-side': $q.platform.is.desktop}">
       <q-toolbar class="items-center sans">
-        <img v-if="shop" class="logo" :src="shop.logo? shop.logo : '/icon/icon-192x192.png'" />
+        <img v-if="shop" class="logo" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
         <q-toolbar-title v-if="shop && shop.name" class="text-weight-bold text-primary">{{ shop.name }}</q-toolbar-title>
         <MenuRight  />
       </q-toolbar>
