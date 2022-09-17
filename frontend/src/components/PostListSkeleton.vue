@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-white border-b">
+  <div class="relative border-b">
     <div class="row q-pa-md no-wrap">
       <q-skeleton width="100px" height="100px"/>
       <div class="q-ml-md column flex-1">
