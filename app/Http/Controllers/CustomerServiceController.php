@@ -25,7 +25,7 @@ class CustomerServiceController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:60'],
-            'phone' => ['required', 'string', 'max:20', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'unique:customer_services'],
         ],[
             'name.required' => 'Nama wajib diisi.',
             'phone.required' => 'Nomor ponsel wajib diisi.',
@@ -48,7 +48,7 @@ class CustomerServiceController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'phone' => 'required|unique:users,phone,' .$id,
+            'phone' => 'required|unique:customer_services,phone,' .$id,
         ],[
             'name.required' => 'Nama wajib diisi.',
             'phone.required' => 'Nomor ponsel wajib diisi.',
