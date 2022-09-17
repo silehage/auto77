@@ -30,11 +30,11 @@
       </div>
 
       <div class="page__padding q-pb-xl">
-        <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding block-container">
+        <div id="categories" v-if="categories && categories.data.length > 1" class="block-container">
           <div class="block-heading">
             <div class="block-title"><h2>Kategori</h2></div>
           </div>
-          <div class="block-content q-pb-sm">
+          <div class="block-content">
             <category-carousel :datas="categories.data" />
           </div>
         </div>

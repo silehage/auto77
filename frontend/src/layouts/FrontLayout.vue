@@ -31,30 +31,13 @@
           />
 
           <q-route-tab 
-           v-if="config && config.theme == 'default'"
-            icon="eva-shopping-bag"
-            :to="{name: 'ProductIndex'}"
-            label="Katalog"
-            exact
-          />
-          <q-route-tab 
-           v-if="config && config.theme == 'romance'"
             icon="eva-shopping-bag"
             :to="{name: 'ProductIndex'}"
             class="bg-primary text-white"
             label="Katalog"
             exact
           />
-          <q-btn
-          v-if="config && config.theme == 'elegant'"
-          :to="{name: 'ProductIndex'}"
-           icon="eva-shopping-bag"
-           class="text-md"
-           color="primary"
-           round
-          ></q-btn>
-
-         
+   
           <q-route-tab 
             :to="{name: 'FrontPostIndex'}" 
             icon="eva-browser-outline" 
