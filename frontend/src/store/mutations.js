@@ -85,6 +85,9 @@ export default {
   },
   SET_CS: (state, payload) => {
     state.customer_services = payload
+  },
+  FB_INIT: (state, payload) => {
+    this.fb_init = payload
   }
 
 }

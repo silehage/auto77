@@ -17,7 +17,7 @@
       <q-card class="card-lg">
          <q-linear-progress :value="1" color="pink" />
         <q-card-section>
-          <div class="flex justify-between items-center q-pb-lg">
+          <div class="flex justify-between items-center q-pb-md">
             <div class="row items-center">
               <q-avatar>
                 <q-icon name="eva-share"></q-icon>
@@ -58,6 +58,14 @@
                   Share Twitter
                 </q-item-section>
               </q-item>
+              <q-item clickable  @click="copyLink">
+                <q-item-section avatar>
+                  <q-avatar text-color="white" icon="eva-copy" color="pink"></q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  Salin Link
+                </q-item-section>
+              </q-item>
             </q-list>
             <!-- <q-btn size="18px" @click="shareNow('facebook')" icon="eva-facebook" round color="fb"></q-btn>
             <q-btn size="18px" @click="shareNow('twitter')" icon="eva-twitter" round color="twitter"></q-btn>
@@ -77,6 +85,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { copyToClipboard } from 'quasar'
 export default {
   name: 'MenuRight',
   props: {
@@ -96,6 +105,9 @@ export default {
     shop() {
       return this.$store.state.shop
     },
+    fb_init() {
+      return this.$store.state.fb_init
+    },
     isDesktop() {
       return this.$q.platform.is.desktop ? true : false
     },
@@ -107,10 +119,29 @@ export default {
         return false
       }
       return true
+    },
+    linkPath() {
+       if(this.$route.name == 'ProductShow' && this.shop) {
+        return this.shop.app_url + this.$route.fullPath
+       }
+
+      return this.shop ? this.shop.app_url : ''
     }
 
   },
   methods: {
+    copyLink() {
+      copyToClipboard(this.linkPath)
+        .then(() => {
+         this.$q.notify({
+          type: 'positive',
+          message: 'Berhasil menyalin link'
+         })
+        })
+        .catch(() => {
+          // fail
+        })
+    },
     darkMode() {
       this.$q.dark.toggle()
     },
@@ -119,25 +150,24 @@ export default {
       let url = ''
       let text = ''
 
-      let path = ''
-
-      if(this.$route.name == 'ProductShow') {
-        path = this.shop.app_url + this.$route.fullPath
-      }else {
-        path = this.shop.app_url
-      }
-
       if(type == 'facebook') {
-        url = 'https://facebook.com/share.php'
+        if(window.innerWidth <= 768 && this.shop.facebook_app_id) {
 
-        url += `?u=${this.shop.app_url}&t=${path}`
+          url = `https://www.facebook.com/dialog/feed?app_id=${this.shop.facebook_app_id}&display=popup&link=${this.linkPath}&redirect_uri=${this.linkPath}`
+
+        }else {
+          
+          url = 'https://facebook.com/share.php'
+  
+          url += `?u=${this.shop.app_url}&t=${this.linkPath}`
+        }
       }
       if(type == 'twitter') {
-        text = encodeURI(this.shop.name + '\n') + path
+        text = encodeURI(this.shop.name + '\n') + this.linkPath
         url = `https://twitter.com/home?status=${text}`
       }
       if(type == 'whatsapp') {
-        text = encodeURI(this.shop.name + '\n') + path
+        text = encodeURI(this.shop.name + '\n') + this.linkPath
         url = `https://api.whatsapp.com/send?text=${text}`
       }
 

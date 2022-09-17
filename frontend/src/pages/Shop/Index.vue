@@ -16,9 +16,10 @@
         <q-input label="Nama Toko" v-model="form.name"></q-input>
         <q-input label="Nomor Whatsapp" v-model="form.phone" placeholder="0812*******"></q-input>
         <q-input label="Slogan" v-model="form.slogan"></q-input>
-        <q-input label="Google Play Url" v-model="form.google_play_url"></q-input>
         <div class="q-my-xs text-red text-sm" v-if="errors.phone">Nomor Whatsapp harus berupa angka</div>
         <q-input autogrow label="Deskripsi Toko" v-model="form.description"></q-input>
+        <q-input label="Google Play Url" v-model="form.google_play_url"></q-input>
+        <q-input label="Facebook App ID" v-model="form.facebook_app_id"></q-input>
         <div class="q-my-md">
           <div for="" class="text-grey-8 q-mb-sm">Alamat Toko</div>
           <q-editor 
@@ -76,7 +77,8 @@ export default {
         slogan: '',
         logo: '',
         is_remove_logo: false,
-        google_play_url: ''
+        google_play_url: '',
+        facebook_app_id: ''
       },
       imagePreview: ''
     }

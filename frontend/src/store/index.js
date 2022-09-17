@@ -66,7 +66,8 @@ export default function (/* { ssrContext } */) {
       meta: {
         title: '',
         description: 'Simple Web Commerce checkout whatsapp'
-      }
+      },
+      fb_init: null
     },
     actions,
     mutations,
