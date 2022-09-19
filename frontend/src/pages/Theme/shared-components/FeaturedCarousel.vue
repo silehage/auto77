@@ -3,8 +3,8 @@
     <vue-glide :options="carouselOptions">
       <vue-glide-slide v-for="feature in datas" :key="feature.id">
         <div class="column col items-center text-center q-gutter-y-xs featured cursor-pointer" @click="showPost(feature)">
-          <img v-if="feature.image" :src="feature.image_url" alt="" width="60" height="60" style="object-fit:contain;"/>
-          <div class="text-sm text-weight-medium">{{ feature.label }}</div>
+          <img v-if="feature.image" :src="feature.image_url" alt="" width="100" height="100" style="object-fit:cover;border-radius:50%;border:2px solid #fff;"/>
+          <div class="text-sm text-weight-medium q-mt-sm">{{ feature.label }}</div>
           <div v-if="feature.description" class="text-grey-7 text-auto description">{{ feature.description }}</div>
         </div>
       </vue-glide-slide>

@@ -1,18 +1,25 @@
 import { Api } from 'boot/axios'
 
 export function addPost({ commit, dispatch }, payload) {
-  // console.log(Object.fromEntries(payload));
   // return
   let formData = new FormData();
   for(const x in payload) {
-    if(payload[x] !== '') {
+
+    if(payload[x] !== '' && x != 'gallery') {
       formData.append(x, payload[x])
     }
   }
+
+  for(var j = 0; j < payload.gallery.length; j++ ){
+    let file = payload.gallery[j];
+
+    formData.append('gallery[' + j + ']', file);
+  }
+
   let self = this
   commit('SET_LOADER_POST')
   Api().post('posts', formData, {headers: {'content-Type': 'multipart/formData'}}).then(response => {
-    if(response.status == 201) {
+    if(response.status == 200) {
      dispatch('getAllPost')
       self.$router.push({name: 'AdminPostIndex'})
       commit('SET_LOADING', false, { root: true })
@@ -23,18 +30,31 @@ export function addPost({ commit, dispatch }, payload) {
 }
 export function updatePost (context, payload) {
   context.commit('SET_LOADER_POST')
-  let self = this
+
   let formData = new FormData();
+
   for(const x in payload) {
-    if(payload[x] !== '') {
+
+    if(payload[x] !== '' && x != 'gallery' && x != 'delete_gallery') {
       formData.append(x, payload[x])
     }
   }
+
+  for(var j = 0; j < payload.gallery.length; j++ ){
+    let file = payload.gallery[j];
+
+    formData.append('gallery[' + j + ']', file);
+  }
+
+  if(payload.delete_gallery.length) {
+    formData.append('delete_gallery', JSON.stringify(payload.delete_gallery))
+  }
+
   formData.append('_method', 'PUT')
 
   Api().post('posts/'+payload.id, formData, {headers: {'content-Type': 'multipart/formData'}}).then(response => {
     if(response.status == 200) {
-      self.$router.push({name: 'AdminPostIndex'})
+      this.$router.push({name: 'AdminPostIndex'})
       context.dispatch('getAllPost')
     }
   })

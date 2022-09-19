@@ -1,5 +1,5 @@
 <template>
-  <q-list class="q-gutter-y-sm" style="min-width:350px;">
+  <q-list class="q-gutter-y-sm" style="min-width:450px;">
     <q-item class="q-px-sm q-py-md">
       <q-item-section avatar top>
          <q-skeleton width="100px" height="100px" />

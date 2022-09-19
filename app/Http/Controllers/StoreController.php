@@ -34,9 +34,6 @@ class StoreController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'phone' => 'nullable|numeric'
-        ]);
         
         DB::beginTransaction();
 

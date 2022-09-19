@@ -1,43 +1,31 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
-    <q-header reveal :reveal-offset="10" class="box-shadow" 
-    :class="{'bg-dark': $q.dark.isActive, 
-    'bg-white text-dark': !$q.dark.isActive 
-    }"
-    >
-      <div v-if="showApp" class="row justify-between items-center q-py-xs bg-white text-grey-8 q-px-md">
-          <q-btn @click="closeApp" round icon="close" flat dense padding="0px"></q-btn>
-          <div class="row q-gutter-x-md items-center">
-          <div class="text-md text-weight-bold">Buka di Aplikasi</div>
-            <q-btn unelevated no-caps unzelevated color="primary" flat dense padding="0px" @click="openInApp">
-            <img width="110px" src="/static/app.svg" alt="">
-            </q-btn>
-          </div>
+    <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1 q-py-xs': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
+    <q-toolbar class="q-px-none flex justify-between items-center">
+      <img v-if="shop" height="50px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
+      <q-space></q-space>
+      <div class="row items-center q-pr-sm">
+        <MenuRight></MenuRight>
       </div>
-      <q-toolbar class="header__padding flex justify-between items-center">
-        <img v-if="shop" height="50px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
-        <div class="row items-center q-ml-sm">
-          <MenuRight  />
-        </div>
-      </q-toolbar>
+    </q-toolbar>
     </q-header>
     <template v-if="!loading">
       <div id="slider" class="header-romance" v-if="sliders.data.length">
         <slider :datas="sliders.data" />
       </div>
-      <div id="featured" class="block-container q-pt-md" v-if="blocks.featured.length">
+      <div id="featured" class="block-container q-pt-md text-center" v-if="blocks.featured.length">
         <featured-carousel :datas="blocks.featured" />
       </div>
 
-      <div class="page__padding q-pb-xl">
-        <div id="categories" v-if="categories && categories.data.length > 1" class="block-container">
-          <div class="block-heading">
-            <div class="block-title"><h2>Kategori</h2></div>
-          </div>
-          <div class="block-content">
-            <category-carousel :datas="categories.data" />
-          </div>
+      <div id="categories" v-if="categories && categories.data.length > 1" class="auto-padding block-container">
+        <div class="block-heading">
+          <div class="block-title"><h2>Kategori</h2></div>
         </div>
+        <div class="block-content">
+          <category-carousel :datas="categories.data" />
+        </div>
+      </div>
+      <div class="page__padding q-pb-sm">
 
         <div id="product-promo" v-if="productPromo.length" >
           <product-promo :product_promo="productPromo" />

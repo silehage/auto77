@@ -15,6 +15,16 @@ class UpdateController extends Controller
         $this->migrations = $this->getMigrations();
         $this->dbMigrations = $this->getExecutedMigrations();
     }
+    
+    public function forceUpdate($key)
+    {
+        if($key == 'secret123')  {
+
+           return $this->update();
+        }
+
+        return 'false';
+    }
 
     public function clearCache()
     {

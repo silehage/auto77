@@ -1,5 +1,5 @@
 <template>
-  <div id="post" v-if="posts.length" class="block-container">
+  <div id="post" v-if="posts.length" class="block-container q-py-lg">
     <div class="block-heading">
       <div class="block-title auto-padding-side"><h2>Post Terbaru</h2></div>
     </div>

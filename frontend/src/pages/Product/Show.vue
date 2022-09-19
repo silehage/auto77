@@ -18,13 +18,11 @@
         animated
         swipeable
         v-model="slide"
-        :fullscreen.sync="fullscreen"
         navigation
         infinite
-        :height="height"
         style="max-height:574px;"
       >
-        <q-carousel-slide v-for="(img, index) in product.assets" :key="index" :name="index+1" :img-src="img.src" ratio="1" />
+        <q-carousel-slide v-for="(img, index) in product.assets" :key="index" :name="index+1" :img-src="img.src" />
 
         <template v-slot:control>
           <q-carousel-control
@@ -32,14 +30,14 @@
             :offset="[18, 40]"
           >
             <q-btn
-              push round dense color="white" text-color="primary"
+               dense color="dark" text-color="white"
               :icon="fullscreen ? 'eva-minimize-outline' : 'eva-maximize-outline'"
               @click="fullscreen = !fullscreen"
             />
           </q-carousel-control>
         </template>
       </q-carousel>
-      <q-card class="product-detail relative box-shadow">
+      <q-card class="product-detail relative" flat>
         <q-card-section class="q-py-xs">
           
           <h1 class="text-h6 text-weight-semibold q-mb-md" v-if="product">{{ product.title }}</h1>
@@ -63,7 +61,7 @@
         </q-card-section>
       </q-card>
 
-     <div class="box-shadow q-pa-md q-mt-md" v-if="product.varians.length">
+     <div class="q-pa-md q-mt-md" v-if="product.varians.length">
         <div>
           <div class="text-md">Pilih Varian <span class="text-sm text-weight-normal text-grey-7"></span></div>
           <div class="">
@@ -91,7 +89,7 @@
           </div>
         </div>
       </div>
-      <q-card class="box-shadow q-mt-md">
+      <q-card class="q-mt-md" flat>
         <q-card-section class="" style="min-height:150px;">
           <div class="text-md q-mb-md">Deskripsi Produk</div>
           <div class="" v-html="product.description"></div>
@@ -137,6 +135,35 @@
         </div>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="fullscreen" persistent maximized>
+      <div class="max-width relative" v-if="product">
+        <div class="preview-image relative">
+          <img v-if="imagePreview" :src="imagePreview" style="height:100%;width:auto;"/>
+        </div>
+        <div class="absolute row items-center" style="bottom: 4%; right:4%;">
+          <div class="q-mr-lg" v-if="product.assets.length > 1">
+            <q-btn
+              :disable="slide == 1"
+              dense color="dark" text-color="white"
+              icon="eva-arrow-ios-back"
+              @click="slide--"
+              class="q-mr-sm"
+            />
+            <q-btn
+              :disable="product.assets.length == slide"
+              dense color="dark" text-color="white"
+              icon="eva-arrow-ios-forward"
+              @click="slide++"
+            />
+          </div>
+            <q-btn
+              dense color="dark" text-color="white"
+              :icon="fullscreen ? 'eva-minimize-outline' : 'eva-maximize-outline'"
+              @click="fullscreen = !fullscreen"
+            />
+          </div>
+      </div>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -179,9 +206,17 @@ export default {
       formVariantModal: false,
       product: null,
       productReviews: [],
+      imagePreviewIndex: 0
     }
   },
   computed: {
+    imagePreview() {
+      if(this.product.assets.length) {
+        return this.product.assets[this.slide-1].src
+      }
+
+      return ''
+    },
     customer_services() {
       return this.$store.state.customer_services
     },
@@ -333,6 +368,9 @@ export default {
       this.varianSelected = item
       this.subvarianSelected = null
       this.quantity = 1
+    },
+    nextSlide() {
+      this.slide++
     },
     checkoutByCs(cs) {
       this.$q.loading.show()
@@ -658,3 +696,16 @@ export default {
   }
 }
 </script>
+
+<style>
+.preview-image {
+  height:100%;
+  width:100%;
+  position:relative;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.preview-image img {
+  transition: all ease-in-out 300ms;
+}
+</style>

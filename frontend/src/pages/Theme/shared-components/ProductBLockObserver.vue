@@ -17,9 +17,9 @@
               </router-link>
             </div>
           </div>
-          <div v-if="!ready">
-            <q-skeleton type="text" width="60%" height="50px" class="text-subtitle1" />
-            <q-skeleton type="text" width="80%" class="text-subtitle1" />
+          <div v-if="!ready" class="row items-center justify-between q-px-xs">
+            <q-skeleton type="text" width="25%" height="50px" class="text-subtitle1" />
+            <q-skeleton type="text" width="25%" class="text-subtitle1" />
           </div>
           <div class="block-content">
               <!-- <product-list-section-home :products="products" :ready="ready" :title="category.title"/> -->
@@ -37,12 +37,10 @@
 <script>
 import { mapState } from 'vuex'
 import SwiperProduct from 'components/GlideProduct.vue'
-import ProductListSectionHome from 'components/ProductListSectionHome.vue'
 import { Api } from 'boot/axios'
 export default {
   props: ['category'],
   components: { 
-    // ProductListSectionHome,
     SwiperProduct
    },
   data() {

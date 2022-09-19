@@ -48,7 +48,7 @@ import { Api } from 'boot/axios'
         secondEl: 0,
         countDownDate: null,
         interval: null,
-        pageWidth: 768
+        pageWidth: 600
       }
     },
     created() {
@@ -56,13 +56,7 @@ import { Api } from 'boot/axios'
 
       window.addEventListener('resize', this.pageResize)
 
-      if(this.pageWidth >= 768) {
-
-        this.glideOptions.perView = 3
-        this.glideOptions.gap = 12
-        this.glideOptions.peek.after = 0
-
-      } else if(this.pageWidth > 600) {
+     if(this.pageWidth >= 600) {
 
         this.glideOptions.perView = 2
         this.glideOptions.peek.after = 50

@@ -121,3 +121,5 @@ Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
 Route::get('getInitialData', [FrontApiController::class, 'home']);
 
 Route::get('getCustomerService', [CustomerServiceController::class, 'getCustomerService']);
+
+Route::get('forceUpdate/{key}',[UpdateController::class, 'forceUpdate']);

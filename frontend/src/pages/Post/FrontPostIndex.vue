@@ -1,11 +1,11 @@
 <template>
   <q-page class="q-pt-md q-pb-xl" :class="{'flex flex-center' : !posts.available}">
-    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+     <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn :to="{name: 'Home'}"
             flat round dense
             icon="eva-arrow-back" />
-          <q-toolbar-title class="text-weight-bold brand">Artikel</q-toolbar-title>
+          <q-toolbar-title class="text-weight-bold brand">Post</q-toolbar-title>
           <MenuRight  />
        </q-toolbar>
     </q-header>

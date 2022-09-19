@@ -1,11 +1,11 @@
 <template>
   <q-page :class="{'flex flex-center' : !ready}">
-    <q-header class="text-primary box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white': !$q.dark.isActive }">
+     <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn :to="{ name: 'FrontPostIndex' }"
             flat round dense
             icon="eva-arrow-back" />
-          <q-toolbar-title class="text-weight-bold brand">Artikel</q-toolbar-title>
+          <q-toolbar-title class="text-weight-bold brand">Post</q-toolbar-title>
           <MenuRight  />
        </q-toolbar>
     </q-header>
@@ -17,6 +17,11 @@
         <h1 class="text-lg text-weight-medium q-mb-sm">{{ post.title }}</h1>
         <div class="text-grey-6 text-caption">{{ post.created_locale }}</div>
         <p class="q-mb-lg" v-html="post.body"></p>
+      </div>
+      <div class="q-my-lg q-pa-md" v-if="post.galleries.length">
+        <div class="galleries">
+            <img v-for="asset in post.galleries" :key="asset.id" :src="asset.src" style="width:100%;height:auto;" class="thumbnail"/>
+        </div>
       </div>
       </template>
       <template v-else>
@@ -67,3 +72,18 @@ export default {
   }
 }
 </script>
+
+<style>
+.thumbnail {
+  border: 2px solid rgba(161, 161, 161, 0.432);
+  border-radius: 8px;
+}
+.galleries {
+  display: column;
+  columns: 2;
+  gap: .5rem;
+}
+.galleries img {
+  break-inside: avoid;
+}
+</style>

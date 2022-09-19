@@ -1,5 +1,5 @@
 <template>
-  <div class="q-px-xs q-pb-xs q-mb-sm" :class="pageWidth >= 800 ? 'col-4' : 'col-6'">
+  <div class="q-px-xs q-pb-xs q-mb-sm col-6">
     <q-card class="box-shadow full-height product-card">
         <div class="relative">
           <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">

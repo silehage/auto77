@@ -24,7 +24,7 @@ class ProductRepository
     {
         $product = Cache::remember($slug, now()->addMinute(), function() use ($slug) {
 
-            return new ProductResource(Product::with(['assets', 'category:id,title,slug', 'varians.subvarian', 'productPromo' => function($query) {
+            return new ProductResource(Product::with(['assets', 'category:id,title,slug', 'productPromo' => function($query) {
                 $query->whereHas('promoActive');
             }])
                 ->where('slug', $slug) 

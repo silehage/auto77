@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use App\Models\Post;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 
@@ -70,31 +72,60 @@ class PostController extends Controller
             File::makeDirectory($path, 0755, true, true);
         }
 
-        $post = new Post();
+        $result = ['success' => true];
 
-        $post->title = $request->title;
-        $post->slug = Str::slug($request->title);
-        $post->tags = $request->tags;
-        $post->body = $request->body;
+        DB::beginTransaction();
 
-        $post->is_listing = $request->boolean('is_listing');
-        $post->is_promote = $request->boolean('is_promote');
 
-        if($file = $request->file('image')) {
-
-            $filename = Str::random(42).'.' . $file->extension();
-                    
-            if($file->move($path, $filename)){
-
-                $post->image = $filename;
+        try {
+            //code...
+            $post = new Post();
+    
+            $post->title = $request->title;
+            $post->slug = Str::slug($request->title);
+            $post->tags = $request->tags;
+            $post->body = $request->body;
+    
+            $post->is_listing = $request->boolean('is_listing');
+            $post->is_promote = $request->boolean('is_promote');
+    
+            if($file = $request->file('image')) {
+    
+                $filename = Str::random(42).'.' . $file->extension();
+                        
+                if($file->move($path, $filename)){
+    
+                    $post->image = $filename;
+                }
             }
+            
+            $post->save();
+    
+            if($request->gallery && count($request->gallery) > 0) {
+                foreach($request->gallery as $file) {
+                    
+                    $filename = Str::random(41).'.' . $file->extension();
+    
+                    $file->move($path, $filename);
+    
+                    $post->galleries()->create([
+                        'filename' => $filename
+                    ]);
+                }
+            }
+            
+            DB::commit();
+
+
+        } catch (\Throwable $th) {
+
+            DB::rollback();
+
+            $result = ['success' => false, 'message' => $th->getMessage()];
         }
 
-        $post->save();
-
-        return response([
-            'success' => true
-        ], 201);
+        return response($result);
+       
     }
 
     /**
@@ -107,14 +138,14 @@ class PostController extends Controller
     {
         return response()->json([
             'success' => true,
-            'results' => Post::findOrFail($id)
+            'results' => Post::with('galleries')->where('id', $id)->first()
         ]);
     }
     public function getPostBySlug($slug)
     {
         return response()->json([
             'success' => true,
-            'results' => Post::where('slug', $slug)->first()
+            'results' => Post::with('galleries')->where('slug', $slug)->first()
         ]);
     }
 
@@ -142,6 +173,8 @@ class PostController extends Controller
             File::delete('upload/images/'. $post->image);
  
         }
+
+
         if($file = $request->file('image')) {
 
             $filename = Str::random(42).'.' . $file->extension();
@@ -160,6 +193,26 @@ class PostController extends Controller
         $post->is_promote = $request->boolean('is_promote');
 
         $post->save();
+
+        if($request->delete_gallery) {
+
+            $assetIds = json_decode($request->delete_gallery);
+
+            Asset::whereIn('id', $assetIds)->delete();
+        }
+
+        if($request->gallery && count($request->gallery) > 0) {
+            foreach($request->gallery as $file) {
+                
+                $filename = Str::random(41).'.' . $file->extension();
+
+                $file->move($path, $filename);
+
+                $post->galleries()->create([
+                    'filename' => $filename
+                ]);
+            }
+        }
 
         return response([
             'success' => true

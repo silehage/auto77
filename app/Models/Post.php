@@ -39,4 +39,8 @@ class Post extends Model
     {
         return Carbon::parse($this->created_at)->translatedFormat('d F Y');
     }
+    public function galleries()
+    {
+        return $this->morphMany(Asset::class, 'assetable');
+    }
 }

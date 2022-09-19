@@ -8,7 +8,7 @@
       </vue-glide>  
     </div>
     <div class="row" v-else>
-      <ProductCardSkeleton v-for="a in glideOptions.perView" :key="a"/>
+      <ProductCardSkeleton v-for="a in 2" :key="a"/>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ import ProductCardSkeleton from 'components/ProductCardSkeleton.vue'
      },
     data() {
       return {
-        pageWidth: 768,
+        pageWidth: 600,
         glideOptions: {
           rewind: false,
           perView: 2,
@@ -51,13 +51,7 @@ import ProductCardSkeleton from 'components/ProductCardSkeleton.vue'
       
       window.addEventListener('resize', this.pageResize)
 
-     if(this.pageWidth >= 768) {
-
-        this.glideOptions.perView = 3
-        this.glideOptions.gap = 12
-        this.glideOptions.peek.after = 0
-
-      } else if(this.pageWidth > 600) {
+     if(this.pageWidth >= 600) {
 
         this.glideOptions.perView = 2
         this.glideOptions.peek.after = 50

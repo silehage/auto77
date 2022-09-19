@@ -1,5 +1,5 @@
 <template>
-  <q-list class="relative" :class="pageWidth >= 768 ? 'col-6 q-pa-xs' : ''">
+  <q-list class="relative">
     <q-item class="q-pa-md relative full-height">
       <q-item-section avatar top @click.prevent="$router.push({name: 'ProductShow', params:{ slug: product.slug }})" class="cursor-pointer column items-center q-gutter-y-sm">
         <q-img v-if="product.assets && product.assets.length" :src="product.assets[0].src" ratio="1" class="image-list rounded-borders" width="105px">

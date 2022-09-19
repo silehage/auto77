@@ -464,6 +464,11 @@ h1,h2,h3,h4,h5,h6 {
 .q-card.shadow {
   box-shadow: 0px 14px 16px -10px rgba(48, 48, 48, 0.04);
 }
+.body--dark {
+  .box-shadow, .q-card.shadow {
+    box-shadow: 0px 14px 16px -10px rgb(205 205 205 / 13%);
+  }
+}
 #checkout {
   .q-stepper__tab {
     padding: 10px;

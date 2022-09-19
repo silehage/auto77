@@ -1,9 +1,9 @@
 <template>
-  <div class="footer q-px-sm q-py-lg bg-dark text-white">
-    <q-list dense v-if="shop">
+  <div class="footer q-px-sm q-pt-lg q-pb-xl bg-dark text-white">
+    <q-list v-if="shop">
       <q-item  v-if="shop.name">
           <q-item-section side>
-            <q-icon color="white" text-color="primary" name="eva-home" />
+            <q-icon color="white" text-color="primary" name="eva-home-outline" />
         </q-item-section>
         <q-item-section >
           <q-item-section>
@@ -13,15 +13,15 @@
       </q-item>
       <q-item v-if="shop.phone">
         <q-item-section side >
-          <q-icon color="white" text-color="primary" name="eva-phone-call"/>
+          <q-icon color="white" text-color="primary" name="eva-phone-call-outline"/>
         </q-item-section>
         <q-item-section >
-          <q-item-label class="text-weight-medium">{{ shop.phone }}</q-item-label>
+          <q-item-label class="text-weight-medium">{{ shop.phone.split(',').join('\n') }}</q-item-label>
         </q-item-section>
       </q-item>
       <q-item v-if="shop.address">
         <q-item-section side top>
-          <q-icon color="white" text-color="primary" name="eva-pin"/>
+          <q-icon color="white" text-color="primary" name="eva-pin-outline"/>
         </q-item-section >
         <q-item-section>
           <q-item-section>

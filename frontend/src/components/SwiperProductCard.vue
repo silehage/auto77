@@ -1,7 +1,7 @@
 <template>
   <q-card class="box-shadow full-height product-card">
     <div class="relative">
-      <q-img v-if="product.assets.length" :src="product.assets[0].src" ratio="1" @click="show(product.slug)" class="cursor-pointer">
+      <q-img v-if="product.assets.length" :src="product.assets[0].src" :ratio="1" @click="show(product.slug)" class="cursor-pointer">
         <template v-slot:error>
           <div class="absolute-full flex flex-center">
             Cannot load image
