@@ -1,6 +1,6 @@
 <template>
-  <q-page class="elegant" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive }">
-     <q-header reveal :class="{ 'bg-grey-9': $q.dark.isActive }">
+  <q-page class="elegant" :class="{'flex flex-center' : loading, 'bg-dark': $q.dark.isActive }">
+     <q-header reveal :class="{ 'bg-dark': $q.dark.isActive }">
         <q-toolbar class="q-py-md">
           <img v-if="shop" class="logo" :src="shop.logo_url? shop.logo_url : '/icon/icon-192x192.png'" />
           <div class="col q-mx-sm inline-flex">
@@ -19,7 +19,7 @@
         </q-toolbar>
       </q-header>
     <template v-if="!loading">
-      <div class="header bg-primary text-white" :class="{ 'bg-grey-9': $q.dark.isActive }">
+      <div class="header bg-primary text-white" :class="{ 'bg-dark': $q.dark.isActive }">
         <div class="header-inner q-pt-sm q-pb-md" v-if="sliders.data.length">
           <slider :datas="sliders.data" />
         </div>

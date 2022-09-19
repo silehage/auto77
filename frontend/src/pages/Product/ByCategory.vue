@@ -1,5 +1,5 @@
 <template>
-  <q-page :class="{'flex flex-center':!products.available, 'bg-grey-9': $q.dark.isActive }" class="q-pb-xl">
+  <q-page :class="{'flex flex-center':!products.available, 'bg-dark': $q.dark.isActive }" class="q-pb-xl">
       <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn @click="backButton"
