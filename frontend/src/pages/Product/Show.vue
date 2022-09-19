@@ -247,7 +247,7 @@ export default {
     },
     cStyle() {
       if(!this.fullscreen && this.$q.screen.width < 560 && this.$q.screen.width > 200) {
-        return 'height:'+ this.$q.screen.width +'px'
+        return 'height:'+ this.$q.screen.width/1.5 +'px'
       }
         return ''
     },
