@@ -24,7 +24,7 @@ module.exports = function (ctx ) {
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
       
-      'axios','helpers', 'glide'
+      'axios','helpers', 'glide', 'swiper'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

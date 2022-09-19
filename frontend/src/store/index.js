@@ -19,6 +19,7 @@ import cart from './cart'
 import discount from './discount'
 import coupon from './coupon'
 import promo from './promo'
+import gallery from './gallery'
 
 import mutations from './mutations'
 import getters from './getters'
@@ -85,6 +86,7 @@ export default function (/* { ssrContext } */) {
       discount,
       coupon,
       promo,
+      gallery
     },
     plugins: [stateData],
 

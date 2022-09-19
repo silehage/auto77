@@ -57,6 +57,7 @@ export default {
         { label: 'Kategori', caption: 'Kelola kategori produk', path: 'CategoryIndex', icon: 'category', color: 'amber-7'},
         { label: 'Promo', caption: 'Kelola produk promo', path: 'PromoIndex', icon: 'local_offer', color: 'blue-7'},
         { label: 'Slider', caption: 'Kelola slideshow', path: 'Slider', icon: 'view_carousel', color: 'teal'},
+        { label: 'Gallery', caption: 'Kelola photo gallery', path: 'Gallery', icon: 'images', color: 'green'},
         { label: 'Block', caption: 'Kelola banner, partner dan featured', path: 'AdminBlockIndex', icon: 'space_dashboard', color: 'amber-7'},
         { label: 'Artikel', caption: 'Kelola Artikel / blog', path: 'AdminPostIndex', icon: 'article', color: 'deep-orange'},
         { label: 'Manage Customer Service', caption: 'kelola Customer Service', path: 'UserList', icon: 'group', color: 'teal'},

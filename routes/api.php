@@ -1,26 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlockController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\CouponController;
 use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\SliderController;
-use App\Http\Controllers\TripayController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerServiceController;
 use App\Http\Controllers\FrontApiController;
-use App\Http\Controllers\ShippingController;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PasswordResetController;
 
 Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
@@ -33,6 +27,10 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::post('product/update', [ProductController::class, 'update']);
     Route::post('product', [ProductController::class, 'store']);
     Route::get('getAdminProducts', [ProductController::class, 'getAdminProducts']);
+
+    Route::post('gallery', [GalleryController::class, 'store']);
+    Route::delete('gallery/{id}', [GalleryController::class, 'destroy']);
+    Route::post('update-gallery-weight', [GalleryController::class, 'updateSliderWeight']);
 
     Route::post('sliders', [SliderController::class, 'store']);
     Route::delete('sliders/{id}', [SliderController::class, 'destroy']);
@@ -106,6 +104,7 @@ Route::get('search/{key}', [ProductController::class, 'search']);
 Route::get('getProductsByCategory/{id}', [ProductController::class, 'getProductsByCategory']);
 
 Route::get('sliders', [SliderController::class, 'index']);
+Route::get('galleries', [GalleryController::class, 'index']);
 Route::get('shop', [StoreController::class, 'index']);
 
 Route::get('category', [CategoryController::class, 'index']);

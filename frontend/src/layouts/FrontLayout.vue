@@ -33,8 +33,14 @@
           <q-route-tab 
             icon="eva-shopping-bag"
             :to="{name: 'ProductIndex'}"
-            class="bg-primary text-white"
             label="Katalog"
+            exact
+          />
+
+          <q-route-tab 
+            icon="photo_library"
+            :to="{name: 'GalleryShow'}"
+            label="Gallery"
             exact
           />
    
