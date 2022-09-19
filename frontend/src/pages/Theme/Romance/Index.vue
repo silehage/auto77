@@ -1,8 +1,8 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-grey-9': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
-    <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1 q-py-xs': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
+    <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
     <q-toolbar class="q-px-none flex justify-between items-center">
-      <img v-if="shop" height="50px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
+      <img v-if="shop" height="55px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
       <q-space></q-space>
       <div class="row items-center q-pr-sm">
         <MenuRight></MenuRight>

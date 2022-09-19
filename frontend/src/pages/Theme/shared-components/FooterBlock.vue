@@ -12,11 +12,11 @@
         </q-item-section>
       </q-item>
       <q-item v-if="shop.phone">
-        <q-item-section side >
+        <q-item-section side top>
           <q-icon color="white" text-color="primary" name="eva-phone-call-outline"/>
         </q-item-section>
         <q-item-section >
-          <q-item-label class="text-weight-medium">{{ shop.phone.split(',').join('\n') }}</q-item-label>
+          <q-item-label v-for="phone in phones" :key="phone" class="text-weight-medium">{{ phone }}</q-item-label>
         </q-item-section>
       </q-item>
       <q-item v-if="shop.address">
@@ -38,6 +38,12 @@ export default {
   computed: {
     shop() {
       return this.$store.state.shop
+    },
+    phones() {
+      if(this.shop && this.shop.phone) {
+        return this.shop.phone.split(',')
+      }
+      return []
     }
   }
 }

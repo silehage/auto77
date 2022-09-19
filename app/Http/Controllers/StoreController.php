@@ -86,7 +86,7 @@ class StoreController extends Controller
 
                 $rawFile->resize(300, null, function ($constraint) {
                     $constraint->aspectRatio();
-                })->crop(300, 80)->encode('png')->save($filepath);
+                })->crop(300, 85)->encode('png')->save($filepath);
 
                 $shop->logo_path = $filepath;
 
