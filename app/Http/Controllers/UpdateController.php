@@ -61,8 +61,9 @@ class UpdateController extends Controller
         DB::beginTransaction();
         
         try {
-            
+
             Artisan::call('migrate', ['--force' => true]);
+            Artisan::call('optimize:clear');
 
             DB::commit();
             
