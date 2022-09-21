@@ -12,18 +12,19 @@ $default   : #0598c0;
   --page-width: 600px;
   --blue-light: #c0eec6;
   --default-theme: $default;
-  --default-dark: #464646;
+  --default-dark: #2e2e2e;
 }
 * {
   outline: none;
 }
 body.body--dark {
+  background: var(--default-dark);
   .mobile-view {
     background: var(--q-color-dark);
     color: #e0e0e0;
   }
   .product-card{
-    background-color: #1b1b1b;
+    background-color: var(--q-color-secondary)
   }
 }
 body.body--light {
@@ -36,7 +37,7 @@ body.body--light {
       background-color: #ffffff;
     }
     background: #fff;
-    color: #000000;
+    color: #252525;
   }
 }
 

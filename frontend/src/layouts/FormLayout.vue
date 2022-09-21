@@ -14,7 +14,7 @@ export default {
     }
   },
   created() {
-    // this.$q.dark.set(false)
+    this.$q.dark.set(false)
     if(this.config) {
       this.$store.commit('SET_THEME_COLOR', this.config.theme_color)
     }else {

@@ -19,6 +19,7 @@ export default {
     })
   },
   created() {
+    this.$q.dark.set(false)
     if(!this.shop) {
       this.$store.dispatch('getShop')
     }

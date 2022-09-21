@@ -55,12 +55,12 @@ export default {
         { label: 'Toko', caption: 'Pengaturan Tampilan toko', path: 'Shop', icon: 'store', color: 'blue'},
         { label: 'Produk', caption: 'Tambah, edit dan hapus produk', path: 'AdminProductIndex', icon: 'inventory_2', color: 'deep-orange'},
         { label: 'Kategori', caption: 'Kelola kategori produk', path: 'CategoryIndex', icon: 'category', color: 'amber-7'},
-        { label: 'Promo', caption: 'Kelola produk promo', path: 'PromoIndex', icon: 'local_offer', color: 'blue-7'},
         { label: 'Slider', caption: 'Kelola slideshow', path: 'Slider', icon: 'view_carousel', color: 'teal'},
-        { label: 'Gallery', caption: 'Kelola photo gallery', path: 'Gallery', icon: 'images', color: 'green'},
+        { label: 'Gallery', caption: 'Kelola photo gallery', path: 'Gallery', icon: 'photo_library', color: 'green'},
         { label: 'Block', caption: 'Kelola banner, partner dan featured', path: 'AdminBlockIndex', icon: 'space_dashboard', color: 'amber-7'},
         { label: 'Artikel', caption: 'Kelola Artikel / blog', path: 'AdminPostIndex', icon: 'article', color: 'deep-orange'},
-        { label: 'Manage Customer Service', caption: 'kelola Customer Service', path: 'UserList', icon: 'group', color: 'teal'},
+        { label: 'Manage Customer Service', caption: 'kelola Customer Service', path: 'CustomerServices', icon: 'group', color: 'teal'},
+        { label: 'List User', caption: 'List user', path: 'UserList', icon: 'group', color: 'orange'},
         { label: 'Pengaturan', caption: 'Pengaturan Tampilan Website', path: 'Config', icon: 'settings', color: 'accent'},
       ]
     }

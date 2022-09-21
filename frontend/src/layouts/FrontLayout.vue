@@ -5,7 +5,7 @@
     </q-page-container>
       <q-footer 
       class="footer-tab box-shadow-top"
-      :class="{ 'text-white bg-dark' : $q.dark.isActive , 'bg-white text-primary' : !$q.dark.isActive}"
+      :class="{ 'text-white bg-secondary' : $q.dark.isActive , 'bg-white text-primary' : !$q.dark.isActive}"
       >
         <q-tabs
           :active-color="$q.dark.isActive ? 'white' : 'primary'"

@@ -21,7 +21,8 @@ class Product extends Model
         'price',
         'category_id',
         'sku',
-        'is_available'
+        'is_available',
+        'price_custom_label',
     ];
     // public $appends = ['rating'];
 

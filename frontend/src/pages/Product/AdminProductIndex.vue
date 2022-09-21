@@ -35,33 +35,7 @@
           <div class="">
             <q-item-label lines="2" class="text-subtitle2">{{ product.title }}</q-item-label>
             
-            <q-item-label caption>Harga Jual {{ moneyIDR(product.price) }}</q-item-label>
-            <q-item-label caption>Tersedia {{ product.is_available ? 'Tersedia' : 'Habis' }}</q-item-label>
-
-            <q-item-label>
-              <q-slide-transition>
-              <div v-show="showListId == product.id">
-                <div class="text-weight-bold q-pa-xs q-mt-sm">Detil Varian</div>
-                <div v-for="varian in product.varians" :key="varian.id" class="q-mb-xs">
-                  <q-list v-if="varian.has_subvarian" dense bordered separator>
-                    <q-item v-for="subvarian in varian.subvarian" :key="subvarian.id">
-                      <q-item-section>{{ varian.label }} {{ varian.value }} </q-item-section>
-                      <q-item-section>{{ subvarian.label }} {{ subvarian.value }}</q-item-section>
-                      <q-item-section>Stok {{ subvarian.stock }}</q-item-section>
-                      <q-item-section>Harga {{ moneyIDR(product.price+subvarian.price) }}</q-item-section>
-                    </q-item>
-                  </q-list>
-                  <q-list v-if="!varian.has_subvarian" dense separator bordered>
-                    <q-item>
-                      <q-item-section>{{ varian.label }} {{ varian.value }} </q-item-section>
-                      <q-item-section>Stok {{ varian.stock }}</q-item-section>
-                      <q-item-section>Harga {{ moneyIDR(product.price+varian.price) }}</q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
-              </div>
-            </q-slide-transition>
-            </q-item-label>
+            <q-item-label caption>Harga Rp {{ product.price_custom_label }}</q-item-label>
             </div>
         </q-item-section>
 
@@ -76,10 +50,6 @@
               </q-fab-action>
               <q-fab-action unelevated :to="{ name: 'ProductShow', params: {slug: product.slug }}" round glossy color="teal" icon="eva-external-link-outline">
                 <q-tooltip content-class="bg-teal">Lihat</q-tooltip>
-              </q-fab-action>
-
-              <q-fab-action v-if="product.varians.length" unelevated @click="selectVarian(product)" round icon="eva-pantone" glossy color="accent">
-                <q-tooltip content-class="bg-accent">Detil Varian</q-tooltip>
               </q-fab-action>
             </q-fab>
           </div>

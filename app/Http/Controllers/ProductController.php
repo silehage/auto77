@@ -201,7 +201,7 @@ class ProductController extends Controller
         $request->validate([
             'id' => 'required',
             'title' => 'required',
-            'price' => 'required',
+            'price_custom_label' => 'required',
             'description' => 'required',
             'images' => $request->del_images && count($product->assets) == count($request->del_images) && !$request->images?'required' : 'nullable'
         ]);

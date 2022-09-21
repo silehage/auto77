@@ -23,7 +23,9 @@
             <div class="text-xs text-red" v-if="errors.title"> {{ errors.title[0]}}</div>
 
 
-            <money-formatter v-model="form.price" prefix="Rp"/>
+            <!-- <money-formatter v-model="form.price" prefix="Rp"/> -->
+            <q-input filled required label="Harga" v-model="form.price_custom_label" prefix="Rp"></q-input>
+
             <q-checkbox v-model="form.is_available" label="Produk Tersedia?"></q-checkbox>
 
               <q-select
@@ -208,7 +210,8 @@ export default {
         varians: [],
         images: [],
         sku: '',
-        has_subvarian: false
+        has_subvarian: false,
+        price_custom_label: ''
       },
       imagePreview: [],
       variantModalForm: false,
@@ -341,6 +344,7 @@ export default {
       formData.append('is_available', this.form.is_available)
       formData.append('has_subvarian', this.form.has_subvarian)
       formData.append('description', this.form.description)
+      formData.append('price_custom_label', this.form.price_custom_label)
       
       if(this.form.category_id) {
         formData.append('category_id', this.form.category_id)

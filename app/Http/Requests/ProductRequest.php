@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'title' => 'required|unique:products',
-            'price' => 'required',
+            'price_custom_label' => 'required',
             'description' => 'required',
             'images' => 'required'
         ];

@@ -1,6 +1,6 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-dark': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
-    <q-header class="box-shadow" :class="{ 'bg-dark text-grey-1': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
+    <q-header class="box-shadow" :class="{ 'bg-secondary text-grey-1': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
     <q-toolbar class="q-px-none flex justify-between items-center">
       <img v-if="shop" height="55px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
       <q-space></q-space>
@@ -25,13 +25,6 @@
           <category-carousel :datas="categories.data" />
         </div>
       </div>
-      <div class="page__padding q-pb-sm">
-
-        <div id="product-promo" v-if="productPromo.length" >
-          <product-promo :product_promo="productPromo" />
-        </div>
-
-        </div>
 
         <div v-if="banner1" class="banner block-container">
           <img :src="banner1.image_url" @click="goToPost(banner1)">
@@ -65,7 +58,6 @@ import Slider from './block/SwiperSlider.vue'
 import ProductSectionObserver from './../shared-components/ProductSectionObserver.vue'
 import featuredCarousel from './../shared-components/FeaturedCarousel.vue'
 import categoryCarousel from './block/CategoryCarousel.vue'
-import productPromo from './../shared-components/ProductPromo.vue'
 import Cookies from 'js-cookie';
 export default {
   name: 'PageIndex',
@@ -75,7 +67,6 @@ export default {
     ProductSectionObserver, 
     featuredCarousel,
     categoryCarousel,
-    productPromo,
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'footer-block': () => import('./../shared-components/FooterBlock.vue'),
   },
@@ -97,7 +88,6 @@ export default {
       loading: state => state.loading,
       posts: state => state.post.initialPost,
       config: state => state.config,
-      productPromo: state => state.product.product_promo,
     }),
     cheight: function() {
       let n =(this.$q.screen.width /1.7)
