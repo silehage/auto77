@@ -1,31 +1,16 @@
 <template>
   <div>
-    <div class="q-py-md bg-white sans" v-if="canInstall"
-    :class="{'q-my-md' : spacing}"
-    >
-      <q-list>
+    <div class="bg-white q-pa-xs" v-show="isShowBanner">
+      <q-list dense>
         <q-item>
-          <q-item-section avatar>
-            <img v-if="shop && shop.logo_url" :src="shop.logo_url" width="50" height="50"/>
-            <img v-else src="/icon/icon-384x384.png" width="50" height="50"/>
+          <q-item-section side>
+            <q-btn icon="eva-close" flat color="dark" dense round padding="xs" @click="closeBanner"></q-btn>
           </q-item-section>
-          <q-item-section top>
-            <div class="text-weight-bold text-md text-primary">{{ shop.name }} App</div>
-            <q-item-label caption>Berbelanja akan lebih mudah dan cepat dengan menggunakan aplikasi.</q-item-label>
+          <q-item-section class="text-dark">
+            <q-item-label class="text-grey-9 text-right text-weight-bold">Unduh Aplikasi</q-item-label>
           </q-item-section>
-          <q-item-section side v-if="!isMini">
-            <div>
-              <q-btn icon="eva-download" unelevated rounded @click="installNow" no-caps unzelevated color="primary">
-                <span>Install</span>
-              </q-btn>
-            </div>
-          </q-item-section>
-        </q-item>
-        <q-item v-if="isMini">
-          <q-item-section>
-              <q-btn unelevated @click="installNow" no-caps unzelevated color="primary">
-                <span>Install Sekarang</span>
-              </q-btn>
+          <q-item-section side>
+              <img class="cursor-pointer" src="/static/app.svg" alt="Unduh Aplikasi" height="30" @click="installNow">
           </q-item-section>
         </q-item>
       </q-list>
@@ -35,39 +20,42 @@
 
 <script>
 import { mapState } from 'vuex'
+import Cookies from 'js-cookie'
 export default {
-  props: {
-    spacing: {
-      type: Boolean,
-      default: false
-    },
-    dense: {
-      type: Boolean,
-      default: false
-    },
+  data() {
+    return {
+      isShowBanner: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.checkBanner()
+    }, 2000)
   },
   computed: {
     ...mapState({
       shop: state => state.shop,
-      deferredPrompt: state => state.deferredPrompt
     }),
-    isMini: () => {
-      return window.screen.width < 480 ? true : false
-    },
-    canInstall: function() {
-      return this.deferredPrompt ? true : false
-    },
   },  
  
   methods: {
-    installNow() {
-      this.deferredPrompt.prompt();
+    checkBanner() {
+       if(this.shop && this.shop.google_play_url) {
+        let isHidden = Cookies.get('__hideInstallBanner')
+        if(isHidden == undefined || isHidden == 0) {
+          this.isShowBanner = true
+        }
+       }
     },
+    installNow() {
+      window.open(this.shop.google_play_url, '_blank')
+    },
+    closeBanner() {
+      this.isShowBanner = false
+      Cookies.remove('__hideInstallBanner')
+      Cookies.set('__hideInstallBanner', 1, { expires: 3 })
+    }
   },
 
 }
 </script>
-
-<style>
-
-</style>

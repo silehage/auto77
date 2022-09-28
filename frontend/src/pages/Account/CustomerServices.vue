@@ -189,7 +189,6 @@ export default {
       this.$q.loading.show()
       Api().get('customer_service').then(response => {
         if(response.status == 200) {
-          console.log(response.data);
           this.$store.commit('SET_CS', response.data.results)
           this.userNotAvailable = response.data.results.length ? false : true
         }

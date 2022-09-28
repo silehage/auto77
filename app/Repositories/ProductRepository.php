@@ -141,6 +141,8 @@ class ProductRepository
             $product->price = 1;
             
             $product->category_id =  $request->category_id;
+            $product->price_custom_label =  $request->price_custom_label;
+            
             $product->description = $request->description;
             $product->is_available =  $request->boolean('is_available');
 

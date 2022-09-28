@@ -81,7 +81,7 @@ export default {
           
         } else {
 
-          console.log(entry);
+          // console.log(entry);
 
           this.getProducts()
 

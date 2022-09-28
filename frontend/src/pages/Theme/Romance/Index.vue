@@ -1,6 +1,7 @@
 <template>
   <q-page class="romance" :class="{'flex flex-center' : loading, 'bg-dark': $q.dark.isActive, 'bg-grey-1': !$q.dark.isActive }">
     <q-header class="box-shadow" :class="{ 'bg-secondary text-grey-1': $q.dark.isActive, 'bg-white text-dark q-py-none': !$q.dark.isActive }">
+    <InstallApp />
     <q-toolbar class="q-px-none flex justify-between items-center">
       <img v-if="shop" height="55px" :src="shop.logo_path? shop.logo_url : '/icon/icon-192x192.png'" />
       <q-space></q-space>
@@ -53,6 +54,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import InstallApp from 'components/InstallApp.vue'
 import MenuRight from 'components/MenuRight.vue'
 import Slider from './block/SwiperSlider.vue'
 import ProductSectionObserver from './../shared-components/ProductSectionObserver.vue'
@@ -67,6 +69,7 @@ export default {
     ProductSectionObserver, 
     featuredCarousel,
     categoryCarousel,
+    InstallApp,
     'post-block': () => import('./../shared-components/PostBlock.vue'), 
     'footer-block': () => import('./../shared-components/FooterBlock.vue'),
   },

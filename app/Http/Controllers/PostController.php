@@ -61,7 +61,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => ['required'],
+            'title' => ['required', 'unique:posts'],
             'image' => ['required'],
             'body' => ['required']
         ]);
@@ -76,13 +76,18 @@ class PostController extends Controller
 
         DB::beginTransaction();
 
+        $slug = Str::slug($request->title);
+
+        if(Post::where('slug', $slug)->count() > 0) {
+            $slug = $slug . '__' . rand(10,99);
+        }
 
         try {
             //code...
             $post = new Post();
     
             $post->title = $request->title;
-            $post->slug = Str::slug($request->title);
+            $post->slug = $slug;
             $post->tags = $request->tags;
             $post->body = $request->body;
     

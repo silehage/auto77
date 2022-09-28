@@ -153,10 +153,6 @@ export default {
 
       let asset = this.post.galleries.find(el => el.src == src) 
 
-      console.log(src);
-      console.log(asset);
-      console.log(this.form);
-
       if(asset != undefined) {
         this.form.delete_gallery.push(asset.id)
       }
