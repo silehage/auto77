@@ -5,16 +5,15 @@ namespace App\Repositories;
 use stdClass;
 use Exception;
 use App\Models\Asset;
-use App\Models\Promo;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Models\ProductVarian;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 use App\Http\Resources\ProductResource;
-use App\Models\ProductVarian;
-use Ramsey\Uuid\Uuid;
 
 class ProductRepository
 {
@@ -151,9 +150,15 @@ class ProductRepository
             if($request->images && count($request->images) > 0) {
                 foreach($request->images as $file) {
                     
-                    $filename = Str::random(41).'.' . $file->extension();
+                    $rawFile = Image::make($file);
 
-                    $file->move($path, $filename);
+                    $filename =  Str::random(20) . Str::random(20) . '.webp'; 
+
+                    $filepath = 'upload/images/' . $filename; 
+
+                    $rawFile->resize(1200, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('webp')->save($filepath);
 
                     $product->assets()->create([
                         'filename' => $filename
@@ -231,14 +236,19 @@ class ProductRepository
             if($request->images) {
                 foreach($request->images as $file) {
 
-                    $filename = Str::random(42).'.' . $file->extension();
-                    
-                    if($file->move($path, $filename)){
+                    $rawFile = Image::make($file);
 
-                        $product->assets()->create([
-                            'filename' => $filename
-                        ]);
-                    }
+                    $filename =  Str::random(20) . Str::random(20) . '.webp'; 
+
+                    $filepath = 'upload/images/' . $filename; 
+
+                    $rawFile->resize(1200, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('png')->save($filepath);
+
+                    $product->assets()->create([
+                        'filename' => $filename
+                    ]);
 
                 }
             }

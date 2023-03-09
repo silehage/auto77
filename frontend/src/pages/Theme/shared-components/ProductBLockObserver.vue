@@ -22,11 +22,6 @@
             <q-skeleton type="text" width="25%" class="text-subtitle1" />
           </div>
           <div class="block-content">
-              <!-- <product-list-section-home :products="products" :ready="ready" :title="category.title"/> -->
-            <!-- <div v-if="config && config.home_view_mode == 'list'">
-            </div>
-            <div v-else class="auto-padding-side">
-            </div> -->
               <swiper-product :products="products" :ready="ready"/>
           </div>
       </div>
@@ -110,7 +105,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>
