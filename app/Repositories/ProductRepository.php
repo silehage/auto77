@@ -152,13 +152,13 @@ class ProductRepository
                     
                     $rawFile = Image::make($file);
 
-                    $filename =  Str::random(20) . Str::random(20) . '.webp'; 
+                    $filename =  Str::random(20) . Str::random(20) . '.png'; 
 
                     $filepath = 'upload/images/' . $filename; 
 
                     $rawFile->resize(1200, null, function ($constraint) {
                         $constraint->aspectRatio();
-                    })->encode('webp')->save($filepath);
+                    })->encode('png')->save($filepath);
 
                     $product->assets()->create([
                         'filename' => $filename
@@ -238,7 +238,7 @@ class ProductRepository
 
                     $rawFile = Image::make($file);
 
-                    $filename =  Str::random(20) . Str::random(20) . '.webp'; 
+                    $filename =  Str::random(20) . Str::random(20) . '.png'; 
 
                     $filepath = 'upload/images/' . $filename; 
 

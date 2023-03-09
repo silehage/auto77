@@ -1,5 +1,5 @@
 <template>
-  <q-page :class="{'flex flex-center' : !ready}" padding>
+  <q-page :class="{'flex flex-center' : !galleries.available}" padding>
      <q-header class="box-shadow" :class="{ 'bg-secondary text-grey-1': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn to="/"
@@ -9,9 +9,10 @@
           <MenuRight  />
        </q-toolbar>
     </q-header>
-      <div class="galleries q-py-lg" v-if="ready">
+      <div class="galleries q-py-lg" v-if="galleries.available">
           <img v-for="asset in galleries.data" :key="asset.id" :src="asset.src" style="width:100%;height:auto;" class="thumbnail"/>
       </div>
+      <div class="text-grey-5 text-center" v-if="!galleries.available">Tidak ada data</div>
     <q-inner-loading :showing="!ready">
         <q-spinner-facebook size="50px" color="primary"/>
     </q-inner-loading>

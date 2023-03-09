@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Store::create([
-            'name' => 'My Shop',
-            'slug' => 'my-shop'
+            'name' => 'Auto 77',
+            'slug' => 'auto77'
         ]);
         \App\Models\Config::create();
     }

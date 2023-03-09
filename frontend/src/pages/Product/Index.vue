@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-pb-xl" :class="{'bg-dark': $q.dark.isActive }">
+  <q-page class="q-pb-xl" :class="{
+    'bg-dark': $q.dark.isActive, 
+    'flex flex-center' : !products.available 
+    }">
     <q-header class="box-shadow" :class="{ 'bg-secondary text-grey-1': $q.dark.isActive, 'bg-white text-dark': !$q.dark.isActive }">
        <q-toolbar class="header__padding">
          <q-btn :to="{name: 'Home'}"
@@ -13,6 +16,7 @@
     <div class="flex justify-center q-py-lg" v-if="products && products.links">
      <q-btn label="loadmore" color="primary" outline :loading="isLoadmore" v-if="products.links.next" @click="paginate(products.links.next)"></q-btn>
    </div>
+   <div class="text-grey-5 text-center" v-if="!products.available">Tidak ada data</div>
   </q-page>
 </template>
 
