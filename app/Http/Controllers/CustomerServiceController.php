@@ -11,7 +11,7 @@ class CustomerServiceController extends Controller
     {
         return response()->json([
             'success' => true,
-            'results' => CustomerService::inRandomOrder()->get()
+            'results' => CustomerService::all()
         ]);
     }
     public function index () 
