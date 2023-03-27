@@ -380,6 +380,7 @@ class ProductRepository
         Cache::forget('products');
         Cache::forget('initial_products');
         Cache::forget('product_promo');
+        Cache::forget('categories');
     }
 
 }

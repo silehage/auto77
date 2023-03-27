@@ -38,11 +38,12 @@ class FrontApiController extends Controller
             return Store::first();
         });
 
-        $categories = Category::orderBy('weight', 'asc')->withCount('products')->get();
+        // $categories = Category::orderBy('weight', 'asc')->whereHas('products')->withCount('products')->get();
 
-        // $categories = Cache::rememberForever('categories', function () {
-        //     return Category::orderBy('weight', 'asc')->withCount('products')->get();
-        // });
+        $categories = Cache::rememberForever('categories', function () {
+            return Category::orderBy('weight', 'asc')->whereHas('products')->withCount('products')->get();
+        });
+        
         $posts = Cache::rememberForever('promote_post', function () {
             return Post::promote()->latest()->take(4)->get();
         });
