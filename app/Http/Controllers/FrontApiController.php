@@ -23,15 +23,15 @@ class FrontApiController extends Controller
     }
     public function home()
     {
-
+        Cache::flush();
         $sliders = Cache::rememberForever('sliders', function () {
             return Slider::OrderBy('weight', 'asc')->get();
         });
-        
+
         $blocks = Cache::rememberForever('blocks', function () {
             return Block::with('post:id,title,slug')
-            ->OrderBy('weight', 'asc')
-            ->get();
+                ->OrderBy('weight', 'asc')
+                ->get();
         });
 
         $shop = Cache::rememberForever('shop', function () {
@@ -43,7 +43,7 @@ class FrontApiController extends Controller
         $categories = Cache::rememberForever('categories', function () {
             return Category::orderBy('weight', 'asc')->whereHas('products')->withCount('products')->get();
         });
-        
+
         $posts = Cache::rememberForever('promote_post', function () {
             return Post::promote()->latest()->take(4)->get();
         });
@@ -51,13 +51,13 @@ class FrontApiController extends Controller
             return Config::first();
         });
 
-        $initialProducts = Cache::rememberForever('initial_products', function() {
-            
+        $initialProducts = Cache::rememberForever('initial_products', function () {
+
             return $this->productRepository->getInitialProducts();
         });
 
         return response()->json([
-            'success' => true, 
+            'success' => true,
             'results' => [
                 'products' => $initialProducts,
                 'sliders' => $sliders,
@@ -68,7 +68,7 @@ class FrontApiController extends Controller
                 'config' => $config,
                 'sess_id' => Str::random(49),
             ]
-            
-        ],200);
+
+        ], 200);
     }
 }

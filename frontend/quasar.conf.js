@@ -11,7 +11,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 // const envparser = require('./src/config/envparser.js')
 
 
-module.exports = function (ctx ) {
+module.exports = function (ctx) {
   return {
     // https://v1.quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
@@ -23,8 +23,8 @@ module.exports = function (ctx ) {
     // --> boot files are part of "main.js"
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
-      
-      'axios','helpers', 'glide', 'swiper'
+
+      'axios', 'helpers', 'glide', 'swiper', 'apiv2'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -50,14 +50,17 @@ module.exports = function (ctx ) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // env: envparser(),
-      htmlFilename: ctx.dev 
-        ? 'index.html' 
+      htmlFilename: ctx.dev
+        ? 'index.html'
         : 'index.php',
       // ssrPwaHtmlFilename: 'offline.html',
       env: {
         API: ctx.dev
           ? 'http://localhost:8000/api'
-          : '/api'
+          : '/api',
+        APIV2: ctx.dev
+          ? 'http://localhost:8000/api/v2'
+          : '/api/v2'
       },
 
       // transpile: false,
@@ -78,9 +81,9 @@ module.exports = function (ctx ) {
 
       // https://v1.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (chain) {
+      chainWebpack(chain) {
         chain.plugin('eslint-webpack-plugin')
-          .use(ESLintPlugin, [{ extensions: [ 'js', 'vue' ] }])
+          .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
       },
     },
 
@@ -97,7 +100,7 @@ module.exports = function (ctx ) {
       lang: 'en-us', // Quasar language pack
       config: {
         notify: {
-          position: 'top', 
+          position: 'top',
           timeout: 2500,
           // progress: true,
         }
@@ -117,7 +120,7 @@ module.exports = function (ctx ) {
 
       // Quasar plugins
       plugins: [
-        'Dialog', 'Notify', 'Meta', 'AddressbarColor' ,'Loading'
+        'Dialog', 'Notify', 'Meta', 'AddressbarColor', 'Loading'
       ]
     },
 
@@ -150,7 +153,7 @@ module.exports = function (ctx ) {
         dir: "ltr",
         display: "standalone",
         orientation: "portrait",
-        icons:[
+        icons: [
           {
             "src": "icon/icon-128x128.png",
             "sizes": "128x128",
@@ -190,10 +193,10 @@ module.exports = function (ctx ) {
         msapplicationTileImage: 'icon/icon-144x144.png',
         msapplicationTileColor: '#000000'
       },
-      
+
     },
     sourceFiles: {
-      indexHtmlTemplate:  ctx.dev? 'src/app.template.html' :  'src/app.template.php',
+      indexHtmlTemplate: ctx.dev ? 'src/app.template.html' : 'src/app.template.php',
     },
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
@@ -232,7 +235,7 @@ module.exports = function (ctx ) {
       // More info: https://v1.quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: true,
 
-      extendWebpack (/* cfg */) {
+      extendWebpack(/* cfg */) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       }

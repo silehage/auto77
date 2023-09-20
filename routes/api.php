@@ -17,7 +17,7 @@ use App\Http\Controllers\FrontApiController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PasswordResetController;
 
-Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
+Route::middleware(['auth:sanctum', 'auth.admin'])->group(function () {
 
     Route::get('userList', [UserController::class, 'userList']);
     Route::get('findUser/{key}', [UserController::class, 'findUser']);
@@ -45,9 +45,9 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::apiResource('blocks', BlockController::class)->only('store', 'update', 'destroy');
     // Update
     Route::get('update', [UpdateController::class, 'overview']);
-    Route::post('update', [UpdateController::class, 'update']);  
-    Route::post('clearCache', [UpdateController::class, 'clearCache']);  
-    
+    Route::post('update', [UpdateController::class, 'update']);
+    Route::post('clearCache', [UpdateController::class, 'clearCache']);
+
 
     Route::post('toggleProductPromo', [ProductController::class, 'toggleProductPromo']);
     Route::get('getProductPromo/{promoId}', [ProductController::class, 'getProductPromo']);
@@ -63,23 +63,21 @@ Route::middleware(['auth:sanctum', 'auth.admin'])->group(function() {
     Route::get('findProductWithoutPromo/{key}', [ProductController::class, 'findProductWithoutPromo']);
 
     Route::apiResource('customer_service', CustomerServiceController::class);
-    
 });
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('adminConfig', [ConfigController::class, 'adminConfig']);
     Route::post('config', [ConfigController::class, 'update']);
-    
+
     Route::get('user', [UserController::class, 'index']);
     Route::post('user/logout', [UserController::class, 'logout']);
     Route::post('user/update', [UserController::class, 'update']);
     Route::post('refreshToken', [UserController::class, 'refreshToken']);
-    
 });
 
-Route::middleware(['throttle:auth'])->group(function() {
-    
+Route::middleware(['throttle:auth'])->group(function () {
+
     Route::post('user/login', [UserController::class, 'login']);
     Route::post('user/register', [UserController::class, 'register']);
     Route::post('user/addNewUser', [UserController::class, 'addNewUser']);
@@ -87,7 +85,6 @@ Route::middleware(['throttle:auth'])->group(function() {
     Route::post('requestPasswordToken', [PasswordResetController::class, 'requestPasswordToken']);
     Route::get('validateToken/{token}', [PasswordResetController::class, 'validateToken']);
     Route::post('resetPassword', [PasswordResetController::class, 'resetPassword']);
-
 });
 
 Route::apiResource('posts', PostController::class)->only('index', 'show');
@@ -110,10 +107,10 @@ Route::get('shop', [StoreController::class, 'index']);
 Route::get('category', [CategoryController::class, 'index']);
 Route::get('category/{id}', [CategoryController::class, 'show']);
 
-Route::get('blocks',[BlockController::class, 'index']);
-Route::get('blocks/{id}',[BlockController::class, 'show']);
+Route::get('blocks', [BlockController::class, 'index']);
+Route::get('blocks/{id}', [BlockController::class, 'show']);
 
-Route::get('config',[ConfigController::class, 'show']);
+Route::get('config', [ConfigController::class, 'show']);
 
 Route::post('sendNotify', [NotifyController::class, 'sendNotify']);
 
@@ -121,4 +118,8 @@ Route::get('getInitialData', [FrontApiController::class, 'home']);
 
 Route::get('getCustomerService', [CustomerServiceController::class, 'getCustomerService']);
 
-Route::get('forceUpdate/{key}',[UpdateController::class, 'forceUpdate']);
+Route::get('forceUpdate/{key}', [UpdateController::class, 'forceUpdate']);
+
+Route::group(['prefix' => 'v2'], function () {
+    require __DIR__ . '/v2/apiv2.php';
+});

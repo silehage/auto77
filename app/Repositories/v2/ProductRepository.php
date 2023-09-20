@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\v2;
 
 use stdClass;
 use Exception;
@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 use App\Http\Resources\ProductResource;
+use App\Models\UploadTemp;
 
 class ProductRepository
 {
@@ -145,29 +146,27 @@ class ProductRepository
 
             $product->save();
 
-            if ($request->images && count($request->images) > 0) {
-                foreach ($request->images as $file) {
+            if ($request->images) {
+                $images = $request->images;
 
-                    $rawFile = Image::make($file);
+                for ($i = 0; $i < count($images); $i++) {
 
-                    $filename =  Str::random(20) . Str::random(20) . '.png';
-
-                    $filepath = 'upload/images/' . $filename;
-
-                    $rawFile->resize(1200, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->encode('png')->save($filepath);
+                    $temp = UploadTemp::find($images[$i]['id']);
 
                     $product->assets()->create([
-                        'filename' => $filename
+                        'filename' => $temp->filename,
+                        'sort' => $i + 1
                     ]);
+
+                    $temp->status = 1;
+                    $temp->save();
                 }
             }
 
             $product->fresh();
 
             if ($request->varians) {
-                $datas = json_decode($request->varians, true);
+                $datas = $request->varians;
 
                 foreach ($datas as $data) {
 
@@ -193,6 +192,8 @@ class ProductRepository
 
             $this->clearCache();
 
+            UploadTemp::clearTemp();
+
             return $product->load('assets', 'varians.subvarian');
         } catch (Exception $e) {
 
@@ -214,96 +215,92 @@ class ProductRepository
 
         DB::beginTransaction();
 
-        $product->title = $request->title;
-        $product->price = 1;
-        $product->description = $request->description;
-        $product->price_custom_label = $request->price_custom_label;
-        $product->category_id = $request->category_id;
-        $product->is_available =  $request->boolean('is_available');
-
         try {
 
+            $product->title = $request->title;
+            $product->price = 1;
+            $product->description = $request->description;
+            $product->price_custom_label = $request->price_custom_label;
+            $product->category_id = $request->category_id;
+            $product->is_available =  $request->boolean('is_available');
+
             if ($request->images) {
-                foreach ($request->images as $file) {
+                $images = $request->images;
 
-                    $rawFile = Image::make($file);
+                for ($i = 0; $i < count($images); $i++) {
 
-                    $filename =  Str::random(20) . Str::random(20) . '.png';
-
-                    $filepath = 'upload/images/' . $filename;
-
-                    $rawFile->resize(1200, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->encode('png')->save($filepath);
-
-                    $product->assets()->create([
-                        'filename' => $filename
-                    ]);
-                }
-            }
-            if ($request->del_images) {
-                foreach ($request->del_images as $filename) {
-                    File::delete('upload/images/' . $filename);
-                    Asset::where('filename', $filename)->delete();
-                }
-            }
-
-            $product->save();
-
-            if ($request->remove_varian) {
-                $varianIds = json_decode($request->remove_varian);
-
-                ProductVarian::whereIn('id', $varianIds)->delete();
-            }
-
-            if ($request->remove_subvarian) {
-                $subVarianIds = json_decode($request->remove_subvarian);
-
-                ProductVarian::whereIn('id', $subVarianIds)->delete();
-            }
-
-            if ($request->varians) {
-                $datas = json_decode($request->varians, true);
-
-                foreach ($datas as $data) {
-
-                    if ($request->boolean('has_subvarian') === true) {
-
-                        if (isset($data['id'])) {
-
-                            $varian =  ProductVarian::find($data['id']);
-                        } else {
-
-                            $varian =  new ProductVarian();
-                        }
-
-                        $varian->product_id = $product->id;
-                        $varian->has_subvarian = 1;
-                        $varian->label = $data['label'];
-                        $varian->value = $data['value'];
-                        $varian->save();
-
-                        foreach ($data['subvarian'] as $item) {
-
-                            if (isset($item['id'])) {
-
-                                ProductVarian::find($item['id'])->update($item);
-                            } else {
-                                $varian->subvarian()->create($item);
-                            }
-                        }
+                    if (isset($images[$i]['sort'])) {
+                        $asset = Asset::find($images[$i]['id']);
+                        $asset->sort = $i + 1;
+                        $asset->save();
                     } else {
+                        $temp = UploadTemp::find($images[$i]['id']);
 
-                        if (isset($data['id'])) {
-
-                            ProductVarian::find($data['id'])->update($data);
-                        } else {
-
-                            $product->varians()->create($data);
-                        }
+                        $product->assets()->create([
+                            'filename' => $temp->filename,
+                            'sort' => $i + 1
+                        ]);
+                        $temp->status = 1;
+                        $temp->save();
                     }
                 }
             }
+            $product->save();
+
+            // if ($request->remove_varian) {
+            //     $varianIds = json_decode($request->remove_varian);
+
+            //     ProductVarian::whereIn('id', $varianIds)->delete();
+            // }
+
+            // if ($request->remove_subvarian) {
+            //     $subVarianIds = json_decode($request->remove_subvarian);
+
+            //     ProductVarian::whereIn('id', $subVarianIds)->delete();
+            // }
+
+            // if ($request->varians) {
+            //     $datas = json_decode($request->varians, true);
+
+            //     foreach ($datas as $data) {
+
+            //         if ($request->boolean('has_subvarian') === true) {
+
+            //             if (isset($data['id'])) {
+
+            //                 $varian =  ProductVarian::find($data['id']);
+            //             } else {
+
+            //                 $varian =  new ProductVarian();
+            //             }
+
+            //             $varian->product_id = $product->id;
+            //             $varian->has_subvarian = 1;
+            //             $varian->label = $data['label'];
+            //             $varian->value = $data['value'];
+            //             $varian->save();
+
+            //             foreach ($data['subvarian'] as $item) {
+
+            //                 if (isset($item['id'])) {
+
+            //                     ProductVarian::find($item['id'])->update($item);
+            //                 } else {
+            //                     $varian->subvarian()->create($item);
+            //                 }
+            //             }
+            //         } else {
+
+            //             if (isset($data['id'])) {
+
+            //                 ProductVarian::find($data['id'])->update($data);
+            //             } else {
+
+            //                 $product->varians()->create($data);
+            //             }
+            //         }
+            //     }
+            // }
 
 
             DB::commit();
@@ -314,6 +311,8 @@ class ProductRepository
             Cache::forget($product->slug);
 
             $this->clearCache();
+
+            UploadTemp::clearTemp();
 
             return $product;
         } catch (Exception $e) {

@@ -6,7 +6,7 @@ use App\Models\Asset;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use Ramsey\Uuid\Uuid as Generator; 
+use Ramsey\Uuid\Uuid as Generator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -31,13 +31,18 @@ class Product extends Model
         'category_id' => 'integer'
     ];
 
+    public function scopeIsAvailable($query)
+    {
+        return $query->where('is_available', 1);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
     public function assets()
     {
-        return $this->morphMany(Asset::class, 'assetable');
+        return $this->morphMany(Asset::class, 'assetable')->orderBy('sort');
     }
     public function promo()
     {

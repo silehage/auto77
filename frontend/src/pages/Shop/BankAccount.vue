@@ -1,92 +1,76 @@
 <template>
-  <q-page :class="{'flex flex-center' : !banks.available}">
-     <q-header>
+  <q-page :class="{ 'flex flex-center': !banks.available }">
+    <q-header>
       <q-toolbar>
-        <q-btn :to="{name: 'Settings'}"
-          flat round dense
-          icon="eva-arrow-back" />
+        <q-btn :to="{ name: 'Settings' }" flat round dense icon="eva-arrow-back" />
         <q-toolbar-title>
-         Bank Account
+          Bank Account
         </q-toolbar-title>
-        <q-btn class="gt-xs" no-caps outline icon="eva-plus-circle" @click="handleAdd" label="Tambah Akun"/>
+        <q-btn class="gt-xs" no-caps color="grey-1" text-color="grey-9" icon="eva-plus-circle" @click="handleAdd"
+          label="Tambah Akun" />
       </q-toolbar>
     </q-header>
     <template v-if="banks.available">
-     <div class="q-pt-md q-pb-xl">
-       <table class="dense full-width">
-         <tbody v-for="bank in banks.data" :key="bank.id">
-           <tr>
-             <td>
-               <tr>
-                <td>Nama Bank</td>
-                <td>:</td>
-                <td>{{ bank.bank_name }} - {{ bank.bank_office }}</td>
-               </tr>
-               <tr>
-                <td>Nomor Rekening</td>
-                <td>:</td>
-                <td>{{ bank.account_number }}</td>
-              </tr>
-              <tr>
-                <td>Nama Akun</td>
-                <td>:</td>
-                <td>{{ bank.account_name }}</td>
-              </tr>
-             </td>
-             <td align="right">
-                 <div class="text-grey-8 column q-gutter-y-sm items-center">
-                  <q-btn @click="remove(bank.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-                  <q-btn @click="edit(bank)" size="sm" round glossy color="info" icon="eva-edit-2" />
-                </div>
-             </td>
-           </tr>
-         </tbody>
-       </table>
-    </div>
+      <div class="q-pt-md q-pb-xl">
+        <table class="dense full-width">
+          <tbody v-for="bank in banks.data" :key="bank.id">
+            <tr>
+              <td>
+            <tr>
+              <td>Nama Bank</td>
+              <td>:</td>
+              <td>{{ bank.bank_name }} - {{ bank.bank_office }}</td>
+            </tr>
+            <tr>
+              <td>Nomor Rekening</td>
+              <td>:</td>
+              <td>{{ bank.account_number }}</td>
+            </tr>
+            <tr>
+              <td>Nama Akun</td>
+              <td>:</td>
+              <td>{{ bank.account_name }}</td>
+            </tr>
+            </td>
+            <td align="right">
+              <div class="text-grey-8 column q-gutter-y-sm items-center">
+                <q-btn @click="remove(bank.id)" size="sm" round icon="eva-trash-2" glossy color="red" />
+                <q-btn @click="edit(bank)" size="sm" round glossy color="info" icon="eva-edit-2" />
+              </div>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </template>
     <template v-else>
       <div>Tidak ada data</div>
     </template>
-     <q-inner-loading :showing="!banks.ready">
-        <q-spinner-facebook size="50px" color="primary"/>
+    <q-inner-loading :showing="!banks.ready">
+      <q-spinner-facebook size="50px" color="primary" />
     </q-inner-loading>
     <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
-      <q-btn fab icon="add" color="primary" @click="handleAdd" glossy/>
+      <q-btn fab icon="add" color="primary" @click="handleAdd" glossy />
     </q-page-sticky>
     <q-dialog v-model="modal">
       <q-card style="width:100%;max-width:400px;">
         <q-form @submit.prevent="submit">
           <q-card-section>
             <div class="text-weight-bold text-md">{{ formType == 'add' ? 'Tambah ' : 'Edit ' }} Data Bank</div>
-            <q-input
-              v-model="form.bank_name"
-              label="Nama Bank"
-              :rules="[val => val && val.length > 0 || 'Wajib Diisi']"
-              placeholder="BCA"
-             />
-            <q-input
-              v-model="form.bank_office"
-              label="Kantor Cabang"
-              :rules="[val => val && val.length > 0 || 'Wajib Diisi']"
-              placeholder="Yogyakarta"
-             />
-            <q-input
-              v-model="form.account_name"
-              label="Nama Akun"
-              :rules="[val => val && val.length > 0 || 'Wajib Diisi']"
-             />
-            <q-input
-              v-model="form.account_number"
-              label="Nomor Rekening"
-              :rules="[val => val && val.length > 0 || 'Wajib Diisi']"
-              placeholder="6985XXXXXXXXXXXX"
-             />
+            <q-input v-model="form.bank_name" label="Nama Bank" :rules="[val => val && val.length > 0 || 'Wajib Diisi']"
+              placeholder="BCA" />
+            <q-input v-model="form.bank_office" label="Kantor Cabang"
+              :rules="[val => val && val.length > 0 || 'Wajib Diisi']" placeholder="Yogyakarta" />
+            <q-input v-model="form.account_name" label="Nama Akun"
+              :rules="[val => val && val.length > 0 || 'Wajib Diisi']" />
+            <q-input v-model="form.account_number" label="Nomor Rekening"
+              :rules="[val => val && val.length > 0 || 'Wajib Diisi']" placeholder="6985XXXXXXXXXXXX" />
           </q-card-section>
           <q-card-actions class="justify-end q-pa-md sticky-bottom bg-grey-2">
             <q-btn :disabled="loading" label="Batal" type="button" color="secondary" @click.prevent="closeModal"></q-btn>
             <q-btn :loading="loading" unelevated label="Simpan Data" type="submit" color="primary"></q-btn>
           </q-card-actions>
-          
+
         </q-form>
       </q-card>
     </q-dialog>
@@ -120,12 +104,12 @@ export default {
   methods: {
     ...mapActions('bank', ['getBanks', 'destroyBank', 'updateBank', 'storeBank']),
     submit() {
-      if(this.loading) return
-      if(this.formType == 'add') {
+      if (this.loading) return
+      if (this.formType == 'add') {
         this.storeBank(this.form)
         this.closeModal()
       }
-      if(this.formType == 'edit') {
+      if (this.formType == 'edit') {
         this.updateBank(this.form)
         this.closeModal()
       }
@@ -134,8 +118,8 @@ export default {
       this.$q.dialog({
         title: 'Konfirmasi Penghapusan Item',
         message: 'Yakin akan menghapus data?',
-        ok: {label: 'Hapus', flat: true, 'no-caps': true},
-        cancel: {label: 'Batal', flat: true, 'no-caps': true},
+        ok: { label: 'Hapus', flat: true, 'no-caps': true },
+        cancel: { label: 'Batal', flat: true, 'no-caps': true },
       }).onOk(() => {
         this.destroyBank(id)
       }).onCancel(() => {
@@ -174,7 +158,7 @@ export default {
     }
   },
   created() {
-    if(!this.banks.data.length) this.getBanks()
+    if (!this.banks.data.length) this.getBanks()
   }
 }
 </script>

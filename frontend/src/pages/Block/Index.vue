@@ -1,107 +1,84 @@
 <template>
-  <q-page class="q-pb-xl" :class="{'flex flex-center' : !blocks.available}">
-     <q-header>
+  <q-page class="q-pb-xl" :class="{ 'flex flex-center': !blocks.available }">
+    <q-header>
       <q-toolbar>
-        <q-btn :to="{name: 'Settings'}"
-          flat round dense
-          icon="eva-arrow-back" />
+        <q-btn :to="{ name: 'Settings' }" flat round dense icon="eva-arrow-back" />
         <q-toolbar-title>
-         List Block
+          List Block
         </q-toolbar-title>
-        <q-btn @click="handleAddBlock" no-caps outline icon="eva-plus-circle" label="Tambah Block" class="gt-xs"/>
+        <q-btn @click="handleAddBlock" no-caps color="grey-1" text-color="grey-9" icon="eva-plus-circle"
+          label="Tambah Block" class="gt-xs" />
       </q-toolbar>
     </q-header>
     <template v-if="blocks.available">
-    <q-list separator>
-       <q-item v-for="block in blocks.data" :key="block.id">
+      <q-list separator>
+        <q-item v-for="block in blocks.data" :key="block.id">
 
-         <q-item-section side class="q-pr-sm relative">
-           <img v-if="block.image" :src="block.image_url" class="rounded-corners" style="height:50px;width:100px;object-fit:contain;"/>
-        </q-item-section>
-        <q-item-section >
-          <q-item-label class="text-subtitle2">{{ block.label }}</q-item-label>
-          <q-item-label v-if="block.description" caption class="" v-html="block.description"></q-item-label>
-          <div class="q-mt-xs">
-            <q-chip size="sm" outline color="orange" text-color="white">Urutan {{ block.weight }}</q-chip>
-            <q-chip size="sm" icon="bookmark" outline color="blue-7" text-color="white">{{ block.position }}</q-chip>
-            <q-chip v-if="block.post_id" size="sm" icon="eva-checkmark-circle-2" outline color="teal" text-color="white">Linked</q-chip>
-          </div>
-        </q-item-section>
+          <q-item-section side class="q-pr-sm relative">
+            <img v-if="block.image" :src="block.image_url" class="img-thumb" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="text-subtitle2">{{ block.label }}</q-item-label>
+            <q-item-label v-if="block.description" caption class="" v-html="block.description"></q-item-label>
+            <div class="q-mt-xs">
+              <q-chip size="sm" outline color="orange" text-color="white">Urutan {{ block.weight }}</q-chip>
+              <q-chip size="sm" icon="bookmark" outline color="blue-7" text-color="white">{{ block.position }}</q-chip>
+              <q-chip v-if="block.post_id" size="sm" icon="eva-checkmark-circle-2" outline color="teal"
+                text-color="white">Linked</q-chip>
+            </div>
+          </q-item-section>
 
 
-        <q-item-section side top>
-          <div class="text-grey-8 column q-gutter-y-sm">
-            <q-btn @click="handleRemoveBlock(block.id)" size="sm" round icon="eva-trash-2" glossy color="red"/>
-            <q-btn @click="handleEditBlock(block)" size="sm" round glossy color="info" icon="eva-edit-2" />
-          </div>
-        </q-item-section>
-      </q-item>
-    </q-list>
+          <q-item-section side top>
+            <div class="text-grey-8 column q-gutter-y-sm">
+              <q-btn @click="handleRemoveBlock(block.id)" size="sm" round icon="eva-trash-2" glossy color="red" />
+              <q-btn @click="handleEditBlock(block)" size="sm" round glossy color="info" icon="eva-edit-2" />
+            </div>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </template>
     <template v-else>
       <div>Tidak ada data</div>
     </template>
-     <q-inner-loading :showing="!blocks.ready">
-        <q-spinner-facebook size="50px" color="primary"/>
+    <q-inner-loading :showing="!blocks.ready">
+      <q-spinner-facebook size="50px" color="primary" />
     </q-inner-loading>
     <q-page-sticky class="lt-sm" position="bottom-right" :offset="[12, 12]">
-      <q-btn fab icon="add" color="primary" @click="handleAddBlock" glossy/>
+      <q-btn fab icon="add" color="primary" @click="handleAddBlock" glossy />
     </q-page-sticky>
     <q-dialog v-model="blockModal">
       <q-card style="width:100%;max-width:450px;">
         <q-card-section>
           <q-form @submit.prevent="submitBlock" class="full-width">
             <q-card-section>
-              <q-input 
-              dense
-              label="Label" 
-              v-model="form.label" 
-              :rules="[
-              val => val && val != '' || 'Tidak boleh kosong'
-              ]"
-              />
-              <q-select
-              dense
-              v-model="form.position"
-              :options="positionOptions"
-              label="Pilih Tipe"
-                :rules="[
-              val => val && val != ''|| 'Tidak boleh kosong'
-              ]"
-            />
-            <q-input 
-              v-if="form.position == 'Featured'"
-              dense
-              label="Deskripsi" 
-              v-model="form.description" 
-              autogrow
-              class="q-mb-sm"
-              />
-              <q-input 
-              dense
-              label="Urutan" 
-              v-model="form.weight" 
-              mask="####"
-              :hint="form.position == 'Banner' ? 'Posisi banner: 1 , 2 atau 3' : ''"
-              :rules="[
-              val => val && val > 0 || 'Tidak boleh kosong'
-              ]"
-              />
+              <q-input dense label="Label" v-model="form.label" :rules="[
+                val => val && val != '' || 'Tidak boleh kosong'
+              ]" />
+              <q-select dense v-model="form.position" :options="positionOptions" label="Pilih Tipe" :rules="[
+                val => val && val != '' || 'Tidak boleh kosong'
+              ]" />
+              <q-input v-if="form.position == 'Featured'" dense label="Deskripsi" v-model="form.description" autogrow
+                class="q-mb-sm" />
+              <q-input dense label="Urutan" v-model="form.weight" mask="####"
+                :hint="form.position == 'Banner' ? 'Posisi banner: 1 , 2 atau 3' : ''" :rules="[
+                  val => val && val > 0 || 'Tidak boleh kosong'
+                ]" />
               <div class="q-mt-md">
-              <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
+                <q-toggle label="Link ke Post" v-model="linkToPost" @input="handleLinkPost"></q-toggle>
               </div>
               <template v-if="linkToPost">
                 <div class="text-grey-7 q-my-sm">Pilih Post</div>
                 <div class="">
                   <q-list separator bordered style="max-height:150px;overflow-y:auto">
-                      <q-item v-for="post in posts.data" :key="post.id" clickable @click="selectPostData(post)">
-                        <q-item-section avatar>
-                        <q-icon :color="form.post_id == post.id ? 'green-7' : 'grey-7'" text-color="white" 
-                        :name="form.post_id == post.id  ? 'task_alt' : 'remove_circle_outline'" />
-                        </q-item-section>
-                        <q-item-section>{{ post.title }}</q-item-section>
-                      </q-item>
-                    </q-list>
+                    <q-item v-for="post in posts.data" :key="post.id" clickable @click="selectPostData(post)">
+                      <q-item-section avatar>
+                        <q-icon :color="form.post_id == post.id ? 'green-7' : 'grey-7'" text-color="white"
+                          :name="form.post_id == post.id ? 'task_alt' : 'remove_circle_outline'" />
+                      </q-item-section>
+                      <q-item-section>{{ post.title }}</q-item-section>
+                    </q-item>
+                  </q-list>
                 </div>
               </template>
             </q-card-section>
@@ -111,7 +88,7 @@
             </q-card-section>
             <q-card-section v-if="imagePreview">
               <div class="row items-center justify-between q-gutter-x-sm">
-                  <img :src="imagePreview" style="max-height:80px;width:auto;object-fit:contain"/>
+                <img :src="imagePreview" style="max-height:80px;width:auto;object-fit:contain" />
               </div>
             </q-card-section>
             <q-card-actions class="justify-end q-pa-md sticky-bottom">
@@ -144,7 +121,7 @@ export default {
         position: 'Featured',
         image: '',
         del_image: false,
-        post_id:''
+        post_id: ''
       },
       imagePreview: '',
       positionOptions: ['Featured', 'Banner'],
@@ -157,26 +134,26 @@ export default {
     }),
   },
   mounted() {
-    if(!this.blocks.data.length) {
+    if (!this.blocks.data.length) {
       this.getAdminBlocks()
     }
-    if(!this.posts.data.length) {
+    if (!this.posts.data.length) {
       this.$store.dispatch('post/getAllPost')
     }
   },
   methods: {
     ...mapActions('block', ['addBlock', 'updateBlock', 'getAdminBlocks', 'getBlockById', 'deleteBlock']),
     selectPostData(post) {
-        this.form.post_id = post.id
-     },
-     handleLinkPost() {
-       if(!this.linkToPost) {
-         this.form.post_id = ''
-       }
-     },
+      this.form.post_id = post.id
+    },
+    handleLinkPost() {
+      if (!this.linkToPost) {
+        this.form.post_id = ''
+      }
+    },
     submitBlock() {
-      if(this.form.position == 'Banner') {
-        if(this.form.weight > 3) {
+      if (this.form.position == 'Banner') {
+        if (this.form.weight > 3) {
           this.$q.dialog({
             title: 'Error',
             message: 'Urutan block tipe banner maksimal adalah 3, Anda bisa pilih no 1, 2 atau 3'
@@ -186,16 +163,17 @@ export default {
         }
       }
       this.loading = true
-      if(this.formType == 'add') {
+      if (this.formType == 'add') {
         this.addBlock(this.form).then(response => {
           this.loading = false
           this.closeModal()
           this.getAdminBlocks()
-        }).catch(() => {;
+        }).catch(() => {
+          ;
           this.loading = false
         })
       }
-      if(this.formType == 'edit') {
+      if (this.formType == 'edit') {
         this.updateBlock(this.form).then(() => {
           this.loading = false
           this.closeModal()
@@ -208,7 +186,7 @@ export default {
     handleEditBlock(block) {
       this.clearForm()
       this.formType = 'edit'
-      this.linkToPost = block.post_id? true : false
+      this.linkToPost = block.post_id ? true : false
       this.form.id = block.id
       this.form.post_id = block.post_id
       this.form.label = block.label
@@ -222,8 +200,8 @@ export default {
       this.$q.dialog({
         title: 'Konfirmasi Penghapusan Item',
         message: 'Yakin akan menghapus data?',
-        ok: {label: 'Hapus', flat: true, 'no-caps': true},
-        cancel: {label: 'Batal', flat: true, 'no-caps': true},
+        ok: { label: 'Hapus', flat: true, 'no-caps': true },
+        cancel: { label: 'Batal', flat: true, 'no-caps': true },
       }).onOk(() => {
         this.deleteBlock(id)
       }).onCancel(() => {
@@ -235,7 +213,7 @@ export default {
       this.clearForm()
       this.blockModal = true
       this.formType = 'add'
-      this.form.weight = this.blocks.data.length? this.blocks.data.length+1 : 1
+      this.form.weight = this.blocks.data.length ? this.blocks.data.length + 1 : 1
     },
     clearForm() {
       this.form.id = ''
@@ -255,17 +233,17 @@ export default {
     handleRemoveImage() {
       this.imagePreview = '';
       this.form.image = ''
-      if(this.formType == 'edit') {
+      if (this.formType == 'edit') {
         this.form.del_image = true
       }
     },
     closeModal() {
       this.blockModal = false,
-      this.clearForm()
+        this.clearForm()
     },
     handleImagePreview() {
       let img = this.$refs.image.files[0]
-      if(!img) return
+      if (!img) return
 
       this.form.image = img
 

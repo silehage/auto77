@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\v2;
 
 use Exception;
 use App\Models\Promo;
 use App\Models\Product;
 use App\Models\ProductPromo;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Cache;
-use App\Repositories\ProductRepository;
+use App\Repositories\v2\ProductRepository;
 use App\Http\Resources\ProductListCollection;
 
 class ProductController extends Controller

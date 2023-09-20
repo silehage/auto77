@@ -4,26 +4,28 @@
       <div class="block-container bg-linear">
         <div class="q-mb-md" v-if="ready">
           <div class="row items-end justify-between">
-            <div class="block-title"><h2>{{ category.title }}</h2></div>
-            <q-btn flat no-caps padding="4px" :to="{name: 'ProductCategory', params:{ id: category.id }}">
+            <div class="block-title">
+              <h2>{{ category.title }}</h2>
+            </div>
+            <q-btn flat no-caps padding="4px" :to="{ name: 'ProductCategory', params: { id: category.id } }">
               <span>Lihat Semua</span>
               <q-icon name="eva-arrow-forward" size="16px"></q-icon>
             </q-btn>
-          </div> 
+          </div>
           <div v-if="category.description" class="block-subtitle">{{ category.description }}</div>
           <div class="banner" v-if="category.banner_src">
-            <router-link :to="{name: 'ProductCategory', params:{ id: category.category_id }}">
-            <img :src="category.banner_src" :alt="category.title" class="cursor-pointer" />
-              </router-link>
-            </div>
+            <router-link :to="{ name: 'ProductCategory', params: { id: category.category_id } }">
+              <img :src="category.banner_src" :alt="category.title" class="cursor-pointer" />
+            </router-link>
           </div>
-          <div v-if="!ready" class="row items-center justify-between q-px-xs">
-            <q-skeleton type="text" width="25%" height="50px" class="text-subtitle1" />
-            <q-skeleton type="text" width="25%" class="text-subtitle1" />
-          </div>
-          <div class="block-content">
-              <swiper-product :products="products" :ready="ready"/>
-          </div>
+        </div>
+        <div v-if="!ready" class="row items-center justify-between q-px-xs">
+          <q-skeleton type="text" width="25%" height="50px" class="text-subtitle1" />
+          <q-skeleton type="text" width="25%" class="text-subtitle1" />
+        </div>
+        <div class="block-content">
+          <swiper-product :products="products" :ready="ready" />
+        </div>
       </div>
     </template>
   </div>
@@ -35,9 +37,9 @@ import SwiperProduct from 'components/GlideProduct.vue'
 import { Api } from 'boot/axios'
 export default {
   props: ['category'],
-  components: { 
+  components: {
     SwiperProduct
-   },
+  },
   data() {
     return {
       loading: false,
@@ -53,7 +55,7 @@ export default {
     })
   },
   mounted() {
-   this.intersecObserve()
+    this.intersecObserve()
   },
   methods: {
     intersecObserve() {
@@ -68,38 +70,38 @@ export default {
 
       let clb = (entries) => {
 
-      entries.forEach(entry => {
+        entries.forEach(entry => {
 
-        if(!entry.isIntersecting) {
+          if (!entry.isIntersecting) {
 
-          return
-          
-        } else {
+            return
 
-          // console.log(entry);
+          } else {
 
-          this.getProducts()
+            // console.log(entry);
 
-          observer.unobserve(entry.target)
+            this.getProducts()
 
-        }
-      });
-    };
+            observer.unobserve(entry.target)
+
+          }
+        });
+      };
       let observer = new IntersectionObserver(clb, opts);
 
-       observer.observe(el)
+      observer.observe(el)
 
     },
     async getProducts() {
-      let response = await Api().get('getProductsByCategory/' + this.category.id +'?limit=10')
+      let response = await Api().get('getProductsByCategory/' + this.category.id + '?limit=10')
 
-     if(response.status == 200) {
-      this.products = response.data.data
-      this.ready = true
-      this.success = true
-     }else {
-       this.success = false
-     }
+      if (response.status == 200) {
+        this.products = response.data.data
+        this.ready = true
+        this.success = true
+      } else {
+        this.success = false
+      }
       this.loading = true
     }
   }
