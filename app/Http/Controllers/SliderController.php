@@ -50,7 +50,7 @@ class SliderController extends Controller
 
             $rawFile = Image::make($file);
 
-            $filename =  uniqid() . '-' . Str::random(20) . '.png';
+            $filename =  uniqid() . '-' . Str::random(20) . '.webp';
 
             $filepath = 'upload/images/' . $filename;
 
