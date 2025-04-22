@@ -44,7 +44,7 @@ class ResizeImage extends Command
      */
     public function handle()
     {
-        $sliders = Slider::where('filename', 'like', '%.png')->get();
+        $sliders = Slider::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
 
         foreach ($sliders as $item) {
 
@@ -54,7 +54,7 @@ class ResizeImage extends Command
             ]);
         }
 
-        $galleries = Gallery::where('filename', 'like', '%.png')->get();
+        $galleries = Gallery::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
 
         foreach ($galleries as $item) {
 
@@ -64,7 +64,7 @@ class ResizeImage extends Command
             ]);
         }
 
-        $categories = Category::where('filename', 'like', '%.png')->get();
+        $categories = Category::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
 
         foreach ($categories as $item) {
 
