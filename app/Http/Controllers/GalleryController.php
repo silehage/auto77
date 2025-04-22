@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class GalleryController extends Controller
 {
@@ -39,33 +40,40 @@ class GalleryController extends Controller
 
         try {
             $path = public_path('/upload/images');
-    
-            if(! File::exists($path)) {
+
+            if (! File::exists($path)) {
                 File::makeDirectory($path, 0755, true, true);
             }
+
             $file = $request->file('image');
-    
-            $filename = Str::random(38).'.' . $file->extension();
-    
-            $file->move($path, $filename);
-    
+
+            $rawFile = Image::make($file);
+
+            $filename =  uniqid() . '-' . Str::random(20) . '.webp';
+
+            $filepath = 'upload/images/' . $filename;
+
+            $rawFile->resize(1200, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->encode('webp')->save($filepath);
+
+
             $last = Gallery::OrderBy('weight', 'desc')->first();
-    
+
             Gallery::create([
                 'filename' => $filename,
-                'weight' => $last? $last->weight+1 : 1
+                'weight' => $last ? $last->weight + 1 : 1
             ]);
 
             DB::commit();
-    
+
             return response([
                 'success' => true,
                 'message' => 'Berhasil menambah item',
                 'results' => null
             ], 200);
-
         } catch (\Throwable $th) {
-            
+
             DB::rollBack();
 
             return response([
@@ -87,12 +95,12 @@ class GalleryController extends Controller
     {
         $slider = Gallery::find($id);
 
-        File::delete('upload/images/'. $slider->filename);
+        File::delete('upload/images/' . $slider->filename);
 
         $slider->delete();
 
         return response([
-            'success' => true, 
+            'success' => true,
             'message' => 'Berhasil menghapus item',
         ], 200);
     }
@@ -108,7 +116,7 @@ class GalleryController extends Controller
         $slider->save();
 
         return response([
-            'success' => true, 
+            'success' => true,
             'message' => 'Berhasil memperbarui item',
         ], 200);
     }

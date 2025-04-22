@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 
 class CategoryController extends Controller
 {
@@ -15,10 +16,10 @@ class CategoryController extends Controller
     public function index()
     {
         return response([
-            'success' => true, 
+            'success' => true,
             'results' => Category::orderBy('weight', 'asc')->get()
-            
-        ],200);
+
+        ], 200);
     }
 
 
@@ -34,7 +35,7 @@ class CategoryController extends Controller
         try {
             $path = public_path('/upload/images');
 
-            if(! File::exists($path)) {
+            if (! File::exists($path)) {
                 File::makeDirectory($path, 0755, true, true);
             }
 
@@ -43,24 +44,36 @@ class CategoryController extends Controller
             $category->slug = Str::slug($request->title);
             $category->is_front = $request->boolean('is_front');
             $category->weight = $request->weight;
-            
+
             $category->description = $request->description;
 
-            if($file = $request->file('images')){
+            if ($file = $request->file('images')) {
 
-                $imageName = Str::random(40).'.' . $file->extension();
+                $rawFile = Image::make($file);
 
-                $file->move($path, $imageName);
+                $filename =  uniqid() . '-' . Str::random(20) . '.webp';
 
-                $category->filename = $imageName;
+                $filepath = 'upload/images/' . $filename;
+
+                $rawFile->resize(1000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->encode('webp')->save($filepath);
+
+                $category->filename = $filename;
             }
-            if($file = $request->file('banner')){
+            if ($file = $request->file('banner')) {
 
-                $imageName = Str::random(41).'.' . $file->extension();
+                $rawFile = Image::make($file);
 
-                $file->move($path, $imageName);
+                $filename =  uniqid() . '-' . Str::random(20) . '.webp';
 
-                $category->banner = $imageName;
+                $filepath = 'upload/images/' . $filename;
+
+                $rawFile->resize(1000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->encode('webp')->save($filepath);
+
+                $category->banner = $filename;
             }
 
             $category->save();
@@ -71,31 +84,28 @@ class CategoryController extends Controller
             Cache::forget('initial_products');
 
             return response([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Berhasil menambah kategori',
-                
-            ],201);
 
+            ], 201);
         } catch (\Throwable $th) {
 
-           DB::rollBack();
+            DB::rollBack();
 
-           return response([
-            'success' => false, 
-            'message' => $th,
-            
-            ],400);
+            return response([
+                'success' => false,
+                'message' => $th,
+
+            ], 400);
         }
-        
-        
     }
     public function show($id)
     {
         return response([
-            'success' => true, 
+            'success' => true,
             'results' => Category::find($id)
-            
-        ],200);
+
+        ], 200);
     }
 
     public function update(Request $request, $id)
@@ -116,82 +126,78 @@ class CategoryController extends Controller
             $category->description = $request->description;
 
             $category->save();
-            
-            if($file = $request->file('images')) {
-    
+
+            if ($file = $request->file('images')) {
+
                 $oldAssets = $category->filename;
-    
-                $imageName = Str::random(39).'.' . $file->extension();
-        
+
+                $imageName = Str::random(39) . '.' . $file->extension();
+
                 $file->move(public_path('/upload/images'), $imageName);
-    
-                File::delete('upload/images/'. $oldAssets);
-    
+
+                File::delete('upload/images/' . $oldAssets);
+
                 $category->filename = $imageName;
             }
-            if($request->boolean('remove_banner')) {
-                
-                File::delete('upload/images/'.  $category->banner);
+            if ($request->boolean('remove_banner')) {
+
+                File::delete('upload/images/' .  $category->banner);
                 $category->banner = '';
             }
-            if($fileBanner = $request->file('banner')){
+            if ($fileBanner = $request->file('banner')) {
 
 
-                if($category->banner) {
-                    File::delete('upload/images/'. $category->banner);
+                if ($category->banner) {
+                    File::delete('upload/images/' . $category->banner);
                 }
 
-                $bannerName = Str::random(41).'.' . $fileBanner->extension();
+                $bannerName = Str::random(41) . '.' . $fileBanner->extension();
 
                 $fileBanner->move(public_path('/upload/images'), $bannerName);
-    
+
 
                 $category->banner = $bannerName;
             }
-    
+
             $category->save();
 
             DB::commit();
-            
+
             Cache::forget('categories');
             Cache::forget('initial_products');
-    
+
             return response([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Berhasil memperbarui Kategori',
-                
-            ],200);
+
+            ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
 
             return response([
-                'success' => false, 
+                'success' => false,
                 'message' => $th->getMessage(),
-                
-            ],400);
 
+            ], 400);
         }
-
     }
 
     public function destroy($id)
     {
         $cat = Category::find($id);
-        
-        File::delete('upload/images/'. $cat->filename);
-        File::delete('upload/images/'. $cat->bannerName);
-        
+
+        File::delete('upload/images/' . $cat->filename);
+        File::delete('upload/images/' . $cat->bannerName);
+
         $cat->delete();
-        
+
         Cache::forget('categories');
         Cache::forget('initial_products');
 
         return response([
-            'success' => true, 
+            'success' => true,
             'results' => null
-            
-        ],200);
-        
-    }
 
+        ], 200);
+    }
 }

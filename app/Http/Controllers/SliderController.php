@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 
 class SliderController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -39,33 +40,39 @@ class SliderController extends Controller
 
         try {
             $path = public_path('/upload/images');
-    
-            if(! File::exists($path)) {
+
+            if (! File::exists($path)) {
                 File::makeDirectory($path, 0755, true, true);
             }
+
             $file = $request->file('image');
-    
-            $filename = Str::random(38).'.' . $file->extension();
-    
-            $file->move($path, $filename);
-    
+
+            $rawFile = Image::make($file);
+
+            $filename =  uniqid() . '-' . Str::random(20) . '.webp';
+
+            $filepath = 'upload/images/' . $filename;
+
+            $rawFile->resize(1200, null, function ($constraint) {
+                $constraint->aspectRatio();
+            })->encode('webp')->save($filepath);
+
             $last = Slider::OrderBy('weight', 'desc')->first();
-    
+
             Slider::create([
                 'filename' => $filename,
-                'weight' => $last? $last->weight+1 : 1
+                'weight' => $last ? $last->weight + 1 : 1
             ]);
 
             DB::commit();
-    
+
             return response([
                 'success' => true,
                 'message' => 'Berhasil menambah item',
                 'results' => null
             ], 200);
-
         } catch (\Throwable $th) {
-            
+
             DB::rollBack();
 
             return response([
@@ -87,12 +94,12 @@ class SliderController extends Controller
     {
         $slider = Slider::find($id);
 
-        File::delete('upload/images/'. $slider->filename);
+        File::delete('upload/images/' . $slider->filename);
 
         $slider->delete();
 
         return response([
-            'success' => true, 
+            'success' => true,
             'message' => 'Berhasil menghapus item',
         ], 200);
     }
@@ -108,7 +115,7 @@ class SliderController extends Controller
         $slider->save();
 
         return response([
-            'success' => true, 
+            'success' => true,
             'message' => 'Berhasil memperbarui item',
         ], 200);
     }
