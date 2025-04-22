@@ -16,10 +16,11 @@ use App\Http\Controllers\FrontController;
 
 Route::get('/', [FrontController::class, 'homepage']);
 Route::get('products', [FrontController::class, 'products']);
-Route::get('products/category/{category}', [FrontController::class, 'productCategory']);
-Route::get('product/{slug}', [FrontController::class, 'productDetail']);
+Route::get('products/category/{category}', [FrontController::class, 'productCategory'])->name('product.bycategory');
+Route::get('product/{slug}', [FrontController::class, 'productDetail'])->name('product.show');
 Route::get('posts', [FrontController::class, 'postIndex']);
-Route::get('post/{slug}', [FrontController::class, 'postDetail']);
+Route::get('post/{slug}', [FrontController::class, 'postDetail'])->name('post.show');
+Route::get('/sitemap.xml', [FrontController::class, 'sitemap']);
 Route::get('p/invoice/{id}', [FrontController::class, 'showInvoice']);
 Route::get('clear-cache', [FrontController::class, 'clearCache']);
-Route::get('/{any}', [FrontController::class, 'any'])->where('any','^(?!api).*$');
+Route::get('/{any}', [FrontController::class, 'any'])->where('any', '^(?!api).*$');

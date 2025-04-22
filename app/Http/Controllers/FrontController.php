@@ -15,7 +15,7 @@ class FrontController extends Controller
 
     public function __construct()
     {
-        $this->shop = Cache::rememberForever('shop', function() {
+        $this->shop = Cache::rememberForever('shop', function () {
             return Store::first();
         });
     }
@@ -24,7 +24,7 @@ class FrontController extends Controller
     {
         $title = $this->shop->name;
 
-        if($this->shop->slogan) {
+        if ($this->shop->slogan) {
             $title = $title . ' | ' . $this->shop->slogan;
         }
         return View::vue([
@@ -34,7 +34,7 @@ class FrontController extends Controller
             'data' => null
         ]);
     }
-    
+
     public function products()
     {
         return View::vue([
@@ -47,25 +47,23 @@ class FrontController extends Controller
     public function productDetail($slug)
     {
         $product = Product::where('slug', $slug)->first();
-        
+
         return View::vue([
             'title' => $product->title . ' | ' . $this->shop->name,
             'description' => $product->description ? $this->createTeaser($product->description) : $this->shop->description,
             'featured_image' => $product->assets[0]->src,
             'data' => null
         ]);
-
     }
 
     public function productCategory(Category $category)
     {
         return View::vue([
             'title' => $category->title . ' | ' . $this->shop->name,
-            'description' => $category->description?? $this->shop->description,
+            'description' => $category->description ?? $this->shop->description,
             'featured_image' => url('/upload/images/' . $category->filename),
             'data' => null
         ]);
-
     }
     public function postIndex()
     {
@@ -79,7 +77,7 @@ class FrontController extends Controller
     public function postDetail($slug)
     {
         $post = Post::where('slug', $slug)->first();
-        
+
         return View::vue([
             'title' => $post->title . ' | ' . $this->shop->name,
             'description' => $this->createTeaser($post->body),
@@ -95,10 +93,18 @@ class FrontController extends Controller
             'data' => null
         ]);
     }
+    public function sitemap()
+    {
+        $categories = Category::select('id', 'slug', 'updated_at')->get();
+        $products = Product::select('id', 'slug', 'updated_at')->get();
+        $posts = Post::select('id', 'slug', 'updated_at')->get();
+        return response()->view('sitemap', compact('categories', 'products', 'posts'))
+            ->header('Content-Type', 'text/xml');
+    }
     public function any()
     {
         $title = $this->shop->name;
-        if($this->shop->slogan) {
+        if ($this->shop->slogan) {
             $title = $title . ' | ' . $this->shop->slogan;
         }
         return View::vue([
@@ -107,7 +113,7 @@ class FrontController extends Controller
         ]);
     }
     public function clearCache()
-    {   
+    {
         Cache::flush();
         return redirect('/');
     }
@@ -115,6 +121,6 @@ class FrontController extends Controller
     {
         $str = strip_tags($html);
 
-        return substr($str, 0, 130) . '...'; 
+        return substr($str, 0, 130) . '...';
     }
 }

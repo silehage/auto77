@@ -48,14 +48,14 @@ class AssetController extends Controller
 
     public function deleteFile($id)
     {
-        $temp = UploadTemp::find($id);
 
-        Asset::where('filename', $temp->filename)->delete();
-
-        File::delete('upload/images/' . $temp->filename);
-
-        $temp->delete();
-
+        if ($temp = UploadTemp::find($id)) {
+            UploadTemp::where('filename', $temp->filename)->delete();
+            File::delete('upload/images/' . $temp->filename);
+        } else if ($asset = Asset::find($id)) {
+            Asset::where('filename', $asset->filename)->delete();
+            File::delete('upload/images/' . $asset->filename);
+        }
 
         return response()->json([
             'success' => true,

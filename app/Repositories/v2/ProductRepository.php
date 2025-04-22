@@ -247,62 +247,6 @@ class ProductRepository
             }
             $product->save();
 
-            // if ($request->remove_varian) {
-            //     $varianIds = json_decode($request->remove_varian);
-
-            //     ProductVarian::whereIn('id', $varianIds)->delete();
-            // }
-
-            // if ($request->remove_subvarian) {
-            //     $subVarianIds = json_decode($request->remove_subvarian);
-
-            //     ProductVarian::whereIn('id', $subVarianIds)->delete();
-            // }
-
-            // if ($request->varians) {
-            //     $datas = json_decode($request->varians, true);
-
-            //     foreach ($datas as $data) {
-
-            //         if ($request->boolean('has_subvarian') === true) {
-
-            //             if (isset($data['id'])) {
-
-            //                 $varian =  ProductVarian::find($data['id']);
-            //             } else {
-
-            //                 $varian =  new ProductVarian();
-            //             }
-
-            //             $varian->product_id = $product->id;
-            //             $varian->has_subvarian = 1;
-            //             $varian->label = $data['label'];
-            //             $varian->value = $data['value'];
-            //             $varian->save();
-
-            //             foreach ($data['subvarian'] as $item) {
-
-            //                 if (isset($item['id'])) {
-
-            //                     ProductVarian::find($item['id'])->update($item);
-            //                 } else {
-            //                     $varian->subvarian()->create($item);
-            //                 }
-            //             }
-            //         } else {
-
-            //             if (isset($data['id'])) {
-
-            //                 ProductVarian::find($data['id'])->update($data);
-            //             } else {
-
-            //                 $product->varians()->create($data);
-            //             }
-            //         }
-            //     }
-            // }
-
-
             DB::commit();
 
             $product->fresh();
