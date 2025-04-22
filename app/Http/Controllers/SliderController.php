@@ -6,6 +6,7 @@ use App\Models\Slider;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
@@ -49,7 +50,7 @@ class SliderController extends Controller
 
             $rawFile = Image::make($file);
 
-            $filename =  uniqid() . '-' . Str::random(20) . '.webp';
+            $filename =  uniqid() . '-' . Str::random(20) . '.png';
 
             $filepath = 'upload/images/' . $filename;
 
@@ -73,8 +74,15 @@ class SliderController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            DB::rollBack();
 
+            DB::rollBack();
+            Log::error($th->getMessage());
+
+            return response([
+                'success' => true,
+                'message' => $th->getMessage(),
+                'results' => null
+            ], 500);
             return response([
                 'success' => true,
                 'message' => 'Gagal menambah item, silahkan ulangi lagi',
