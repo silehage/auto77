@@ -73,6 +73,16 @@ class ResizeImage extends Command
                 'filename' => $filename
             ]);
         }
+
+        $products = Category::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
+
+        foreach ($products as $item) {
+
+            $filename = $this->resize($item);
+            $item->update([
+                'filename' => $filename
+            ]);
+        }
     }
 
     protected function resize($item)
