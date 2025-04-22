@@ -331,10 +331,15 @@ class ProductRepository
         DB::beginTransaction();
 
         try {
-            if ($product->assets) {
+            foreach ($product->assets as $item) {
 
-                $product->assets()->delete();
+                $filesource = 'upload/images/' . $item->filename;
+
+                unlink(public_path($filesource));
+
+                $item->delete();
             }
+
             $product->delete();
 
             DB::commit();
