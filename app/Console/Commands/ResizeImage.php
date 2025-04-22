@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Asset;
 use App\Models\Slider;
 use App\Models\Gallery;
 use App\Models\Category;
@@ -74,9 +75,9 @@ class ResizeImage extends Command
             ]);
         }
 
-        $products = Category::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
+        $assets = Asset::where('filename', 'like', '%.png')->orWhere('filename', 'like', '%.jpg')->get();
 
-        foreach ($products as $item) {
+        foreach ($assets as $item) {
 
             $filename = $this->resize($item);
             $item->update([
