@@ -12,8 +12,9 @@ class Post extends Model
 
     protected $guarded = [];
     public $appends = [
-        'image_url', 
-        'created_locale'
+        'image_url',
+        'created_locale',
+        'last_update'
     ];
 
     public $casts = [
@@ -21,6 +22,10 @@ class Post extends Model
         'is_promote' => 'boolean'
     ];
 
+    public function getLastUpdateAttribute()
+    {
+        return Carbon::parse($this->updated_at)->tz('UTC')->toAtomString();
+    }
     public function scopeListing()
     {
         return $this->where('is_listing', 1);
@@ -32,9 +37,9 @@ class Post extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image? config('app.url') .'/upload/images/' . $this->image : '';
+        return $this->image ? config('app.url') . '/upload/images/' . $this->image : '';
     }
-    
+
     public function getCreatedLocaleAttribute()
     {
         return Carbon::parse($this->created_at)->translatedFormat('d F Y');

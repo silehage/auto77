@@ -31,6 +31,13 @@ class Product extends Model
         'category_id' => 'integer'
     ];
 
+    public $appends = ['last_update'];
+
+    public function getLastUpdateAttribute()
+    {
+        return Carbon::parse($this->updated_at)->tz('UTC')->toAtomString();
+    }
+
     public function scopeIsAvailable($query)
     {
         return $query->where('is_available', 1);

@@ -5,7 +5,7 @@
 		<url>
 			<loc><?php echo route('product.bycategory', $category->slug); ?></loc>
 			<?php if (isset($category->updated_at)) { ?>
-				<lastmod><?php echo $category->updated_at; ?></lastmod>
+				<lastmod><?php echo $category->last_update; ?></lastmod>
 			<?php } ?>
 			<changefreq>monthly</changefreq>
 			<priority>0.8</priority>
@@ -14,7 +14,7 @@
 	<?php foreach ($products as $product) { ?>
 		<url>
 			<loc><?= route('product.show', $product->slug); ?></loc>
-			<lastmod><?php echo $product->updated_at; ?></lastmod>
+			<lastmod><?php echo $product->last_update; ?></lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.8</priority>
 		</url>
@@ -22,7 +22,7 @@
 	<?php foreach ($posts as $post) { ?>
 		<url>
 			<loc><?= route('post.show', $post->slug); ?></loc>
-			<lastmod><?php echo $post->updated_at; ?></lastmod>
+			<lastmod><?php echo $post->last_update; ?></lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.8</priority>
 		</url>

@@ -44,6 +44,7 @@ class CategoryController extends Controller
             $category->slug = Str::slug($request->title);
             $category->is_front = $request->boolean('is_front');
             $category->weight = $request->weight;
+            $category->updated_at = now();
 
             $category->description = $request->description;
 
@@ -124,6 +125,7 @@ class CategoryController extends Controller
             $category->is_front = $request->boolean('is_front');
             $category->weight = $request->weight;
             $category->description = $request->description;
+            $category->updated_at = now();
 
             $category->save();
 

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -11,7 +12,7 @@ class Category extends Model
     public $timestamps = false;
     protected $guarded = [];
 
-    public $appends = ['src', 'banner_src'];
+    public $appends = ['src', 'banner_src', 'last_update'];
 
     protected $casts = [
         'is_front' => 'boolean',
@@ -22,6 +23,10 @@ class Category extends Model
     public function getSrcAttribute()
     {
         return $this->filename ?  url('/upload/images/' . $this->filename) : '';
+    }
+    public function getLastUpdateAttribute()
+    {
+        return Carbon::parse($this->updated_at)->tz('UTC')->toAtomString();
     }
 
     public function getBannerSrcAttribute()
