@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Carbon;
 use App\Models\Asset;
 use App\Models\Category;
 use Illuminate\Support\Str;
